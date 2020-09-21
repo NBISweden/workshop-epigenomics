@@ -8,7 +8,7 @@ Held in SciLifeLab Solna, from 2018-11-07 to 2018-11-09
 
 ## Course Links
 [Pre-course material](precourse)   
-[Participants](admin/Participants/participants.pdf)
+
 
 
 Alternative Files Locations
