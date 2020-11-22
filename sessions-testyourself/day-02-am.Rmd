@@ -1,0 +1,72 @@
+---
+title: "Tuesday morning session"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+
+## Welcome to Tuesday! 
+
+1. Take a minute to look at [today's questions](https://docs.google.com/forms/d/e/1FAIpQLSdy2hqyTqgc9STuo8Of1j9vDABQs2qw4QjVR0sHWJc0AUhQ9g/viewform?usp=sf_link) and rate your knowledge
+
+2. Then, in your group discuss:
+- yesterday's questions (below); can you agree on the answers?
+- anything that you've found confusing or useful yesterday
+- and post your answers and comments on our [whiteboard](https://jamboard.google.com/d/1PSY_jTxLy26TsIFbmxnOLe-tP8LOSsK-AzES-ihx4qo/edit?usp=sharing)
+
+
+-----
+
+**Monday's questions**
+
+1. How many million CpG sites are there in the human genome?
+a) 28k
+b) 1M
+c) 28M
+d) 150M
+ 
+2. Which method does not provide DNA methylation estimates at a base-pair resolution?
+a) EPIC array
+b) RRBS
+c) MeDIP-seq 
+d) WGBS
+
+3. What is the main purpose of treating DNA with bisulfite conversion?
+a) To denature DNA
+b) To convert unmethylated cytosine (5C) to uracil
+c) To convert metylation cytosoines (5mC) to thymine
+d) To prepare DNA for NGS library preparation
+ 
+4. What is the major difference between long-read (PacBio/ONT) and short-read (Illumina) NGS for measuring DNA modifications
+a) Short read NGS can directly detect 5mC in DNA
+b) Long-read NGS required bisulfite treatment prior to sequencing
+c) There is no difference between short-read and long-read sequencing platforms when it comes to measuring base modifications
+d) Long read NGS can directly detect several different base modifications in DNA
+
+5. Which metric would you use to visualize methylation data from the 450K array?
+a) The Beta-value
+b) The M-value
+c) Both can be used
+d) The signal intensities
+ 
+6. Why perform within-array normalization?
+a) To remove the background noise
+b) To remove failed beads
+c) To remove differences between probe design I and II
+d) To make samples more comparable across samples
+ 
+7. What complicates gene enrichment analysis for methylation data?
+a) The link between CpG and gene is not always clear
+b) The effect of methylation on gene expression is hard to predict
+c) There is a bias related to the number of CpG per gene
+d) All of the above
+ 
+8. Which genome structure is preferentially studied through reduced representation bisulfite sequencing?
+a) Gene bodies
+b) CpG Islands
+c) CpG Shores
+d) Enhancers

@@ -1,0 +1,81 @@
+---
+title: "Test yourself 01"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+
+Rate your confidence of being able to answer the below questions saying A, B or C, where:
+
+- A. I am confident that I do know the answer to this question
+- B. I know at least 50% of the answer to this question, within 20 minutes I could find the required resources to enable a complete answer
+- C. I am not confident that I can answer the question at this time.
+
+
+### Part I
+
+1. Could you tell how many CpG sites are there in the human genome?
+2. Could you name the methods that provide DNA methylation estimates at base-pair resolution?
+3. Could you explain what is the main purpose of treating DNA with bisulfite conversion?
+4. Could you tell what is the major difference between long-read (PacBio/ONT) and short-read (Illumina) NGS for measuring DNA modifications? 
+5. Given 450K array data, could you tell which metric to use to visualize data?
+6. Given 450K array, could you explain why we perform within-array normalization?
+7. Could you name factors that complicate gene enrichment analysis for methylation data?
+8. Could you explain what is studied through the reduced representation bisulfite sequencing? 
+
+
+### Part II
+
+1. How many million CpG sites are there in the human genome?
+a) 28k
+b) 1M
+c) 28M
+d) 150M
+ 
+2. Which method does not provide DNA methylation estimates at a base-pair resolution?
+a) EPIC array
+b) RRBS
+c) MeDIP-seq 
+d) WGBS
+
+3. What is the main purpose of treating DNA with bisulfite conversion?
+a) To denature DNA
+b) To convert unmethylated cytosine (5C) to uracil
+c) To convert metylation cytosoines (5mC) to thymine
+d) To prepare DNA for NGS library preparation
+ 
+4. What is the major difference between long-read (PacBio/ONT) and short-read (Illumina) NGS for measuring DNA modifications
+a) Short read NGS can directly detect 5mC in DNA
+b) Long-read NGS required bisulfite treatment prior to sequencing
+c) There is no difference between short-read and long-read sequencing platforms when it comes to measuring base modifications
+d) Long read NGS can directly detect several different base modifications in DNA
+
+5. Which metric would you use to visualize methylation data from the 450K array?
+a) The Beta-value
+b) The M-value
+c) Both can be used
+d) The signal intensities
+ 
+6. Why perform within-array normalization?
+a) To remove the background noise
+b) To remove failed beads
+c) To remove differences between probe design I and II
+d) To make samples more comparable across samples
+ 
+7. What complicates gene enrichment analysis for methylation data?
+a) The link between CpG and gene is not always clear
+b) The effect of methylation on gene expression is hard to predict
+c) There is a bias related to the number of CpG per gene
+d) All of the above
+ 
+8. Which genome structure is preferentially studied through reduced representation bisulfite sequencing?
+a) Gene bodies
+b) CpG Islands
+c) CpG Shores
+d) Enhancers
+
+
