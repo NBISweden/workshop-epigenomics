@@ -1,5 +1,5 @@
-title: "ChIP-seq workshop"
-baseurl: /workshop-ChIP-seq
+title: "Epigenomics data analysis"
+baseurl: /workshop-epigenomics
 
 # where things are
 layouts_dir: ./workshop-common/layouts
