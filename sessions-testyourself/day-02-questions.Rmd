@@ -1,5 +1,5 @@
 ---
-title: "Test yourself 02"
+title: "Questions 02"
 output:
   html_document: default
   pdf_document: default
@@ -8,72 +8,55 @@ editor_options:
   chunk_output_type: console
 ---
 
-
-Rate your confidence of being able to answer the below questions saying A, B or C, where:
-
-- A. I am confident that I know the answer to this question
-- B. I know at least 50% of the answer to this question, within 20 minutes I could find the required resources to enable a complete answer
-- C. I am not confident that I can answer the question at this time.
-
-
-### Part I
-
-1. Could you identify a peak-independent QC method for ChIP-seq?
-2. Could you name methods to assess replicate consistency in ChIP-seq?
-3. Could you explain when and why we use cross correlation? 
-4. Could you describe a common downstream analysis for a standard ChIP-seq experiment? 
-5. Could you explain how the ideal IP and input signal should look like? 
-6. Could you explain how differential occupancy is performed? 
-7. Could you identify methods to study chromatin accessibility? 
-8. Could you explain why fragment length estimation is an important QC metric for ATAC-seq?
-
-### Part II
-
 1. Which of the following is a peak-independent QC method for ChIP-seq
 a. clustering of binned signal in bam files
-b. cross correlation 
+b. cross correlation <--correct
 c. fraction of reads in peaks (FRiP)
 d. fraction of reads mapped to mitochondrial chromosome
+
 
 2. Replicate consistency in ChIP-seq can be assessed by
 a. PCA of binned signal in BAM files
 b. clustering of signal in peak regions
 c. IDR
-d. all the above
+d. all the above <--correct
 
 3. Which of the following does NOT apply to broad peaks
 a. sequencing depth does not scale linearly with genome size
 b. peak calling results are less reproducible between different methods
-c. fragment length can be assessed by cross correlation
+c. fragment length can be assessed by cross correlation <--correct
 d. proper sequencing depth is crucial to obtaining meaningful results
 
 4. Which of the following in NOT a downstream analysis for a standard ChIP-seq experiment
 a. functional annotation of detected peaks
 b. differential occupancy analysis
 c. identification of sequence motifs in peaks
-d. nucleosome positioning analysis
+d. nucleosome positioning analysis <--correct
 
 5. In ChIP-seq, the ideal IP and input pair should:
-a. ChIP sample shows strong cross correlation at fragment length whereas input shows none 
+a. ChIP sample shows strong cross correlation at fragment length whereas input shows none <--correct
 b. ChIP sample and input group together when clustering is made based on signal in peak regions
 c. the lines representing both look similar on the fingerprint plot
 d. the input should show similar pattern of enrichment as the IP
+
 
 6. To perform differential occupancy analysis one needs
 a. quantify ChIP-seq signal as counts
 b. many detected peaks in each sample
 c. three independent biological replicates of each condition 
-d. a and c
+d. a and c <--correct
 
 7. Which of the methods gives information on chromatin openness / accessibility
 a. ChIP-seq against H3K4me1
-b. ATAC-seq 
+b. ATAC-seq <--correct
 c. HiC
 d. ChIP-exo
 
 8. Fragment length estimation is an important QC metric for ATAC-seq because it
 a. is later used for peak calling
 b. confirms that read mapping was succesful
-c. demonstrates that mono- and di- nucleosome peaks are present in the data
+c. demonstrates that mono- and di- nucleosome peaks are present in the data <--correct
 d. it is not a QC metric for ATAC-seq experiments
+
+
 

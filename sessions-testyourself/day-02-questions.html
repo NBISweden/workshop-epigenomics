@@ -11,7 +11,7 @@
 
 
 
-<title>Tuesday morning session</title>
+<title>Questions 02</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -383,97 +383,83 @@ summary {
 
 
 
-<h1 class="title toc-ignore">Tuesday morning session</h1>
+<h1 class="title toc-ignore">Questions 02</h1>
 
 </div>
 
 
-<div id="welcome-to-tuesday" class="section level2">
-<h2>Welcome to Tuesday!</h2>
 <ol style="list-style-type: decimal">
-<li><p>Take a minute to look at <a href="https://docs.google.com/forms/d/e/1FAIpQLSeW2L773xNPOz9LfYTuHbZYmx5W1uyDULvX517EBGsRXxfINg/viewform?usp=sf_link">today’s questions</a> and rate your knowledge</p></li>
-<li><p>Then, in your group discuss:</p></li>
-</ol>
-<ul>
-<li>yesterday’s questions (below); can you agree on the answers?</li>
-<li>anything that you’ve found confusing or useful yesterday</li>
-<li>and post your answers and comments on our <a href="https://jamboard.google.com/d/1PSY_jTxLy26TsIFbmxnOLe-tP8LOSsK-AzES-ihx4qo/edit?usp=sharing">whiteboard</a></li>
-</ul>
-<hr />
-<p><strong>Monday’s questions</strong></p>
-<ol style="list-style-type: decimal">
-<li>How many million CpG sites are there in the human genome?</li>
+<li>Which of the following is a peak-independent QC method for ChIP-seq</li>
 </ol>
 <ol style="list-style-type: lower-alpha">
-<li>28k</li>
-<li>1M</li>
-<li>28M</li>
-<li>150M</li>
+<li>clustering of binned signal in bam files</li>
+<li>cross correlation &lt;–correct</li>
+<li>fraction of reads in peaks (FRiP)</li>
+<li>fraction of reads mapped to mitochondrial chromosome</li>
 </ol>
 <ol start="2" style="list-style-type: decimal">
-<li>Which method does not provide DNA methylation estimates at a base-pair resolution?</li>
+<li>Replicate consistency in ChIP-seq can be assessed by</li>
 </ol>
 <ol style="list-style-type: lower-alpha">
-<li>EPIC array</li>
-<li>RRBS</li>
-<li>MeDIP-seq</li>
-<li>WGBS</li>
+<li>PCA of binned signal in BAM files</li>
+<li>clustering of signal in peak regions</li>
+<li>IDR</li>
+<li>all the above &lt;–correct</li>
 </ol>
 <ol start="3" style="list-style-type: decimal">
-<li>What is the main purpose of treating DNA with bisulfite conversion?</li>
+<li>Which of the following does NOT apply to broad peaks</li>
 </ol>
 <ol style="list-style-type: lower-alpha">
-<li>To denature DNA</li>
-<li>To convert unmethylated cytosine (5C) to uracil</li>
-<li>To convert metylation cytosoines (5mC) to thymine</li>
-<li>To prepare DNA for NGS library preparation</li>
+<li>sequencing depth does not scale linearly with genome size</li>
+<li>peak calling results are less reproducible between different methods</li>
+<li>fragment length can be assessed by cross correlation &lt;–correct</li>
+<li>proper sequencing depth is crucial to obtaining meaningful results</li>
 </ol>
 <ol start="4" style="list-style-type: decimal">
-<li>What is the major difference between long-read (PacBio/ONT) and short-read (Illumina) NGS for measuring DNA modifications</li>
+<li>Which of the following in NOT a downstream analysis for a standard ChIP-seq experiment</li>
 </ol>
 <ol style="list-style-type: lower-alpha">
-<li>Short read NGS can directly detect 5mC in DNA</li>
-<li>Long-read NGS required bisulfite treatment prior to sequencing</li>
-<li>There is no difference between short-read and long-read sequencing platforms when it comes to measuring base modifications</li>
-<li>Long read NGS can directly detect several different base modifications in DNA</li>
+<li>functional annotation of detected peaks</li>
+<li>differential occupancy analysis</li>
+<li>identification of sequence motifs in peaks</li>
+<li>nucleosome positioning analysis &lt;–correct</li>
 </ol>
 <ol start="5" style="list-style-type: decimal">
-<li>Which metric would you use to visualize methylation data from the 450K array?</li>
+<li>In ChIP-seq, the ideal IP and input pair should:</li>
 </ol>
 <ol style="list-style-type: lower-alpha">
-<li>The Beta-value</li>
-<li>The M-value</li>
-<li>Both can be used</li>
-<li>The signal intensities</li>
+<li>ChIP sample shows strong cross correlation at fragment length whereas input shows none &lt;–correct</li>
+<li>ChIP sample and input group together when clustering is made based on signal in peak regions</li>
+<li>the lines representing both look similar on the fingerprint plot</li>
+<li>the input should show similar pattern of enrichment as the IP</li>
 </ol>
 <ol start="6" style="list-style-type: decimal">
-<li>Why perform within-array normalization?</li>
+<li>To perform differential occupancy analysis one needs</li>
 </ol>
 <ol style="list-style-type: lower-alpha">
-<li>To remove the background noise</li>
-<li>To remove failed beads</li>
-<li>To remove differences between probe design I and II</li>
-<li>To make samples more comparable across samples</li>
+<li>quantify ChIP-seq signal as counts</li>
+<li>many detected peaks in each sample</li>
+<li>three independent biological replicates of each condition</li>
+<li>a and c &lt;–correct</li>
 </ol>
 <ol start="7" style="list-style-type: decimal">
-<li>What complicates gene enrichment analysis for methylation data?</li>
+<li>Which of the methods gives information on chromatin openness / accessibility</li>
 </ol>
 <ol style="list-style-type: lower-alpha">
-<li>The link between CpG and gene is not always clear</li>
-<li>The effect of methylation on gene expression is hard to predict</li>
-<li>There is a bias related to the number of CpG per gene</li>
-<li>All of the above</li>
+<li>ChIP-seq against H3K4me1</li>
+<li>ATAC-seq &lt;–correct</li>
+<li>HiC</li>
+<li>ChIP-exo</li>
 </ol>
 <ol start="8" style="list-style-type: decimal">
-<li>Which genome structure is preferentially studied through reduced representation bisulfite sequencing?</li>
+<li>Fragment length estimation is an important QC metric for ATAC-seq because it</li>
 </ol>
 <ol style="list-style-type: lower-alpha">
-<li>Gene bodies</li>
-<li>CpG Islands</li>
-<li>CpG Shores</li>
-<li>Enhancers</li>
+<li>is later used for peak calling</li>
+<li>confirms that read mapping was succesful</li>
+<li>demonstrates that mono- and di- nucleosome peaks are present in the data &lt;–correct</li>
+<li>it is not a QC metric for ATAC-seq experiments</li>
 </ol>
-</div>
 
 
 

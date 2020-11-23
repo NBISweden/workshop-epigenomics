@@ -22,7 +22,7 @@ d) WGBS
 
 3. What is the main purpose of treating DNA with bisulfite conversion?
 a) To denature DNA
-b) To convert unmethylated cytosine (5C) to uracil (correct)
+b) To convert unmethylated cytosine (C) to uracil (correct)
 c) To convert metylation cytosoines (5mC) to thymine
 d) To prepare DNA for NGS library preparation
  

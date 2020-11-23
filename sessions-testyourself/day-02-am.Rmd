@@ -11,7 +11,7 @@ editor_options:
 
 ## Welcome to Tuesday! 
 
-1. Take a minute to look at [today's questions](https://docs.google.com/forms/d/e/1FAIpQLSdy2hqyTqgc9STuo8Of1j9vDABQs2qw4QjVR0sHWJc0AUhQ9g/viewform?usp=sf_link) and rate your knowledge
+1. Take a minute to look at [today's questions](https://docs.google.com/forms/d/e/1FAIpQLSeW2L773xNPOz9LfYTuHbZYmx5W1uyDULvX517EBGsRXxfINg/viewform?usp=sf_link) and rate your knowledge
 
 2. Then, in your group discuss:
 - yesterday's questions (below); can you agree on the answers?
