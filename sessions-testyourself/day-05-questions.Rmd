@@ -1,0 +1,57 @@
+---
+title: "Questions 05"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+… where cells are repeatedly split up into wells, labeled with part of a
+barcode and pooled again
+
+1. What is the method called where cells are repeatedly split up into wells, labeled with part of a barcode and pooled again?
+	a) Drop-seq
+	b) single-cell combinatorial-indexing *
+	c) SMART
+	d) SCRAM
+	
+2. What is the most common number in a scATAC-seq count matrix?
+	a) 0 *
+	b) 1
+	c) 2
+	d) 3
+	
+3. What was the problem with the early single cell ChIP-seq methods?
+	a) Too much noise in repeat regions
+	b) Too many reads that would not align to the genome
+	c) Too much starting material required
+	d) Too few reads per cell *
+	
+4. There is a nice new single cell method from 10X Genomics available, where you can measure several types of data from the same cells. Which data?
+a) RNA and TF binding
+b) 2. TF binding and DNA methylation
+c) 3. DNA methylation and open chromatin
+d) 4. open chromatin and RNA *
+
+5. What are anchors in the data integration method used by Seurat?
+	1. Clusters of cells
+	2. Pairs of similar cells from the same data set
+	3. Pairs of similar genes, from the same data set
+	4. Pairs of cells, from different data sets, that are mutual nearest neighbors *
+6. Why are unsupervised methods useful?
+	1. Because they are fast
+	2. Because they can show you unexpected patterns in data *
+	3. Because they can handle large data sets
+	4. Because they can handle missing values
+7. What does the command “reduce(peaks + 100)” do when you use the GRanges package in R?
+	1. Select the top 100 peaks, and select all peaks that don’t overlap with any other peak
+	2. Add 100 random peaks, and collapse all overlapping peaks
+	3. Extend all peaks 100 bp in each direction, and collapse all overlapping peaks *
+	4. Shift all peaks 100 bp, and select all peaks that don’t overlap with any other peak
+8. What are the gene activity scores Seurat calculates based on?
+	1. ATAC-seq reads in the promoter regions of each gene *
+	2. Gene expression variability
+	3. The fraction of reads in peak in each cell
+	4. The number of cells in each cell type

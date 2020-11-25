@@ -1,5 +1,5 @@
 ---
-title: "Thursday morning session"
+title: "Questions 03"
 output:
   html_document: default
   pdf_document: default
@@ -7,21 +7,6 @@ output:
 editor_options:
   chunk_output_type: console
 ---
-
-
-## Welcome to Thursday! 
-
-1. Take a minute to look at [today's questions](https://docs.google.com/forms/d/e/1FAIpQLSfoCMfFCxVd22HCFNFIRPnReU3fDx1mQZZIdzmiWiY7TPljLw/viewform?usp=sf_link) and rate your knowledge
-
-2. Then, in your group discuss:
-- yesterday's questions (below); can you agree on the answers?
-- anything that you've found confusing or useful yesterday
-- and post your answers and comments on our [whiteboard](https://jamboard.google.com/d/1PSY_jTxLy26TsIFbmxnOLe-tP8LOSsK-AzES-ihx4qo/edit?usp=sharing)
-
-
------
-
-**Wednesday's questions**
 
 1. Could you identify two internal normalization methods for traditional ChIP-Seq datasets?
 a) RPKM (correct)
@@ -67,6 +52,15 @@ d) IPs are performed separately
 
 8. Could you identify ChIP-Seq alternatives for profiling TF binding?
 a) CUT&Run, CUT&TAG, DamID (correct)
-b) only CUT&Tag and CUT&Tag
-c) CUT&RUN, CUT&Tag, DamID and ATAC-seq 
+b) only CUT&Tag and CUT&TAG
+c) CUT&RUN, CUT&TAG, DamID and ATAC-seq 
 d) none of the above
+
+
+Extra 
+
+9. How can you establish if two or more datasets share the same TF binding sites?
+a) Peak calling
+b) Intersecting peaks (e.g. Venn diagramm)
+c) Heatmaps of the joint peak lists
+d) All of the above (correct)
