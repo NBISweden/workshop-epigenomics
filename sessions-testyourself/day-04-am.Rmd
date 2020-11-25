@@ -29,6 +29,7 @@ b) RPGC
 c) TPM
 d) division by input (incorrect, this corrects for uneven input but does not ensure normalization across samples)
 
+
 2. Could you identify sources of background in ChIP-Seq?
 a) unspecific binding of DNA to the surface of beads
 b) chromatin fragments sticking together or remaining connected via crosslinks after sonication
