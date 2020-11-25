@@ -24,19 +24,19 @@ editor_options:
 **Wednesday's questions**
 
 1. Could you identify two internal normalization methods for traditional ChIP-Seq datasets?
-a) RPKM (correct)
-b) RPGC (correct)
-c) TPM (incorrect, used for RNA-Seq)
+a) RPKM
+b) RPGC
+c) TPM
 d) division by input (incorrect, this corrects for uneven input but does not ensure normalization across samples)
 
 2. Could you identify sources of background in ChIP-Seq?
 a) unspecific binding of DNA to the surface of beads
 b) chromatin fragments sticking together or remaining connected via crosslinks after sonication
 c) antibody binding other proteins with lower affinity
-d) all of the above (correct)
+d) all of the above
 
 3. What is the underlying assumption of comparisons relying on internal ChIP-Seq normalization?
-a) that the background between samples is constant (correct)
+a) that the background between samples is constant
 b) that total reads counts of the samples are the same
 c) that the peak height-to-background ratio is constant
 d) that inputs of the samples are 
@@ -45,16 +45,16 @@ d) that inputs of the samples are
 a) new peaks appear
 b) existing peaks get smaller or bigger
 c) the background (in between peaks) increases or decreases
-d) all of the above (correct)
+d) all of the above
 
 5. Which factors should theoretically have no background in ChIP-Seq (i.e. binary signal, either peak or nothing)
-a) DNA specific binding factors (correct)
+a) DNA specific binding factors
 b) RNA Polymerase
 c) Chromatin remodelers
 d) Lamin
 
 6. How is Drosophila spike-in used for normalization?
-a) each dataset is scaled so that all datasets match the same absolute spike-in read count (correct)
+a) each dataset is scaled so that all datasets match the same absolute spike-in read count
 b) all datasets are pooled and and then normalized
 c) each dataset is divided by its input
 d) none of the above
@@ -66,7 +66,7 @@ c) barcoded RNA is added to each sample
 d) IPs are performed separately
 
 8. Could you identify ChIP-Seq alternatives for profiling TF binding?
-a) CUT&Run, CUT&TAG, DamID (correct)
+a) CUT&Run, CUT&TAG, DamID
 b) only CUT&Tag and CUT&Tag
 c) CUT&RUN, CUT&Tag, DamID and ATAC-seq 
 d) none of the above
