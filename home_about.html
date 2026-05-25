@@ -43,12 +43,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-3ee88504cc60924a02ec0c1375dc49a5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script src="site_libs/quarto-contrib/quarto-leaflet-1.0.0/leaflet.js"></script>
-<link href="site_libs/quarto-contrib/quarto-leaflet-1.0.0/leaflet.css" rel="stylesheet">
-<link href="site_libs/quarto-contrib/quarto-leaflet-1.0.0/quarto-leaflet.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/team/team.css" rel="stylesheet">
-<link href="site_libs/quarto-contrib/fontawesome6-6.7.2/all.min.css" rel="stylesheet">
-<link href="site_libs/quarto-contrib/fontawesome6-6.7.2/latex-fontsize.css" rel="stylesheet">
 <script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -91,7 +86,6 @@ background-size: cover;
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&amp;family=Nunito:ital,wght@0,200..700;1,200..700&amp;display=swap" rel="stylesheet">
   
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 
 <meta property="og:title" content="About">
@@ -126,16 +120,8 @@ background-size: cover;
 <span class="menu-text">Schedule</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./home_contents.html"> 
-<span class="menu-text">Contents</span></a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="./home_syllabus.html"> 
 <span class="menu-text">Syllabus</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./home_precourse.html"> 
-<span class="menu-text">Precourse</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./home_faq.html"> 
@@ -189,80 +175,7 @@ background-size: cover;
 
 <section id="venue" class="level2">
 <h2 data-anchor-id="venue">Venue</h2>
-<!-- update map markers in _metadata.yml -->
-<p></p><div id="quarto-leaflet-map-1" class="quarto-leaflet-map" style="height: 400px; width: 100%;"></div>
-<script>
-if (typeof L.Icon.Default.imagePath !== "string") {
-  var _ql = document.querySelector('link[href*="quarto-leaflet"][href$="leaflet.css"]');
-  if (_ql) { L.Icon.Default.imagePath = _ql.href.replace(/leaflet\.css$/, "") + "images/"; }
-}
-window.__quartoLeafletMaps = window.__quartoLeafletMaps || [];
-window.__quartoLeafletWireReveal = window.__quartoLeafletWireReveal || function() {
-  if (window.__quartoLeafletRevealFix || typeof Reveal === "undefined") { return; }
-  window.__quartoLeafletRevealFix = true;
-  var _qlRefresh = function() {
-    setTimeout(function() {
-      window.__quartoLeafletMaps.forEach(function(m) {
-        if (m && typeof m.invalidateSize === "function") { m.invalidateSize(true); }
-      });
-    }, 60);
-  };
-  Reveal.on("ready", _qlRefresh);
-  Reveal.on("slidechanged", _qlRefresh);
-  Reveal.on("resize", _qlRefresh);
-  _qlRefresh();
-};
-window.__quartoLeafletWireReveal();
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", window.__quartoLeafletWireReveal, {once: true});
-} else {
-  setTimeout(window.__quartoLeafletWireReveal, 0);
-}
-var quartoLeafletMap1 = L.map('quarto-leaflet-map-1', {"center":[59.340607868964,18.04131375],"zoom":13});
-L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {"attribution":"&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"}).addTo(quartoLeafletMap1);
-var _icon = L.divIcon({html: "<span class=\"quarto-leaflet-icon-pin\" style=\"--ql-icon-size:14px;--ql-pin-size:37px;--ql-pin-color:#E74856;\"><i class=\"fa-solid fa-location-pin quarto-leaflet-icon-pin-bg\" aria-hidden=\"true\"></i><i class=\"fa-solid fa-briefcase quarto-leaflet-icon-glyph\" aria-hidden=\"true\"></i></span>", className: "leaflet-div-icon-custom", iconSize: [37, 37], iconAnchor: [18, 37]});
-var _m = L.marker([59.350484347014,18.0234315], {icon: _icon}).addTo(quartoLeafletMap1);
-_m.bindPopup("<p>SciLifeLab Stockholm<br> Tomtebodavägen 23A<br> 171 65 Solna<br>\nSweden</p>", {offset: [0,-37]});
-_m.bindTooltip("Venue", {offset: [19,-19]});
-var _icon = L.divIcon({html: "<span class=\"quarto-leaflet-icon-pin\" style=\"--ql-icon-size:14px;--ql-pin-size:37px;--ql-pin-color:#8E8CD8;\"><i class=\"fa-solid fa-location-pin quarto-leaflet-icon-pin-bg\" aria-hidden=\"true\"></i><i class=\"fa-solid fa-train quarto-leaflet-icon-glyph\" aria-hidden=\"true\"></i></span>", className: "leaflet-div-icon-custom", iconSize: [37, 37], iconAnchor: [18, 37]});
-var _m = L.marker([59.330231,18.059196], {icon: _icon}).addTo(quartoLeafletMap1);
-_m.bindPopup("<p>Centralstation<br> Vasagatan 1<br> 111 20 Stockholm<br> Sweden</p>", {offset: [0,-37]});
-_m.bindTooltip("Centralstation", {offset: [19,-19]});
-var _icon = L.divIcon({html: "<span class=\"quarto-leaflet-icon-pin\" style=\"--ql-icon-size:14px;--ql-pin-size:37px;--ql-pin-color:#8E8CD8;\"><i class=\"fa-solid fa-location-pin quarto-leaflet-icon-pin-bg\" aria-hidden=\"true\"></i><i class=\"fa-solid fa-bus quarto-leaflet-icon-glyph\" aria-hidden=\"true\"></i></span>", className: "leaflet-div-icon-custom", iconSize: [37, 37], iconAnchor: [18, 37]});
-var _m = L.marker([59.349989956287,18.025427713742], {icon: _icon}).addTo(quartoLeafletMap1);
-_m.bindPopup("<p>Karolinska Institutet Biomedicum<br> 171 65 Solna<br> Sweden</p>", {offset: [0,-37]});
-_m.bindTooltip("Karolinska Institutet Biomedicum bus stop", {offset: [19,-19]});
-var _icon = L.divIcon({html: "<span class=\"quarto-leaflet-icon-pin\" style=\"--ql-icon-size:14px;--ql-pin-size:37px;--ql-pin-color:#8E8CD8;\"><i class=\"fa-solid fa-location-pin quarto-leaflet-icon-pin-bg\" aria-hidden=\"true\"></i><i class=\"fa-solid fa-bus quarto-leaflet-icon-glyph\" aria-hidden=\"true\"></i></span>", className: "leaflet-div-icon-custom", iconSize: [37, 37], iconAnchor: [18, 37]});
-var _m = L.marker([59.350984737929,18.023782437067], {icon: _icon}).addTo(quartoLeafletMap1);
-_m.bindPopup("<p>Karolinkskavägen<br> 171 64 Solna<br> Sweden</p>", {offset: [0,-37]});
-_m.bindTooltip("Karolinkskavägen bus stop", {offset: [19,-19]});
-window.__quartoLeafletMaps.push(quartoLeafletMap1);
-</script><p></p>
-<!-- additional practical information -->
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Address
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><i class="fa-solid fa-location-dot" aria-label="location-dot"></i> Room Air &amp; Fire<br>
-Ground floor<br>
-<a href="https://www.scilifelab.se/about-us/campus-solna/">Science for Life Laboratory Stockholm</a><br>
-Tomtebodavägen 23A<br>
-17165 Solna<br>
-Sweden</p>
-</div>
-</div>
-<p>This course round is given on-site in Sweden at <a href="https://www.scilifelab.se/about-us/campus-solna/">SciLifeLab Stockholm</a>. Travel directions are as follows:</p>
-<ul>
-<li>Transport yourself to Stockholm (see e.g.&nbsp;<a href="https://www.sj.se/">SJ’s website</a> for train travel within Sweden).</li>
-<li>Go to SciLifeLab in Solna. The closest bus stop is called Karolinska institutet Biomedicum (search for public transport options here).</li>
-<li>Enter the SciLifeLab/Karolinska Institutet Science Park building. There are public transport-style access gates to your left, and the glass door to the left immediately after the gates is where you need to go for the rooms Air &amp; Fire, where the course will be held. You will, however, need an access card in order to pass through the gates, which will be handed to you on the morning of the first day (there is also a reception where you can ask for help if you run into any issues).</li>
-</ul>
+<p>This course is given online.</p>
 </section>
 <section id="organizers" class="level2">
 <h2 data-anchor-id="organizers">Organizers</h2>
@@ -313,7 +226,7 @@ Louella Vasquez
 </section>
 <section id="contact" class="level2">
 <h2 data-anchor-id="contact">Contact</h2>
-<p>This event is organized by <a href="https://nbis.se/">NBIS</a> in co-operation with National Genomics Infrastructure (<a href="https://ngisweden.scilifelab.se/">NGI</a>). NBIS and NGI are platforms at the Science for Life Laboratory (SciLifeLab). NBIS is the Swedish node of <a href="https://elixir-europe.org/">Elixir</a>.</p>
+<p>This event is organized by <a href="https://nbis.se/">NBIS</a> in co-operation with the National Genomics Infrastructure (<a href="https://ngisweden.scilifelab.se/">NGI</a>). NBIS and NGI are platforms at the Science for Life Laboratory (SciLifeLab). NBIS is the Swedish node of <a href="https://elixir-europe.org/">Elixir</a>.</p>
 <p>For queries, write to us at <strong>edu.epigenomics[at]nbis.se</strong>.</p>
 <hr>
 <p><span class="small"><a href="https://nbisweden.github.io/workshop-epigenomics">Epigenomics Data Analysis: From Bulk to Single Cell</a>, a workshop created by <a href="https://nbis.se/">NBIS</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></span>.</p>
