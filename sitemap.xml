@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://nbisweden.github.io/workshop-epigenomics-bulk-sc/home_faq.html</loc>
-    <lastmod>2026-04-23T15:09:17.099Z</lastmod>
+    <loc>https://nbisweden.github.io/workshop-epigenomics/home_precourse.html</loc>
+    <lastmod>2026-05-25T12:22:03.811Z</lastmod>
   </url>
   <url>
-    <loc>https://nbisweden.github.io/workshop-epigenomics-bulk-sc/index.html</loc>
-    <lastmod>2026-04-23T15:09:17.099Z</lastmod>
+    <loc>https://nbisweden.github.io/workshop-epigenomics/home_about.html</loc>
+    <lastmod>2026-05-25T12:22:03.811Z</lastmod>
   </url>
   <url>
-    <loc>https://nbisweden.github.io/workshop-epigenomics-bulk-sc/home_contents.html</loc>
-    <lastmod>2026-04-23T15:09:17.099Z</lastmod>
+    <loc>https://nbisweden.github.io/workshop-epigenomics/tutorials/TFs/representingMotifs.html</loc>
+    <lastmod>2026-05-25T12:22:03.833Z</lastmod>
   </url>
   <url>
-    <loc>https://nbisweden.github.io/workshop-epigenomics-bulk-sc/home_syllabus.html</loc>
-    <lastmod>2026-04-23T15:09:17.099Z</lastmod>
+    <loc>https://nbisweden.github.io/workshop-epigenomics/index.html</loc>
+    <lastmod>2026-05-25T12:22:03.811Z</lastmod>
   </url>
   <url>
-    <loc>https://nbisweden.github.io/workshop-epigenomics-bulk-sc/home_schedule.html</loc>
-    <lastmod>2026-04-23T15:09:17.099Z</lastmod>
+    <loc>https://nbisweden.github.io/workshop-epigenomics/home_schedule.html</loc>
+    <lastmod>2026-05-25T12:22:03.811Z</lastmod>
   </url>
   <url>
-    <loc>https://nbisweden.github.io/workshop-epigenomics-bulk-sc/home_coc.html</loc>
-    <lastmod>2026-04-23T15:09:17.099Z</lastmod>
+    <loc>https://nbisweden.github.io/workshop-epigenomics/home_contents.html</loc>
+    <lastmod>2026-05-25T12:22:03.811Z</lastmod>
   </url>
   <url>
-    <loc>https://nbisweden.github.io/workshop-epigenomics-bulk-sc/home_precourse.html</loc>
-    <lastmod>2026-04-23T15:09:17.099Z</lastmod>
+    <loc>https://nbisweden.github.io/workshop-epigenomics/home_syllabus.html</loc>
+    <lastmod>2026-05-25T12:22:03.811Z</lastmod>
   </url>
   <url>
-    <loc>https://nbisweden.github.io/workshop-epigenomics-bulk-sc/home_about.html</loc>
-    <lastmod>2026-04-23T15:09:17.099Z</lastmod>
+    <loc>https://nbisweden.github.io/workshop-epigenomics/home_faq.html</loc>
+    <lastmod>2026-05-25T12:22:03.811Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nbisweden.github.io/workshop-epigenomics/home_coc.html</loc>
+    <lastmod>2026-05-25T12:22:03.811Z</lastmod>
   </url>
 </urlset>

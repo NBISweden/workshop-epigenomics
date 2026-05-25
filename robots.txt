@@ -1,1 +1,1 @@
-Sitemap: https://nbisweden.github.io/workshop-epigenomics-bulk-sc/sitemap.xml
+Sitemap: https://nbisweden.github.io/workshop-epigenomics/sitemap.xml

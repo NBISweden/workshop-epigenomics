@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -39,15 +39,19 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-f192b606b6c103a7696b9e51301a379f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-305e41d86b68e0f0eb45ce206b515247.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-edb1ca5fbd2b4e4a9c50cb0d1a9f7868.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3ee88504cc60924a02ec0c1375dc49a5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="site_libs/quarto-contrib/quarto-leaflet-1.0.0/leaflet.js"></script>
 <link href="site_libs/quarto-contrib/quarto-leaflet-1.0.0/leaflet.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/quarto-leaflet-1.0.0/quarto-leaflet.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/team/team.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/fontawesome6-6.7.2/all.min.css" rel="stylesheet">
 <link href="site_libs/quarto-contrib/fontawesome6-6.7.2/latex-fontsize.css" rel="stylesheet">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -92,7 +96,7 @@ background-size: cover;
 
 <meta property="og:title" content="About">
 <meta property="og:description" content="NBIS Workshop">
-<meta property="og:image" content="https://nbisweden.github.io/workshop-epigenomics-bulk-sc/assets/images/featured.webp">
+<meta property="og:image" content="https://nbisweden.github.io/workshop-epigenomics/assets/images/featured.webp">
 </head>
 
 <body class="nav-fixed fullcontent quarto-light">
@@ -142,7 +146,7 @@ background-size: cover;
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/NBISweden/workshop-epigenomics-bulk-sc/"> <i class="bi bi-github" role="img" aria-label="GitHub">
+    <a class="nav-link" href="https://github.com/NBISweden/workshop-epigenomics"> <i class="bi bi-github" role="img" aria-label="GitHub">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -185,6 +189,7 @@ background-size: cover;
 
 <section id="venue" class="level2">
 <h2 data-anchor-id="venue">Venue</h2>
+<!-- update map markers in _metadata.yml -->
 <p></p><div id="quarto-leaflet-map-1" class="quarto-leaflet-map" style="height: 400px; width: 100%;"></div>
 <script>
 if (typeof L.Icon.Default.imagePath !== "string") {
@@ -213,67 +218,106 @@ if (document.readyState === "loading") {
 } else {
   setTimeout(window.__quartoLeafletWireReveal, 0);
 }
-var quartoLeafletMap1 = L.map('quarto-leaflet-map-1', {"center":[51.52365,-0.1281],"zoom":15});
+var quartoLeafletMap1 = L.map('quarto-leaflet-map-1', {"center":[59.340607868964,18.04131375],"zoom":13});
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {"attribution":"&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"}).addTo(quartoLeafletMap1);
 var _icon = L.divIcon({html: "<span class=\"quarto-leaflet-icon-pin\" style=\"--ql-icon-size:14px;--ql-pin-size:37px;--ql-pin-color:#E74856;\"><i class=\"fa-solid fa-location-pin quarto-leaflet-icon-pin-bg\" aria-hidden=\"true\"></i><i class=\"fa-solid fa-briefcase quarto-leaflet-icon-glyph\" aria-hidden=\"true\"></i></span>", className: "leaflet-div-icon-custom", iconSize: [37, 37], iconAnchor: [18, 37]});
-var _m = L.marker([51.5218,-0.1318], {icon: _icon}).addTo(quartoLeafletMap1);
-_m.bindPopup("<p>Room 309<br> Roberts Building<br> University College London<br>\nTorrington Place<br> London WC1E 7JE<br> United Kingdom</p>", {offset: [0,-37]});
+var _m = L.marker([59.350484347014,18.0234315], {icon: _icon}).addTo(quartoLeafletMap1);
+_m.bindPopup("<p>SciLifeLab Stockholm<br> Tomtebodavägen 23A<br> 171 65 Solna<br>\nSweden</p>", {offset: [0,-37]});
 _m.bindTooltip("Venue", {offset: [19,-19]});
-var _icon = L.divIcon({html: "<span class=\"quarto-leaflet-icon-pin\" style=\"--ql-icon-size:14px;--ql-pin-size:37px;--ql-pin-color:#0078D7;\"><i class=\"fa-solid fa-location-pin quarto-leaflet-icon-pin-bg\" aria-hidden=\"true\"></i><i class=\"fa-solid fa-bed quarto-leaflet-icon-glyph\" aria-hidden=\"true\"></i></span>", className: "leaflet-div-icon-custom", iconSize: [37, 37], iconAnchor: [18, 37]});
-var _m = L.marker([51.5244,-0.1328], {icon: _icon}).addTo(quartoLeafletMap1);
-_m.bindPopup("<p>21 Gower Street<br> London WC1E 6HG<br> United Kingdom</p>", {offset: [0,-37]});
-_m.bindTooltip("The Academy Hotel (0.2 km, 3 min walk)", {offset: [19,-19]});
-var _icon = L.divIcon({html: "<span class=\"quarto-leaflet-icon-pin\" style=\"--ql-icon-size:14px;--ql-pin-size:37px;--ql-pin-color:#0078D7;\"><i class=\"fa-solid fa-location-pin quarto-leaflet-icon-pin-bg\" aria-hidden=\"true\"></i><i class=\"fa-solid fa-bed quarto-leaflet-icon-glyph\" aria-hidden=\"true\"></i></span>", className: "leaflet-div-icon-custom", iconSize: [37, 37], iconAnchor: [18, 37]});
-var _m = L.marker([51.5192,-0.1265], {icon: _icon}).addTo(quartoLeafletMap1);
-_m.bindPopup("<p>16-22 Great Russell Street<br> London WC1B 3QD<br> United Kingdom</p>", {offset: [0,-37]});
-_m.bindTooltip("The Bloomsbury Hotel (0.5 km, 6 min walk)", {offset: [19,-19]});
-var _icon = L.divIcon({html: "<span class=\"quarto-leaflet-icon-pin\" style=\"--ql-icon-size:14px;--ql-pin-size:37px;--ql-pin-color:#0078D7;\"><i class=\"fa-solid fa-location-pin quarto-leaflet-icon-pin-bg\" aria-hidden=\"true\"></i><i class=\"fa-solid fa-bed quarto-leaflet-icon-glyph\" aria-hidden=\"true\"></i></span>", className: "leaflet-div-icon-custom", iconSize: [37, 37], iconAnchor: [18, 37]});
-var _m = L.marker([51.5216,-0.1232], {icon: _icon}).addTo(quartoLeafletMap1);
-_m.bindPopup("<p>1-8 Russell Square<br> London WC1B 5BE<br> United Kingdom</p>", {offset: [0,-37]});
-_m.bindTooltip("Kimpton Fitzroy London (0.6 km, 8 min walk)", {offset: [19,-19]});
-var _icon = L.divIcon({html: "<span class=\"quarto-leaflet-icon-pin\" style=\"--ql-icon-size:14px;--ql-pin-size:37px;--ql-pin-color:#0078D7;\"><i class=\"fa-solid fa-location-pin quarto-leaflet-icon-pin-bg\" aria-hidden=\"true\"></i><i class=\"fa-solid fa-bed quarto-leaflet-icon-glyph\" aria-hidden=\"true\"></i></span>", className: "leaflet-div-icon-custom", iconSize: [37, 37], iconAnchor: [18, 37]});
-var _m = L.marker([51.5242,-0.1225], {icon: _icon}).addTo(quartoLeafletMap1);
-_m.bindPopup("<p>60 Coram Street<br> London WC1N 1HT<br> United Kingdom</p>", {offset: [0,-37]});
-_m.bindTooltip("Holiday Inn London Bloomsbury (0.7 km, 9 min walk)", {offset: [19,-19]});
-var _icon = L.divIcon({html: "<span class=\"quarto-leaflet-icon-pin\" style=\"--ql-icon-size:14px;--ql-pin-size:37px;--ql-pin-color:#0078D7;\"><i class=\"fa-solid fa-location-pin quarto-leaflet-icon-pin-bg\" aria-hidden=\"true\"></i><i class=\"fa-solid fa-bed quarto-leaflet-icon-glyph\" aria-hidden=\"true\"></i></span>", className: "leaflet-div-icon-custom", iconSize: [37, 37], iconAnchor: [18, 37]});
-var _m = L.marker([51.527,-0.1329], {icon: _icon}).addTo(quartoLeafletMap1);
-_m.bindPopup("<p>1 Dukes Road<br> London WC1H 9PJ<br> United Kingdom</p>", {offset: [0,-37]});
-_m.bindTooltip("Premier Inn London Euston (1.0 km, 12 min walk)", {offset: [19,-19]});
-var _icon = L.divIcon({html: "<span class=\"quarto-leaflet-icon-pin\" style=\"--ql-icon-size:14px;--ql-pin-size:37px;--ql-pin-color:#0078D7;\"><i class=\"fa-solid fa-location-pin quarto-leaflet-icon-pin-bg\" aria-hidden=\"true\"></i><i class=\"fa-solid fa-bed quarto-leaflet-icon-glyph\" aria-hidden=\"true\"></i></span>", className: "leaflet-div-icon-custom", iconSize: [37, 37], iconAnchor: [18, 37]});
-var _m = L.marker([51.5277,-0.1285], {icon: _icon}).addTo(quartoLeafletMap1);
-_m.bindPopup("<p>3 Cardington Street<br> London NW1 2LW<br> United Kingdom</p>", {offset: [0,-37]});
-_m.bindTooltip("Ibis London Euston St Pancras (1.2 km, 15 min walk)", {offset: [19,-19]});
 var _icon = L.divIcon({html: "<span class=\"quarto-leaflet-icon-pin\" style=\"--ql-icon-size:14px;--ql-pin-size:37px;--ql-pin-color:#8E8CD8;\"><i class=\"fa-solid fa-location-pin quarto-leaflet-icon-pin-bg\" aria-hidden=\"true\"></i><i class=\"fa-solid fa-train quarto-leaflet-icon-glyph\" aria-hidden=\"true\"></i></span>", className: "leaflet-div-icon-custom", iconSize: [37, 37], iconAnchor: [18, 37]});
-var _m = L.marker([51.5281,-0.1337], {icon: _icon}).addTo(quartoLeafletMap1);
-_m.bindPopup("<p>Euston Station<br> London NW1 2RT<br> United Kingdom</p>", {offset: [0,-37]});
-_m.bindTooltip("Euston Station", {offset: [19,-19]});
+var _m = L.marker([59.330231,18.059196], {icon: _icon}).addTo(quartoLeafletMap1);
+_m.bindPopup("<p>Centralstation<br> Vasagatan 1<br> 111 20 Stockholm<br> Sweden</p>", {offset: [0,-37]});
+_m.bindTooltip("Centralstation", {offset: [19,-19]});
+var _icon = L.divIcon({html: "<span class=\"quarto-leaflet-icon-pin\" style=\"--ql-icon-size:14px;--ql-pin-size:37px;--ql-pin-color:#8E8CD8;\"><i class=\"fa-solid fa-location-pin quarto-leaflet-icon-pin-bg\" aria-hidden=\"true\"></i><i class=\"fa-solid fa-bus quarto-leaflet-icon-glyph\" aria-hidden=\"true\"></i></span>", className: "leaflet-div-icon-custom", iconSize: [37, 37], iconAnchor: [18, 37]});
+var _m = L.marker([59.349989956287,18.025427713742], {icon: _icon}).addTo(quartoLeafletMap1);
+_m.bindPopup("<p>Karolinska Institutet Biomedicum<br> 171 65 Solna<br> Sweden</p>", {offset: [0,-37]});
+_m.bindTooltip("Karolinska Institutet Biomedicum bus stop", {offset: [19,-19]});
+var _icon = L.divIcon({html: "<span class=\"quarto-leaflet-icon-pin\" style=\"--ql-icon-size:14px;--ql-pin-size:37px;--ql-pin-color:#8E8CD8;\"><i class=\"fa-solid fa-location-pin quarto-leaflet-icon-pin-bg\" aria-hidden=\"true\"></i><i class=\"fa-solid fa-bus quarto-leaflet-icon-glyph\" aria-hidden=\"true\"></i></span>", className: "leaflet-div-icon-custom", iconSize: [37, 37], iconAnchor: [18, 37]});
+var _m = L.marker([59.350984737929,18.023782437067], {icon: _icon}).addTo(quartoLeafletMap1);
+_m.bindPopup("<p>Karolinkskavägen<br> 171 64 Solna<br> Sweden</p>", {offset: [0,-37]});
+_m.bindTooltip("Karolinkskavägen bus stop", {offset: [19,-19]});
 window.__quartoLeafletMaps.push(quartoLeafletMap1);
 </script><p></p>
-<p><i class="fa-solid fa-location-dot" aria-label="location-dot"></i> Room 309<br>
-Roberts Building<br>
-University College London<br>
-Torrington Place<br>
-London, WC1E 7JE<br>
-United Kingdom</p>
-<p>A few selected hotels are listed below ranked by distance from the venue.</p>
+<!-- additional practical information -->
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Address
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><i class="fa-solid fa-location-dot" aria-label="location-dot"></i> Room Air &amp; Fire<br>
+Ground floor<br>
+<a href="https://www.scilifelab.se/about-us/campus-solna/">Science for Life Laboratory Stockholm</a><br>
+Tomtebodavägen 23A<br>
+17165 Solna<br>
+Sweden</p>
+</div>
+</div>
+<p>This course round is given on-site in Sweden at <a href="https://www.scilifelab.se/about-us/campus-solna/">SciLifeLab Stockholm</a>. Travel directions are as follows:</p>
 <ul>
-<li><a href="https://www.theacademylondon.co.uk/">The Academy Hotel</a> (0.2 km, 3 min walk)</li>
-<li><a href="https://www.thebloomsbury.com/">The Bloomsbury Hotel</a> (0.5 km, 6 min walk)</li>
-<li><a href="https://www.ihg.com/kimptonhotels/hotels/us/en/london/lonkf/hoteldetail">Kimpton Fitzroy London</a> (0.6 km, 8 min walk)</li>
-<li><a href="https://www.ihg.com/holidayinn/hotels/us/en/london/lonbl/hoteldetail">Holiday Inn London Bloomsbury</a> (0.7 km, 9 min walk)</li>
-<li><a href="https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-euston.html">Premier Inn London Euston</a> (1.0 km, 12 min walk)</li>
-<li><a href="https://all.accor.com/hotel/3145/index.en.shtml">Ibis London Euston St Pancras</a> (1.2 km, 15 min walk)</li>
+<li>Transport yourself to Stockholm (see e.g.&nbsp;<a href="https://www.sj.se/">SJ’s website</a> for train travel within Sweden).</li>
+<li>Go to SciLifeLab in Solna. The closest bus stop is called Karolinska institutet Biomedicum (search for public transport options here).</li>
+<li>Enter the SciLifeLab/Karolinska Institutet Science Park building. There are public transport-style access gates to your left, and the glass door to the left immediately after the gates is where you need to go for the rooms Air &amp; Fire, where the course will be held. You will, however, need an access card in order to pass through the gates, which will be handed to you on the morning of the first day (there is also a reception where you can ask for help if you run into any issues).</li>
 </ul>
-<p>The venue and hotels are also marked on the map.</p>
-<p>Use the <a href="https://tfl.gov.uk">TfL website</a> or the <a href="https://tfl.gov.uk/maps_/tfl-go">TfL Go app</a> for tube, bus, and rail services across London. The nearest tube stations are <strong>Euston Square</strong> (Circle, Metropolitan, Hammersmith &amp; City lines), <strong>Warren Street</strong> (Victoria, Northern lines), and <strong>Goodge Street</strong> (Northern line). From <strong>Euston</strong> or <strong>King’s Cross St Pancras</strong> mainline stations, UCL is approximately a 15-20 minute walk or a short tube ride. Bus routes <strong>10</strong>, <strong>24</strong>, <strong>29</strong>, <strong>73</strong>, and <strong>390</strong> serve Tottenham Court Road and Gower Street. Oyster cards, contactless bank cards, or single tickets can be used on all TfL services.</p>
 </section>
 <section id="organizers" class="level2">
 <h2 data-anchor-id="organizers">Organizers</h2>
-{{&lt; team organizers &gt;}}
+<!-- organizers info up in the yaml matter -->
+<div id="quarto-team-organizers" class="quarto-team" data-team-label="organizers">
+<div class="team-parent team-list">
+<article id="quarto-team-organizers-agatasmialowskabioin-1-21056c" class="team-child team-card">
+<div class="team-media">
+<img src="assets/images/profile/profile.webp" alt="Agata Smialowska" loading="lazy">
+</div>
+<div class="team-body">
+<div class="name team-name">
+Agata Smialowska
+</div>
+<div class="description team-description">
+<p>Bioinformatician NBIS / Stockholm University</p>
+</div>
+</div>
+</article>
+<article id="quarto-team-organizers-daniamachlabbioinfor-2-ebbc55" class="team-child team-card">
+<div class="team-media">
+<img src="assets/images/profile/profile.webp" alt="Dania Machlab" loading="lazy">
+</div>
+<div class="team-body">
+<div class="name team-name">
+Dania Machlab
+</div>
+<div class="description team-description">
+<p>Bioinformatician NBIS / Stockholm University</p>
+</div>
+</div>
+</article>
+<article id="quarto-team-organizers-louellavasquezbioinf-3-de670d" class="team-child team-card">
+<div class="team-media">
+<img src="assets/images/profile/profile.webp" alt="Louella Vasquez" loading="lazy">
+</div>
+<div class="team-body">
+<div class="name team-name">
+Louella Vasquez
+</div>
+<div class="description team-description">
+<p>Bioinformatician NBIS / Lund University</p>
+</div>
+</div>
+</article>
+</div>
+</div>
 </section>
 <section id="contact" class="level2">
 <h2 data-anchor-id="contact">Contact</h2>
-<p>For queries, write to us at <strong>contact[at]email.com</strong>.</p>
+<p>This event is organized by <a href="https://nbis.se/">NBIS</a> in co-operation with National Genomics Infrastructure (<a href="https://ngisweden.scilifelab.se/">NGI</a>). NBIS and NGI are platforms at the Science for Life Laboratory (SciLifeLab). NBIS is the Swedish node of <a href="https://elixir-europe.org/">Elixir</a>.</p>
+<p>For queries, write to us at <strong>edu.epigenomics[at]nbis.se</strong>.</p>
+<hr>
+<p><span class="small"><a href="https://nbisweden.github.io/workshop-epigenomics">Epigenomics Data Analysis: From Bulk to Single Cell</a>, a workshop created by <a href="https://nbis.se/">NBIS</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></span>.</p>
+<p><a href="assets/logos/nbis-scilifelab-ngi.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="assets/logos/nbis-scilifelab-ngi.svg" height="26"></a></p>
 
 
 </section>
@@ -345,7 +389,7 @@ United Kingdom</p>
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/nbisweden\.github\.io\/workshop-epigenomics-bulk-sc\/");
+        var filterRegex = new RegExp("https:\/\/nbisweden\.github\.io\/workshop-epigenomics");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -682,10 +726,42 @@ United Kingdom</p>
       &nbsp;
     </div>
     <div class="nav-footer-right">
-<p>Published with <a href="https://quarto.org/">Quarto</a> v1.9.37</p>
+<p>Published with <a href="https://quarto.org/">Quarto</a> v1.9.38</p>
 </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 
