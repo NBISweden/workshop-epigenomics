@@ -27,10 +27,6 @@ An introduction to best practice bioinformatics methods for processing, analyses
 and integration of epigenomics data. This online workshop includes lectures, 
 programming tutorials and interactive group sessions.
 
-This webpage is still under construction. Course materials will be made 
-available at the start of the workshop. Material from the previous year can be 
-found [here](https://nbis-workshop-epigenomics.readthedocs.io/en/latest/).
-
 ---
 
 ::: small

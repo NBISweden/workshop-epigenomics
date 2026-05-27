@@ -40,6 +40,14 @@ website:
     border: false
     left: "{{< meta current_year >}} [NBIS](https://nbis.se) • [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)"
     right: "Published with [Quarto](https://quarto.org/) v{{< meta quarto_version >}}"
+  announcement:
+    icon: info-circle
+    dismissable: true
+    content: "This website is still under construction. Workshop materials will be 
+available at the start of the workshop. Last year's materials can be 
+found [here](https://nbis-workshop-epigenomics.readthedocs.io/en/latest/)."
+    type: primary
+    position: above-navbar
 
 format:
   html:
