@@ -6,17 +6,17 @@ sidebar: false
 team:
   organizers:
     - name: "Agata Smialowska"
-      image: "assets/images/profile/profile.webp"
+      image: "assets/images/profile/Agata.webp"
       description: |
         Bioinformatician  
         NBIS / Stockholm University
     - name: "Dania Machlab"
-      image: "assets/images/profile/Dania.JPEG"
+      image: "assets/images/profile/Dania.webp"
       description: |
         Bioinformatician  
         NBIS / Stockholm University
     - name: "Louella Vasquez"
-      image: "assets/images/profile/profile.webp"
+      image: "assets/images/profile/Louella.webp"
       description: |
         Bioinformatician  
         NBIS / Lund University
