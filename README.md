@@ -20,8 +20,8 @@ quarto add --no-prompt royfrancis/quarto-leaflet
 quarto add --no-prompt royfrancis/quarto-team
 ```
 
-We will be using `R-4.6.0` coupled with Bioconductor release `3.23` for this
-workshop. PLease make sure you are using the right `R` version when adding new
+We will be using `R-4.6.1` coupled with Bioconductor release `3.23` for this
+workshop. Please make sure you are using the right `R` version when adding new
 material. If you have multiple `R` versions installed on your machine, you can
 use [rig](https://github.com/r-lib/rig) to open `RStudio` with the desired 
 version as follows:
@@ -110,6 +110,13 @@ New material can be added by topic as follows:
 PDF slides may be added as presentation. However, if you are comfortable with 
 quarto, we recommend creating quarto presentation to keep the repository at a
 good size.
+
+> [!TIP]
+> Consider using images in the `.webp` format to limit the size even more.
+> Below is an example of how you can transfer an image to this format:
+> ```bash
+> cwebp exampleImage.png -o exampleImage.webp
+> ```
 
 Finally, to visualize how the website may look with your added material, you
 can run the following from the root:
