@@ -342,7 +342,7 @@ For Option A only:
 ```
 
 For Option C only:
-```{bash}
+```{r}
 
 # make sure the library paths are correct (should be pointing to the local renv folder)
 .libPaths()
