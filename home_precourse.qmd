@@ -7,69 +7,91 @@ sidebar: false
 format: html
 ---
 
-## Getting Started
+## Getting started
 
-Welcome to the course! Please follow these preparation instructions to ensure a smooth experience.
+Welcome to the course! There are few things to do *before* the course starts. Please read carefully and follow the instructions so we can have a good start to the course. Contact us in case anything is unclear.
 
-::: {.callout-tip}
 
-### Critical Pre-Course Tasks
+## HPC resources and creating an account
 
-Before the course begins, make sure to:
+During the course we will be using Uppsala University’s high performance computer cluster ([UPPMAX](https://docs.uppmax.uu.se/cluster_guides/uppmax_cluster/)) as well as run scripts locally on laptops using `R` and `RStudio`.
 
-- Create your course account
-- Download the course materials
-- Test your internet connection
+### Register at SUPR
 
-:::
+A SUPR/NAISS account is needed to use UPPMAX resources. If you do not already have one, please register for an account at [SUPR/NAISS](https://supr.naiss.se/person/register/) and then you must accept the user [agreement](https://supr.naiss.se/person/user_agreement/naiss/) either online or in paper form. For those within Swedish academia, it is recommended to register with your SWAMID. If you don’t have a SWAMID connected account, you will have to send in your signed user agreement in paper form together with a copy of your passport. Note that this manual process can take a week or more. You can follow this detailed [instruction](https://docs.uppmax.uu.se/getting_started/supr_register/). Once you have a SUPR/NAISS account, please [request](https://docs.uppmax.uu.se/getting_started/join_existing_project/) membership to the project *UPPMAX 2025/2-309*.
 
-### Preparation Checklist
+### Apply for an UPPMAX user account
 
-| Task | Status | Deadline |
-|------|--------|----------|
-| Check your equipment compatibility | ☐ | 1 week before |
-| Install required software | ☐ | 1 week before |
-| Complete pre-course readings | ☐ | 3 days before |
-| Join the course community | ☐ | At course start |
+After you have been added to a SUPR project, you can now apply for a user account in UPPMAX if you do not have an existing account yet. This will be the account you use to log in to UPPMAX so it is not the same as your SUPR account. Note that it might take up to 2 working days for your account to be created. You will then receive 2 emails with information on how to login to UPPMAX. To apply, please follow this [instruction](https://docs.uppmax.uu.se/getting_started/user_account/#apply-for-an-account-at-uppmax).
 
-## System Requirements & Installation
 
-### Hardware Requirements
+## Working with the compute resources from UPPMAX
 
-Your computer should meet the following *minimum* specifications:
+There are three ways to connect to Pelle: 
 
-- **RAM**: 8 GB or more
-- **Storage**: 20 GB available space
-- **Processor**: Dual-core processor or better
-- **Internet**: Reliable broadband connection
+- An ssh connection from a terminal
+- A graphical remote desktop using a Thinlinc client on your laptop 
+- A remote desktop environment via a web browser
 
-::: {.callout-warning}
-If your system does not meet these requirements, please contact support **before** the course begins.
-:::
+### SSH connection using a terminal
 
-### Software Installation
+A straightforward way to connect to Pelle is through a terminal using ssh connection.
 
-Follow these steps to prepare your environment:
+- For Linux users, use Terminal (included by default).
+- For Mac users, use Terminal (included by default). You need to also install [XQuartz](https://www.xquartz.org/) to enable X11 forwarding from a terminal, i.e., to run graphical applications on a remote server while displaying them on your laptop.
+- For Windows system, we recommend using [MobaXterm](http://mobaxterm.mobatek.net/). Please install the program and not use the portable version. MobaXterm also has a built-in X11 and an integrated SFTP file browser to transfer data between the remote cluster and your computer.
 
-1. **Familiarize Yourself with the Course Platform**: Log in and explore available resources
-2. **Install Development Tools**: Download and install any required software from the course syllabus
-3. **Verify Installation**: Run the provided verification scripts to ensure everything is working
-4. **Prepare Your Workspace**: Set up a dedicated folder for course materials
+Other SSH clients and X-servers for MacOS and Windows are described [here](https://docs.uppmax.uu.se/software/ssh_client/#ssh-client).
 
-## Community & Support
+### GUI desktop using ThinLinc locally
 
-::: {.callout-note}
-We look forward to seeing you in the course! Here are resources to help you succeed:
-:::
+You can also connect to Pelle via a graphical remote desktop using a local ThinLinc client on your laptop. Thinlinc is useful if you need to view images or documents in GUI programs without having to first download the image/document to your own computer first. Since it is using graphics, it will require you to have an internet connection that is good and stable. Please install [ThinLinc](https://www.cendio.com/thinlinc/download/) to be able to access UPPMAX in this manner.
 
-### Getting Help
+### GUI desktop using ThinLinc in a web browser
 
-| Resource | Purpose |
-|----------|---------|
-| Course Forum | Ask questions and connect with peers |
-| Office Hours | One-on-one support from instructors |
-| FAQ Section | Quick answers to common questions |
-| Slack Channel | Real-time chat with the community |
+Lastly, you can connect to Pelle using a remote desktop environment via a web browser at [https://rackham-gui.uppmax.uu.se](https://rackham-gui.uppmax.uu.se/). This is the easiest option as no software installation is needed but it will give you the slowest connection. It will require you to have an internet connection that is good and stable. For this option, you have to set up your UPPMAX two factor authorization (2FA). See [how to get an UPPMAX 2FA](https://docs.uppmax.uu.se/getting_started/get_uppmax_2fa/).
 
-**Remember**: Don't hesitate to reach out if you have any questions or concerns. We're here to help!
+
+### Additional instructions/resources
+
+This [tutorial](https://docs.uppmax.uu.se/getting_started/login_rackham/) will guide you to connect to Rackham using the three methods as described above For Windows users with MobaXterm, please follow this [instruction](https://docs.uppmax.uu.se/software/ssh_client/#using-ssh-with-different-terminals-that-allow-for-graphics).
+
+Some useful tutorials:
+
+- [Troubleshoot your MobaXterm X11 connection to UPPMAX](https://hackmd.io/@pmitev/UPPMAX-MobaXterm-X11)
+- [File transfer to/from Rackham](https://docs.uppmax.uu.se/cluster_guides/transfer_rackham/)
+- [Change your UPPMAX password](https://docs.uppmax.uu.se/getting_started/change_uppmax_password/)
+- [How to get an UPPMAX 2FA](https://docs.uppmax.uu.se/getting_started/get_uppmax_2fa/)
+
+
+## Check configuration
+
+After you complete setting-up and you receive a notification from SUPR that your account *has been added to the course allocation*.
+
+1. Log in to [rackham.uppmax.uu.se](rackham.uppmax.uu.se)
+2. Type id in the command line
+3. Copy the output of the command and email back (to the course organisers at [edu.epigenomics@nbis.se](edu.epigenomics@nbis.se))
+
+
+## Working from your local machine
+
+To be able to work from your local machine, please make sure you have the following installed:
+
+- `R-4.6.1` and `RStudio`. If you have other versions of `R` installed, you can used [rig](https://github.com/r-lib/rig) to version control `R` installation and start `RStudio` with different versions of `R`. We will be using `R-4.6.1` during the workshop.
+- The [Integrative Genomics Viewer](https://software.broadinstitute.org/software/igv/). 
+
+### Cloning the repo and installing the needed `R` packages
+
+More instructions will follow here on how to clone the GitHub repo of the workshop and install all needed R packages using `renv`.
+
+
+## Additional (optional) reading material to help you prepare
+
+- [Unix](http://www.ee.surrey.ac.uk/Teaching/Unix/): especially the first three chapters.
+- DataCamp free [Introduction to R](https://www.datacamp.com/blog/all-about-r).
+- [A short introduction to R](https://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf). A very short introduction to using `R`.
+- How to install and use `RStudio` from [Data Camp RStudio Tutorial](https://www.datacamp.com/tutorial/r-studio-tutorial).
+
+
+
 
