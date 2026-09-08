@@ -15,13 +15,13 @@ Welcome to the course! There are few things to do **before** the course starts. 
 
 During the course we will be using Uppsala University’s high performance computer cluster ([UPPMAX](https://docs.uppmax.uu.se/cluster_guides/uppmax_cluster/)) as well as run scripts locally on laptops using `R` and `RStudio`.
 
-### Register at SUPR
+### Register at NAISS
 
-A SUPR/NAISS account is needed to use UPPMAX resources. If you do not already have one, please register for an account at [SUPR/NAISS](https://supr.naiss.se/person/register/) and then you must accept the user [agreement](https://supr.naiss.se/person/user_agreement/naiss/) either online or in paper form. For those within Swedish academia, it is recommended to register with your SWAMID. If you don’t have a SWAMID connected account, you will have to send in your signed user agreement in paper form together with a copy of your passport. Note that this manual process can take a week or more. You can follow this detailed [instruction](https://docs.uppmax.uu.se/getting_started/supr_register/). Once you have a SUPR/NAISS account, please [request](https://docs.uppmax.uu.se/getting_started/join_existing_project/) membership to the project *UPPMAX 2025/2-309*.
+A NAISS account is needed to use UPPMAX resources. If you do not already have one, please register for an account at [NAISS](https://supr.naiss.se/person/register/) and then you must accept the user [agreement](https://supr.naiss.se/person/user_agreement/naiss/) either online or in paper form. For those within Swedish academia, it is recommended to register with your SWAMID. If you don’t have a SWAMID connected account, you will have to send in your signed user agreement in paper form together with a copy of your passport. Note that this manual process can take a week or more. You can follow this detailed [instruction](https://docs.uppmax.uu.se/getting_started/supr_register/). Once you have a NAISS account, please [request](https://docs.uppmax.uu.se/getting_started/join_existing_project/) membership to the project *UPPMAX 2026/X-XXX* --- check your email for the correct project number.
 
 ### Apply for an UPPMAX user account
 
-After you have been added to a SUPR project, you can now apply for a user account in UPPMAX if you do not have an existing account yet. This will be the account you use to log in to UPPMAX so it is not the same as your SUPR account. Note that it might take up to 2 working days for your account to be created. You will then receive 2 emails with information on how to login to UPPMAX. To apply, please follow this [instruction](https://docs.uppmax.uu.se/getting_started/user_account/#apply-for-an-account-at-uppmax).
+After you have been added to a NAISS project, you can now apply for a user account in UPPMAX if you do not have an existing account yet. This will be the account you use to log in to UPPMAX so it is not the same as your NAISS account. Note that it might take up to 2 working days for your account to be created. You will then receive 2 emails with information on how to login to UPPMAX. To activate your user account, click [here]( https://supr.naiss.se/account/).
 
 
 ## Working with the compute resources from UPPMAX
@@ -48,26 +48,26 @@ You can also connect to Pelle via a graphical remote desktop using a local ThinL
 
 ### GUI desktop using ThinLinc in a web browser
 
-Lastly, you can connect to Pelle using a remote desktop environment via a web browser at [https://rackham-gui.uppmax.uu.se](https://rackham-gui.uppmax.uu.se/). This is the easiest option as no software installation is needed but it will give you the slowest connection. It will require you to have an internet connection that is good and stable. For this option, you have to set up your UPPMAX two factor authorization (2FA). See [how to get an UPPMAX 2FA](https://docs.uppmax.uu.se/getting_started/get_uppmax_2fa/).
+Lastly, you can connect to Pelle using a remote desktop environment via a web browser at [https://pelle-gui.uppmax.uu.se](https://pelle-gui.uppmax.uu.se/). This is the easiest option as no software installation is needed but it will give you the slowest connection. It will require you to have an internet connection that is good and stable. For this option, you have to set up your UPPMAX two factor authorization (2FA). See [how to get an UPPMAX 2FA](https://docs.uppmax.uu.se/getting_started/get_uppmax_2fa/).
 
 
 ### Additional instructions/resources
 
-This [tutorial](https://docs.uppmax.uu.se/getting_started/login_rackham/) will guide you to connect to Rackham using the three methods as described above For Windows users with MobaXterm, please follow this [instruction](https://docs.uppmax.uu.se/software/ssh_client/#using-ssh-with-different-terminals-that-allow-for-graphics).
+This [tutorial](https://docs.uppmax.uu.se/getting_started/login_pelle/) will guide you to connect to Pelle using the three methods as described above.  For Windows users with MobaXterm, please follow this [instruction](https://docs.uppmax.uu.se/software/ssh_client/#using-ssh-with-different-terminals-that-allow-for-graphics).
 
 Some useful tutorials:
 
 - [Troubleshoot your MobaXterm X11 connection to UPPMAX](https://hackmd.io/@pmitev/UPPMAX-MobaXterm-X11)
-- [File transfer to/from Rackham](https://docs.uppmax.uu.se/cluster_guides/transfer_rackham/)
-- [Change your UPPMAX password](https://docs.uppmax.uu.se/getting_started/change_uppmax_password/)
+- [File transfer to/from Pelle](https://docs.uppmax.uu.se/cluster_guides/transfer_pelle/)
+- [Change your UPPMAX password](https://docs.uppmax.uu.se/getting_started/change_reset_uppmax_password/)
 - [How to get an UPPMAX 2FA](https://docs.uppmax.uu.se/getting_started/get_uppmax_2fa/)
 
 
 ## Check configuration
 
-After you complete setting-up and you receive a notification from SUPR that your account **has been added to the course allocation**.
+After you complete setting-up and you receive a notification from NAISS that your account **has been added to the course allocation**.
 
-1. Log in to [rackham.uppmax.uu.se](rackham.uppmax.uu.se)
+1. Log in to [pelle.uppmax.uu.se](pelle.uppmax.uu.se)
 2. Type id in the command line
 3. Copy the output of the command and email back (to the course organisers at [edu.epigenomics@nbis.se](edu.epigenomics@nbis.se))
 
