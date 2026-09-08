@@ -47,7 +47,7 @@ website:
     icon: info-circle
     dismissable: true
     content: "This website is still under construction. Workshop materials will be 
-available at the start of the workshop. Last year's materials can be 
+available during the workshop. Last year's materials can be 
 found [here](https://nbis-workshop-epigenomics.readthedocs.io/en/latest/)."
     type: primary
     position: above-navbar
