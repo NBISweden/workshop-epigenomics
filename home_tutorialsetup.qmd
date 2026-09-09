@@ -1,0 +1,56 @@
+---
+title: "Tutorial Setup"
+subtitle: "Instructions on how to work with the tutorials"
+date: ""
+toc: false
+sidebar: false
+format: html
+---
+
+
+Please make sure that you have followed the pre-course instructions before continuing with the instructions here.
+
+
+## Working on Pelle (UPPMAX HPC)
+
+We have booked 5 cores on Pelle per course participant. To run the tutorial in the interactive mode log on to Pelle and run interactive command:
+
+```{r}
+#| eval: false
+ssh -Y <username>@pelle.uppmax.uu.se
+```
+
+
+While logged to Pelle, book the interactive session:
+```{r}
+#| eval: false
+interactive -A uppmax2025-2-309 -p core -n 5 -t 08:00:00
+```
+
+This command gives you access to 5 cores for eight hours or until 17:00, whichever comes first. Please make sure you do it only ONCE per day, as by repeating this command you will use up resources reserved for others.
+
+Check which node you were assigned
+```{r}
+#| eval: false
+squeue -u <username>
+```
+
+
+And connect to your node with
+```{r}
+#| eval: false
+ssh -Y <nodename>
+```
+
+
+If you lose connection to the server during a tutorial, please connect again to Pelle and do `ssh -Y <nodename>` again. You will reconnect to your set of cores.
+
+
+## Working on your local machine
+
+Instructions to follow.
+
+## Structuring your folders and working directories
+
+Instructions and recommendations to follow here.
+

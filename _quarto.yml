@@ -24,9 +24,12 @@ website:
       - text: "Syllabus"
         href: "home_syllabus.html"
         aria-label: "Syllabus"
-      #- text: "Precourse"
-      #  href: "home_precourse.html"
-      #  aria-label: "Pre-course"
+      - text: "Precourse"
+        href: "home_precourse.html"
+        aria-label: "Pre-course"
+      #- text: "Tutorial Setup"
+      #  href: "home_tutorialsetup.html"
+      #  aria-label: "tutorialSetup"
       - text: "FAQ"
         href: "home_faq.html"
         aria-label: "FAQ"
@@ -44,7 +47,7 @@ website:
     icon: info-circle
     dismissable: true
     content: "This website is still under construction. Workshop materials will be 
-available at the start of the workshop. Last year's materials can be 
+available during the workshop. Last year's materials can be 
 found [here](https://nbis-workshop-epigenomics.readthedocs.io/en/latest/)."
     type: primary
     position: above-navbar
