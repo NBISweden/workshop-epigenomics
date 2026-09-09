@@ -46,7 +46,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-5cb467f805ac08d84b40d2cabe0cf67d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-68b2d195786fe16b6e5df8895b6e59b4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-b88d299656ba7816fc3b44d364b90065.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -97,8 +97,8 @@ background-size: cover;
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
-    <div id="quarto-announcement" data-announcement-id="98b3517e339408979f8d9861ebee15c9" class="alert alert-primary hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
-<p>This website is still under construction. Workshop materials will be available at the start of the workshop. Last year’s materials can be found <a href="https://nbis-workshop-epigenomics.readthedocs.io/en/latest/">here</a>.</p>
+    <div id="quarto-announcement" data-announcement-id="121998c1b8fb2434c8da5f4373f30083" class="alert alert-primary hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>This website is still under construction. Workshop materials will be available during the workshop. Last year’s materials can be found <a href="https://nbis-workshop-epigenomics.readthedocs.io/en/latest/">here</a>.</p>
 </div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
@@ -125,6 +125,10 @@ background-size: cover;
   <li class="nav-item">
     <a class="nav-link" href="./home_syllabus.html"> 
 <span class="menu-text">Syllabus</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./home_precourse.html" aria-current="page"> 
+<span class="menu-text">Precourse</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./home_faq.html"> 
@@ -176,145 +180,88 @@ background-size: cover;
 
 
 
-<section id="getting-started" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="getting-started"><span class="header-section-number">1</span> Getting Started</h2>
-<p>Welcome to the course! Please follow these preparation instructions to ensure a smooth experience.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Critical Pre-Course Tasks
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Before the course begins, make sure to:</p>
+<p>Welcome to the course! There are few things to do <strong>before</strong> the course starts. Please read carefully and follow the instructions so we can have a good start to the course. Contact us in case anything is unclear.</p>
+<section id="hpc-resources-and-creating-an-account" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="hpc-resources-and-creating-an-account"><span class="header-section-number">1</span> HPC resources and creating an account</h2>
+<p>During the course we will be using Uppsala University’s high performance computer cluster (<a href="https://docs.uppmax.uu.se/cluster_guides/uppmax_cluster/">UPPMAX</a>) as well as run scripts locally on laptops using <code>R</code> and <code>RStudio</code>.</p>
+<section id="register-at-naiss" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="register-at-naiss"><span class="header-section-number">1.1</span> Register at NAISS</h3>
+<p>A NAISS account is needed to use UPPMAX resources. If you do not already have one, please register for an account at <a href="https://supr.naiss.se/person/register/">NAISS</a> and then you must accept the user <a href="https://supr.naiss.se/person/user_agreement/naiss/">agreement</a> either online or in paper form. For those within Swedish academia, it is recommended to register with your SWAMID. If you don’t have a SWAMID connected account, you will have to send in your signed user agreement in paper form together with a copy of your passport. Note that this manual process can take a week or more. You can follow this detailed <a href="https://docs.uppmax.uu.se/getting_started/supr_register/">instruction</a>. Once you have a NAISS account, please <a href="https://docs.uppmax.uu.se/getting_started/join_existing_project/">request</a> membership to the project <em>UPPMAX 2026/X-XXX</em> — check your email for the correct project number.</p>
+</section>
+<section id="apply-for-an-uppmax-user-account" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="apply-for-an-uppmax-user-account"><span class="header-section-number">1.2</span> Apply for an UPPMAX user account</h3>
+<p>After you have been added to a NAISS project, you can now apply for a user account in UPPMAX if you do not have an existing account yet. This will be the account you use to log in to UPPMAX so it is not the same as your NAISS account. Note that it might take up to 2 working days for your account to be created. You will then receive 2 emails with information on how to login to UPPMAX. To activate your user account, click <a href="https://supr.naiss.se/account/">here</a>.</p>
+</section>
+</section>
+<section id="working-with-the-compute-resources-from-uppmax" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="working-with-the-compute-resources-from-uppmax"><span class="header-section-number">2</span> Working with the compute resources from UPPMAX</h2>
+<p>There are three ways to connect to Pelle:</p>
 <ul>
-<li>Create your course account</li>
-<li>Download the course materials</li>
-<li>Test your internet connection</li>
+<li>An ssh connection from a terminal</li>
+<li>A graphical remote desktop using a Thinlinc client on your laptop</li>
+<li>A remote desktop environment via a web browser</li>
 </ul>
-</div>
-</div>
-<section id="preparation-checklist" class="level3" data-number="1.1">
-<h3 data-number="1.1" class="anchored" data-anchor-id="preparation-checklist"><span class="header-section-number">1.1</span> Preparation Checklist</h3>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Task</th>
-<th>Status</th>
-<th>Deadline</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Check your equipment compatibility</td>
-<td>☐</td>
-<td>1 week before</td>
-</tr>
-<tr class="even">
-<td>Install required software</td>
-<td>☐</td>
-<td>1 week before</td>
-</tr>
-<tr class="odd">
-<td>Complete pre-course readings</td>
-<td>☐</td>
-<td>3 days before</td>
-</tr>
-<tr class="even">
-<td>Join the course community</td>
-<td>☐</td>
-<td>At course start</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="system-requirements-installation" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="system-requirements-installation"><span class="header-section-number">2</span> System Requirements &amp; Installation</h2>
-<section id="hardware-requirements" class="level3" data-number="2.1">
-<h3 data-number="2.1" class="anchored" data-anchor-id="hardware-requirements"><span class="header-section-number">2.1</span> Hardware Requirements</h3>
-<p>Your computer should meet the following <em>minimum</em> specifications:</p>
+<section id="ssh-connection-using-a-terminal" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="ssh-connection-using-a-terminal"><span class="header-section-number">2.1</span> SSH connection using a terminal</h3>
+<p>A straightforward way to connect to Pelle is through a terminal using ssh connection.</p>
 <ul>
-<li><strong>RAM</strong>: 8 GB or more</li>
-<li><strong>Storage</strong>: 20 GB available space</li>
-<li><strong>Processor</strong>: Dual-core processor or better</li>
-<li><strong>Internet</strong>: Reliable broadband connection</li>
+<li>For Linux users, use Terminal (included by default).</li>
+<li>For Mac users, use Terminal (included by default). You need to also install <a href="https://www.xquartz.org/">XQuartz</a> to enable X11 forwarding from a terminal, i.e., to run graphical applications on a remote server while displaying them on your laptop.</li>
+<li>For Windows system, we recommend using <a href="http://mobaxterm.mobatek.net/">MobaXterm</a>. Please install the program and not use the portable version. MobaXterm also has a built-in X11 and an integrated SFTP file browser to transfer data between the remote cluster and your computer.</li>
 </ul>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Warning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>If your system does not meet these requirements, please contact support <strong>before</strong> the course begins.</p>
-</div>
-</div>
+<p>Other SSH clients and X-servers for MacOS and Windows are described <a href="https://docs.uppmax.uu.se/software/ssh_client/#ssh-client">here</a>.</p>
 </section>
-<section id="software-installation" class="level3" data-number="2.2">
-<h3 data-number="2.2" class="anchored" data-anchor-id="software-installation"><span class="header-section-number">2.2</span> Software Installation</h3>
-<p>Follow these steps to prepare your environment:</p>
+<section id="gui-desktop-using-thinlinc-locally" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="gui-desktop-using-thinlinc-locally"><span class="header-section-number">2.2</span> GUI desktop using ThinLinc locally</h3>
+<p>You can also connect to Pelle via a graphical remote desktop using a local ThinLinc client on your laptop. Thinlinc is useful if you need to view images or documents in GUI programs without having to first download the image/document to your own computer first. Since it is using graphics, it will require you to have an internet connection that is good and stable. Please install <a href="https://www.cendio.com/thinlinc/download/">ThinLinc</a> to be able to access UPPMAX in this manner.</p>
+</section>
+<section id="gui-desktop-using-thinlinc-in-a-web-browser" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="gui-desktop-using-thinlinc-in-a-web-browser"><span class="header-section-number">2.3</span> GUI desktop using ThinLinc in a web browser</h3>
+<p>Lastly, you can connect to Pelle using a remote desktop environment via a web browser at <a href="https://pelle-gui.uppmax.uu.se/">https://pelle-gui.uppmax.uu.se</a>. This is the easiest option as no software installation is needed but it will give you the slowest connection. It will require you to have an internet connection that is good and stable. For this option, you have to set up your UPPMAX two factor authorization (2FA). See <a href="https://docs.uppmax.uu.se/getting_started/get_uppmax_2fa/">how to get an UPPMAX 2FA</a>.</p>
+</section>
+<section id="additional-instructionsresources" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="additional-instructionsresources"><span class="header-section-number">2.4</span> Additional instructions/resources</h3>
+<p>This <a href="https://docs.uppmax.uu.se/getting_started/login_pelle/">tutorial</a> will guide you to connect to Pelle using the three methods as described above. For Windows users with MobaXterm, please follow this <a href="https://docs.uppmax.uu.se/software/ssh_client/#using-ssh-with-different-terminals-that-allow-for-graphics">instruction</a>.</p>
+<p>Some useful tutorials:</p>
+<ul>
+<li><a href="https://hackmd.io/@pmitev/UPPMAX-MobaXterm-X11">Troubleshoot your MobaXterm X11 connection to UPPMAX</a></li>
+<li><a href="https://docs.uppmax.uu.se/cluster_guides/transfer_pelle/">File transfer to/from Pelle</a></li>
+<li><a href="https://docs.uppmax.uu.se/getting_started/change_reset_uppmax_password/">Change your UPPMAX password</a></li>
+<li><a href="https://docs.uppmax.uu.se/getting_started/get_uppmax_2fa/">How to get an UPPMAX 2FA</a></li>
+</ul>
+</section>
+</section>
+<section id="check-configuration" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="check-configuration"><span class="header-section-number">3</span> Check configuration</h2>
+<p>After you complete setting-up and you receive a notification from NAISS that your account <strong>has been added to the course allocation</strong>.</p>
 <ol type="1">
-<li><strong>Familiarize Yourself with the Course Platform</strong>: Log in and explore available resources</li>
-<li><strong>Install Development Tools</strong>: Download and install any required software from the course syllabus</li>
-<li><strong>Verify Installation</strong>: Run the provided verification scripts to ensure everything is working</li>
-<li><strong>Prepare Your Workspace</strong>: Set up a dedicated folder for course materials</li>
+<li>Log in to <a href="pelle.uppmax.uu.se">pelle.uppmax.uu.se</a></li>
+<li>Type id in the command line</li>
+<li>Copy the output of the command and email back (to the course organisers at <a href="edu.epigenomics@nbis.se">edu.epigenomics@nbis.se</a>)</li>
 </ol>
 </section>
+<section id="working-from-your-local-machine" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="working-from-your-local-machine"><span class="header-section-number">4</span> Working from your local machine</h2>
+<p>To be able to work from your local machine, please make sure you have the following installed:</p>
+<ul>
+<li><code>R-4.6.1</code> and <code>RStudio</code>. If you have other versions of <code>R</code> installed, you can used <a href="https://github.com/r-lib/rig">rig</a> to version control <code>R</code> installation and start <code>RStudio</code> with different versions of <code>R</code>. We will be using <code>R-4.6.1</code> during the workshop.</li>
+<li>The <a href="https://software.broadinstitute.org/software/igv/">Integrative Genomics Viewer</a>.</li>
+</ul>
+<section id="cloning-the-repo-and-installing-the-needed-r-packages" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="cloning-the-repo-and-installing-the-needed-r-packages"><span class="header-section-number">4.1</span> Cloning the repo and installing the needed <code>R</code> packages</h3>
+<p>More instructions will follow here on how to clone the GitHub repo of the workshop and install all needed R packages using <code>renv</code>.</p>
 </section>
-<section id="community-support" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="community-support"><span class="header-section-number">3</span> Community &amp; Support</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>We look forward to seeing you in the course! Here are resources to help you succeed:</p>
-</div>
-</div>
-<section id="getting-help" class="level3" data-number="3.1">
-<h3 data-number="3.1" class="anchored" data-anchor-id="getting-help"><span class="header-section-number">3.1</span> Getting Help</h3>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Resource</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Course Forum</td>
-<td>Ask questions and connect with peers</td>
-</tr>
-<tr class="even">
-<td>Office Hours</td>
-<td>One-on-one support from instructors</td>
-</tr>
-<tr class="odd">
-<td>FAQ Section</td>
-<td>Quick answers to common questions</td>
-</tr>
-<tr class="even">
-<td>Slack Channel</td>
-<td>Real-time chat with the community</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Remember</strong>: Don’t hesitate to reach out if you have any questions or concerns. We’re here to help!</p>
+</section>
+<section id="additional-optional-reading-material-to-help-you-prepare" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="additional-optional-reading-material-to-help-you-prepare"><span class="header-section-number">5</span> Additional (optional) reading material to help you prepare</h2>
+<ul>
+<li><a href="http://www.ee.surrey.ac.uk/Teaching/Unix/">Unix</a>: especially the first three chapters.</li>
+<li>DataCamp free <a href="https://www.datacamp.com/blog/all-about-r">Introduction to R</a>.</li>
+<li><a href="https://cran.r-project.org/doc/contrib/Torfs+Brauer-Short-R-Intro.pdf">A short introduction to R</a>. A very short introduction to using <code>R</code>.</li>
+<li>How to install and use <code>RStudio</code> from <a href="https://www.datacamp.com/tutorial/r-studio-tutorial">Data Camp RStudio Tutorial</a>.</li>
+</ul>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

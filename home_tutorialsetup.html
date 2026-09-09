@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>NBIS Workshop</title>
+<title>Tutorial Setup</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -41,6 +76,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-5cb467f805ac08d84b40d2cabe0cf67d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
@@ -74,22 +110,28 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background-image: url(assets/images/banner.webp);
+background-size: cover;
+      }
+</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&amp;family=Nunito:ital,wght@0,200..700;1,200..700&amp;display=swap" rel="stylesheet">
   
 
 
-<link rel="stylesheet" href="assets/css/home.css">
-<meta property="og:title" content="NBIS Workshop">
-<meta property="og:description" content="A quarto website template for courses and workshops.">
-<meta property="og:image" content="https://nbisweden.github.io/workshop-epigenomics/assets/images/seo.webp">
+<meta property="og:title" content="Tutorial Setup">
+<meta property="og:description" content="Instructions on how to work with the tutorials">
+<meta property="og:image" content="https://nbisweden.github.io/workshop-epigenomics/assets/images/featured.webp">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <div id="quarto-announcement" data-announcement-id="121998c1b8fb2434c8da5f4373f30083" class="alert alert-primary hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
 <p>This website is still under construction. Workshop materials will be available during the workshop. Last year’s materials can be found <a href="https://nbis-workshop-epigenomics.readthedocs.io/en/latest/">here</a>.</p>
 </div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
@@ -108,7 +150,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -144,43 +186,78 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Tutorial Setup</h1>
+            <p class="subtitle lead">Instructions on how to work with the tutorials</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content column-page" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
-<div class="home-container">
-<div class="home-grid-parent">
-<div class="home-grid-child-left">
-<section id="nbis-workshop" class="level3">
-<h3 data-anchor-id="nbis-workshop">NBIS Workshop</h3>
+
+<p>Please make sure that you have followed the pre-course instructions before continuing with the instructions here.</p>
+<section id="working-on-pelle-uppmax-hpc" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="working-on-pelle-uppmax-hpc"><span class="header-section-number">1</span> Working on Pelle (UPPMAX HPC)</h2>
+<p>We have booked 5 cores on Pelle per course participant. To run the tutorial in the interactive mode log on to Pelle and run interactive command:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ssh <span class="sc">-</span>Y <span class="sc">&lt;</span>username<span class="sc">&gt;</span><span class="er">@</span>pelle.uppmax.uu.se</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>While logged to Pelle, book the interactive session:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>interactive <span class="sc">-</span>A uppmax2025<span class="dv">-2-309</span> <span class="sc">-</span>p core <span class="sc">-</span>n <span class="dv">5</span> <span class="sc">-</span>t <span class="dv">08</span><span class="sc">:</span><span class="dv">00</span><span class="sc">:</span><span class="dv">00</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This command gives you access to 5 cores for eight hours or until 17:00, whichever comes first. Please make sure you do it only ONCE per day, as by repeating this command you will use up resources reserved for others.</p>
+<p>Check which node you were assigned</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>squeue <span class="sc">-</span>u <span class="sc">&lt;</span>username<span class="sc">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>And connect to your node with</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ssh <span class="sc">-</span>Y <span class="sc">&lt;</span>nodename<span class="sc">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>If you lose connection to the server during a tutorial, please connect again to Pelle and do <code>ssh -Y &lt;nodename&gt;</code> again. You will reconnect to your set of cores.</p>
 </section>
-<section id="epigenomics-data-analysis-from-bulk-to-single-cell" class="level2">
-<h2 data-anchor-id="epigenomics-data-analysis-from-bulk-to-single-cell"><strong>Epigenomics Data Analysis</strong><br>From Bulk to Single Cell</h2>
-<p>An introduction to best practice bioinformatics methods for processing, analyses and integration of epigenomics data. This online workshop includes lectures, programming tutorials and interactive group sessions.</p>
-<hr>
-<div class="small">
-<p>Updated: 09-09-2026 at 14:21:11 .</p>
-</div>
+<section id="working-on-your-local-machine" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="working-on-your-local-machine"><span class="header-section-number">2</span> Working on your local machine</h2>
+<p>Instructions to follow.</p>
 </section>
-</div>
-<div class="home-grid-child-right">
-<p><img src="assets/images/hero.webp" class="nolightbox img-fluid"></p>
-</div>
-</div>
-</div>
+<section id="structuring-your-folders-and-working-directories" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="structuring-your-folders-and-working-directories"><span class="header-section-number">3</span> Structuring your folders and working directories</h2>
+<p>Instructions and recommendations to follow here.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     
