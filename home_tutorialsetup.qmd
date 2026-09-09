@@ -49,3 +49,8 @@ If you lose connection to the server during a tutorial, please connect again to 
 ## Working on your local machine
 
 Instructions to follow.
+
+## Structuring your folders and working directories
+
+Instructions and recommendations to follow here.
+
