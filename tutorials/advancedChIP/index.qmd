@@ -1,0 +1,22 @@
+---
+title: "Advanced ChIP-seq"
+author: "Dania Machlab"
+format: 
+  html:
+    toc: true
+    fig-format: png
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+
+## Overview
+
+This tutorial covers more advanced analyses pertaining to ChIP-seq data. We will examine histone modifications over time and look into how we can jointly visualize the epigenome and changes in chromatin that occur on a global level. 
+
+### The data set
+
+As mentioned, we will be looking at histone marks over time. For this we will be using the data generated in [this study](https://www.nature.com/articles/s41588-021-00789-z). The authors discovered a new epigenetic signature on genes characterized by open accessible and H2K27-acetylated promoters (active marks) and H3K27-methylated gene bodies (repressed), called bipartite genes. 
+
