@@ -15,3 +15,35 @@ editor:
 ## Overview
 
 
+
+
+```{r}
+
+suppressPackageStartupMessages({
+  library(QuasR)
+})
+
+```
+
+
+## Mapping
+
+
+## Quality Control (QC)
+
+mapping QC, GC bias
+
+## Estimating fragment size
+
+illustrate where TF sits and where true signal is, autocorrelation
+
+## Peak calling
+ 
+TF vs histone mark
+ 
+
+
+
+
+
+
