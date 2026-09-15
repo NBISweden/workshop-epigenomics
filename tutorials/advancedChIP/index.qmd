@@ -18,5 +18,5 @@ This tutorial covers more advanced analyses pertaining to ChIP-seq data. We will
 
 ### The data set
 
-As mentioned, we will be looking at histone marks over time. For this we will be using the data generated in [this study](https://www.nature.com/articles/s41588-021-00789-z). The authors discovered a new epigenetic signature on genes characterized by open accessible and H2K27-acetylated promoters (active marks) and H3K27-methylated gene bodies (repressed), called bipartite genes. 
+As mentioned, we will be looking at histone marks over time. For this we will be using the data generated in [this study](https://www.nature.com/articles/s41588-021-00789-z). The authors describe a new epigenetic signature on genes characterized by open and H3K27-acetylated promoters (active marks) and H3K27-methylated gene bodies (repressive mark), called bipartite genes. These genes are not expressed but can be within minutes as soon as the repressive H3K27me3 mark is removed from the gene body upon exposure to the right stimulus. They tend to be transcription factors (TFs) and play key developmental roles. 
 

@@ -1,0 +1,17 @@
+---
+title: "Introduction to ChIP-seq Analyses"
+author: "Dania Machlab"
+format: 
+  html:
+    toc: true
+    fig-format: png
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+
+## Overview
+
+
