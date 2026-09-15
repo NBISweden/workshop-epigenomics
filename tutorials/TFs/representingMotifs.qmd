@@ -64,7 +64,7 @@ Note that we will need to work with the latest version of `monaLisa` if
 using `ggplo2>=4.0.0`.
 
 ```{r echo=FALSE}
-#.libPaths(c("/Users/daniamachlab/Library/R/arm64/4.5-Bioc-3.21/library", .libPaths()))
+#.libPaths(c("/Users/daniamachlab/Library/R/arm64/4.5-Bioc-3.21/library", .libPaths())) 
 ```
 
 ```{r}
