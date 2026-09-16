@@ -12,17 +12,61 @@ execute:
 
 :::{.contents-table .column-body-outset}
 
-|Topic                                      |Instructor	| Links 												                                                                        |
-|-------------------------------------------|-----------|-------------------------------------------------------------------------------------------------------|
-|[05-Oct-2026 (Mon)]{.badge .badge-primary} |           |										                                                                  	              	|
-| DNA methylation                           |           |                                                                                                       |
-|[06-Oct-2026 (Tue)]{.badge .badge-primary} |           |                                                                                                     	|
-| ATAC-seq                                  |           |                                                                                                       |
-|[07-Oct-2026 (Wed)]{.badge .badge-primary} |           |                                                                                                     	|
-| ChIP-seq                                  |           |                                                                                                       |
-|[08-Oct-2026 (Thu)]{.badge .badge-primary} |           |                                                                                                     	|
-| Motifs                                    |     	    |[Slides](presentations/TFs/TFslides.pdf), [Tutorial](tutorials/TFs/representingMotifs.html)    	      |
-|[09-Oct-2026 (Fri)]{.badge .badge-primary} |           |                                                                                                   	 	|
-| Single cell omics                         |           |                                                                                                       |
+|Time                                       |Topic                                                          |Instructor	                                      | Links 												                     |
+|-------------------------------------------|---------------------------------------------------------------|-------------------------------------------------|----------------------------------------------------|
+|[05-Oct-2026 (Mon)]{.badge .badge-primary} | DNA methylation with Illumina array and Bisulfite-seq         |	              		                              |                                                    |
+| 09:00-09:30                               | Welcome + NBIS Talk                                           |                                                 |                                                    |  
+| 09:30-10:10                               | Introduction to DNA methylation + Overview Array Exercises    | Louella Vasque                                  |                                                    |
+| 10:10-10:30                               | Uppmax set up + break                                         |                                                 |                                                    |
+| 10:30-12:00                               | Exercises Array Workflow                                      | Louella Vasque                                  |                                                    |
+| 12:00-13:00                               | Lunch (offline)                                               |                                                 |                                                    |
+| 13:00-14:00                               | Methylation methods & technologies (NGI)                      | Jessica Nordlund                                |                                                    |
+| 14:00-14:15                               | Break                                                         |                                                 |                                                    |
+| 14:15-14:30                               | Methylation Exercises Overview II: Methylation Sequencing     |                                                 |                                                    |
+| 14:30-16:00                               | Exercises Methylation Sequencing                              |                                                 |                                                    |
+| 16:00-17:00                               | Daily challenge (offline)                                     |                                                 |                                                    |
+|[06-Oct-2026 (Tue)]{.badge .badge-primary} | ATAC-seq: data processing and analysis principles.            |                                                 |                                                    |
+| 09:00-09:30                               | Recap previous day                                            | Louella Vasque                                  |                                                    |
+| 09:30-10:15                               | Introduction to ATAC-seq data analysis                        | Agata Smialowska                                |                                                    |
+| 10:15-10:30                               | Break                                                         |                                                 |                                                    |
+| 10:30-11.30                               | Exercise: Data preprocessing and general QC and ATACseq QC    | Agata Smialowska                                |                                                    |
+| 11:30-12:00                               | Exercise: ATAC-seq data analysis                              | Agata Smialowska                                |                                                    |
+| 12:00-13:00                               | Lunch (offline)                                               |                                                 |                                                    |
+| 13:00-14:00                               | Exercise: ATAC-seq data analysis                              | Agata Smialowska                                |                                                    |
+| 14:00-15.00                               | Presentation and Q&A with NGI                                 | Orlando Contreras Lopez and Michelle Ljungmark  |                                                    |
+| 15:00-15:30                               | Exercise: ATAC-seq data analysis                              | Agata Smialowska                                |                                                    |
+| 15:30-17:00                               | Daily challenge, Exercises (offline support)                  |                                                 |                                                    |
+|[07-Oct-2026 (Wed)]{.badge .badge-primary} | ChIP-seq                                                      |                                                 |                                                    |
+| 09:00-09:30                               | Recap previous day                                            | Agata Smialowska                                |                                                    |
+| 09:30-10:15                               | Lecture                                                       | Dania Machlab                                   |                                                    |
+| 10:15-10:30                               | Break                                                         |                                                 |                                                    |
+| 10:30-12:00                               | Lab: ChIP-seq                                                 | Dania Machlab                                   |                                                    |
+| 12:00-13:00                               | Lunch (offline)                                               |                                                 |                                                    |
+| 13:00-13:45                               | Cut & Tag/Run                                                 | Prasoon Agarwal                                 |                                                    |
+| 13:45-14:00                               | Break                                                         |                                                 |                                                    |
+| 14:00-15:30                               | Lab: Advanced ChIP-seq                                        | Dania Machlab                                   |                                                    |
+| 15:30-17:00                               | Daily challenge, Exercise (offline support)                   |                                                 |                                                    |
+|[08-Oct-2026 (Thu)]{.badge .badge-primary} | Downstream analyses                                           |                                                 |                                                    |
+| 09:00-09:30                               | Recap previous day                                            | Dania Machlab                                   |                                                    |
+| 09:30-10:00                               | Introduction to transcription factors and gene regulation     | Dania Machlab                                   |                                                    |
+| 10:00-10:30                               | Exercise: Representing transcription factor binding sites     | Dania Machlab                                   |                                                    |
+| 10:30-10:45                               | Break                                                         |                                                 |                                                    |
+| 10:45-12:00                               | Exercise: Predicting relevant motifs                          | Dania Machlab                                   |                                                    |
+| 12:00-13:00                               | Lunch (offline)                                               |                                                 |                                                    |
+| 13:00-14:00                               | BiG Talk (keynote)                                            | Mattias Mannervik                               |                                                    |
+| 14:00-14:15                               | Break                                                         |                                                 |                                                    |
+| 14:15-15:30                               | Additional downstream exercises                               |                                                 |                                                    |
+| 15:30-17:00                               | Daily challenge, Exercises (offline support)                  |                                                 |                                                    |
+|[09-Oct-2026 (Fri)]{.badge .badge-primary} | Integrative and single cell omics                             |                                                 |                                                    |
+| 09:00-09:30                               | Recap previous day                                            | Dania Machlab                                   |                                                    |
+| 09.30-10.15                               | Single cell methods                                           | Markus Ringnér                                  |                                                    |
+| 10:15-10:30                               | Break                                                         |                                                 |                                                    |
+| 10.30-10.45                               | Integration of genomics data                                  | Markus Ringnér                                  |                                                    |
+| 10.45-12.00                               | Single cell and data integration exercises                    | Markus Ringnér                                  |                                                    |
+| 12:00-13:00                               | Lunch (offline)                                               |                                                 |                                                    |
+| 13.00-14.00                               | Single cell and data integration exercises                    | Markus Ringnér                                  |                                                    |
+| 14:00-14:30                               | Daily challenge, break                                        |                                                 |                                                    |
+| 14:30-15:00                               | Short term feedback form, Course wrap-up, NBIS talk           |                                                 |                                                    |
+| 15:00-17:00                               | (offline support)                                             |                                                 |                                                    |
 
 :::
