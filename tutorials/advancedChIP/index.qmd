@@ -20,3 +20,64 @@ This tutorial covers more advanced analyses pertaining to ChIP-seq data. We will
 
 As mentioned, we will be looking at histone marks over time. For this we will be using the data generated in [this study](https://www.nature.com/articles/s41588-021-00789-z). The authors describe a new epigenetic signature on genes characterized by open and H3K27-acetylated promoters (active marks) and H3K27-methylated gene bodies (repressive mark), called bipartite genes. These genes are not expressed but can be within minutes as soon as the repressive H3K27me3 mark is removed from the gene body upon exposure to the right stimulus. They tend to be transcription factors (TFs) and play key developmental roles. 
 
+
+```{r}
+.libPaths(c("/Users/daniamachlab/Library/R/arm64/4.6-Bioc-3.23/library/", .libPaths()))
+suppressPackageStartupMessages({
+  library(GenomicRanges)
+  #library(QuasR)
+})
+
+```
+
+
+## Explore the count matrix
+
+Our starting point for this tutorial is two raw count matrices: one on promoters and another on gene bodies. Promoters were defined as 1kb upstream and 500 bases downstream the transcription start site (TSS) and gene bodies as regions from 1kb to 3 kb downstream the TSS. The rows in these count matrices correspond to genes and the columns correspond to the different modalities quantified on the promoter and gene body level and at three different developmental time points, namely E14, E18 and P4, where E14 means day 14 at the embryonic stage and P4 means 4 days post natally or after birth. The marks that were quantified are ATAC-seq, H3K27me3, H3K27Ac and H3K4me2. 
+
+todo: make pairs plot for P and GB, what do you see and where could this be coming from?
+
+Let's begin by reading in the data.
+
+```{r}
+## promoters
+promoters <- readRDS("dataObjects/promotersGRanges.rds")
+pCnt <- readRDS("dataObjects/promotersCnt.rds")
+```
+
+Examine the `promoters` object and what it contains. Notice that it is of class [GRanges](https://bioconductor.org/packages/GenomicRanges/) which is a useful way to represent genomic ranges in `R` and do efficient operations on them. What information do you see?
+```{r}
+head(promoters)
+```
+
+```{r}
+head(pCnt)
+```
+
+
+
+```{r}
+## gene bodies
+geneBodies <- readRDS("dataObjects/geneBodiesGRanges.rds")
+gbCnt <- readRDS("dataObjects/geneBodiesCnt.rds")
+```
+
+
+::: {.callout-tip}
+## Exercise
+1. Examine the gene body regions and counts.
+2. Pick either on of the two count matrices (promoter or gene body level) and summarize how many time points there are, how many marks are measured, and how many replicates each mark has per time point. You can make use of the `table` function to do this.
+:::
+
+
+
+
+## Session information
+
+```{r}
+date()
+sessionInfo()
+```
+
+
+

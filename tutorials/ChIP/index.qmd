@@ -20,7 +20,7 @@ editor:
 ```{r}
 
 suppressPackageStartupMessages({
-  library(QuasR)
+  #library(QuasR)
 })
 
 ```
