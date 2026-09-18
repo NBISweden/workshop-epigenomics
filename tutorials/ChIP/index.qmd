@@ -126,16 +126,26 @@ tiles$fracGC <- fracGC
 tiles$oeCpG <- oeCpG
 
 ## Mark tiles with overlap with CpG islands
-# url <- "https://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/cpgIslandExt.txt.gz"
-# url <- "https://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/cpgIslandExt.txt.gz"
-# 
-# con <- pipe(paste("curl -L", shQuote(url)), "rb")
-# cpg <- read.delim(gzcon(con), header = FALSE)
-# close(con)
-# 
-# cpgIslands <- read.delim("https://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/cpgIslandExt.txt.gz", 
-#                          header = FALSE)
+## ... if you cloned the repo, you can read it in from the assets folder. Otherwise
+## ... you will need to download it from here: 
+## ... http://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/cpgIslandExt.txt.gz
+## ... UCSC bed files are 0-base coordinates so we will have to add +1 to the start position.
+cpgFile <- "assets/cpgIslandExt.txt"
+cpg <- read.delim(cpgFile, header = FALSE)
+cpgGr <- GRanges(
+    seqnames = cpg[[2]],
+    ranges = IRanges(
+        start = cpg[[3]] + 1,
+        end = cpg[[4]]
+    )
+)
 
+ov <- findOverlaps(query = tiles, subject = cpgGr, minoverlap = 5)
+cpgTiles <- unique(queryHits(ov))
+tiles$overlappingCpG <- ifelse(test = 1:length(tiles) %in% cpgTiles, 
+                               yes = TRUE, no = FALSE)
+
+head(tiles)
 ```
 
 
@@ -154,44 +164,51 @@ head(cntTiles)
 Let's plot the log2(counts) vs the GC content of the tiles.
 
 ```{r}
+#| fig-width: 15
+#| fig-height: 10
 
 ## Prepare to plot
-df <- as.data.frame(cbind(cntTiles, mcols(tiles))) %>%
+## ... We randomly subsample 25,000 tiles for faster plotting and
+## ... exclude tiles which have zero counts in all samples
+df <- as.data.frame(cbind(cntTiles, mcols(tiles))) 
+zeroCounts <- rowSums(cntTiles[, -1]) == 0
+sum(zeroCounts) / nrow(df)
+df <- df[!zeroCounts, ]
+
+set.seed(123)
+i <- sample(x = 1:nrow(df), size = 25000, replace = FALSE)
+df <- df[i, ]
+
+df <- df %>%
   as_tibble() %>%
   pivot_longer(cols = starts_with("ChIPseq_"), names_to = "sample", values_to = "rawCount")
 
+
 ## Plot
 ggplot(df, aes(x = fracGC, y = log2(rawCount+1))) +
-  geom_point() + 
+  geom_point(size = 0.3) + 
+  theme_bw() + 
   facet_wrap(~sample)
-  
-  
-# df <- as.data.frame(cbind(cnt_tiles, mcols(tiles)))
-# set.seed(123)
-# s <- sample(x = 1:nrow(df), size = 25000, replace = FALSE)
-# df <- df[s, ]
-# df <- df %>%
-#   as_tibble() %>%
-#   pivot_longer(cols = 2:10, names_to = "Sample", values_to = "raw_cnt")
-# 
-# ggplot(df) + 
-#   geom_point(aes(x = percGC, y = log2(raw_cnt + 8), color = CGI.hasOverlap), alpha = 0.2) + 
-#   geom_smooth(data = df[!df$CGI.hasOverlap, ], mapping = aes(x = percGC, y = log2(raw_cnt + 8)), span = 0.7) + 
-#   facet_wrap(~ Sample) + 
-#   theme_minimal()  
-#   
-
 ```
 
+Compare the input samples to those where the TF was pulled down. What do you notice? 
+
+In this data set we notice a few things. Firstly, there is not relationship between count and GC content. It looks to be flat, and secondly that the samples have the same relationship between read count and GC content. If we had considerable differences in GC trends between samples we wish to quantitatively compare we would have had to normalize them accordingly before comparing them or doing differential analyses, as the differences in counts could be purely driven by differences in GC trends. We will explore how to correct for this in the advanced ChIP-seq tutorial. 
+
+Notice that the cloud above the background represents tiles with signal, where the TF is bound. Another thing to look out for is how similar the signal or enrichment is for these samples. Was there one replicate which had a very poor signal for instance?
 
 
-mapping QC, GC bias
+::: {.callout-tip}
+## Exercise
+Re-do the plots above, coloring by `oeCpG` and `overlappingCpG`. Depending on the mark, the signal can sometimes overlap with CpG islands. Do you see this here?
+:::
+
 
 ## Estimating fragment size
 
-rsync danmac@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/test/ChIPseq_ESC_CTCF_input_BPTFko_rep1_chr19.ucsc.bam*' data/ 
 
-/home/danmac/Teaching/uppmax2026-1-197/ChIP/test/ChIPseq_ESC_CTCF_input_BPTFko_rep1_chr19.ucsc.bam
+
+
 
 
 illustrate where TF sits and where true signal is, autocorrelation
