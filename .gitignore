@@ -11,3 +11,4 @@ _site/
 **/*.quarto_ipynb
 
 tutorials/ChIP/data
+tutorials/ChIP/figures

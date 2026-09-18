@@ -18,12 +18,26 @@ editor:
 
 
 ```{r}
+.libPaths(c("/Users/daniamachlab/Library/R/arm64/4.6-Bioc-3.23/library/", .libPaths()))
 
 suppressPackageStartupMessages({
-  #library(QuasR)
+  library(QuasR)
+  library(limma)
+  library(BSgenome.Mmusculus.UCSC.mm39)
+  library(GenomicRanges)
+  #library(GenomeInfoDb)
 })
 
 ```
+
+
+## Useful Bioconductor data structures
+
+Throughout this lab we will be making use of a few data objects and packages from Bioconductor that are convenient when working with genomic data. They are described here and additional links are provided should you want to explore more or get a better understanding.
+
+### GRanges
+
+### BSgenome objects
 
 
 ## Mapping
@@ -31,22 +45,77 @@ suppressPackageStartupMessages({
 
 Download bam files from Pelle.
 
-```{r}
+```{bash}
 #| eval: false
 
 rsync [username]@pelle.uppmax.uu.se:[path_to_file]
 
+## Download the bam files
 mkdir data
-rsync danmac@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/dataMapped/*_chr19.bam*' data/ 
+rsync danmac@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/dataMapped/*_chr19.ucsc.bam*' data/ 
   
+## Download the reference genome used
+#mkdir reference
+#rsync danmac@pelle.uppmax.uu.se:/proj/uppmax2026-1-197/ChIP/reference/Mus_musculus.GRCm39.dna.primary_assembly.fa reference/ 
 ```
 
 
 ## Quality Control (QC)
 
+Let's begin by doing some QC on the mapped reads. We will be using the [QuasR](https://bioconductor.org/packages/QuasR) package to do this. 
+
+```{r}
+## Create the sample sheet needed by QuasR
+## ... See ?qAlign for more details
+bamFiles <- file.path(getwd(), 
+                      list.files("data", pattern = ".bam$", full.names = TRUE))
+meta <- data.frame(FileName = bamFiles, 
+                   SampleName = limma::strsplit2(basename(bamFiles), "_chr19")[, 1])
+write.table(meta, file = "data/sampleSheet.txt", quote = FALSE, sep = "\t", 
+            row.names = FALSE, append = FALSE)
+
+## Create proj object on aligned bam files
+## ... you can set the number of cores here according to what works on you machine
+cl <- makeCluster(4)
+proj <- qAlign(sampleFile = "data/sampleSheet.txt", 
+               genome = "BSgenome.Mmusculus.UCSC.mm39", 
+               paired = "no", 
+               clObj = cl, 
+               checkOnly = TRUE)
+
+## QC plots
+dir.create("figures")
+qQCReport(input = proj,  pdfFilename = "figures/mappingQC.pdf", clObj=cl)
+```
+
+Examine the generated `pdf` file and the plots it contains. We like to see high mapping rates typically close to 95% and no big differences in duplicate levels between the samples. Note that here you will see 100% since the bam files have already been filtered for only reads mapping to chr19.
+
+### GC Bias
+
+An important plot we often look at in ChIP-seq data is the GC-bias trends the samples have. Do they have very different ones and what are the consequences of that?
+
+```{r}
+
+## BSgenome
+BSgenome <- BSgenome.Mmusculus.UCSC.mm39
+
+## Tile the genome (on chr19 in our case) into 500 bp regions
+tiles <- tileGenome(seqlengths = seqlengths(BSgenome)["chr19"], 
+                    tilewidth = 500, 
+                    cut.last.tile.in.chrom = TRUE)
+tiles
+
+```
+
+
 mapping QC, GC bias
 
 ## Estimating fragment size
+
+rsync danmac@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/test/ChIPseq_ESC_CTCF_input_BPTFko_rep1_chr19.ucsc.bam*' data/ 
+
+/home/danmac/Teaching/uppmax2026-1-197/ChIP/test/ChIPseq_ESC_CTCF_input_BPTFko_rep1_chr19.ucsc.bam
+
 
 illustrate where TF sits and where true signal is, autocorrelation
 
