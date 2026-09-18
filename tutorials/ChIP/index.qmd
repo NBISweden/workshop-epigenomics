@@ -29,6 +29,19 @@ suppressPackageStartupMessages({
 ## Mapping
 
 
+Download bam files from Pelle.
+
+```{r}
+#| eval: false
+
+rsync [username]@pelle.uppmax.uu.se:[path_to_file]
+
+mkdir data
+rsync danmac@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/dataMapped/*_chr19.bam*' data/ 
+  
+```
+
+
 ## Quality Control (QC)
 
 mapping QC, GC bias
