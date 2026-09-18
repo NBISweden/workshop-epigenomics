@@ -1,28 +1,50 @@
 ---
 title: "Schedule"
-toc: false
+description: "The schedule is intended for when following a live workshop. For materials, see **Contents**"
 date: ""
+number-sections: false
 sidebar: false
+toastui:
+  schedule:
+    defaultView: week
+    file: "schedule.tsv"
+    file-sep: "\t"
+    date: "2026-10-05"
+    useDetailPopup: true
+    isReadOnly: true
+    height: 980px
+    timegridHeight: 900px
+    week:
+      workweek: true
+      taskView: false
+      eventView: ['time']
+      hourStart: 9
+      hourEnd: 18
+      showNowIndicator: true
+    timezone:
+      zones:
+        - timezoneName: Europe/Stockholm
+    calendars:
+      - id: "session"
+        name: "Session"
+        color: inherit
+        backgroundColor: "#D6EAF8"
+        dragBackgroundColor: "#D6EAF8"
+        borderColor: "#85C1E9"
+      - id: "free"
+        name: "Free"
+        color: inherit
+        backgroundColor: "#FCF3CF"
+        dragBackgroundColor: "#FCF3CF"
+        borderColor: "#F7DC6F"
+      - id: "extra"
+        name: "Extra"
+        color: inherit
+        backgroundColor: "#E8DAEF"
+        dragBackgroundColor: "#E8DAEF"
+        borderColor: "#BB8FCE"
 format:
-  html:
-    number-sections: false
-execute:
-  freeze: false
+  html
 ---
 
-:::{.contents-table .column-body-outset}
-
-|Topic                                      |Instructor	| Links 												                                                                        |
-|-------------------------------------------|-----------|-------------------------------------------------------------------------------------------------------|
-|[05-Oct-2026 (Mon)]{.badge .badge-primary} |           |										                                                                  	              	|
-| DNA methylation                           |           |                                                                                                       |
-|[06-Oct-2026 (Tue)]{.badge .badge-primary} |           |                                                                                                     	|
-| ATAC-seq                                  |           |                                                                                                       |
-|[07-Oct-2026 (Wed)]{.badge .badge-primary} |           |                                                                                                     	|
-| ChIP-seq                                  |           |                                                                                                       |
-|[08-Oct-2026 (Thu)]{.badge .badge-primary} |           |                                                                                                     	|
-| Motifs                                    |     	    |[Slides](presentations/TFs/TFslides.pdf), [Tutorial](tutorials/TFs/representingMotifs.html)    	      |
-|[09-Oct-2026 (Fri)]{.badge .badge-primary} |           |                                                                                                   	 	|
-| Single cell omics                         |           |                                                                                                       |
-
-:::
+{{< toastui schedule >}}

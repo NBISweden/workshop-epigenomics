@@ -1,0 +1,50 @@
+start	end	title	attendees	calendarId
+2026-10-05T09:00:00	2026-10-05T09:30:00	Welcome + NBIS Talk		extra
+2026-10-05T09:30:00	2026-10-05T10:10:00	Introduction to DNA methylation + Overview Array Exercises	Louella Vasque	session
+2026-10-05T10:10:00	2026-10-05T10:30:00	Uppmax set up + Break		extra
+2026-10-05T10:30:00	2026-10-05T12:00:00	Exercises Array Workflow	Louella Vasque	session
+2026-10-05T12:00:00	2026-10-05T13:00:00	Lunch (Offline)		free
+2026-10-05T13:00:00	2026-10-05T14:00:00	Methylation methods & technologies (NGI)	Jessica Nordlund	session
+2026-10-05T14:00:00	2026-10-05T14:15:00	Break		free
+2026-10-05T14:15:00	2026-10-05T14:30:00	Methylation Exercises Overview II: Methylation Sequencing		session
+2026-10-05T14:30:00	2026-10-05T16:00:00	Exercises Methylation Sequencing		session
+2026-10-05T16:00:00	2026-10-05T17:00:00	Daily challenge (Offline)		extra
+2026-10-06T09:00:00	2026-10-06T09:30:00	Recap previous day	Louella Vasque	extra
+2026-10-06T09:30:00	2026-10-06T10:15:00	Introduction to ATAC-seq data analysis	Agata Smialowska	session
+2026-10-06T10:15:00	2026-10-06T10:30:00	Break		free
+2026-10-06T10:30:00	2026-10-06T11:30:00	Exercise: Data preprocessing and general QC and ATACseq QC	Agata Smialowska	session
+2026-10-06T11:30:00	2026-10-06T12:00:00	Exercise: ATAC-seq data analysis	Agata Smialowska	session
+2026-10-06T12:00:00	2026-10-06T13:00:00	Lunch (Offline)		free
+2026-10-06T13:00:00	2026-10-06T14:00:00	Exercise: ATAC-seq data analysis	Agata Smialowska	session
+2026-10-06T14:00:00	2026-10-06T15:00:00	Presentation and Q&A with NGI	Orlando Contreras Lopez and Michelle Ljungmark	session
+2026-10-06T15:00:00	2026-10-06T15:30:00	Exercise: ATAC-seq data analysis	Agata Smialowska	session
+2026-10-06T15:30:00	2026-10-06T17:00:00	Daily challenge, Exercises (Offline support)		extra
+2026-10-07T09:00:00	2026-10-07T09:30:00	Recap previous day	Agata Smialowska	extra
+2026-10-07T09:30:00	2026-10-07T10:15:00	Lecture	Dania Machlab	session
+2026-10-07T10:15:00	2026-10-07T10:30:00	Break		free
+2026-10-07T10:30:00	2026-10-07T12:00:00	Lab: ChIP-seq	Dania Machlab	session
+2026-10-07T12:00:00	2026-10-07T13:00:00	Lunch (Offline)		free
+2026-10-07T13:00:00	2026-10-07T13:45:00	Cut & Tag/Run	Prasoon Agarwal	session
+2026-10-07T13:45:00	2026-10-07T14:00:00	Break		free
+2026-10-07T14:00:00	2026-10-07T15:30:00	Lab: Advanced ChIP-seq	Dania Machlab	session
+2026-10-07T15:30:00	2026-10-07T17:00:00	Daily challenge, Exercise (Offline support)		extra
+2026-10-08T09:00:00	2026-10-08T09:30:00	Recap previous day	Dania Machlab	extra
+2026-10-08T09:30:00	2026-10-08T10:00:00	Introduction to transcription factors and gene regulation	Dania Machlab	session
+2026-10-08T10:00:00	2026-10-08T10:30:00	Exercise: Representing transcription factor binding sites	Dania Machlab	session
+2026-10-08T10:30:00	2026-10-08T10:45:00	Break		free
+2026-10-08T10:45:00	2026-10-08T12:00:00	Exercise: Predicting relevant motifs	Dania Machlab	session
+2026-10-08T12:00:00	2026-10-08T13:00:00	Lunch (Offline)		free
+2026-10-08T13:00:00	2026-10-08T14:00:00	BiG Talk (Keynote)	Mattias Mannervik	session
+2026-10-08T14:00:00	2026-10-08T14:15:00	Break		free
+2026-10-08T14:15:00	2026-10-08T15:30:00	Additional downstream exercises		session
+2026-10-08T15:30:00	2026-10-08T17:00:00	Daily challenge, Exercises (Offline support)		extra
+2026-10-09T09:00:00	2026-10-09T09:30:00	Recap previous day	Dania Machlab	extra
+2026-10-09T09:30:00	2026-10-09T10:15:00	Single cell methods	Markus Ringnér	session
+2026-10-09T10:15:00	2026-10-09T10:30:00	Break		free
+2026-10-09T10:30:00	2026-10-09T10:45:00	Integration of genomics data	Markus Ringnér	session
+2026-10-09T10:45:00	2026-10-09T12:00:00	Single cell and data integration exercises	Markus Ringnér	session
+2026-10-09T12:00:00	2026-10-09T13:00:00	Lunch (Offline)		free
+2026-10-09T13:00:00	2026-10-09T14:00:00	Single cell and data integration exercises	Markus Ringnér	session
+2026-10-09T14:00:00	2026-10-09T14:30:00	Daily challenge, Break		free
+2026-10-09T14:30:00	2026-10-09T15:00:00	Short term feedback form, Course wrap-up, NBIS talk		extra
+2026-10-09T15:00:00	2026-10-09T17:00:00	(Offline support)		extra
