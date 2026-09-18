@@ -25,6 +25,8 @@ suppressPackageStartupMessages({
   library(limma)
   library(BSgenome.Mmusculus.UCSC.mm39)
   library(GenomicRanges)
+  library(ggplot2)
+  library(tidyr)
   #library(GenomeInfoDb)
 })
 
@@ -39,6 +41,7 @@ Throughout this lab we will be making use of a few data objects and packages fro
 
 ### BSgenome objects
 
+### DNAstringSet
 
 ## Mapping
 
@@ -52,7 +55,7 @@ rsync [username]@pelle.uppmax.uu.se:[path_to_file]
 
 ## Download the bam files
 mkdir data
-rsync danmac@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/dataMapped/*_chr19.ucsc.bam*' data/ 
+rsync danmac@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/dataMapped/*_chr19.ucsc.fixed.bam*' data/ 
   
 ## Download the reference genome used
 #mkdir reference
@@ -95,17 +98,91 @@ Examine the generated `pdf` file and the plots it contains. We like to see high 
 An important plot we often look at in ChIP-seq data is the GC-bias trends the samples have. Do they have very different ones and what are the consequences of that?
 
 ```{r}
-
 ## BSgenome
 BSgenome <- BSgenome.Mmusculus.UCSC.mm39
 
-## Tile the genome (on chr19 in our case) into 500 bp regions
+## Tile the genome (on chr19 in our case) into 100 bp regions
 tiles <- tileGenome(seqlengths = seqlengths(BSgenome)["chr19"], 
                     tilewidth = 500, 
                     cut.last.tile.in.chrom = TRUE)
 tiles
+```
+
+Next, we will make use of the BSgenome object to extract the reference genome sequences and calculate the GC content of each tile.
+
+```{r}
+
+## Extract the raw reference sequences
+tileSeq <- getSeq(BSgenome, tiles)
+
+## Calculate G+C and CpG obs/expected
+fMono <- oligonucleotideFrequency(tileSeq, width = 1L, as.prob = TRUE)
+fDi <- oligonucleotideFrequency(tileSeq, width = 2L, as.prob = TRUE)
+fracGC <- fMono[, "G"] + fMono[, "C"]
+oeCpG <- (fDi[, "CG"] + 0.01) / (fMono[, "G"] * fMono[, "C"] + 0.01)
+
+## Add the information to the tiles object
+tiles$fracGC <- fracGC
+tiles$oeCpG <- oeCpG
+
+## Mark tiles with overlap with CpG islands
+# url <- "https://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/cpgIslandExt.txt.gz"
+# url <- "https://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/cpgIslandExt.txt.gz"
+# 
+# con <- pipe(paste("curl -L", shQuote(url)), "rb")
+# cpg <- read.delim(gzcon(con), header = FALSE)
+# close(con)
+# 
+# cpgIslands <- read.delim("https://hgdownload.cse.ucsc.edu/goldenPath/mm39/database/cpgIslandExt.txt.gz", 
+#                          header = FALSE)
 
 ```
+
+
+::: {.callout-tip}
+## Exercise
+Examine the different objects above and get more familiar with what they show. You can use the help pages of the used functions with `?functionName` ro inspect that the functions does, expects and gives back.
+:::
+
+We can now proceed to counting the reads on the tiles we have produced. This will take a few seconds.
+```{r}
+## Quantify reads
+cntTiles <- qCount(proj = proj, query = tiles, mapqMin = 42, clObj = cl)
+head(cntTiles)
+```
+
+Let's plot the log2(counts) vs the GC content of the tiles.
+
+```{r}
+
+## Prepare to plot
+df <- as.data.frame(cbind(cntTiles, mcols(tiles))) %>%
+  as_tibble() %>%
+  pivot_longer(cols = starts_with("ChIPseq_"), names_to = "sample", values_to = "rawCount")
+
+## Plot
+ggplot(df, aes(x = fracGC, y = log2(rawCount+1))) +
+  geom_point() + 
+  facet_wrap(~sample)
+  
+  
+# df <- as.data.frame(cbind(cnt_tiles, mcols(tiles)))
+# set.seed(123)
+# s <- sample(x = 1:nrow(df), size = 25000, replace = FALSE)
+# df <- df[s, ]
+# df <- df %>%
+#   as_tibble() %>%
+#   pivot_longer(cols = 2:10, names_to = "Sample", values_to = "raw_cnt")
+# 
+# ggplot(df) + 
+#   geom_point(aes(x = percGC, y = log2(raw_cnt + 8), color = CGI.hasOverlap), alpha = 0.2) + 
+#   geom_smooth(data = df[!df$CGI.hasOverlap, ], mapping = aes(x = percGC, y = log2(raw_cnt + 8)), span = 0.7) + 
+#   facet_wrap(~ Sample) + 
+#   theme_minimal()  
+#   
+
+```
+
 
 
 mapping QC, GC bias
