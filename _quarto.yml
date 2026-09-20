@@ -10,7 +10,7 @@ website:
   favicon: "assets/favicon.png"
   navbar:
     logo: "assets/logos/nbis-scilifelab.webp"
-    logo-alt: "logo"
+    logo-alt: "nbis scilifelab logo"
     right:
       - text: "Home"
         href: "index.html"
@@ -32,7 +32,7 @@ website:
       #  aria-label: "tutorialSetup"
       - text: "FAQ"
         href: "home_faq.html"
-        aria-label: "FAQ"
+        aria-label: "Frequently Asked Questions"
       - text: About
         href: "home_about.html"
         aria-label: "About"
@@ -74,7 +74,7 @@ format:
     title-block-banner: "assets/images/banner.webp"
     subtitle: "NBIS Workshop"
     callout-icon: true
-    date:  last-modified
+    date: last-modified
     date-format: "DD-MMM-YYYY"
     image: "assets/images/featured.webp"
     lightbox: auto
@@ -128,7 +128,7 @@ execute:
   message: false
   freeze: false
 
-metadata-files: 
+metadata-files:
   - _metadata.yml
 
 filters:
