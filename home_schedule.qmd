@@ -2,6 +2,7 @@
 title: "Schedule"
 description: "The schedule is intended for when following a live workshop. For materials, see **Contents**"
 date: ""
+toc: false
 number-sections: false
 sidebar: false
 toastui:
@@ -52,4 +53,5 @@ format:
   html
 ---
 
+<!-- Remember to set first schedule date in the YAML above -->
 {{< toastui schedule >}}
