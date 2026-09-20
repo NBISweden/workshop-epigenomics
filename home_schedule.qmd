@@ -14,6 +14,11 @@ toastui:
     isReadOnly: true
     height: 980px
     timegridHeight: 900px
+    eventDetailItems:
+      - attendees
+    popupDetailItems:
+      - attendees
+      - calendar
     week:
       workweek: true
       taskView: false
