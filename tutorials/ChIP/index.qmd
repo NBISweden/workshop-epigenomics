@@ -9,6 +9,7 @@ date: "`r format(Sys.time(), '%B %d, %Y')`"
 editor: 
   markdown: 
     wrap: 72
+bibliography: references.bib
 ---
 
 
@@ -25,6 +26,7 @@ suppressPackageStartupMessages({
   library(limma)
   library(BSgenome.Mmusculus.UCSC.mm39)
   library(GenomicRanges)
+  library(csaw)
   library(ggplot2)
   library(tidyr)
   #library(GenomeInfoDb)
@@ -206,14 +208,66 @@ Re-do the plots above, coloring by `oeCpG` and `overlappingCpG`. Depending on th
 
 ## Estimating fragment size
 
+ChIP-seq enriches the DNA fragments containing the bound TF, and so the reads start at the beginning of the fragment. This does not reflect where the TF was sitting, likely somewhere in the middle of the fragment. To have the reads reflect the position of the TF, which is our signal of interest, the reads need to be shifted by a size which approximately translates to half the fragment size. Figure  @fig-readShift from @Wilbanks2010 illustrates this. Our samples contains single end (SE) reads, some coming from the negative and some the positive strand. We can use this to estimate the original fragment size by shifting the reads from the forward strand and calculating the cross-correlation between the shifted forward positions and the original reverse positions.
+
+::: {layout-ncol=2}
+
+![Reads mapping to the negative and positive strands of the DNA. Image from @Wilbanks2010.](assets/readShift.webp){#fig-readShift height=300px}
+
+![Example of a good cross correlation plot. The first small peak is typically reflecting the red length whereas the second big peak reflects the fragment size. Image from the Csaw Book by @Lun2016.](assets/crossCorr.webp){#fig-crossCorr height=300px}
+
+:::
 
 
 
 
+Let's take one example sample and estimate the average fragment size. Note that this needs to be a non-input sample.
+```{r}
+## Prepare to read the bam file into R
+bamFile <- "data/ChIPseq_ESC_CTCF_IP_wt_rep1_chr19.ucsc.fixed.bam"
+param <- readParam(minq=20)
 
-illustrate where TF sits and where true signal is, autocorrelation
+max.delay <- 500
+dedup.on <- initialize(param, dedup=TRUE)
+x <- correlateReads(bamFile, max.delay, param=param)
+plot(0:max.delay, x, type="l", ylab="CCF", xlab="Delay (bp)")
+maximizeCcf(x)
+```
 
-## Peak calling
+
+::: {.callout-tip}
+## Exercise
+Choose another sample and estimate the average fragment size. How does it compare to `ChIPseq_ESC_CTCF_IP_wt_rep1`? By how much should the reads be shifted on average to get the TF binding location?
+:::
+
+
+
+## peak calling per sampel and comparing across replicates
+
+have backups ready here..(pelle down)
+
+## common set of peaks, and quantify
+
+
+scatter plots, PCA, qProfile, diff binding?
+
+
+### Global correlation
+
+Let's use the counts on the tiles and look at how the samples correlate with each other on a global level. Ideally, we want to see replicates of the same condition grouping together, unless there are other reasons they shouldn't. For example if the signals differ a lot between samples and that drives the correlation, if the biological source of variation between conditions is smaller than the technical source of variation, or if there are no biological differences between conditions.
+
+First, we need to normalize for difference in library size between samples.
+```{r}
+
+# cpm <- sweep(x = cnt_tiles[, -1], MARGIN = 2, STATS = colSums(cnt_tiles[, -1]), FUN = "/")*1e6
+# log_cpm <- as.data.frame(log2(cpm + 1))
+# 
+
+
+```
+
+
+## Extra: histone mark: do same thing
  
 TF vs histone mark
  

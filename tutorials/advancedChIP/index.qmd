@@ -31,7 +31,12 @@ suppressPackageStartupMessages({
 ```
 
 
-## Explore the count matrix
+```{r}
+jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
+```
+
+
+## Read in the data
 
 Our starting point for this tutorial is two raw count matrices: one on promoters and another on gene bodies. Promoters were defined as 1kb upstream and 500 bases downstream the transcription start site (TSS) and gene bodies as regions from 1kb to 3 kb downstream the TSS. The rows in these count matrices correspond to genes and the columns correspond to the different modalities quantified on the promoter and gene body level and at three different developmental time points, namely E14, E18 and P4, where E14 means day 14 at the embryonic stage and P4 means 4 days post natally or after birth. The marks that were quantified are ATAC-seq, H3K27me3, H3K27Ac and H3K4me2. 
 
@@ -68,6 +73,21 @@ gbCnt <- readRDS("dataObjects/geneBodiesCnt.rds")
 1. Examine the gene body regions and counts.
 2. Pick either on of the two count matrices (promoter or gene body level) and summarize how many time points there are, how many marks are measured, and how many replicates each mark has per time point. You can make use of the `table` function to do this.
 :::
+
+## Explore the count matrices
+
+We will now get a global picture of our data. We want to know if there is any global non-linearitites or problems with the counts. Do we expect global shifts across time?
+
+```{r}
+# cnt <- pCnt[, grep("K4Me2", colnames(pCnt))]
+# 
+# pairs(cnt, panel = function(...){smoothScatter(..., nrpoints = 0, colramp = jet.colors, add=TRUE);abline(a=0,b=1,col="white")}, 
+#       main = paste0("Original log2(RPKM) - ", conditions[i]))
+# 
+
+
+```
+
 
 
 
