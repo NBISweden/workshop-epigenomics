@@ -1,0 +1,712 @@
+---
+title: "Peak Annotation"
+format: 
+  html:
+    toc: true
+    toc-depth: 2
+    fig-format: png
+    mermaid:
+      theme: default
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+editor: 
+  markdown: 
+    wrap: 72
+bibliography: references.bib
+---
+
+
+```{r echo=FALSE,include=FALSE,cache=FALSE}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE, 
+                      collapse = TRUE, 
+                      warning = FALSE, 
+                      message = FALSE,
+                      include=TRUE,
+                      cache=FALSE,
+                      out.width = "99%")
+
+options(knitr.duplicate.label = "allow")
+
+```
+
+```{=html}
+<!-- 
+Author:         Agata Smialowska
+About:          This qmd file is used to render the .html file. To modify or 
+                update the .html file, please do so in the .qmd file here and 
+                render it.
+-->
+```
+
+
+<br />
+
+## Learning outcomes
+
+
+Using packages from Bioconductor:
+
+
+* to profile ATAC-seq signal by genomic location and by proximity to TSS regions;
+
+* to annotate peaks with the nearest feature;
+
+* to perform functional annotation.
+
+
+<br />
+<br />
+
+
+::: {.callout-note}
+
+  
+   We continue working with data from [@Tsao2022]. We will use the count table derived from non subset data (already prepared).
+
+   We will also use results of [Differential Accessibility](../ATACda/index.html).
+
+   Data processing recap: reads were mapped to reference genome `mm39`.
+
+:::
+
+
+<br />
+<br />
+
+
+## Introduction
+
+In this tutorial we use an R / Bioconductor package `ChIPseeker` [@Yu2015], to inspect the ATAC signal profiles (can be used for ChIP-seq as well), annotate peaks and visualise annotations. We will also perform functional annotation of peaks using `clusterProfiler` [@Yu2012].
+
+This tutorial is based on the [ChIPseeker package tutorial](https://bioconductor.org/packages/release/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html) so feel free to have this open alongside to read and experiment more.
+
+
+<br />
+<br />
+
+## Data & Methods
+
+We will build upon the main labs:
+
+* ATAC-seq: all detected peaks (merged consensus peaks);
+
+* ATAC-seq: differentially accessible peaks;
+
+<br />
+<br />
+
+## Setting Up
+
+You can continue working in the directory `atacseq/analysis/counts`. This directory contains merged peaks called earlier using genrich as well as count tables derived from summarising of non-subset data. Although strictly speaking we won’t need the count tables for this exercise, this will be our staring point, to prepare the object for the differential accessibility analysis. We will use file `AB_Batf_KO_invivo.genrich_joint.merged_peaks.featureCounts` and annotation libraries, which are preinstalled. 
+
+
+::: {.callout-note}
+  
+   We take advantage of the module system on Pelle in this tutorial. The code was tested under `R 4.6.1` The lab was developed under the R version stated in session info.
+
+:::
+
+<br />
+<br />
+
+
+We access the R environment via:
+
+```
+module load R_packages/4.6.1
+```
+
+We activate R console upon typing `R` in the terminal.
+
+
+Alternatively you can work on this tutorial locally, using R libraries installed via `renv`.
+
+
+We begin by loading necessary libraries:
+
+```{r}
+#| label: libraries
+#| echo: true
+
+library(tidyverse)
+library(dplyr)
+library(kableExtra)
+
+library(GenomicRanges)
+
+library(ChIPseeker)
+library(ggupset)
+library(ggimage)
+library(biomaRt)
+library(txdbmaker)
+library(GenomicFeatures)
+
+library(clusterProfiler)
+library(org.Mm.eg.db)
+library(ReactomePA)
+```
+
+
+```{r}
+#| echo: false
+
+#workdir="/Users/agatasmialowska/NBIS/teaching/epigenomics_workshop/homepage/workshop-epigenomics/tutorials/ATAC-DA"
+
+#.libPaths=c("/Users/agatasmialowska/Library/R/arm64/4.6/library","/Library/Frameworks/R.framework/Versions/4.6/Resources/library",.libPaths())
+```
+
+
+```
+workdir=getwd()
+
+workdir=setwd()
+```
+
+<br />
+<br />
+
+## Preparing Annotations
+
+We will use TSS annotations from Ensembl. We can fetch them from `biomaRt`:
+
+
+::: {.callout-note collapse="true"}
+
+### Obtaining the annotation objects
+
+```
+txdb_mm39 = txdbmaker::makeTxDbFromBiomart(biomart="ensembl",
+                               dataset="mmusculus_gene_ensembl",
+                               circ_seqs=NULL,
+                               taxonomyId=NA)
+
+ensembl = useEnsembl(biomart="genes", dataset="mmusculus_gene_ensembl")
+all_genes = names(transcriptsBy(txdb_mm39, "gene"))
+
+gene_annot_mm39=getBM(attributes = 
+   c('ensembl_gene_id', 'ensembl_transcript_id','external_gene_name','entrezgene_id','description','gene_biotype','chromosome_name','start_position','end_position','strand','transcription_start_site'),
+       filters = 'ensembl_gene_id',
+       values = all_genes, 
+        mart = ensembl)
+```
+
+:::
+
+<br />
+<br />
+
+We have prepared these for you, so you can load them via:
+
+
+```{r}
+annotdir=file.path("assets","annotation")
+
+#pth_txdbens=file.path(annotdir,"Ensembl.txdb.GRCm39.Rdata")
+#txdb_mm39=loadDb(pth_txdbens)
+
+gene_annot_mm39=read.delim(file.path(annotdir,"mm39_gene_names.tab"), sep="\t", header=TRUE, quote = "")
+```
+
+<br />
+<br />
+
+
+You can inspect the objects:
+
+
+```
+txdb_mm39
+## TxDb object:
+## # Db type: TxDb
+## # Supporting package: GenomicFeatures
+## # Data source: BioMart
+## # Organism: Mus musculus
+## # Taxonomy ID: 10090
+## # Resource URL: www.ensembl.org:443
+## # BioMart database: ENSEMBL_MART_ENSEMBL
+## # BioMart database version: Ensembl Genes 115
+## # BioMart dataset: mmusculus_gene_ensembl
+## # BioMart dataset description: Mouse genes (GRCm39)
+## # BioMart dataset version: GRCm39
+## # Full dataset: yes
+## # miRBase build ID: NA
+## # Nb of transcripts: 278396
+## # Db created by: txdbmaker package from Bioconductor
+## # Creation time: 2025-09-08 11:35:27 +0200 (Mon, 08 Sep 2025)
+## # txdbmaker version at creation time: 1.0.1
+## # RSQLite version at creation time: 2.4.3
+## # DBSCHEMAVERSION: 1.2
+```
+
+
+```{r}
+#| collapse: TRUE
+
+head(gene_annot_mm39)
+```
+
+<br />
+<br />
+
+
+
+
+::: {.callout-note collapse="true"}
+
+### Working with UCSC annotations
+  
+If you would rather annotate TSS using the gene models from UCSC you can use the Bioconductor package directly:
+
+```
+library(TxDb.Mmusculus.UCSC.mm39.knownGene)
+txdb = TxDb.Hsapiens.UCSC.mm39.knownGene
+```
+
+Please note that UCSC and Ensembl use different contig naming schemes, so it is advisable to use the annotation matching the genome reference used for read mapping.
+
+:::
+
+<br />
+<br />
+
+
+
+## Data
+
+We can now load data. We will subset the count table to only contain the peaks on assembled chromosomes.
+
+```{r}
+count_table_fname="AB_Batf_KO_invivo.genrich_joint.merged_peaks.featureCounts"
+
+cnt_table_pth=file.path("assets","data",count_table_fname)
+
+cnt_table=read.table(cnt_table_pth, sep="\t", header=TRUE, blank.lines.skip=TRUE)
+rownames(cnt_table)=cnt_table$Geneid
+rownames(cnt_table)=c(gsub("AB_Batf_KO_invivo.genrich_joint.","",rownames(cnt_table)))
+colnames(cnt_table)=c(colnames(cnt_table)[1:6],gsub(".filt.bam","",colnames(cnt_table)[7:10]))
+
+colnames(cnt_table)[7:10]=c("B1_WT_Batf-floxed","B2_WT_Batf-floxed","A1_Batf_cKO","A2_Batf_cKO")
+
+#remove peaks not on the assembled chromosomes
+cnt_table_chr=cnt_table|>
+  dplyr::filter(Chr%in%c(1:19) | Chr%in%c("X","Y"))
+
+reads.peak=cnt_table_chr[,c(7:10)]
+
+head(reads.peak)
+```
+
+
+* All peaks: n = `r nrow(cnt_table)`;
+
+* Peaks on assembled chromosomes: n = `r nrow(cnt_table_chr)`. These peaks will be used for further analysis.
+
+<br />
+<br />
+
+
+## Peak Annotation
+
+We will be working on a `GRanges` object `peaks_gr` containing non-subset peaks (i.e. all assebled chromosome peaks).
+
+We create the `GRanges` object:
+
+```{r}
+peaks_gr=GRanges(seqnames=cnt_table_chr$Chr, ranges=IRanges(cnt_table_chr$Start, cnt_table_chr$End), strand="*", mcols=data.frame(peakID=rownames(cnt_table_chr)))
+```
+
+and inspect it:
+
+```{r}
+peaks_gr
+```
+
+<br />
+<br />
+
+
+
+We are ready to annotate the peaks to their closest feature:
+
+
+```
+peakAnno=annotatePeak(peaks_gr, tssRegion=c(-3000, 3000),TxDb=txdb_mm39)
+```
+
+```
+#| echo: FALSE
+saveRDS(peakAnno, 
+  file = "assets/rds/Batf_WT_KO.merged_peaks.annot.obj.rds", 
+  ascii = FALSE, 
+  version = NULL, 
+  compress = TRUE, 
+  refhook = NULL)
+```
+
+```{r}
+#| echo: FALSE
+peakAnno=readRDS("assets/rds/Batf_WT_KO.merged_peaks.annot.obj.rds")
+```
+
+Summary of the regions annotated to peaks:
+
+
+```{r}
+peakAnno
+```
+
+Over 30% peaks localised to TSS, as expected in an ATAC-seq experiment.
+
+<br />
+<br />
+
+
+To inspect peak annotations:
+
+```{r}
+peakAnno_df=as.data.frame(peakAnno)
+```
+
+```
+  seqnames   start     end width strand   mcols.peakID        annotation geneChr geneStart geneEnd geneLength geneStrand             geneId       transcriptId distanceToTSS
+1        1 3050939 3052959  2021      * merged_peaks_1 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -90517
+2        1 3053048 3054634  1587      * merged_peaks_2 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -88842
+3        1 3054861 3055532   672      * merged_peaks_3 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -87944
+4        1 3057260 3057785   526      * merged_peaks_4 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -85691
+5        1 3059375 3061360  1986      * merged_peaks_5 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -82116
+6        1 3066555 3069092  2538      * merged_peaks_6 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -74384
+```
+
+<br />
+<br />
+
+
+We may want to include more gene related information:
+
+```{r}
+peakAnno_df=peakAnno_df|>
+  left_join(gene_annot_mm39, by=c("transcriptId"="ensembl_transcript_id"))|>
+  dplyr::rename(peakID=mcols.peakID)
+```
+
+
+
+
+<br />
+<br />
+
+
+::: {.callout-note collapse="true"}
+
+### Annotated peaks can be saved to a file as a table or rds object
+
+```
+write.table(peakAnno_df, "Batf_WT_KO.merged_peaks.tsv", 
+    append = FALSE, 
+    quote = FALSE, 
+    sep = "\t",
+    row.names = FALSE,
+    col.names = TRUE, 
+    fileEncoding = "")
+```
+
+<br />
+<br />
+
+```
+saveRDS(peakAnno_df, 
+  file = "assets/rds/Batf_WT_KO.merged_peaks.annot.rds", 
+  ascii = FALSE, 
+  version = NULL, 
+  compress = TRUE, 
+  refhook = NULL)
+```
+
+
+:::
+
+<br />
+<br />
+
+We can also assess the read density at annotated TSS regions. The plot of read density at the transcription start sites (TSS) for all peaks is presented on @fig-tss-profile.
+
+```
+promoter = getPromoters(TxDb=txdb_mm39, upstream=3000, downstream=3000)
+```
+
+<!-- 
+
+```
+promoter = getPromoters(TxDb=txdb_mm39, upstream=3000, downstream=3000)
+saveRDS(promoter, 
+  file = "assets/rds/prom.ensembl.rds", 
+  ascii = FALSE, 
+  version = NULL, 
+  compress = TRUE, 
+  refhook = NULL)
+```
+ -->
+
+
+```{r}
+#| echo: FALSE
+promoter=readRDS("assets/rds/prom.ensembl.rds")
+```
+
+
+```{r}
+tagMatrix = getTagMatrix(peaks_gr, windows=promoter)
+
+TSS_profile = plotAvgProf(tagMatrix, xlim=c(-3000, 3000), xlab="Genomic Region (5'->3')", ylab = "Read Count in Peaks")
+```
+
+
+
+::: {#fig-tss-profile}
+
+```{r}
+TSS_profile
+```
+Plot of signal density in peaks in relation to transcription start sites (TSS). Expected is an enrichment of signal proximal to TSS.
+
+:::
+
+
+
+<br />
+<br />
+
+
+We can also plot summary of the annotations:
+
+```{r}
+peakAnnoplot=upsetplot(peakAnno, vennpie=TRUE)
+```
+
+
+::: {#fig-annot-upset}
+
+```{r}
+peakAnnoplot
+```
+Summary of features annotated to peaks.
+
+:::
+
+
+::: {.callout-note collapse="true"}
+
+### Saving the plots
+
+
+```
+pdf("TSSdist.pdf")
+  TSS_profile
+dev.off()
+
+pdf("AnnotVis.pdf")
+  peakAnnoplot
+dev.off()
+
+```
+
+:::
+
+
+<br />
+<br />
+
+<br />
+<br />
+
+## Functional Analysis
+
+Having obtained annotations to nearest genes, we can perform functional enrichment analysis to identify predominant biological themes among these genes by incorporating knowledge provided by biological ontologies, e.g. GO (Gene Ontology, [@GO]) and Reactome [@reactome].
+
+<br />
+
+We can use several approaches and peak sets for this, e.g.:
+
+* genes annotated to merged consensus peaks set in e.g. promoters or proximal to TSS to assess functional signature in open chromatin regions (OCRs) (overrepresentation analysis set vs. id universe, ORA);
+
+* differentially accessible peaks to define functional signature in OCRs which change their occupancy status (ORA);
+
+* genes annotated to merged consensus peaks set ranked by an effect size metric (Gene Set Enrichment Analysis, GSEA).
+
+<br />
+<br />
+
+
+Let’s first annotate the consensus peaks with **Reactome**.
+
+Reactome uses **entrez gene ID** space.
+
+<br />
+<br />
+
+
+Reactome pathway enrichment of genes defined as the nearest feature to the peaks:
+
+```{r}
+entrez_ids=peakAnno_df$entrezgene_id
+entrez_ids=entrez_ids[!is.na(unique(entrez_ids))]
+
+pathway.reac=ReactomePA::enrichPathway(entrez_ids, organism = "mouse")
+```
+
+<br />
+<br />
+
+```{r}
+#previewing enriched Reactome pathways
+colnames(as.data.frame(pathway.reac))
+
+#we skip the preview of some columns which contain long strings of gene IDs
+pathway.reac[1:10,c(1:7,9)]
+```
+
+<br />
+<br />
+
+We can see familar terms which can be connected to sample biology: 
+
+* Cytokine Signaling in Immune system
+
+* Class I MHC mediated antigen processing & presentation
+
+
+<br />
+<br />
+
+
+
+We can also check for GO terms enriched amongst DA OCRs by using GSEA.
+
+
+We need to read in the results of the DA analysis:
+
+```{r}
+DA_res=readRDS("assets/rds/Batf_WT_KO.merged_peaks.DA_TMM.annot.rds")
+```
+
+The metric to use in GSEA ideally should combine effect size and statistical significance. Ties in the ranked list are discouraged, as they may lead to unexpected results.
+
+Common practice for constructing the metric based on `edgeR` results is:
+
+```{r}
+DA_res=DA_res|>
+  dplyr::mutate(gsea_metric=PValue*logFC)
+```
+
+GSEA statistical framework recommends that the ranked gene list is duplicate free; yet often a gene may have more than one peak annotated. If we leave the list as is (i.e. with duplicated gene ids and different value for ranking metric for each entry), we have no control over which peak / metric value gets selected for GSEA, which may lead to unexpected results. Applying some selection strategy for genes with multiple peaks helps with interpretability of the GSEA results.
+
+<br />
+<br />
+
+In this tutorial, we select:
+
+* genes with ATAC peaks up to 3 kb of their TSS (annotated as `Promoter`);
+
+* one peak per gene; we select the peak with largest absolute fold change;
+
+
+This will require some data wrangling:
+
+```{r}
+DA_res.prom.top=DA_res|>
+  dplyr::mutate(gene_name=coalesce(external_gene_name,geneId))|>
+  dplyr::filter(annotation%in%c("Promoter"))|>
+  dplyr::group_by(gene_name)|>
+  dplyr::mutate(gene_max_abs_lfc=max(abs(logFC)))|>
+  dplyr::ungroup()|>
+  dplyr::rowwise()|>
+  dplyr::filter(abs(logFC)==gene_max_abs_lfc)|>
+  dplyr::distinct(gene_name, .keep_all=TRUE)|>
+  as.data.frame()
+```
+
+<br />
+<br />
+
+We can now create a named list, sort it, and use it in GSEA:
+
+```{r}
+gene_list=DA_res.prom.top$gsea_metric #using pval*logFC
+names(gene_list)=DA_res.prom.top$geneId
+gene_list=gene_list[order(gene_list,decreasing=TRUE)]
+
+gsea_go=clusterProfiler::gseGO(
+        geneList     = gene_list,
+        OrgDb        = org.Mm.eg.db,
+        keyType      = "ENSEMBL",
+        ont          = "BP",
+        pvalueCutoff = 0.05,
+        seed         = TRUE,
+        verbose      = FALSE,
+        nPermSimple  = 1000,
+        eps          = 0,
+        scoreType    = "std",
+        by           = "fgsea"
+    )
+
+```
+
+<br />
+<br />
+
+`clusterProfiler` outputs an object with its own internal structure, which can be used for plotting using [enrichplot](https://yulab-smu.top/biomedical-knowledge-mining-book/enrichplot.html). To view just the result of GSEA test we can:
+
+```{r}
+go_res=gsea_go@result
+go_res=go_res|>
+    rowwise()|>
+    dplyr::mutate(core_enrichment_ls=strsplit(core_enrichment,split="/"))|>
+    dplyr::mutate(gene_count=length(core_enrichment_ls))|>    
+    dplyr::mutate(GeneRatio=length(core_enrichment_ls)/setSize)|>
+    dplyr::select(!core_enrichment_ls)
+
+
+go_res_peaks_up=as.data.frame(go_res)|>
+    dplyr::select(ID,Description,enrichmentScore,NES,p.adjust,qvalue,gene_count,setSize,GeneRatio)|>
+    dplyr::filter(NES>0)|>
+    dplyr::arrange(desc(abs(NES)))
+```
+
+<br />
+<br />
+
+Upon object inspection we can see terms related to interleukin signalling, amongst other GO terms. 
+
+<br />
+<br />
+
+<br />
+<br />
+
+## Session Info
+
+<br />
+<br />
+
+
+::: {.callout-note collapse="true"}
+
+
+## Session Info
+
+
+```{r}
+#| label: session-info
+
+sessionInfo()
+```
+
+:::
+
+<br />
+<br />
+
+## References
+
+
