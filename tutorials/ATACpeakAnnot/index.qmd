@@ -631,7 +631,7 @@ DA_res.prom.top=DA_res|>
 
 We can now create a named list, sort it, and use it in GSEA:
 
-```{r}
+```
 gene_list=DA_res.prom.top$gsea_metric #using pval*logFC
 names(gene_list)=DA_res.prom.top$geneId
 gene_list=gene_list[order(gene_list,decreasing=TRUE)]
@@ -657,7 +657,7 @@ gsea_go=clusterProfiler::gseGO(
 
 `clusterProfiler` outputs an object with its own internal structure, which can be used for plotting using [enrichplot](https://yulab-smu.top/biomedical-knowledge-mining-book/enrichplot.html). To view just the result of GSEA test we can:
 
-```{r}
+```
 go_res=gsea_go@result
 go_res=go_res|>
     rowwise()|>
