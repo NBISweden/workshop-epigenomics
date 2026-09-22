@@ -99,13 +99,13 @@ ATAC-seq data analysis workflow.
 
 Tutorials in this module:
 
-* [Data Processing and QC](../ATACprocessing/index.html)
+* [Data Processing and QC](../../tutorials/ATACprocessing/index.html)
 
-* [Peak Detection](../ATACpeakAnnot/index.html)
+* [Peak Detection](../../tutorials/ATACpeakAnnot/index.html)
 
-* [Differential Accessibility](../ATACda/index.html)
+* [Differential Accessibility](../../tutorials/ATACda/index.html)
 
-* [Peak Annotation](../ATACpeakAnnot/index.html)
+* [Peak Annotation](../../tutorials/ATACpeakAnnot/index.html)
 
 
 <br />
@@ -113,9 +113,9 @@ Tutorials in this module:
 
 Additional ATAC-seq related tutorials:
 
-* [TF motifs](../TFs/representingMotifs.html)
+* [TF motifs](../../tutorials/TFs/representingMotifs.html)
 
-* [Identifying Relevant TFs](../TFs/representingMotifs.html)
+* [Identifying Relevant TFs](../../tutorials/TFs/representingMotifs.html)
 
 
 

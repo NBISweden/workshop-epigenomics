@@ -33,7 +33,7 @@ About:          This qmd file is used to render the .html file. To modify or
 
 Tutorials in this module:
 
-* [Array](../DNAM/Array/array.html)
+* [Array](../../tutorials/DNAM/Array/array.html)
 
-* [WGBS](../DNAM/WGBS/wgbs.html)
+* [WGBS](../../tutorials/DNAM/WGBS/wgbs.html)
 

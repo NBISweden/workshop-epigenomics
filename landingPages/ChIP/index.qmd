@@ -36,4 +36,4 @@ About:          This qmd file is used to render the .html file. To modify or
 
 Tutorials in this module:
 
-* [TF motifs](../TFs/representingMotifs.html)
+* [TF motifs](../../tutorials/TFs/representingMotifs.html)
