@@ -30,6 +30,12 @@ website:
       #- text: "Tutorial Setup"
       #  href: "home_tutorialsetup.html"
       #  aria-label: "tutorialSetup"
+      - text: "Tutorials"
+        menu:
+          - text: "DNA methylation"
+            href: "tutorials/DNAM/Array/array.html"
+          - text: "ATACseq"
+            href: "tutorials/ATAC/index.html"
       - text: "FAQ"
         href: "home_faq.html"
         aria-label: "FAQ"
