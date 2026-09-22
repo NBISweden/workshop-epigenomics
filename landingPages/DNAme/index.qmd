@@ -1,0 +1,39 @@
+---
+title: "DNA methylation"
+format: 
+  html:
+    fig-format: png
+    number-sections: false
+    mermaid:
+      theme: default
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+editor: 
+  markdown: 
+    wrap: 72
+bibliography: references.bib
+---
+
+
+```{=html}
+<!-- 
+About:          This qmd file is used to render the .html file. To modify or 
+                update the .html file, please do so in the .qmd file here and 
+                render it.
+-->
+```
+
+<br />
+<br />
+
+## DNA methylation tutorials
+
+<br />
+<br />
+
+
+Tutorials in this module:
+
+* [Array](../DNAM/Array/array.html)
+
+* [WGBS](../DNAM/WGBS/wgbs.html)
+
