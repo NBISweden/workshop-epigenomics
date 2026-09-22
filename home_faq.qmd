@@ -1,5 +1,6 @@
 ---
 title: "FAQs"
+pagetitle: "Frequently Asked Questions"
 description: "Frequently Asked Questions"
 toc: false
 date: ""
@@ -17,3 +18,4 @@ format: html
 ---
 
 {{< accordion faq >}}
+

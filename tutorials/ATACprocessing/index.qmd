@@ -1,0 +1,834 @@
+---
+title: "ATAC-seq Data Processing and Quality Control"
+format: 
+  html:
+    toc: true
+    toc-depth: 2
+    fig-format: png
+    mermaid:
+      theme: default
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+editor: 
+  markdown: 
+    wrap: 72
+bibliography: references.bib
+---
+
+
+```{r echo=FALSE,include=FALSE,cache=FALSE}
+library(knitr)
+
+knitr::opts_chunk$set(echo = FALSE, 
+                      collapse = TRUE, 
+                      warning = FALSE, 
+                      message = FALSE,
+                      include=TRUE,
+                      cache=FALSE,
+                      out.width = "99%")
+
+options(knitr.duplicate.label = "allow")
+
+```
+
+<br />
+
+## Learning outcomes
+
+
+* apply standard processing methods used in functional genomics on ATAC-seq data;
+
+* apply quality control methods agnostic to signal structure, which are used in functional genomics, on an example of ATAC-seq data;
+
+* assess quality of the ATAC-seq libraries with a range of quality metrics;
+
+* become accustomed to work in interactive HPC environment (Pelle / Uppmax cluster);
+
+* work interactively with ATAC-seq signal using Integrative Genome Viewer (IGV);
+
+
+<br />
+<br />
+
+
+
+::: {.callout-note collapse="false"}
+
+### Note on this workflow
+
+This workflow is developed using ATAC-seq data. Many of the principles of data filtering and quality control apply to other functional genomics data sets.
+
+![Overview of ATAC-seq [@Buenrostro2015]](assets/figures/atac-seq-figure1.png){width=70%}
+
+:::
+
+
+## Introduction
+
+<br />
+<br />
+
+
+::: {#fig-flowchart-1}
+
+
+```{mermaid}
+%%| label: fig-mermaid-flowchart1
+%%| fig-width: 6
+%%| echo: FALSE
+
+flowchart LR
+  subgraph QC
+    D(Quality Control, Feature Agnostic)
+  end
+  subgraph Processing
+    B([Data Processing])
+  end
+
+  A[Data] --> B([Data Processing])
+  B([Data Processing]) --> C(Feature Detection)
+  B([Data Processing]) --> D(Quality Control, Feature Agnostic)
+  C(Feature Detection) --> E(Feature Annotation)
+  C(Feature Detection) --> F(Statistical Analysis)
+  C(Feature Detection) --> G(Visualisation)
+  B([Data Processing]) --> G(Visualisation)
+  E(Feature Annotation) --> I{Analysed}
+  F(Statistical Analysis) --> I{Analysed}
+  D(Quality Control, Feature Agnostic) --> H(Quality Control, Feature Focused)
+  C(Feature Detection) --> H(Quality Control, Feature Focused)
+  G(Visualisation) --> I{Analysed}
+  H(Quality Control, Feature Focused) --> I{Analysed}
+
+  style A fill:#8FB4F7,stroke:#2768F5
+  style I fill:#DF8FF7,stroke:#C11DF2
+  style QC fill:#A0C49D,stroke:#648C61
+  style Processing fill:#A4D6E0,stroke:#6A898F
+
+```
+
+
+
+```{mermaid}
+%%| label: fig-mermaid-flowchart2
+%%| fig-width: 5
+%%| echo: FALSE
+
+flowchart TD
+  subgraph Processing
+    B(Remove low quality Alignments)
+    C(Mark duplicate alignments)
+    D(Remove blacklist regions)
+  end
+  subgraph QC
+    E(Collect metrics: mapping, filtering)
+    F(Replicate concordance)
+    G(ATAC-seq specific metrics)
+  end
+
+  A[Aligned Reads] --> B(Remove low quality alignments)
+  B(Remove low quality Alignments) --> C(Mark duplicate alignments)
+  C(Mark duplicate alignments) --> D(Remove blacklist regions)
+  D(Remove blacklist regions) --> E(Collect metrics: mapping, filtering)
+  A[Aligned Reads] --> E(Collect metrics: mapping, filtering)
+  E(Collect metrics: mapping, filtering) --> F(Replicate concordance)
+  F(Replicate concordance) --> G(ATAC-seq specific metrics)
+  D(Remove blacklist regions) --> I{Processed Data}
+  G(ATAC-seq specific metrics) --> I{Processed Data}
+
+  style A fill:#8FB4F7,stroke:#2768F5
+  style I fill:#DF8FF7,stroke:#C11DF2
+  style QC fill:#A0C49D,stroke:#648C61
+  style Processing fill:#A4D6E0,stroke:#6A898F
+
+```
+
+
+ATAC-seq data analysis workflow, assuming the starting point are reads aligned to reference genome. Highlighted in turquoise and green are topics of this tutorial.
+:::
+
+<br />
+
+<br />
+<br />
+
+
+The aim of this part of the data analysis workflow is to remove alignments which most likely are artifacts and could interfere with data analysis (upper-left part of the concept map). These include:
+
+* alignments to organelles (mitchondria);
+
+* alignments within "blacklisted regions": regions of unusually high signal in many functional genomics experiments, described in @[Amemiya2019];
+
+* low quality alignments;
+
+* duplicate alignments (i.e. both mates of a pair map to identical genomic locations).
+
+
+We assume that starting point are reads mapped to a reference sequence.
+
+
+
+
+<br />
+<br />
+
+## Before we start
+
+Today we are going to work on [Pelle](https://docs.uppmax.uu.se/cluster_guides/pelle/)
+an HPC cluster hosted by [Uppmax](https://www.uu.se/centrum/uppmax/).
+
+<br />
+
+Please follow the setup procedure to book a node and log in to it as desribed in section
+[Setting Up](../ATAC/index.html)
+
+
+<br />
+<br />
+
+## Data
+
+We will work with **ATAC-seq** data in this tutorial, however the same principles apply to other functional genomics data types. 
+
+We will use data that come from publication **Batf-mediated epigenetic control of effector CD8+
+T cell differentiation** [@Tsao2022]. These are **ATAC-seq** libraries (in duplicates) prepared to analyse chromatin accessibility status in murine CD8+ T lymphocytes prior to and upon Batf knockout.
+
+The response of naive CD8+ T cells to their cognate antigen involves rapid and broad changes to gene expression that are coupled with extensive chromatin remodeling. Basic leucine zipper ATF-like transcription
+factor **Batf** is essential for the early phases of the process.
+
+We will use data from the *in vivo* experiment described in the paper.
+
+
+SRA sample accession numbers are listed in Table 1.
+
+
+
+::: {.list-table}
+   - - No
+     - Accession
+     - Sample Name
+     - Description
+   - - 1
+     - SRR17296554
+     - B1_WT_Batf-floxed_Cre_P14
+     - WT Batf
+   - - 2
+     - SRR17296555
+     - B2_WT_Batf-floxed_Cre_P14
+     - WT Batf
+   - - 3
+     - SRR17296556
+     - A1_Batf_cKO_P14
+     - KO Batf
+   - - 4
+     - SRR17296557
+     - A2_Batf_cKO_P14
+     - KO Batf
+
+Table 1. Samples used in this tutorial.
+:::
+
+
+
+<br />
+
+We have processed the data, starting from raw reads. The reads were aligned to **GRCm39** reference assembly using **bowtie2** and subset to include alignments to chromosome 1 and 1% of reads mapped to chromosomes 2 to 5 and MT.
+
+This allows you to see a realistic coverage of one selected chromosome and collect QC metrics while allowing shorter computing times.
+
+
+<br />
+
+
+### Setting up directory structure and files
+
+Normally you process several files from your data set using the same workflow. We are going to process just one file, as an example. In addition to the file with unprocessed alignments which will be our starting point, we will need annotation files. Files produced in this part will be used in downstream tutorials, therefore saving files in a structured manner is essential to keep track of the analysis steps (and always a good practice). We have preset data access and environment for you. To use these settings run:
+
+
+* `atac_data.sh` that sets up directory structure and creates symbolic links to data as well as copies smaller files **[RUN ONLY ONCE]**
+
+
+<br />
+
+Copy the script to your home directory and execute it:
+
+
+```
+cp /proj/epi2026/atacseq_proc/atacseq_data.sh .
+  
+bash atacseq_data.sh
+```
+
+<br />
+
+You should see a newly created directory named `atacseq`. Everything you need for completing the ATAC-seq tutorials is located there. When you enter `atacseq` you'll see several other directories. `results` contains precomputed results of (most of) the steps, so you can continue in case something goes wrong along the way. You can enter `analysis`; this is where we'll be working today.
+
+<br />
+
+```
+cd atacseq
+
+ls .
+cd analysis
+```
+
+
+<br />
+<br />
+
+
+
+## Read Mapping Statistics
+
+As stated above, we use data which has already been mapped to a reference.
+To start with, we can inspect the statistics of these unprocessed data. We will be working in directory `processedData`:
+
+<br />
+
+```
+mkdir processedData
+cd processedData
+
+module load bioinfo-tools
+module load samtools/1.19
+
+samtools idxstats ../../data/SRR17296554.mapped.bowtie2.chr1.bam  >SRR17296554.idxstats
+samtools stats ../../data/SRR17296554.mapped.bowtie2.chr1.bam  >SRR17296554.stats
+```
+<br />
+
+One of the characteristics of the ATAC-seq signal is the presence of reads mapped to organelles. These reads may constitute even 40% of the library, depending on the library preparation method. MT contents be used to flag failed libraries early on. 
+
+We can inspect the Mt contents of our data::
+
+<br />
+
+```
+#total fragments
+awk '{sum += $3} END {print sum}' SRR17296554.idxstats
+11335599
+
+#chrM fragments
+awk '$1 ~ /MT/ {print $3}' SRR17296554.idxstats
+75245
+```
+<br />
+
+`MT/total` ratio in this file is `0.007` (thanks to data subsetting). The fraction of MT reads in the nonsubset file was `0.053`, a value to be expected if using the Omni ATAC library prep [@Corces2017]. Older protocols result in much higher values.
+
+<br />
+<br />
+
+We can inspect the read mapping statistics in `SRR17296554.stats`:
+
+<br />
+
+```
+grep ^SN SRR17296554.stats | cut -f 2-
+
+  raw total sequences:  11399457  # excluding supplementary and secondary reads
+  filtered sequences: 0
+  sequences:  11399457
+  is sorted:  1
+  1st fragments:  5694081
+  last fragments: 5705376
+  reads mapped: 11335599
+  reads mapped and paired:  11271741  # paired-end technology bit set + both mates mapped
+  reads unmapped: 63858
+  reads properly paired:  11230312  # proper-pair bit set
+  reads paired: 11399457  # paired-end technology bit set
+  reads duplicated: 0 # PCR or optical duplicate bit set
+  reads MQ0:  5945  # mapped and MQ=0
+  reads QC failed:  0
+  non-primary alignments: 0
+  supplementary alignments: 0
+  total length: 420662620 # ignores clipping
+  total first fragment length:  210119227 # ignores clipping
+  total last fragment length: 210543393 # ignores clipping
+  bases mapped: 418303160 # ignores clipping
+  bases mapped (cigar): 417695422 # more accurate
+  bases trimmed:  0
+  bases duplicated: 0
+  mismatches: 822766  # from NM fields
+  error rate: 1.969775e-03  # mismatches / bases mapped (cigar)
+  average length: 37
+  average first fragment length:  37
+  average last fragment length: 37
+  maximum length: 37
+  maximum first fragment length:  37
+  maximum last fragment length: 37
+  average quality:  34.1
+  insert size average:  220.2
+  insert size standard deviation: 134.6
+  inward oriented pairs:  5597226
+  outward oriented pairs: 19488
+  pairs with other orientation: 1094
+  pairs on different chromosomes: 18062
+  percentage of properly paired reads (%):  98.5
+
+```
+
+
+<br />
+<br />
+
+
+
+## Processing alignments
+
+<br />
+
+We start by removing alignments within problematic genomic regions.
+
+We use **mm38** specific blacklist from ENCODE, accession `ENCFF999QPV`, which was litover to **GRCm39** using UCSC `liftOver` web tool. 
+
+We will perform this as a "complement" operation, i.e. we will retain alignments which overlap the *non-blacklisted* regions (`complementBed` from [bedtools](https://bedtools.readthedocs.io/en/latest/content/tools/complement.html)).
+
+
+Before we can do this we need to prepare the genomic regions:
+
+<br />
+
+```
+module load BEDTools/2.31.1
+
+sortBed -i  ../../annot/ENCFF999QPV.mm39_ens.bed  | complementBed -i stdin -g ../../annot/GRCm39.sizes > mm39.noblcklst.bed
+```
+<br />
+
+While we are at it, we can also remove the MT contig from the *non-blacklist* regions:
+
+<br />
+
+```
+awk '$1 != "MT" { print $0 }' mm39.noblcklst.bed > mm39.noblcklst_MT.bed
+```
+
+<br />
+
+We can now remove the alignments in problematic reagions (blacklists and MT). Please note the bam file should be sorted and indexed first (required by ``samtools view``), which we have done beforehand.
+
+<br />
+
+We retain alignments **not** within the blacklisted regions, which also are *properly paired* and of minimum MAPQ 5 (`-f 0x2 -q 5`):
+
+<br />
+
+```
+samtools view -f 0x2 -q 5 -M -L mm39.noblcklst_MT.bed -hbo SRR17296554.blstMT_filt.bam ../../data/SRR17296554.mapped.bowtie2.chr1.bam
+
+samtools index SRR17296554.blstMT_filt.bam
+```
+
+<br />
+
+How many alignments are retained?
+
+<br />
+
+```
+samtools idxstats SRR17296554.blstMT_filt.bam >SRR17296554.blstMT_filt.idxstats
+
+awk '{sum += $3} END {print sum}' SRR17296554.blstMT_filt.idxstats
+
+9440817 alignments are retained after filtering (out of initial 11335599).
+```
+
+<br />
+
+Finally, we can mark / remove duplicated alignments. Note: we are not removing the duplicated alignments, just marking them.
+
+<br />
+
+```
+module load picard/3.1.1
+
+java -Xmx31G -jar $PICARD MarkDuplicates -I SRR17296554.blstMT_filt.bam \
+   -O SRR17296554.blstMT_filt.dedup.bam -M SRR17296554.dedup_metrics \
+   -VALIDATION_STRINGENCY LENIENT -REMOVE_DUPLICATES false -ASSUME_SORTED true
+
+samtools index SRR17296554.blstMT_filt.dedup.bam
+
+```
+
+<br />
+
+Resulting file ``SRR17296554.blstMT_filt.dedup.bam`` containes preprocessed alignments we can use in the analysis and visualisations.
+
+We can inspect the duplication status of the library. This is another early QC step we perform, and it informs us of library complexity.
+
+<br />
+
+```
+head SRR17296554.dedup_metrics
+```
+<br />
+
+Key information from `SRR17296554.dedup_metrics`:
+
+<br />
+
+```
+  READ_PAIRS_EXAMINED 4720408
+  READ_PAIR_DUPLICATES 1389167
+  PERCENT_DUPLICATION 0.29429
+```
+
+<br />
+
+
+::: {.callout-note collapse="true"}
+
+### Inspecting file contents
+
+```
+  ## METRICS CLASS  picard.sam.DuplicationMetrics
+  
+  LIBRARY UNPAIRED_READS_EXAMINED READ_PAIRS_EXAMINED SECONDARY_OR_SUPPLEMENTARY_RDS  UNMAPPED_READS  UNPAIRED_READ_DUPLICATES  READ_PAIR_DUPLICATES  READ_PAIR_OPTICAL_DUPLICATES  PERCENT_DUPLICATION ESTIMATED_LIBRARY_SIZE
+  
+  Unknown Library 0 4720408 0 0 0 1389167 0 0.29429 6354197
+```
+:::
+
+<br />
+<br />
+
+
+Good news, acceptable duplication level in this library, we can proceed with further QC and analysis.
+
+
+<br />
+<br />
+
+## Peak independent QC for ATAC-seq data
+
+
+<br />
+<br />
+
+
+The aim of this part of the data analysis workflow is to perform general signal structure agnostic (i.e. peak - independent) quality control (lower-right part of the concept map). These include:
+
+* assessment of read coverage along the genome;
+
+* replicate congruency.
+
+
+Basic read count statistics were already collected in the previous part.
+
+
+<br />
+<br />
+
+
+### Cumulative Enrichment
+
+<br />
+<br />
+
+
+[Cumulative enrichment](https://deeptools.readthedocs.io/en/3.5.2/content/tools/plotFingerprint.html) aka BAM **fingerprint**, is a way of assesing the quality of signal concentrated predeminantly in a small fraction of a genome (such as peaks detected in ATAC-seq and ChIP-seq). It determines how well the signal in the sample can be differentiated from the background.
+
+Cumulative enrichment is obtained by sampling indexed BAM files and plotting a profile of cumulative read coverages for each sample. All reads overlapping a window (bin) of the specified length are counted; these counts are sorted and the cumulative sum is plotted.
+
+To compute cumulative enrichment for processed bam files in our ATAC-seq data set (assuming we are in drectory `analysis`, so if you have followed the previous tutorial, you should move one directory level up `cd ..`). Here we use files preprocessed earlier:
+
+<br />
+
+
+```
+mkdir deepTools
+cd deepTools
+
+#link necessary files to avoid long paths in commands
+ln -s ../../data_proc/* .
+
+module load deepTools/3.5.6
+
+plotFingerprint --bamfiles SRR17296554.filt.chr1.bam SRR17296555.filt.chr1.bam SRR17296556.filt.chr1.bam SRR17296557.filt.chr1.bam \
+   --binSize=1000 --plotFile Invivo_proc.fingerprint.pdf \
+   --smartLabels -p 5 &> fingerprint.log
+```
+
+<br />
+
+You can copy the resulting file to your local system to view it.
+
+<br />
+
+::: {.callout-note collapse="true"}
+
+### Copying files from remote server
+
+To copy files from Pelle (or any remote host) you need to know the path to the file on Pelle  (i.e. the remote side). Type in the terminal::
+
+```
+pwd
+```
+
+This gives you the path to the working directory, e.g::
+
+```
+/proj/epi2025/nobackup/agata/tst/atac_proc/atacseq/analysis/deepTools/
+```
+
+To copy file `Invivo_proc.fingerprint.pdf` to *current directory*, type in the **local** terminal:
+
+```
+scp <username>@pelle.uppmax.uu.se:/path/to/file .
+```
+
+E.g.:
+
+```
+scp agata@pelle.uppmax.uu.se:/proj/epi2025/nobackup/agata/tst/atac_proc/atacseq/analysis/deepTools/Invivo_proc.fingerprint.pdf .
+```
+
+You will be prompted to input the 2FA code following the password to Uppmax.
+
+:::
+
+
+<br />
+<br />
+
+
+Have a look at `Invivo_proc.fingerprint.pdf`, read `deepTools` [What the plots tell you] (https://deeptools.readthedocs.io/en/latest/content/tools/plotFingerprint.html#what-the-plots-tell-you>) and answer
+
+- does it indicate a good sample quality, i.e. signal present in narrow regions?
+
+<br />
+<br />
+
+
+::: {.callout-note collapse="true"}
+
+### Fingerprint for ATAC-seq signal in Batf KO dataset. Data subset to chr1.
+
+![Fingerprint](assets/figures/Invivo_proc.fingerprint.png)
+
+:::
+
+::: {.callout-note collapse="true"}
+
+### Fingerprint for ATAC-seq signal in Batf KO dataset. Non subset data.
+
+![Fingerprint](assets/figures/tsao2022_proc.plotFingerprint.png)
+
+:::
+
+
+
+
+
+<br />
+<br />
+
+
+
+### Replicate Clustering
+
+
+**To assess overall similarity between libraries from different samples** one can compute sample clustering heatmaps using
+[multiBamSummary](http://deeptools.readthedocs.io/en/latest/content/tools/multiBamSummary.html) and [plotCorrelation](http://deeptools.readthedocs.io/en/latest/content/tools/plotCorrelation.html) in bins mode from `deepTools`.
+
+In this method the genome is divided into bins of specified size (`--binSize` parameter) and reads mapped to each bin are counted. The resulting signal profiles are used to cluster libraries to identify groups of similar signal profile.
+
+In this part we use bam files prepared before the workshop, to save time.
+
+
+```
+multiBamSummary bins --bamfiles SRR17296554.filt.chr1.bam SRR17296555.filt.chr1.bam SRR17296556.filt.chr1.bam SRR17296557.filt.chr1.bam \
+   --smartLabels \
+   --outFileName Invivo_proc.npz --binSize 5000 -p 5 &> multiBamSummary.log
+
+
+plotCorrelation --corData Invivo_proc.npz \
+   --plotFile Invivo_proc_correlation_bin.pdf --outFileCorMatrix Invivo_proc_correlation_bin.txt \
+   --whatToPlot heatmap --corMethod pearson --plotNumbers
+
+
+# to change the min number plotted
+plotCorrelation --corData Invivo_proc.npz \
+   --plotFile Invivo_proc_correlation_bin.pdf --outFileCorMatrix Invivo_proc_correlation_bin.txt \
+   --whatToPlot heatmap --corMethod pearson --plotNumbers -min 0.95
+```
+
+
+
+You can copy the resulting file to your local system to view it.
+
+What do you think?
+
+- which samples are similar?
+
+- are the clustering results as you would have expected them to be?
+
+
+<br />
+<br />
+
+
+
+::: {.callout-note collapse="true"}
+
+### Correlation of binned ATAC-seq signal in Batf KO *in vivo* data set. Data subset to chr 1.
+
+![Pearson correlation, data subset to chr1](assets/figures/Invivo_proc_correlation_bin.png)
+
+![Pearson correlation, data subset to chr1, min 0.95](assets/figures/Invivo_proc_correlation_bin_2.png))
+
+:::
+
+<br />
+<br />
+
+
+::: {.callout-note collapse="true"}
+
+### Correlation of binned ATAC-seq signal in Batf KO *in vivo* and *in vitro* data sets. Non subset data.
+
+![Pearson correlation, non-subset data](assets/figures/tsao2022_proc.plotCorrelation.pearson.png)
+
+![Spearman correlation, non-subset data](assets/figures/tsao2022_proc.plotCorrelation.spearman.png)
+
+:::
+
+
+<br />
+<br />
+
+
+In addition to these general procedures, several specialised assay - specific quality metrics exist, which probe signal characteristics related to each method. These are **key QC metrics** to evaluate the experiment and should always be colleced during the QC step.
+
+We can now follow with the ATACseq specifc QC methods.
+
+<br />
+<br />
+<br />
+<br />
+
+## Quality Control for ATAC-seq
+
+
+<br />
+<br />
+
+
+The aim of this part of the data analysis workflow is to collect ATAC-seq specific quality metrics:
+
+
+* fragment length distribution;
+
+* presence of signal in nuclesome-free regions (NFR) and mononucleosome fractions;
+
+* enrichment of signal in transcription start site (TSS) regions.
+
+
+
+<br />
+<br />
+
+### Fragment Length Distribution
+
+
+In ATAC-seq experiments, tagmentation of Tn5 transposases produces signature size pattern of fragments derived from nucleosome-free regions (NFR), mononucleosome, dinucleosome, trinucleosome and longer oligonucleosome from open chromatin regions (@fig-fraglen-assay, adapted from [@Li2019].
+
+Please note the pre-processed BAM files need to be used to get an unbiased distribution of insert fragment size in the ATAC-seq library.
+
+
+<br />
+<br />
+
+::: {#fig-fraglen-assay}
+
+![](assets/figures/Lietal_atacTn5.png)
+
+Library fragments in the ATAC-seq data.
+:::
+
+<br />
+
+To compute fragment length distribution for processed bam file in our ATAC-seq data set (assuming we are in drectory `analysis`):
+
+<br />
+
+```
+mkdir QC
+cd QC
+
+ln -s ../processedData/SRR17296554.blstMT_filt.dedup.bam  .
+ln -s ../processedData/SRR17296554.blstMT_filt.dedup.bam.bai  .
+  
+module load picard/3.1.1
+
+java -Xmx31G -jar $PICARD CollectInsertSizeMetrics \
+  -I SRR17296554.blstMT_filt.dedup.bam \
+  -O SRR17296554.chr1.proc.fraglen.stats \
+  -H SRR17296554.chr1.proc.fraglen.pdf -M 0.5
+```
+<br />
+
+You can copy the resulting file to your local system to view it.
+
+
+Have a look at `SRR17296554.chr1.proc.fraglen.pdf` (@fig-fraglen-1), and answer
+
+- does it indicate a good sample quality? is the chromatin structure preserved?
+
+- what do the periodic peaks correspond to?
+
+
+<br />
+
+
+
+
+::: {#fig-fraglen-1}
+
+![Fragment length histogram in SRR17296554](assets/figures/SRR17296554.chr1.proc.fraglen.png){width=40%}
+
+Fragment length histogram of ATAC-seq signal in sample SRR17296554.
+:::
+
+<br />
+<br />
+
+
+<br />
+<br />
+
+
+Generating this key QC plot is only possible for **PE libraries**. Can you tell what the peaks at approximately 50bp, 200bp, 400bp and 600bp correspond to?
+
+<br />
+
+To give some context compare to plots on @fig-fraglen-2. 
+
+<br />
+
+::: {#fig-fraglen-2 layout-ncol=2}
+
+![Naked DNA](assets/figures/Screenshot_sizeDistribution_Naked.png){width=80%}
+
+![Failed ATAC-seq](assets/figures/Screenshot_sizeDistribution_Failed.png){width=80%}
+
+![Noisy ATAC-seq](assets/figures/Screenshot_sizeDistribution_Failed2.png){width=80%}
+
+![Successful ATAC-seq](assets/figures/Screenshot_sizeDistribution_Good.png){width=80%}
+
+Examples of insert size distribution for ATAC-seq experiments.
+:::
+
+
+
+
+<br />
+<br />
+
+<br />
+<br />
+
+<br />
+<br />
+
+
+

@@ -9,3 +9,6 @@ _site/
 /.quarto/
 
 **/*.quarto_ipynb
+
+tutorials/ChIP/data
+tutorials/ChIP/figures
