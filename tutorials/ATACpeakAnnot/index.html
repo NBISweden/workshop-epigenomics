@@ -191,6 +191,33 @@ background-size: cover;
     <a class="nav-link" href="../../home_precourse.html"> 
 <span class="menu-text">Precourse</span></a>
   </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutorials</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-tutorials">    
+        <li>
+    <a class="dropdown-item" href="../../landingPages/DNAme/index.html">
+ <span class="dropdown-text">DNA methylation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../landingPages/ATAC/index.html">
+ <span class="dropdown-text">ATACseq</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../landingPages/ChIP/index.html">
+ <span class="dropdown-text">ChIPseq</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../landingPages/TF/index.html">
+ <span class="dropdown-text">TFs</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../landingPages/scATAC/index.html">
+ <span class="dropdown-text">ChIPseq</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="../../home_faq.html"> 
 <span class="menu-text">FAQ</span></a>
@@ -778,11 +805,11 @@ saveRDS(promoter,
  -->
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>tagMatrix <span class="ot">=</span> <span class="fu">getTagMatrix</span>(peaks_gr, <span class="at">windows=</span>promoter)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing start_site regions by gene... 2026-09-22 14:12:57</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing tag matrix...  2026-09-22 14:12:57</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing start_site regions by gene... 2026-09-22 14:48:23</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing tag matrix...  2026-09-22 14:48:23</span></span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>TSS_profile <span class="ot">=</span> <span class="fu">plotAvgProf</span>(tagMatrix, <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">3000</span>, <span class="dv">3000</span>), <span class="at">xlab=</span><span class="st">"Genomic Region (5'-&gt;3')"</span>, <span class="at">ylab =</span> <span class="st">"Read Count in Peaks"</span>)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; plotting figure...             2026-09-22 14:13:21</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; plotting figure...             2026-09-22 14:48:48</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="fig-tss-profile" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-fig figure">
