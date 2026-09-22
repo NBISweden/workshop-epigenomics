@@ -22,7 +22,18 @@ jobs:
             libbz2-dev \
             liblzma-dev \
             bzip2-doc \
-            libgsl-dev
+            libgsl-dev \
+            cmake \
+            gsfonts \
+            libcairo2-dev \
+            libfontconfig1-dev \
+            libfreetype6-dev \
+            libglpk-dev \
+            libjpeg-dev \
+            libmagick++-dev \
+            libpng-dev \
+            libx11-dev \
+            pandoc
 
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
