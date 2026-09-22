@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="The schedule is intended for when following a live workshop. For materials, see Contents">
 
 <title>Schedule</title>
 <style>
@@ -43,10 +44,13 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-5cb467f805ac08d84b40d2cabe0cf67d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-1d7419975391f8d34029e70c3403f21d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7ec0f5a62e8198185a311a936c276bcd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-465c098b9354961f3c0c452a5d4e7f36.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/toastui-calendar-2.1.3/toastui-calendar.min.js"></script>
+<link href="site_libs/quarto-contrib/toastui-calendar-2.1.3/toastui-calendar.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/toastui-calendar-2.1.3/toastui.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -89,7 +93,7 @@ background-size: cover;
 
 
 <meta property="og:title" content="Schedule">
-<meta property="og:description" content="NBIS Workshop">
+<meta property="og:description" content="The schedule is intended for when following a live workshop. For materials, see Contents">
 <meta property="og:image" content="https://nbisweden.github.io/workshop-epigenomics/assets/images/featured.webp">
 </head>
 
@@ -104,8 +108,8 @@ background-size: cover;
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./assets/logos/nbis-scilifelab.webp" alt="logo" class="navbar-logo light-content">
-    <img src="./assets/logos/nbis-scilifelab.webp" alt="logo" class="navbar-logo dark-content">
+    <img src="./assets/logos/nbis-scilifelab.webp" alt="nbis scilifelab logo" class="navbar-logo light-content">
+    <img src="./assets/logos/nbis-scilifelab.webp" alt="nbis scilifelab logo" class="navbar-logo dark-content">
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -156,7 +160,12 @@ background-size: cover;
     <div class="quarto-title column-body">
       <h1 class="title">Schedule</h1>
             <p class="subtitle lead">NBIS Workshop</p>
-                      </div>
+                  <div>
+        <div class="description">
+          The schedule is intended for when following a live workshop. For materials, see <strong>Contents</strong>
+        </div>
+      </div>
+                </div>
   </div>
     
   
@@ -173,76 +182,250 @@ background-size: cover;
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
 
-<div class="contents-table column-body-outset">
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Topic</th>
-<th>Instructor</th>
-<th>Links</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="badge badge-primary">05-Oct-2026 (Mon)</span></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>DNA methylation</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><span class="badge badge-primary">06-Oct-2026 (Tue)</span></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>ATAC-seq</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><span class="badge badge-primary">07-Oct-2026 (Wed)</span></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>ChIP-seq</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><span class="badge badge-primary">08-Oct-2026 (Thu)</span></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Motifs</td>
-<td></td>
-<td><a href="presentations/TFs/TFslides.pdf">Slides</a>, <a href="tutorials/TFs/representingMotifs.html">Tutorial</a></td>
-</tr>
-<tr class="odd">
-<td><span class="badge badge-primary">09-Oct-2026 (Fri)</span></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Single cell omics</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
+<!-- Remember to set first schedule date in the YAML above -->
+<style>#toastui-calendar-1 .toastui-calendar-timegrid { height: 900px; min-height: unset; }</style>
+<div class="toastui-calendar-wrapper">
+<div class="toastui-nav" id="toastui-calendar-1-nav">
+  <button class="toastui-nav-btn" data-action="prev">◀</button>
+  <button class="toastui-nav-btn" data-action="today">Today</button>
+  <button class="toastui-nav-btn" data-action="next">▶</button>
+  <span class="toastui-nav-title" id="toastui-calendar-1-title"></span>
+  <span class="toastui-nav-right">
+    <button class="toastui-nav-btn toastui-view-btn" data-view="month">Month</button>
+    <button class="toastui-nav-btn toastui-view-btn" data-view="week">Week</button>
+    <button class="toastui-nav-btn toastui-view-btn" data-view="day">Day</button>
+  </span>
 </div>
+<div id="toastui-calendar-1" class="toastui-calendar-detail-popup-enabled toastui-calendar-detail-exclude-location toastui-calendar-detail-exclude-recurrence-rule toastui-calendar-detail-exclude-state toastui-calendar-detail-exclude-body" style="height: 980px;"></div>
+</div>
+<script>
+(function() {
+  var opts = {"defaultView":"week","isReadOnly":true,"timezone":{"zones":[{"timezoneName":"Europe/Stockholm"}]},"usageStatistics":false,"useDetailPopup":true,"week":{"eventView":["time"],"hourEnd":18,"hourStart":9,"showNowIndicator":true,"taskView":false,"workweek":true}};
+  opts.calendars = [{"backgroundColor":"#D6EAF8","borderColor":"#85C1E9","color":"inherit","dragBackgroundColor":"#D6EAF8","id":"session","name":"Session"},{"backgroundColor":"#FCF3CF","borderColor":"#F7DC6F","color":"inherit","dragBackgroundColor":"#FCF3CF","id":"free","name":"Free"},{"backgroundColor":"#E8DAEF","borderColor":"#BB8FCE","color":"inherit","dragBackgroundColor":"#E8DAEF","id":"extra","name":"Extra"}];
+  var timeFormat = "24h";
+  var eventDetailItems = ["attendees"];
+  var popupDetailItems = ["attendees","calendar"];
+  opts.template = opts.template || {};
+  var detailItemIcons = {
+    location: 'toastui-calendar-ic-location-b',
+    recurrenceRule: 'toastui-calendar-ic-repeat-b',
+    attendees: 'toastui-calendar-ic-user-b',
+    state: 'toastui-calendar-ic-state-b',
+    calendar: 'toastui-calendar-calendar-dot'
+  };
+  var nativeDetailItems = {
+    location: true,
+    recurrenceRule: true,
+    attendees: true,
+    state: true,
+    calendar: true,
+    body: true
+  };
+  function pad(value) {
+    return String(value).padStart(2, '0');
+  }
+  function formatTime(value) {
+    var hours = value.getHours();
+    var minutes = pad(value.getMinutes());
+    if (timeFormat === '24h') {
+      return pad(hours) + ':' + minutes;
+    }
+    return (hours % 12 || 12) + ':' + minutes + (hours < 12 ? ' am' : ' pm');
+  }
+  function formatDate(value) {
+    return value.getFullYear() + '.' + pad(value.getMonth() + 1) + '.' + pad(value.getDate());
+  }
+  function isSameDate(left, right) {
+    return left.getFullYear() === right.getFullYear() &&
+      left.getMonth() === right.getMonth() &&
+      left.getDate() === right.getDate();
+  }
+  function escapeHtml(value) {
+    var replacements = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function(character) {
+      return replacements[character];
+    });
+  }
+  function eventDetailValue(event, item) {
+    if (item === 'calendar') {
+      var calendars = opts.calendars || [];
+      for (var index = 0; index < calendars.length; index++) {
+        if (calendars[index].id === event.calendarId) return calendars[index].name || '';
+      }
+      return '';
+    }
+
+    var value = event[item];
+    if (value == null && event.raw) value = event.raw[item];
+    if (Array.isArray(value)) return value.join(', ');
+    return value == null ? '' : value;
+  }
+  function renderEventDetails(event) {
+    var details = eventDetailItems.map(function(item) {
+      var value = eventDetailValue(event, item);
+      if (value === '') return '';
+      var iconClass = Object.prototype.hasOwnProperty.call(detailItemIcons, item) ? detailItemIcons[item] : '';
+      var iconStyle = item === 'calendar' && event.backgroundColor ? ' style="background-color:' + escapeHtml(event.backgroundColor) + '"' : '';
+      var icon = iconClass ? '<span class="toastui-calendar-icon toastui-calendar-event-detail-icon ' + iconClass + '"' + iconStyle + '></span>' : '';
+      var label = Object.prototype.hasOwnProperty.call(nativeDetailItems, item) ? '' : '<strong>' + escapeHtml(item) + ':</strong> ';
+      return '<span class="toastui-calendar-event-detail-item">' + icon + label + escapeHtml(value) + '</span>';
+    }).join('');
+    return details ? '<span class="toastui-calendar-event-detail-items">' + details + '</span>' : '';
+  }
+  function renderCustomPopupDetails(event) {
+    var customItems = popupDetailItems.filter(function(item) {
+      return !Object.prototype.hasOwnProperty.call(nativeDetailItems, item);
+    });
+    if (customItems.length === 0) return true;
+
+    var section = container.querySelector('.toastui-calendar-section-detail');
+    if (!section) return false;
+    section.querySelectorAll('.toastui-calendar-custom-detail-item').forEach(function(element) {
+      element.remove();
+    });
+    customItems.forEach(function(item) {
+      var value = eventDetailValue(event, item);
+      if (value === '') return;
+      var row = document.createElement('div');
+      row.className = 'toastui-calendar-detail-item toastui-calendar-custom-detail-item';
+      var label = document.createElement('strong');
+      label.textContent = item + ': ';
+      row.appendChild(label);
+      row.appendChild(document.createTextNode(String(value)));
+      section.appendChild(row);
+    });
+    return true;
+  }
+
+  opts.template.time = function(event) {
+    var title = escapeHtml(event.title);
+    var titleAndTime = event.start ? '<strong>' + formatTime(event.start) + '</strong>&nbsp;' + title : title;
+    return titleAndTime + renderEventDetails(event);
+  };
+  opts.template.timegridDisplayPrimaryTime = function(model) {
+    return formatTime(model.time);
+  };
+  opts.template.timegridDisplayTime = function(model) {
+    return formatTime(model.time);
+  };
+  opts.template.timegridNowIndicatorLabel = function(model) {
+    return formatTime(model.time);
+  };
+  opts.template.popupDetailDate = function(event) {
+    var sameDate = isSameDate(event.start, event.end);
+    if (event.isAllday) {
+      return formatDate(event.start) + (sameDate ? '' : ' - ' + formatDate(event.end));
+    }
+
+    var end = (sameDate ? '' : formatDate(event.end) + ' ') + formatTime(event.end);
+    return formatDate(event.start) + ' ' + formatTime(event.start) + ' - ' + end;
+  };
+  var container = document.getElementById("toastui-calendar-1");
+  var cal = new tui.Calendar(container, opts);
+  function fitShortTimedEvent(event) {
+    if (!event.start || !event.end || event.isAllday || event.category === 'allday') return;
+
+    var duration = event.end.getTime() - event.start.getTime();
+    var minimumDuration = 30 * 60 * 1000;
+    if (duration <= 0 || duration >= minimumDuration) return;
+
+    var weekOptions = opts.week || {};
+    var hourStart = weekOptions.hourStart == null ? 0 : Number(weekOptions.hourStart);
+    var hourEnd = weekOptions.hourEnd == null ? 24 : Number(weekOptions.hourEnd);
+    var visibleDuration = (hourEnd - hourStart) * 60 * 60 * 1000;
+    if (visibleDuration <= 0) return;
+
+    var height = duration / visibleDuration * 100;
+    if (event.id == null || event.id === '') return;
+    var eventId = String(event.id);
+    container.querySelectorAll('.toastui-calendar-event-time').forEach(function(element) {
+      if (element.getAttribute('data-event-id') !== eventId) return;
+      element.style.height = 'max(1px, calc(' + height + '% - 2px))';
+      element.style.minHeight = '0';
+      element.style.overflow = 'hidden';
+      var content = element.querySelector('.toastui-calendar-event-time-content');
+      if (content) {
+        content.style.minHeight = '0';
+        content.style.overflow = 'hidden';
+      }
+    });
+  }
+  cal.on('afterRenderEvent', fitShortTimedEvent);
+  var __ev = [{"attendees":[],"calendarId":"extra","end":"2026-10-05T09:30:00","start":"2026-10-05T09:00:00","title":"Welcome + NBIS Talk"},{"attendees":["Louella Vasque"],"calendarId":"session","end":"2026-10-05T10:10:00","start":"2026-10-05T09:30:00","title":"Talk: Introduction to DNA methylation + Overview Array Exercises"},{"attendees":[],"calendarId":"extra","end":"2026-10-05T10:30:00","start":"2026-10-05T10:10:00","title":"Uppmax set up + Break"},{"attendees":["Louella Vasque"],"calendarId":"session","end":"2026-10-05T12:00:00","start":"2026-10-05T10:30:00","title":"Lab: Array workflow"},{"attendees":[],"calendarId":"free","end":"2026-10-05T13:00:00","start":"2026-10-05T12:00:00","title":"Lunch (Offline)"},{"attendees":["Jessica Nordlund"],"calendarId":"session","end":"2026-10-05T14:00:00","start":"2026-10-05T13:00:00","title":"Talk: Methylation methods & technologies (NGI)"},{"attendees":[],"calendarId":"free","end":"2026-10-05T14:15:00","start":"2026-10-05T14:00:00","title":"Break"},{"attendees":[],"calendarId":"session","end":"2026-10-05T14:30:00","start":"2026-10-05T14:15:00","title":"Methylation Labs Overview II: Methylation Sequencing"},{"attendees":[],"calendarId":"session","end":"2026-10-05T16:00:00","start":"2026-10-05T14:30:00","title":"Lab: Methylation Sequencing"},{"attendees":[],"calendarId":"extra","end":"2026-10-05T17:00:00","start":"2026-10-05T16:00:00","title":"Daily challenge (Offline)"},{"attendees":["Louella Vasque"],"calendarId":"extra","end":"2026-10-06T09:30:00","start":"2026-10-06T09:00:00","title":"Recap previous day"},{"attendees":["Agata Smialowska"],"calendarId":"session","end":"2026-10-06T10:15:00","start":"2026-10-06T09:30:00","title":"Talk: Introduction to ATAC-seq data analysis"},{"attendees":[],"calendarId":"free","end":"2026-10-06T10:30:00","start":"2026-10-06T10:15:00","title":"Break"},{"attendees":["Agata Smialowska"],"calendarId":"session","end":"2026-10-06T11:30:00","start":"2026-10-06T10:30:00","title":"Lab: Data preprocessing, general QC and ATACseq QC"},{"attendees":["Agata Smialowska"],"calendarId":"session","end":"2026-10-06T12:00:00","start":"2026-10-06T11:30:00","title":"Lab: ATAC-seq data analysis"},{"attendees":[],"calendarId":"free","end":"2026-10-06T13:00:00","start":"2026-10-06T12:00:00","title":"Lunch (Offline)"},{"attendees":["Agata Smialowska"],"calendarId":"session","end":"2026-10-06T14:00:00","start":"2026-10-06T13:00:00","title":"Lab: ATAC-seq data analysis"},{"attendees":["Orlando Contreras Lopez and Michelle Ljungmark"],"calendarId":"session","end":"2026-10-06T15:00:00","start":"2026-10-06T14:00:00","title":"Presentation and Q&A with NGI"},{"attendees":["Agata Smialowska"],"calendarId":"session","end":"2026-10-06T15:30:00","start":"2026-10-06T15:00:00","title":"Lab: ATAC-seq data analysis"},{"attendees":[],"calendarId":"extra","end":"2026-10-06T17:00:00","start":"2026-10-06T15:30:00","title":"Daily challenge, Labs (Offline support)"},{"attendees":["Agata Smialowska"],"calendarId":"extra","end":"2026-10-07T09:30:00","start":"2026-10-07T09:00:00","title":"Recap previous day"},{"attendees":["Dania Machlab"],"calendarId":"session","end":"2026-10-07T10:15:00","start":"2026-10-07T09:30:00","title":"Talk"},{"attendees":[],"calendarId":"free","end":"2026-10-07T10:30:00","start":"2026-10-07T10:15:00","title":"Break"},{"attendees":["Dania Machlab"],"calendarId":"session","end":"2026-10-07T12:00:00","start":"2026-10-07T10:30:00","title":"Lab: ChIP-seq"},{"attendees":[],"calendarId":"free","end":"2026-10-07T13:00:00","start":"2026-10-07T12:00:00","title":"Lunch (Offline)"},{"attendees":["Prasoon Agarwal"],"calendarId":"session","end":"2026-10-07T13:45:00","start":"2026-10-07T13:00:00","title":"Talk: Cut & Tag/Run"},{"attendees":[],"calendarId":"free","end":"2026-10-07T14:00:00","start":"2026-10-07T13:45:00","title":"Break"},{"attendees":["Dania Machlab"],"calendarId":"session","end":"2026-10-07T15:30:00","start":"2026-10-07T14:00:00","title":"Lab: Advanced ChIP-seq"},{"attendees":[],"calendarId":"extra","end":"2026-10-07T17:00:00","start":"2026-10-07T15:30:00","title":"Daily challenge, Labs (Offline support)"},{"attendees":["Dania Machlab"],"calendarId":"extra","end":"2026-10-08T09:30:00","start":"2026-10-08T09:00:00","title":"Recap previous day"},{"attendees":["Dania Machlab"],"calendarId":"session","end":"2026-10-08T10:00:00","start":"2026-10-08T09:30:00","title":"Talk: Introduction to transcription factors and gene regulation"},{"attendees":["Dania Machlab"],"calendarId":"session","end":"2026-10-08T10:30:00","start":"2026-10-08T10:00:00","title":"Lab: Representing transcription factor binding sites"},{"attendees":[],"calendarId":"free","end":"2026-10-08T10:45:00","start":"2026-10-08T10:30:00","title":"Break"},{"attendees":["Dania Machlab"],"calendarId":"session","end":"2026-10-08T12:00:00","start":"2026-10-08T10:45:00","title":"Lab: Predicting relevant motifs"},{"attendees":[],"calendarId":"free","end":"2026-10-08T13:00:00","start":"2026-10-08T12:00:00","title":"Lunch (Offline)"},{"attendees":["Mattias Mannervik"],"calendarId":"session","end":"2026-10-08T14:00:00","start":"2026-10-08T13:00:00","title":"Keynote: BiG Talk"},{"attendees":[],"calendarId":"free","end":"2026-10-08T14:15:00","start":"2026-10-08T14:00:00","title":"Break"},{"attendees":[],"calendarId":"session","end":"2026-10-08T15:30:00","start":"2026-10-08T14:15:00","title":"Lab: Additional downstream exercises"},{"attendees":[],"calendarId":"extra","end":"2026-10-08T17:00:00","start":"2026-10-08T15:30:00","title":"Daily challenge, Labs (Offline support)"},{"attendees":["Dania Machlab"],"calendarId":"extra","end":"2026-10-09T09:30:00","start":"2026-10-09T09:00:00","title":"Recap previous day"},{"attendees":["Markus Ringnér"],"calendarId":"session","end":"2026-10-09T10:15:00","start":"2026-10-09T09:30:00","title":"Talk: Single cell methods"},{"attendees":[],"calendarId":"free","end":"2026-10-09T10:30:00","start":"2026-10-09T10:15:00","title":"Break"},{"attendees":["Markus Ringnér"],"calendarId":"session","end":"2026-10-09T10:45:00","start":"2026-10-09T10:30:00","title":"Talk: Integration of genomics data"},{"attendees":["Markus Ringnér"],"calendarId":"session","end":"2026-10-09T12:00:00","start":"2026-10-09T10:45:00","title":"Lab: Single cell and data integration"},{"attendees":[],"calendarId":"free","end":"2026-10-09T13:00:00","start":"2026-10-09T12:00:00","title":"Lunch (Offline)"},{"attendees":["Markus Ringnér"],"calendarId":"session","end":"2026-10-09T14:00:00","start":"2026-10-09T13:00:00","title":"Lab: Single cell and data integration"},{"attendees":[],"calendarId":"free","end":"2026-10-09T14:30:00","start":"2026-10-09T14:00:00","title":"Daily challenge, Break"},{"attendees":[],"calendarId":"extra","end":"2026-10-09T15:00:00","start":"2026-10-09T14:30:00","title":"Feedback, Wrap-up"},{"attendees":[],"calendarId":"extra","end":"2026-10-09T16:00:00","start":"2026-10-09T15:00:00","title":"(Offline support)"}];
+  __ev.forEach(function(e, index) {
+    if (e.id == null || e.id === '') e.id = 'toastui-calendar-1-event-' + index;
+    var source = Object.assign({}, e, e.raw && typeof e.raw === 'object' ? e.raw : {});
+    e.raw = source;
+    if (!e.state) e.state = '';
+    if (!e.attendees || (Array.isArray(e.attendees) && e.attendees.length === 0)) e.attendees = null;
+  });
+  cal.createEvents(__ev);
+  cal.setDate(new Date("2026-10-05"));
+  window.__quartoToastuiCalendars = window.__quartoToastuiCalendars || {};
+  window.__quartoToastuiCalendars["toastui-calendar-1"] = cal;
+  window.__quartoToastuiLastCalendarId = "toastui-calendar-1";
+  document.addEventListener('mousedown', function(e) {
+    var root = document.getElementById("toastui-calendar-1");
+    if (!root) return;
+    var popup = root.querySelector('.toastui-calendar-popup-container');
+    if (!popup) return;
+    if (popup.contains(e.target)) return;
+    try { cal.getStoreDispatchers().popup.hideAllPopup(); } catch(ex) {}
+  });
+  function updateTitle() {
+    var date = cal.getDate().toDate();
+    var viewName = cal.getViewName();
+    var title = '';
+    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    if (viewName === 'month') {
+      title = months[date.getMonth()] + ' ' + date.getFullYear();
+    } else if (viewName === 'week') {
+      var start = cal.getDateRangeStart().toDate();
+      var end_ = cal.getDateRangeEnd().toDate();
+      title = months[start.getMonth()] + ' ' + start.getDate() + ' - ' + months[end_.getMonth()] + ' ' + end_.getDate() + ', ' + end_.getFullYear();
+    } else {
+      title = months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
+    }
+    var el = document.getElementById("toastui-calendar-1-title");
+    if (el) el.textContent = title;
+    var navEl = document.getElementById("toastui-calendar-1-nav");
+    if (navEl) {
+      var btns = navEl.querySelectorAll('.toastui-view-btn');
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].classList.toggle('active', btns[i].getAttribute('data-view') === viewName);
+      }
+    }
+  }
+  var navEl = document.getElementById("toastui-calendar-1-nav");
+  if (navEl) {
+    navEl.addEventListener('click', function(e) {
+      var btn = e.target.closest('[data-action]');
+      if (btn) {
+        var action = btn.getAttribute('data-action');
+        if (action === 'prev') cal.prev();
+        else if (action === 'next') cal.next();
+        else if (action === 'today') cal.today();
+        updateTitle();
+        return;
+      }
+      var viewBtn = e.target.closest('[data-view]');
+      if (viewBtn) {
+        cal.changeView(viewBtn.getAttribute('data-view'));
+        updateTitle();
+      }
+    });
+  }
+  updateTitle();
+
+})();
+</script>
 
 
 
