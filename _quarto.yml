@@ -40,7 +40,7 @@ website:
             href: "landingPages/ChIP/index.html"
           - text: "TFs"
             href: "landingPages/TF/index.html"
-          - text: "ChIPseq"
+          - text: "Single Cell ATACseq"
             href: "landingPages/scATAC/index.html"
       - text: "FAQ"
         href: "home_faq.html"
