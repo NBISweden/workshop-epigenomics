@@ -32,6 +32,7 @@ suppressPackageStartupMessages({
   library(ggplot2)
   library(patchwork)
   library(ComplexHeatmap)
+  library(circlize)
   library(tidyr)
   library(tibble)
   library(dplyr)
@@ -565,8 +566,8 @@ head(peaks)
 ```{r}
 ## Prepare for SummarizedExperiment object
 rd <- as.data.frame(peaks) %>% 
-  rename(seqnames = "chromosome", start = "chrStart", end = "chrEnd", 
-         width = "peakWidth", strand = "chrStarnd")
+  rename(chr = seqnames, chrStart = start, chrEnd = end, 
+         peakWidth = width, chrStarnd = strand)
 rd <- DataFrame(rd)
 cd <- DataFrame(sampleName = apply(X = limma::strsplit2(colnames(cntPeaks), "_")[, 5:6], 
                                    MARGIN = 1, 
@@ -741,8 +742,8 @@ Another way to visualize this is via a heatmap. Here we need to make sure to pro
 
 ```{r}
 ## Profile plot counting on each peak
-names(peaks) <- paste0("peak_", 1:length(peaks))
-profile <- qProfile(proj, query = peaks, upstream = 1000, 
+names(centeredPeaks) <- paste0("peak_", 1:length(centeredPeaks))
+profile <- qProfile(proj, query = centeredPeaks, upstream = 1000, 
                     downstream = 1000, orientation = "any", 
                     shift = 75, clObj = cl)
 head(profile$ChIPseq_ESC_CTCF_IP_BPTFko_rep1[, 1:10])
@@ -750,30 +751,88 @@ head(profile$ChIPseq_ESC_CTCF_IP_BPTFko_rep1[, 1:10])
 
 Let's normalize these raw count matrices for library size differences again, and this time sum up the reads per condition to have an aggregate view.
 ```{r}
+#| fig-width: 15
+#| fig-height: 15
+
 ## Normalize for library size diffs
 normProfile <- lapply(2:length(profile), function(i){
-  profile[[i]] / sf[i] 
+  profile[[i]] / sf[i-1] 
 })
 names(normProfile) <- names(sf)
 
 ## Sum counts (matrices) by condition
-spl <- split(names(normProfile), )
+spl <- split(names(normProfile), 
+             paste(limma::strsplit2(names(normProfile), "_")[, 4], 
+                   limma::strsplit2(names(normProfile), "_")[, 5], 
+                   sep = "_"))
+summedNormProfile <- lapply(spl, function(samples) {
+    Reduce(`+`, normProfile[samples])
+})
+
+## Prepare for heatmaps on the peaks with the biggest absolute log2 fold-change 
+## ... between BPTFko and wt
+avrPeakLogFC <- rowMeans(assays(se)$log2cpm[, grep("BPTFko", colnames(se))]) - 
+  rowMeans(assays(se)$log2cpm[, grep("wt", colnames(se))])
+topVar <- abs(avrPeakLogFC) > 1.5
+matWt <- summedNormProfile$IP_wt[topVar, ]
+matBptfko <- summedNormProfile$IP_BPTFko[topVar, ]
+matDiff <- matBptfko - matWt
+
+## Heatmaps
+peakClust <- hclust(dist(matDiff), method = "ward.D2")
+colFunCnt <- colorRamp2(
+    c(quantile(rbind(matWt, matBptfko), 0.05), quantile(rbind(matWt, matBptfko), 0.95)),
+    c("cornsilk", "firebrick4")
+)
+colFunDiff <- colorRamp2(
+    c(-2, 0, 2),
+    c("steelblue", "cornsilk", "coral")
+)
+colsToLabel <- c("-800", "-400", "0", "400", "800")
+columnLabels <- ifelse(
+    colnames(matDiff) %in% colsToLabel,
+    colnames(matDiff),
+    ""
+)
+
+H1 <- Heatmap(matWt, cluster_columns = FALSE, show_row_names = FALSE, 
+              cluster_rows = peakClust, use_raster = TRUE, name = "normWtCount", 
+              column_title = "CTCF Binding Around Peaks in Wt", 
+              col = colFunCnt, column_labels = columnLabels, 
+              column_names_side = "top")
+H2 <- Heatmap(matBptfko, cluster_columns = FALSE, show_row_names = FALSE, 
+              cluster_rows = peakClust, use_raster = TRUE, name = "normBPTFkoCount", 
+              column_title = "CTCF Binding Around Peaks in BPTFko", 
+              col = colFunCnt, column_labels = columnLabels, 
+              column_names_side = "top")
+H3 <- Heatmap(matDiff, cluster_columns = FALSE, show_row_names = FALSE, 
+              cluster_rows = peakClust, use_raster = TRUE, name = "BPTFko-wt", 
+              column_title = "CTCF Binding Around Peaks in (BPTFko - Wt)", 
+              col = colFunDiff, column_labels = columnLabels, 
+              column_names_side = "top")
+H1 + H2 + H3
 ```
 
+We can see clear losses of CTCF binding in the top variable peaks.
 
+choose one of the peaks with big diff, make bigwig files and use gviz. add peak annotations up here..
 
-?top variable peaks?
+## Genome tracks
 
+Let's select a peak that caught our eye in these heatmaps and visualize the ChIP tracks against the reference.
 
 ## Diff expr
 
 MA plot
 
 
+annotate peaks somewhere
+
 ## Bonus exercise
 
 on histone mark (1 sample)
  
+qProfile plot on minus and plus strands, see arg, wihtout shifting. Do you see the bimodal distr?
  
 
 
