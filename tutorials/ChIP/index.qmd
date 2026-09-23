@@ -29,6 +29,7 @@ suppressPackageStartupMessages({
   library(csaw)
   library(Rsamtools)
   library(ggplot2)
+  library(patchwork)
   library(ComplexHeatmap)
   library(tidyr)
   #library(GenomeInfoDb)
@@ -272,19 +273,54 @@ log2cntNorm <- log2(cntNorm + 8)
 Compare the library sizes before and after correction. You can use `colSums` to sum the reads per sample.
 :::
 
-Let's calculate the enrichment values for sample `wt_rep1`.
+Let's calculate the enrichment values over the input for all samples. The enrichment will be calculated as $enr=log_2\frac{(normCountIP+8)}{(normCountInput+8)}$.
 
-
-HERE
 ```{r}
-## 
+## Samples
+samples <- apply(limma::strsplit2(colnames(cnt), "_")[, 5:6], 
+                 MARGIN = 1, 
+                 FUN = function(x){paste(x, collapse = "_")})
+spl <- split(colnames(cnt), samples)
+spl
+```
 
-enr <- log2cntNorm[, "ChIPseq_ESC_CTCF_IP_wt_rep1"] - log2cntNorm[, "ChIPseq_ESC_CTCF_input_wt_rep1"]
-enrTiles <- enr > 2
 
+```{r}
+## Calculate enrichment of input for all IP samples
+enr <- do.call(cbind, lapply(spl, function(samples){
+  ip <- samples[grep("_IP_", samples)]
+  input <- samples[grep("_input_", samples)]
+  log2cntNorm[, ip] - log2cntNorm[, input]
+}))
+head(enr)
+```
 
+We can now look at the distribution of these enrichment values. Let's have a look at sample `wt_rep1`.
+```{r}
+## Prepare to plot
+df <- as.data.frame(enr) %>% 
+  pivot_longer(cols = everything(), names_to = "sample", values_to = "enr") %>%
+  dplyr::filter(sample == "wt_rep1")
+
+## Plot
+ggplot(df) + 
+  geom_histogram(aes(x = enr), bins = 60) + 
+  theme_bw()
+```
+
+The normal looking distribution shows the background, and we can set a cutoff at around 2 to select for tiles which we consider enriched for the TF. Let's do that and see where these tiles fall in the count vs GC plot.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 4
+
+## Label enriched tiles for wt_rep1
+enrTiles <- enr[, "wt_rep1"] > 2
+
+## Prepare to plot
 df <- as.data.frame(cbind(cntTiles, mcols(tiles))) 
 df$enrTiles <- enrTiles
+df$enr <- enr[, "wt_rep1"] 
 zeroCounts <- rowSums(cntTiles[, -1]) == 0
 sum(zeroCounts) / nrow(df)
 df <- df[!zeroCounts, ]
@@ -295,16 +331,18 @@ df <- df[i, ]
 
 df <- df %>%
   as_tibble() %>%
-  pivot_longer(cols = starts_with("ChIPseq_"), names_to = "sample", values_to = "rawCount")
-
+  pivot_longer(cols = starts_with("ChIPseq_"), names_to = "sample", values_to = "rawCount") %>% 
+  dplyr::filter(sample == "ChIPseq_ESC_CTCF_IP_wt_rep1")
 
 ## Plot
-ggplot(df, aes(x = fracGC, y = log2(rawCount+1))) +
+p1 <- ggplot(df, aes(x = fracGC, y = log2(rawCount+1))) +
+  geom_point(aes(color = enr), size = 0.3) + 
+  scale_color_viridis_c() + 
+  theme_bw()
+p2 <- ggplot(df, aes(x = fracGC, y = log2(rawCount+1))) +
   geom_point(aes(color = enrTiles), size = 0.3) + 
-  theme_bw() + 
-  facet_wrap(~sample)
-
-
+  theme_bw()
+p1 + p2
 ```
 
 
@@ -348,7 +386,7 @@ maximizeCcf(ccf)
 
 ::: {.callout-tip}
 ## Exercise
-Choose another sample and estimate the average fragment size. How does it compare to `ChIPseq_ESC_CTCF_IP_wt_rep1`? By how much should the reads be shifted on average to get the TF binding location, and by what direction?
+Choose another sample and estimate the average fragment size. How does it compare to `ChIPseq_ESC_CTCF_IP_wt_rep1`? By how much should the reads be shifted on average to get the TF binding location, and in what direction?
 :::
 
 
@@ -357,11 +395,11 @@ Choose another sample and estimate the average fragment size. How does it compar
 
 ## Peak calling
 
-Shifting the forward and reverse reads by half the fragment size will be important during peak calling. We will be using `MACS3` for peak calling. MACS stands for **Mo**del-based **A**nalysis of **C**hIP-**S**eq. The main function we will be using there is `callpeak`. Note that we have chipped for TFs and so need to call narrow peaks representing the TF binding site. When chipping histone marks such as H3K27-acetylation, we expect broader peaks and there we would need to add the `--broad` argument when doing peak calling. We will also make use of our input samples when peak calling. This will be useful, especially since we have experiments on cell lines (ESCs), so that we can avoid problematic and repetitive parts of the genome which may appear as false peaks otherwise. This should be less of a problem in in-vivo data, but having inputs is always a benefit to be able to avoid false peaks.
+Shifting the forward and reverse reads by half the fragment size will be important during peak calling. We will be using `MACS3` for peak calling. MACS stands for **M**odel-based **A**nalysis of **C**hIP-**S**eq. The main function we will be using there is `callpeak`. Note that we have chipped for TFs and so need to call narrow peaks representing the TF binding site. When chipping histone marks such as H3K27-acetylation, we expect broader peaks and there we would need to add the `--broad` argument when doing peak calling. We will also make use of our input samples when peak calling. This will be useful, especially since we have experiments on cell lines (ESCs), so that we can avoid problematic and repetitive parts of the genome which may appear as false peaks otherwise. This should be less of a problem in in-vivo data, but having inputs is always a benefit to be able to avoid false peaks.
 
-The peak caller will by default filter duplicates by keeping one duplicate read both in the IP and it input sample. It will also estimate the average fragment size and shift the reads accordingly before doing peak calling. Generally speaking, peak calling is done by using a sliding window and comparing the counts in that to a background sliding window to see if there are more counts than expected. For more details on how peak calling is done in `MACS3` see [this](https://macs3-project.github.io/MACS/docs/Advanced_Step-by-step_Peak_Calling.html) section in the manual. You can also have a look at all the parameters the aligner offers by using `macs3 -h`.
+The peak caller will by default filter duplicates by keeping one duplicate read both in the IP and its input sample. It will also estimate the average fragment size and shift the reads accordingly before doing peak calling. Generally speaking, peak calling is done by using a sliding window and comparing the counts in that to a background sliding window to see if there are more counts than expected. For more details on how peak calling is done in `MACS3` see [this](https://macs3-project.github.io/MACS/docs/Advanced_Step-by-step_Peak_Calling.html) section in the manual. You can also have a look at all the parameters the aligner offers by using `macs3 -h`.
 
-Let's do peak calling on the `ChIPseq_ESC_CTCF_IP_wt_rep1` sample. Note that this step needs to done on Pelle (the HPC from UPPMAX). If you are unable to access the compute server, you may skip this step for now. We will be reading in the called peaks later. Note that we need to specify the genome size value. Since we are only looking at chr19 in these bam files, we will set it to the size of that chromosome, but this should be modified accordingly when working with the full genome.
+Let's do peak calling on the `ChIPseq_ESC_CTCF_IP_wt_rep1` sample. Note that this step needs to done on Pelle (the HPC from UPPMAX). If you are unable to access the compute server, you may skip this step for now. We will be reading in the called peaks later. Note that we need to specify the effective genome size value which is the size of the mappable genome. Because of the repetitive features on the chromosomes, the actual mappable genome size will be smaller than the original size, about 90% or 70% of the genome size. You can find more information and suggested values [here](https://macs3-project.github.io/MACS/docs/callpeak.html). Since we are only looking at chr19 in these bam files, we will set it to the size of that chromosome (even though in reality the mappable size will be smaller), but this should be modified accordingly when working with the full genome.
 
 ```{bash}
 #| eval: false
@@ -390,6 +428,14 @@ $macs3 callpeak -t $bamIP -c $bamInput -f BAM -g $genomeSize -q 0.01 \
 Check the contents of the `ChIPpeaks` folder. You can have a look at the individual files using `less yourFileName`, and exit this with `q` (short for quit).
 :::
 
+This command has been run for the rest of the samples. We will now download the peaks bed files and then read them into `R`.
+```{bash}
+#| eval: false
+
+## Download the peak files
+mkdir peaks
+rsync danmac@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/peaks/*_peaks.narrowPeak' peaks/ 
+```
 
 
 have backups ready here..(pelle down)
