@@ -26,12 +26,16 @@ suppressPackageStartupMessages({
   library(limma)
   library(BSgenome.Mmusculus.UCSC.mm39)
   library(GenomicRanges)
+  library(rtracklayer)
   library(csaw)
   library(Rsamtools)
   library(ggplot2)
   library(patchwork)
   library(ComplexHeatmap)
   library(tidyr)
+  library(tibble)
+  library(dplyr)
+  #library(stringr)
   #library(GenomeInfoDb)
 })
 
@@ -438,34 +442,338 @@ rsync danmac@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/peaks/*_peaks.narro
 ```
 
 
-have backups ready here..(pelle down)
-peak calling per sample and comparing across replicates
+### Peak overlap
 
+Let's examine how well our peaks overlap, particularly the repliactes.
 
-## common set of peaks, and quantify
-
-
-scatter plots, PCA, qProfile, diff binding?
-
-
-### Global correlation
-
-Let's use the counts on the tiles and look at how the samples correlate with each other on a global level. Ideally, we want to see replicates of the same condition grouping together, unless there are other reasons they shouldn't. For example if the signals differ a lot between samples and that drives the correlation, if the biological source of variation between conditions is smaller than the technical source of variation, or if there are no biological differences between conditions.
-
-First, we need to normalize for difference in library size between samples.
 ```{r}
-
-# cpm <- sweep(x = cnt_tiles[, -1], MARGIN = 2, STATS = colSums(cnt_tiles[, -1]), FUN = "/")*1e6
-# log_cpm <- as.data.frame(log2(cpm + 1))
-# 
-
-
+## Read in peaks
+peakFiles <- list.files("peaks", full.names = TRUE)
+names(peakFiles) <- gsub("_chr19_peaks.narrowPeak", "", basename(peakFiles))
+peaksL <- lapply(peakFiles, function(bedFile){import(bedFile)})
+peaksL$ChIPseq_ESC_CTCF_IP_BPTFko_rep1
 ```
 
 
-## Extra: histone mark: do same thing
+```{r}
+#| fig-width: 10
+#| fig-height: 5
+
+## Generate all sample pair combinations we wish to look for peak Overlap.
+samplePairs <- combn(names(peaksL), 2, simplify = FALSE)
+names(samplePairs) <- samplePairs
+
+## Count overlaps in all sample pairs with min overlap set to 5 bases
+ovL <- lapply(samplePairs, function(samples){
+  sum(countOverlaps(peaksL[[samples[1]]], peaksL[[samples[2]]], minoverlap = 5))
+})
+
+## Create symmetric samples matrix showing the number of pairwise overlaps
+samples <- names(peaksL)
+ovMat <- matrix(
+    0,
+    nrow = length(samples),
+    ncol = length(samples),
+    dimnames = list(samples, samples)
+)
+for (i in seq_along(ovL)) {
+  x <- names(ovL)[i]
+  x <- sub('^c\\(\\"', '', x)
+  x <- sub('\\"\\)$', '', x)
+  x <- strsplit(x, '\\", \\"')[[1]]
+  s1 <- x[1]
+  s2 <- x[2]
+  ovMat[s1, s2] <- ovL[[i]]
+  ovMat[s2, s1] <- ovL[[i]]
+}
+diag(ovMat) <- NA
+
+## Calculate fraction of peaks overlapping
+all(names(peaksL) == colnames(ovMat))
+colnames(ovMat) <- gsub("ChIPseq_ESC_CTCF_", "", colnames(ovMat))
+rownames(ovMat) <- gsub("ChIPseq_ESC_CTCF_", "", rownames(ovMat))
+fracOvMat <- sweep(x = ovMat, MARGIN = 1, STATS = lengths(peaksL), FUN = "/")
+
+## Plot
+H1 <- Heatmap(ovMat, name = "numberOverlaps", 
+              column_title = "Number of Overlapping Peaks")
+H2 <- Heatmap(fracOvMat, name = "fracOverlaps", 
+              column_title = "Fraction of Overlapping Peaks")
+
+H1 + H2
+```
+
+Here we also don't see an obvious grouping of samples by condition (wt vs BPTFko). This could be due to reasons related to overall low signal and lots of background noise.
+
+Note that we are looking at pairwise overlaps. Let's create a common set of peaks that we can use to create a count matrix across all samples so we can have a more global and quantitative overview of how well the samples agree.
+
+
+## Quantify counts on peaks
+
+```{r}
+## Define common set of peaks as the union
+peaks <- reduce(unlist(GRangesList(peaksL)))
+head(peaks)
+length(peaks)
+```
+
+
+::: {.callout-tip}
+## Exercise
+Plot the histogram of the peak width sizes for the unified set of peaks. Do these widths make sense for a TF? What do you think this would look like for a histone mark like H3K27Ac?
+:::
+
+Let's count the reads on the peaks. Now that we have made use of the input samples during peak calling we will ignore them on focus on the counts of the IP samples.
+```{r}
+## Count reads across peaks (shifting by 1/2 the fragment length).
+## ... Looking at the output of fragment size estimates (d) in MACS3 in the .xls 
+## ... files, the median across all samples is 150, so we will shift by 75 in 
+## ... the 3' direction. 
+cntPeaks <- qCount(proj = proj, query = peaks, mapqMin = 42, clObj = cl, 
+                   shift = 75)
+
+## Only keep IP samples
+cntPeaks <- cntPeaks[, grepl("_IP_", colnames(cntPeaks))]
+head(cntPeaks)
+```
+
+Let's now create a `SummarizedExperiment` object for the peaks count matrix. We will also add additional information on the peaks like GC content, position etc. This way everything we need is on one object.
+
+```{r}
+## Calculate G+C and CpG obs/expected
+peaksSeq <- getSeq(BSgenome, peaks)
+fMono <- oligonucleotideFrequency(peaksSeq, width = 1L, as.prob = TRUE)
+fDi <- oligonucleotideFrequency(peaksSeq, width = 2L, as.prob = TRUE)
+fracGC <- fMono[, "G"] + fMono[, "C"]
+oeCpG <- (fDi[, "CG"] + 0.01) / (fMono[, "G"] * fMono[, "C"] + 0.01)
+
+## Add the information to the peaks
+peaks$fracGC <- fracGC
+peaks$oeCpG <- oeCpG
+
+## Mark peaks with overlap with CpG islands
+ov <- findOverlaps(query = peaks, subject = cpgGr, minoverlap = 5)
+cpgPeaks <- unique(queryHits(ov))
+peaks$overlappingCpG <- ifelse(test = 1:length(peaks) %in% cpgPeaks, 
+                               yes = TRUE, no = FALSE)
+
+## View peaks
+head(peaks)
+
+```
+
+```{r}
+## Prepare for SummarizedExperiment object
+rd <- as.data.frame(peaks) %>% 
+  rename(seqnames = "chromosome", start = "chrStart", end = "chrEnd", 
+         width = "peakWidth", strand = "chrStarnd")
+rd <- DataFrame(rd)
+cd <- DataFrame(sampleName = apply(X = limma::strsplit2(colnames(cntPeaks), "_")[, 5:6], 
+                                   MARGIN = 1, 
+                                   FUN = function(x){paste(x, collapse = "_")}), 
+                genotype = limma::strsplit2(colnames(cntPeaks), "_")[, 5])
+
+## Make SE object
+se <- SummarizedExperiment(assays = list(counts = cntPeaks), 
+                           rowData = rd, 
+                           colData = cd)
+rownames(se) <- paste0("peak_", 1:nrow(se))
+colnames(se) <- cd$sampleName
+se
+```
+
+```{r}
+rowData(se)
+```
+
+```{r}
+colData(se)
+```
+
+::: {.callout-tip}
+## Exercise
+Subset the `se` object, keeping peaks which have a GC fraction greater than 0.5 and keeping the samples which are `wt` only. Make sure to store it into a new variable for example `seSub`. Access the counts, rowData and colData in this new object. Are they also subsetted?
+:::
+
+
+## Scatter plots
+
+We will scatter plots comparing all samples against each other and color by density. This is also an important QC plot to see if there are global trends that differ a lot between the samples and if there is a need to correct for them, assuming we do not expect genome-wide differences between samples. This can be for instance driven by differences in the count vs GC content trends. 
+
+```{r}
+## Create a CPM matrix (correting for library size differences)
+cpm <- sweep(x = assays(se)$counts, MARGIN = 2, 
+             STATS = colSums(assays(se)$counts), FUN = "/")*1e6
+log2cpm <- log2(cpm + 1)
+
+## Add to the SE object
+assays(se)$cpm <- cpm
+assays(se)$log2cpm <- log2cpm
+se
+```
+
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+
+## Pairs plot
+jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", 
+                                 "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
+pairs(assays(se)$log2cpm, panel = function(...){
+  smoothScatter(..., nrpoints = 0, colramp = jet.colors, add=TRUE);
+  abline(a=0,b=1,col="white")}, main = "log2(CPM+1")
+```
+
+We can notice that for all comparisons, most data points fall on the diagonal (white line) indicating to global shifts we need to worry about. The density is reflected in the colors, the more red the more dense that part of the plot is. Notice also that within a condition, for example within wt, the scatter plots look more narrow (globally more similar) to each other, and that this become a little bit wider when you compare to the samples from the other contiditon. Take `wt_rep4` for instance and compare it against the other samples above.
+
+
+## Global groupings
+
+
+Let's revisit the correlation heatmap. Earlier we did this on the tiles and did not see clear groupings. Can we see better grouping in the peaks count matrix? Focusing on the peaks should improve our signal, since the tiles will contain a lot of noisy background counts, especially with TF ChIP, where we expect most tiles not to have the TF bound.
+```{r}
+## Correlation heatmap
+cor <- cor(assays(se)$log2cpm)
+Heatmap(cor, name = "Pears Corr")
+```
+
+We can nicely see the samples grouping by condition.
+
+Let's also do a PCA (Principal Component Analysis) on the log2(CPM) count matrix. This will map our samples onto a new set of coordinates or principal components (PCs), ordered from highest to lowest by the variance explained in the data. 
+```{r}
+## PCA
+pca <- prcomp(x = t(assays(se)$log2cpm), center = TRUE, scale. = FALSE)
+s <- summary(pca)
+s
+```
+
+Notice that we have 8 PCs (because we have 8 samples or dimensions) and that the "Proportion of Variance" sums to 100% across all PCs.
+
+
+```{r}
+## Prepare to plot
+pc1var <- round(s$importance["Proportion of Variance", "PC1"]*100, digits = 2)
+pc2var <- round(s$importance["Proportion of Variance", "PC2"]*100, digits = 2)
+pc3var <- round(s$importance["Proportion of Variance", "PC3"]*100, digits = 2)
+df <- cbind(as.data.frame(pca$x), colData(se))
+
+## Plot
+ggplot(df, aes(x = PC1, y = PC2)) + 
+  geom_point(aes(color = genotype)) + 
+  labs(title = "PCA", x = paste0("PC1 (", pc1var, "%)"), y = paste0("PC2 (", pc2var, "%)")) +
+  theme_bw()
+```
+
+PC1 which captures around 35% of the variance explained is separating the wt from the BPTFko condition. This is informative and indicates that our biological signal of interest (the difference between the two conditions) is nicely explaining a big source of variance. Notice also that in this PC1 and PC2 space, the wt samples seem to group together more tightly whereas the BPTFko samples are a little more scattered indicating more variation between the replicates there, captured in PC2.
+
+
+## Profile plots
+
+wt vs bptfko
+
+The called peaks should reflect the binding sites of the CTCF TF. Let's take the peaks, center them and look at the overall reads distribution, somapring the BPTFko to the wt. We will use `QuasR` to create these profile plots. 
+
+```{r}
+## Center peaks
+centeredPeaks <- resize(peaks, width = 1, fix = "center")
+centeredPeaks
+```
+
+
+```{r}
+## Create profile
+profile <- qProfile(proj, query = centeredPeaks, upstream = 1000, 
+                    downstream = 1000, orientation = "any", 
+                    shift = 75, clObj = cl)
+names(profile)
+```
+
+We can see the number of summed reads at each position relative to the center of the peaks.
+```{r}
+profile$ChIPseq_ESC_CTCF_IP_BPTFko_rep1[, 1:10]
+```
+
+
+```{r}
+## Calculate scaling factors to normalize for the library size difference
+libSizes <- alignmentStats(proj)[, "mapped"]
+sf <- libSizes / median(libSizes)
+sf
+```
+
+```{r}
+## Aggregate into one matrix
+profileMat <- do.call(rbind, profile[2:length(profile)])
+rownames(profileMat) <- names(profile)[2:length(profile)]
+profileMat[, 1:10]
+```
+
+```{r}
+#| fig-width: 15
+#| fig-height: 3
+
+## Normalize reads for library size differences
+profileMat <- sweep(x = profileMat, MARGIN = 1, STATS = sf, FUN = "/")
+
+## Prepare to plot
+df <- as.data.frame(profileMat) %>% 
+  rownames_to_column("sampleName") %>% 
+  mutate(sampleName = gsub("ChIPseq_ESC_CTCF_", "", sampleName), 
+         condition = sub("_rep[0-9]+$", "", sampleName)) %>% 
+  pivot_longer(cols = -c(sampleName, condition), 
+               names_to = "position", 
+               values_to = "normCount") %>%
+  mutate(position = as.numeric(position))
+
+## Plot
+ggplot(df, aes(x = position, y = normCount)) +
+  geom_line(aes(group = sampleName, color = condition)) +
+  theme_bw() 
+```
+
+We can see flat lines for the input samples, and on average, a global reduction in CTCF binding in the BPTFko samples compared to the wt. Remember that position 0 reflects the midpoint of the peaks. Here we made these profile plots using all peaks as regions, but you can do this on any regions of interest. For example if you have accessibility data on the same samples, one could ask, is there a reduction in CTCF binding in regions which lose accessibility or regions which stay constantly accessible?
+
+
+
+## Heatmaps on peaks
+
+Another way to visualize this is via a heatmap. Here we need to make sure to provide the `qProfile` function with a `GRanges` where each peak has a unique name, so that the counts are not summed up over the peaks.
+
+```{r}
+## Profile plot counting on each peak
+names(peaks) <- paste0("peak_", 1:length(peaks))
+profile <- qProfile(proj, query = peaks, upstream = 1000, 
+                    downstream = 1000, orientation = "any", 
+                    shift = 75, clObj = cl)
+head(profile$ChIPseq_ESC_CTCF_IP_BPTFko_rep1[, 1:10])
+```
+
+Let's normalize these raw count matrices for library size differences again, and this time sum up the reads per condition to have an aggregate view.
+```{r}
+## Normalize for library size diffs
+normProfile <- lapply(2:length(profile), function(i){
+  profile[[i]] / sf[i] 
+})
+names(normProfile) <- names(sf)
+
+## Sum counts (matrices) by condition
+spl <- split(names(normProfile), )
+```
+
+
+
+?top variable peaks?
+
+
+## Diff expr
+
+MA plot
+
+
+## Bonus exercise
+
+on histone mark (1 sample)
  
-TF vs histone mark
  
 
 
