@@ -36,6 +36,8 @@ suppressPackageStartupMessages({
   library(tidyr)
   library(tibble)
   library(dplyr)
+  library(SimpleUpset)
+  library(extraChIPs)
   #library(stringr)
   #library(GenomeInfoDb)
 })
@@ -506,11 +508,22 @@ H1 + H2
 
 Here we also don't see an obvious grouping of samples by condition (wt vs BPTFko). This could be due to reasons related to overall low signal and lots of background noise.
 
-Note that we are looking at pairwise overlaps. Let's create a common set of peaks that we can use to create a count matrix across all samples so we can have a more global and quantitative overview of how well the samples agree.
+Note that we are looking at pairwise overlaps. Below we make use of the `plotOverlaps` function from the `extraChIPs` package to look at how well the peask in each sample agree with the rest. Under the hood this is creating a union set of peaks and checking if each sample overlaps this set, so the numbers don't reflect the true number of peaks we have here.
+```{r}
+#| fig-width: 15
+#| fig-height: 6
+library(SimpleUpset)
+library(extraChIPs)
+
+plotOverlaps(GRangesList(peaksL), type = "upset")
+```
+
+It's only at bar number 7 where we see 35 peaks shared only in the wt replicates. Otherwise most peaks seem shared, although the wt_rep1 sample has a lot of unique peaks.
 
 
 ## Quantify counts on peaks
 
+Let's create a common set of peaks that we can use to create a count matrix across all samples so we can have a more global and quantitative overview of how well the samples agree.
 ```{r}
 ## Define common set of peaks as the union
 peaks <- reduce(unlist(GRangesList(peaksL)))
@@ -825,6 +838,129 @@ Let's select a peak that caught our eye in these heatmaps and visualize the ChIP
 
 MA plot
 
+For the differential expression let's first plot the log2 fold change between BPTFko and wt vs the avergae axrpession across all samples. We want to see most points centered on the `y=0` line and no non-linearities. This plot is often called an MA plot. We don't have many peaks here which may affect the fit. With histone marks we typically have more peaks.
+```{r}
+## Calculate log2FC(BPTFko cpm / wt cpm)
+cpm <- assays(se)$cpm
+cpmWt <- rowMeans(cpm[, grep("wt", colnames(cpm))])
+cpmBPTFko <- rowMeans(cpm[, grep("BPTFko", colnames(cpm))])
+log2FC <- log2((cpmBPTFko+1)/(cpmWt+1))
+log2avrCPM <- log2(rowMeans(cpm) + 1)
+
+## Plot
+df <- data.frame(log2FC = log2FC, log2avrCPM = log2avrCPM)
+ggplot(df, aes(x = log2avrCPM, y = log2FC)) + 
+  geom_point() + 
+  geom_hline(yintercept = 0, linetype = "dashed", color = "steelblue") + 
+  theme_bw()
+```
+
+
+
+```{r}
+## Design matrix
+condition <- as.factor(colData(se)$genotype)
+design <- model.matrix(~0+condition)
+colnames(design) <- levels(condition)
+design
+
+## Prepare DGE object for edgeR
+library(edgeR)
+dge <- DGEList(counts = assays(se)$counts, group = condition, genes = rowData(se))
+
+## Library sizes
+dge$samples
+```
+
+```{r}
+## Correct for library size diffs
+dge <- normLibSizes(dge)
+dge$samples
+```
+
+
+
+
+```{r}
+## Filter out peaks with low counts
+## ... This will keep peaks which have CPM >= CPM.cutoff in MinSampleSize samples
+## ... where CPM.cutoff = min.count / median(lib.size) * 1e6
+keep <- filterByExpr(dge)
+dge <- dge[keep, ]
+
+## Fraction kept peaks with enough counts
+sum(keep) / length(peaks)
+```
+
+```{r}
+## Normalize for lib sizes again (since the total lib size changes after excluding some peaks)
+dge <- normLibSizes(dge)
+dge$samples
+```
+
+```{r}
+## Estimate disperion
+dge <- estimateDisp(y=dge, design=design)
+```
+
+
+```{r}
+## Fit model
+fit <- glmQLFit(dge, design)
+```
+
+
+```{r}
+## Contrast: BPTFko vs wt
+contrast <- makeContrasts(BPTFko-wt, levels=design)
+diffTest <- glmQLFTest(fit, contrast=contrast)
+diffTable <- as.data.frame(topTags(diffTest, n = nrow(dge)))
+head(diffTable)
+```
+
+
+```{r}
+ggplot(diffTable, aes(x = logCPM, y = logFC)) + 
+  geom_point(aes(color = FDR <= 0.05)) + 
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  theme_bw()
+```
+
+```{r}
+ggplot(diffTable, aes(x = logCPM, y = logFC)) + 
+  geom_point(aes(color = FDR <= 0.05 & abs(logFC) >= 1.5)) + 
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  theme_bw()
+```
+
+
+Let's take these top peaks with differential binding and look at the peak by sample heatmap. How well do the replicates agree, and are some of these peaks clearly different or less so. 
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+
+## log2cpm of top diff peaks
+diffPeaks <- rownames(diffTable)[diffTable$FDR <= 0.05 & abs(diffTable$logFC) >= 1.5]
+log2cpm <- assays(se)$log2cpm[diffPeaks, ]
+
+## log2FC with respect to mean across samples
+log2cpmFC <- sweep(x = log2cpm, MARGIN = 1, STATS = rowMeans(log2cpm), FUN = "-")
+log2cpmFC <- as.matrix(log2cpmFC)
+
+## Plot
+Heatmap(log2cpmFC, name = "log2FC w.r.t. mean", show_row_names = FALSE)
+
+```
+
+We can appreciate a strong aggrement between replicates within a condition.
+
+
+## Visualize peaks on genome tracks
+
+Let's choose a peak that is showing strong differential binding between BPTFko and wt, and visualize the 
+
+
+Total CV2 = Technical CV2 + Biological CV2
 
 annotate peaks somewhere
 
@@ -832,7 +968,7 @@ annotate peaks somewhere
 
 on histone mark (1 sample)
  
-qProfile plot on minus and plus strands, see arg, wihtout shifting. Do you see the bimodal distr?
+qProfile plot on minus and plus strands, see arg, without shifting. Do you see the bimodal distr?
  
 
 
