@@ -64,12 +64,12 @@ your local repo, and switch to that branch to work.
 > `workshop-epigenomics` and click 'Create Project'. 
 
 Next, we will install the `R` packages listed in the `renv.lock` file. You will
-need to do runt he following commands the first time you are setting up. Make
+need to do run the following commands the first time you are setting up. Make
 sure that you are using the correct `R` version and that you are in the root
 directory of the repo.
 ```r
 # check status
-renv:status()
+renv::status()
 
 # make sure the library paths are correct (should be pointing to the local renv folder)
 .libPaths()
@@ -87,7 +87,7 @@ Now you are set up to start making changes and add new material. If there are
 # check status of packages
 # ... this should also report missing packages if they are present in .qmd files 
 # ... but not present in the lock file
-renv:status()
+renv::status()
 
 # install the missing packages
 renv::hydrate()
