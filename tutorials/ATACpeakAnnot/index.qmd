@@ -110,24 +110,52 @@ You can continue working in the directory `atacseq/analysis/counts`. This direct
 <br />
 <br />
 
+We navigate to our working directory for this tutorial. Assuming we are at the top of the `atacseq`
+
+```{bash}
+#| eval: FALSE
+#| echo: TRUE
+
+cd  %€/&(()&/%&#%"")
+```
+
+<br />
+<br />
+
 
 We access the R environment via:
 
-```
-module load R_packages/4.6.1
+```{bash}
+#| eval: FALSE
+#| echo: TRUE
+
+module load R/4.6.1-gfbf-2026.1
+module load R-bundle-CRAN/2026.07-foss-2026.1
+module load R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1
 ```
 
 We activate R console upon typing `R` in the terminal.
 
+
+To be able to load all necessary libraries we need to update the paths to custom library locations:
+
+
+```{r}
+#| eval: FALSE
+#| echo: TRUE
+
+.libPaths(c(.libPaths(),"/proj/epi2026/library/Rpackages/4.6.1"))
+```
 
 Alternatively you can work on this tutorial locally, using R libraries installed via `renv`.
 
 
 We begin by loading necessary libraries:
 
+
 ```{r}
 #| label: libraries
-#| echo: true
+#| echo: TRUE
 
 library(tidyverse)
 library(dplyr)
@@ -146,29 +174,16 @@ library(clusterProfiler)
 library(org.Mm.eg.db)
 library(ReactomePA)
 ```
+<br />
+<br />
 
-
-```{r}
-#| echo: false
-
-#workdir="/Users/agatasmialowska/NBIS/teaching/epigenomics_workshop/homepage/workshop-epigenomics/tutorials/ATAC-DA"
-
-#.libPaths=c("/Users/agatasmialowska/Library/R/arm64/4.6/library","/Library/Frameworks/R.framework/Versions/4.6/Resources/library",.libPaths())
-```
-
-
-```
-workdir=getwd()
-
-workdir=setwd()
-```
 
 <br />
 <br />
 
 ## Preparing Annotations
 
-We will use TSS annotations from Ensembl. We can fetch them from `biomaRt`:
+We will use TSS and gene annotations from Ensembl. We can fetch them from `biomaRt`:
 
 
 ::: {.callout-note collapse="true"}
@@ -202,10 +217,16 @@ We have prepared these for you, so you can load them via:
 ```{r}
 annotdir=file.path("assets","annotation")
 
-#pth_txdbens=file.path(annotdir,"Ensembl.txdb.GRCm39.Rdata")
-#txdb_mm39=loadDb(pth_txdbens)
-
 gene_annot_mm39=read.delim(file.path(annotdir,"mm39_gene_names.tab"), sep="\t", header=TRUE, quote = "")
+```
+
+and
+
+```{r}
+#| eval: FALSE
+
+pth_txdbens=file.path(annotdir,"Ensembl.txdb.GRCm39.Rdata")
+txdb_mm39=loadDb(pth_txdbens)
 ```
 
 <br />
