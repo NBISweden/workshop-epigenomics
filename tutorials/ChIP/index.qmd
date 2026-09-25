@@ -38,9 +38,14 @@ suppressPackageStartupMessages({
   library(dplyr)
   library(SimpleUpset)
   library(extraChIPs)
+  library(rtracklayer)
+  library(Gviz)
   #library(stringr)
   #library(GenomeInfoDb)
 })
+
+## Params
+cpus <- 2
 
 ```
 
@@ -93,7 +98,7 @@ write.table(meta, file = "data/sampleSheet.txt", quote = FALSE, sep = "\t",
 
 ## Create proj object on aligned bam files
 ## ... you can set the number of cores here according to what works on you machine
-cl <- makeCluster(4)
+cl <- makeCluster(cpus)
 proj <- qAlign(sampleFile = "data/sampleSheet.txt", 
                genome = "BSgenome.Mmusculus.UCSC.mm39", 
                paired = "no", 
@@ -512,8 +517,6 @@ Note that we are looking at pairwise overlaps. Below we make use of the `plotOve
 ```{r}
 #| fig-width: 15
 #| fig-height: 6
-library(SimpleUpset)
-library(extraChIPs)
 
 plotOverlaps(GRangesList(peaksL), type = "upset")
 ```
@@ -573,7 +576,6 @@ peaks$overlappingCpG <- ifelse(test = 1:length(peaks) %in% cpgPeaks,
 
 ## View peaks
 head(peaks)
-
 ```
 
 ```{r}
@@ -830,15 +832,10 @@ We can see clear losses of CTCF binding in the top variable peaks.
 
 choose one of the peaks with big diff, make bigwig files and use gviz. add peak annotations up here..
 
-## Genome tracks
 
-Let's select a peak that caught our eye in these heatmaps and visualize the ChIP tracks against the reference.
+## Differential binding
 
-## Diff expr
-
-MA plot
-
-For the differential expression let's first plot the log2 fold change between BPTFko and wt vs the avergae axrpession across all samples. We want to see most points centered on the `y=0` line and no non-linearities. This plot is often called an MA plot. We don't have many peaks here which may affect the fit. With histone marks we typically have more peaks.
+For the differential binding let's first plot the log2 fold change between BPTFko and wt vs the average exrpession across all samples. We want to see most points centered on the `y=0` line and no non-linearities. This plot is often called an MA plot. We don't have many peaks here which may affect the fit. With histone marks we typically have more peaks.
 ```{r}
 ## Calculate log2FC(BPTFko cpm / wt cpm)
 cpm <- assays(se)$cpm
@@ -950,7 +947,6 @@ log2cpmFC <- as.matrix(log2cpmFC)
 
 ## Plot
 Heatmap(log2cpmFC, name = "log2FC w.r.t. mean")
-
 ```
 
 We can appreciate a strong agreement between replicates within a condition.
@@ -958,22 +954,110 @@ We can appreciate a strong agreement between replicates within a condition.
 
 ## Visualize peaks on genome tracks
 
-Let's choose a peak that is showing strong differential binding between BPTFko and wt, and visualize the count tracks on the reference genome. We will choose `peak_2`, which according to the heatmap above shows loss of CTCF binding in the BPTFko condition.
+Let's choose a peak that is showing strong differential binding between BPTFko and wt, and visualize the count tracks on the reference genome. We will choose `peak_462`, which according to the heatmap above shows loss of CTCF binding in the BPTFko condition.
 
-First, we will need to produce wig files fro each sample. These are 
+First, we will need to produce BigWig files for each sample. [BigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) files are a file format used to visualize continuous data in the genome browser. We will use the `qExportWig` function from `QuasR` to produce these files, shifting the reads by 75 bases in the 3' direction and setting the `binsize` to 100. Reads are scaled by the total number of reads to correct for library size differences between samples. See the help page of the `qExportWig` function for more details.
 
 ```{r}
-
-qExportWig(proj[i], file = paste0("BigWig_Raw_Uncorrected/ATAC/", SN, "_raw_uncorrected_100b.bw"),
-             binsize = 100, scaling = SF, createBigWig = TRUE, pairedAsSingle = TRUE)
-
+## Create BigWig files (this can take a few seconds)
+dir.create("bigwigs")
+bwFiles <- file.path("bigwigs", 
+                     paste0(basename(alignments(proj)$genome$SampleName), ".bw"))
+bwFiles <- gsub("ChIPseq_ESC_CTCF_", "", bwFiles)
+qExportWig(proj, file = bwFiles, binsize = 100, shift = 75, 
+           createBigWig = TRUE, clObj = cl)
 ```
 
 
 ```{r}
+## Read in BigWigs
+names(bwFiles) <- gsub(".bw", "", basename(bwFiles))
+bwGrL <- lapply(bwFiles, function(file){
+  import(file)
+})
+head(bwGrL$IP_BPTFko_rep1)
+```
 
+Since we have input samples we will include them in our visualization. They are a good check to have that we aren't looking at a false signal. 
+```{r}
+#| fig-width: 10
+#| fig-height: 8
+
+## Get peak coordinates and add 8kb upstream and downstream
+trackStart <- rowData(se)["peak_462", ]$chrStart - 8000
+trackEnd <- rowData(se)["peak_462", ]$chrEnd + 8000
+
+## Set y-axis limit to be the same
+ylims <- c(0, max(sapply(bwGrL, function(gr){
+  keep <- seqnames(gr) == "chr19" & start(gr) >= trackStart & end(gr) <= trackEnd
+  grSub <- gr[keep]
+  max(grSub$score)})))
+
+## Prepare sample tracks
+cols <- c(
+  input_wt = "grey",
+  input_BPTFko = "grey", 
+  IP_wt = "forestgreen",
+  IP_BPTFko = "firebrick"
+)
+tracks <- lapply(names(bwGrL), function(sn){
+  cond <- sub("_rep[0-9]$", "", sn)
+  DataTrack(range = bwGrL[[sn]], 
+            name = sn, 
+            type = "histogram", 
+            fill = cols[cond], 
+            rotation.title = 0, 
+            just.title = "center")
+})
+
+## Prepare genome and gene annotations track
+genomeTrack <- GenomeAxisTrack()
+genes <- genes(TxDb.Mmusculus.UCSC.mm39.knownGene)
+#geneTrack <- AnnotationTrack(annot, name = "Genes")
+geneTrack <- GeneRegionTrack(genes, genome = "mm39", 
+                             chromosome = "chr19", 
+                             name = "Genes", 
+                             rotation.title = 0)
+chrTrack <- IdeogramTrack(genome = "mm39", chromosome = "chr19")
+
+## Prepare peak track
+peaksGr <- makeGRangesFromDataFrame(rowData(se))
+peaksGr$peakName = names(peaksGr)
+peakTrack <- AnnotationTrack(peaksGr, name = "Peaks", rotation.title = 0)
+
+## Plot tracks
+plotTracks(c(chrTrack, genomeTrack, tracks, peakTrack, geneTrack), 
+           chromosome="chr19", 
+           from = trackStart, 
+           to = trackEnd, 
+           ylim = ylims, title.width = 2, cex.title = 0.4, col.title = "black", just.title = "center")
+```
+
+
+::: {.callout-tip}
+## Exercise
+Pick another peak(s) and make the same plot. Feel free to alter the range around the peak you wish to see.
+:::
+
+
+```{r}
+
+tracks <- lapply(names(bwGrL), function(sn){
+  DataTrack(range = bwGrL[[sn]], 
+            name = sn, 
+            type = "histogram", ylim = c(0,20))
+})
+
+plotTracks(c(chrTrack, genomeTrack, tracks[[1]], tracks[[16]], peakTrack, geneTrack), 
+           chromosome="chr19", 
+           from = trackStart, 
+           to = trackEnd, ylim = c(0,20))
 
 ```
+
+
+
+
 
 
 
