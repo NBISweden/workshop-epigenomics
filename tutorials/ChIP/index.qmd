@@ -962,23 +962,15 @@ Let's choose a peak that is showing strong differential binding between BPTFko a
 
 First, we will need to produce wig files fro each sample. These are 
 
+```{r}
+
+qExportWig(proj[i], file = paste0("BigWig_Raw_Uncorrected/ATAC/", SN, "_raw_uncorrected_100b.bw"),
+             binsize = 100, scaling = SF, createBigWig = TRUE, pairedAsSingle = TRUE)
+
+```
 
 
 ```{r}
-library(rtracklayer)
-wigfnames <- c(tempfile(fileext=".wig.gz"),tempfile(fileext=".wig.gz"))
-qExportWig(proj, file=wigfnames, binsize=100L, scaling=TRUE, collapseBySample=TRUE)
-gr1 <- import(wigfnames[1])
-gr2 <- import(wigfnames[2])
-annot <- import(file.path(td,"extdata/hg19sub_annotation.gtf"))
-colnames(mcols(annot))[c(2,5,8)] <- c("feature","group","id")
-
-library(Gviz)
-axisTrack <- GenomeAxisTrack()
-dTrack1 <- DataTrack(range=gr1, name="Sample 1", type="h")
-dTrack2 <- DataTrack(range=gr2, name="Sample 2", type="h")
-aTrack <- AnnotationTrack(annot, name="Genes")
-plotTracks(list(axisTrack, dTrack1, dTrack2, aTrack), chromosome="chr3", extend.left=1000)
 
 
 ```
