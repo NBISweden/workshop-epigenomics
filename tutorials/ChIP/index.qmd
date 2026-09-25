@@ -842,10 +842,11 @@ For the differential expression let's first plot the log2 fold change between BP
 ```{r}
 ## Calculate log2FC(BPTFko cpm / wt cpm)
 cpm <- assays(se)$cpm
+cpm <- cpm + 1
 cpmWt <- rowMeans(cpm[, grep("wt", colnames(cpm))])
 cpmBPTFko <- rowMeans(cpm[, grep("BPTFko", colnames(cpm))])
-log2FC <- log2((cpmBPTFko+1)/(cpmWt+1))
-log2avrCPM <- log2(rowMeans(cpm) + 1)
+log2FC <- log2((cpmBPTFko)/(cpmWt))
+log2avrCPM <- log2(rowMeans(cpm))
 
 ## Plot
 df <- data.frame(log2FC = log2FC, log2avrCPM = log2avrCPM)
@@ -948,19 +949,41 @@ log2cpmFC <- sweep(x = log2cpm, MARGIN = 1, STATS = rowMeans(log2cpm), FUN = "-"
 log2cpmFC <- as.matrix(log2cpmFC)
 
 ## Plot
-Heatmap(log2cpmFC, name = "log2FC w.r.t. mean", show_row_names = FALSE)
+Heatmap(log2cpmFC, name = "log2FC w.r.t. mean")
 
 ```
 
-We can appreciate a strong aggrement between replicates within a condition.
+We can appreciate a strong agreement between replicates within a condition.
 
 
 ## Visualize peaks on genome tracks
 
-Let's choose a peak that is showing strong differential binding between BPTFko and wt, and visualize the 
+Let's choose a peak that is showing strong differential binding between BPTFko and wt, and visualize the count tracks on the reference genome. We will choose `peak_2`, which according to the heatmap above shows loss of CTCF binding in the BPTFko condition.
+
+First, we will need to produce wig files fro each sample. These are 
 
 
-Total CV2 = Technical CV2 + Biological CV2
+
+```{r}
+library(rtracklayer)
+wigfnames <- c(tempfile(fileext=".wig.gz"),tempfile(fileext=".wig.gz"))
+qExportWig(proj, file=wigfnames, binsize=100L, scaling=TRUE, collapseBySample=TRUE)
+gr1 <- import(wigfnames[1])
+gr2 <- import(wigfnames[2])
+annot <- import(file.path(td,"extdata/hg19sub_annotation.gtf"))
+colnames(mcols(annot))[c(2,5,8)] <- c("feature","group","id")
+
+library(Gviz)
+axisTrack <- GenomeAxisTrack()
+dTrack1 <- DataTrack(range=gr1, name="Sample 1", type="h")
+dTrack2 <- DataTrack(range=gr2, name="Sample 2", type="h")
+aTrack <- AnnotationTrack(annot, name="Genes")
+plotTracks(list(axisTrack, dTrack1, dTrack2, aTrack), chromosome="chr3", extend.left=1000)
+
+
+```
+
+
 
 annotate peaks somewhere
 
