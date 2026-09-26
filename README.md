@@ -108,9 +108,10 @@ New material can be added by topic as follows:
 - slides: `presentations/yourTopic`
 - tutorials: `tutorials/yourTopic`
 
-PDF slides may be added as presentation. However, if you are comfortable with 
-quarto, we recommend creating quarto presentation to keep the repository at a
-good size.
+In your `qmd` files please start with two hashtags as the top header level 
+(`##`). PDF slides may be added as presentation. However, if you are comfortable 
+with quarto, we recommend creating quarto presentation to keep the repository at 
+a good size.
 
 > [!TIP]
 > Consider using images in the `.webp` format to limit the size even more.
