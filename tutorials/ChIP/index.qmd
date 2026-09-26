@@ -25,6 +25,7 @@ suppressPackageStartupMessages({
   library(QuasR)
   library(limma)
   library(BSgenome.Mmusculus.UCSC.mm39)
+  library(TxDb.Mmusculus.UCSC.mm39.knownGene)
   library(GenomicRanges)
   library(rtracklayer)
   library(csaw)
@@ -40,8 +41,7 @@ suppressPackageStartupMessages({
   library(extraChIPs)
   library(rtracklayer)
   library(Gviz)
-  #library(stringr)
-  #library(GenomeInfoDb)
+  library(GenomicFeatures)
 })
 
 ## Params
@@ -50,7 +50,7 @@ cpus <- 2
 ```
 
 
-## Useful Bioconductor data structures
+## Useful Bioconductor classes
 
 Throughout this lab we will be making use of a few data objects and packages from Bioconductor that are convenient when working with genomic data. They are described here and additional links are provided should you want to explore more or get a better understanding.
 
@@ -515,7 +515,7 @@ Here we also don't see an obvious grouping of samples by condition (wt vs BPTFko
 
 Note that we are looking at pairwise overlaps. Below we make use of the `plotOverlaps` function from the `extraChIPs` package to look at how well the peask in each sample agree with the rest. Under the hood this is creating a union set of peaks and checking if each sample overlaps this set, so the numbers don't reflect the true number of peaks we have here.
 ```{r}
-#| fig-width: 15
+#| fig-width: 12
 #| fig-height: 6
 
 plotOverlaps(GRangesList(peaksL), type = "upset")
@@ -685,8 +685,6 @@ PC1 which captures around 35% of the variance explained is separating the wt fro
 
 ## Profile plots
 
-wt vs bptfko
-
 The called peaks should reflect the binding sites of the CTCF TF. Let's take the peaks, center them and look at the overall reads distribution, somapring the BPTFko to the wt. We will use `QuasR` to create these profile plots. 
 
 ```{r}
@@ -750,6 +748,11 @@ ggplot(df, aes(x = position, y = normCount)) +
 We can see flat lines for the input samples, and on average, a global reduction in CTCF binding in the BPTFko samples compared to the wt. Remember that position 0 reflects the midpoint of the peaks. Here we made these profile plots using all peaks as regions, but you can do this on any regions of interest. For example if you have accessibility data on the same samples, one could ask, is there a reduction in CTCF binding in regions which lose accessibility or regions which stay constantly accessible?
 
 
+::: {.callout-tip}
+## Exercise
+Use the `qProfile` and `centeredPeaks` object on an IP sample of choice and do the counting without shifting the reads. Make the profile plot. Do you see a bimodal distribution reflecting the fragment length? 
+You can select one sample by substituting the `proj` object (e.g. `projSub <- proj[16]`). You can skip the library size correction step since we are looking at one sample. Make sure that the rows in `centeredPeaks` have the same name so that the reads are summed up, instead of counted per peak.
+:::
 
 ## Heatmaps on peaks
 
@@ -981,11 +984,11 @@ head(bwGrL$IP_BPTFko_rep1)
 Since we have input samples we will include them in our visualization. They are a good check to have that we aren't looking at a false signal. 
 ```{r}
 #| fig-width: 10
-#| fig-height: 8
+#| fig-height: 16
 
 ## Get peak coordinates and add 8kb upstream and downstream
-trackStart <- rowData(se)["peak_462", ]$chrStart - 8000
-trackEnd <- rowData(se)["peak_462", ]$chrEnd + 8000
+trackStart <- rowData(se)["peak_462", ]$chrStart - 15000
+trackEnd <- rowData(se)["peak_462", ]$chrEnd + 15000
 
 ## Set y-axis limit to be the same
 ylims <- c(0, max(sapply(bwGrL, function(gr){
@@ -1006,13 +1009,13 @@ tracks <- lapply(names(bwGrL), function(sn){
             name = sn, 
             type = "histogram", 
             fill = cols[cond], 
-            rotation.title = 0, 
             just.title = "center")
 })
 
 ## Prepare genome and gene annotations track
 genomeTrack <- GenomeAxisTrack()
-genes <- genes(TxDb.Mmusculus.UCSC.mm39.knownGene)
+txdb <- TxDb.Mmusculus.UCSC.mm39.knownGene
+genes <- genes(txdb)
 #geneTrack <- AnnotationTrack(annot, name = "Genes")
 geneTrack <- GeneRegionTrack(genes, genome = "mm39", 
                              chromosome = "chr19", 
@@ -1030,48 +1033,13 @@ plotTracks(c(chrTrack, genomeTrack, tracks, peakTrack, geneTrack),
            chromosome="chr19", 
            from = trackStart, 
            to = trackEnd, 
-           ylim = ylims, title.width = 2, cex.title = 0.4, col.title = "black", just.title = "center")
+           ylim = ylims, title.width = 2, cex.title = 0.5, just.title = "center")
 ```
 
+We can appreciate the benefit and importance of having several replicates per condition to detect constant changes in signal, especially smaller changes in signal. This becomes even more important for TFs that are hard to pull down or experiments where we see a lot of background noise. In the figure above we can for example see that for wt_rep4 the CTCF signal for our peak of interest was not as high as the other 3 replicates. When examining and placing importance individual peaks and interpreting them correctly, have several replicates is necessary to be sure of the effect we are seeing beyond variability between replicates. 
 
 ::: {.callout-tip}
 ## Exercise
 Pick another peak(s) and make the same plot. Feel free to alter the range around the peak you wish to see.
 :::
-
-
-```{r}
-
-tracks <- lapply(names(bwGrL), function(sn){
-  DataTrack(range = bwGrL[[sn]], 
-            name = sn, 
-            type = "histogram", ylim = c(0,20))
-})
-
-plotTracks(c(chrTrack, genomeTrack, tracks[[1]], tracks[[16]], peakTrack, geneTrack), 
-           chromosome="chr19", 
-           from = trackStart, 
-           to = trackEnd, ylim = c(0,20))
-
-```
-
-
-
-
-
-
-
-annotate peaks somewhere
-
-## Bonus exercise
-
-on histone mark (1 sample)
- 
-qProfile plot on minus and plus strands, see arg, without shifting. Do you see the bimodal distr?
- 
-
-
-
-
-
 
