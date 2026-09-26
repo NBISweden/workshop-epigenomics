@@ -10,7 +10,5 @@ _site/
 
 **/*.quarto_ipynb
 
-tutorials/ChIP/data
 tutorials/ChIP/figures
-tutorials/ChIP/peaks
 tutorials/ChIP/bigwigs
