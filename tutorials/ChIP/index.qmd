@@ -203,10 +203,8 @@ bamFiles <- file.path(getwd(),
                       list.files("data", pattern = ".bam$", full.names = TRUE))
 meta <- data.frame(FileName = bamFiles, 
                    SampleName = limma::strsplit2(basename(bamFiles), "_chr19")[, 1])
-if (! file.exists("data/sampleSheet.txt")) {
-  write.table(meta, file = "data/sampleSheet.txt", quote = FALSE, sep = "\t", 
-              row.names = FALSE, append = FALSE)
-}
+write.table(meta, file = "data/sampleSheet.txt", quote = FALSE, sep = "\t", 
+            row.names = FALSE, append = FALSE)
 
 ## Create proj object on aligned bam files
 ## ... you can set the number of cores here according to what works on you machine
