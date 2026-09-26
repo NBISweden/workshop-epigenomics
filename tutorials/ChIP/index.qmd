@@ -1122,9 +1122,7 @@ qExportWig(proj, file = bwFiles, binsize = 100, shift = 75,
 ```{r}
 #| echo: false
 
-bwFiles <- file.path("bigwigs", 
-                     paste0(basename(alignments(proj)$genome$SampleName), ".bw"))
-bwFiles <- gsub("ChIPseq_ESC_CTCF_", "", bwFiles)
+bwFiles <- list.files("bigwigs", full.names = TRUE)
 ```
 
 
