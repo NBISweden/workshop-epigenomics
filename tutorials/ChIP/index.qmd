@@ -24,7 +24,6 @@ Make sure you have decided where you would like to run this tutorial. If you hav
 
 Let's start by loading the `R` packages we will need. The `cpus` variable is set to 2 below. Feel free to increase this if your machine or system can handle it.
 ```{r}
-.libPaths(c("/Users/daniamachlab/Library/R/arm64/4.6-Bioc-3.23/library/", .libPaths()))
 
 ## Librararies
 suppressPackageStartupMessages({
