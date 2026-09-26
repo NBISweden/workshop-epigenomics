@@ -1137,19 +1137,23 @@ head(bwGrL$IP_BPTFko_rep1)
 
 Since we have input samples we will include them in our visualization. They are a good check to have that we aren't looking at a false signal. 
 ```{r}
+#| label: test
 #| fig-width: 10
 #| fig-height: 16
 
+message("1: calculating track coordinates")
 ## Get peak coordinates and add 8kb upstream and downstream
 trackStart <- rowData(se)["peak_462", ]$chrStart - 15000
 trackEnd <- rowData(se)["peak_462", ]$chrEnd + 15000
 
+message("2: calculating y limits")
 ## Set y-axis limit to be the same
 ylims <- c(0, max(sapply(bwGrL, function(gr){
   keep <- seqnames(gr) == "chr19" & start(gr) >= trackStart & end(gr) <= trackEnd
   grSub <- gr[keep]
   max(grSub$score)})))
 
+message("3: preparing sample tracks")
 ## Prepare sample tracks
 cols <- c(
   input_wt = "grey",
@@ -1166,28 +1170,34 @@ tracks <- lapply(names(bwGrL), function(sn){
             just.title = "center")
 })
 
+message("4: loading TxDb")
 ## Prepare genome and gene annotations track
 genomeTrack <- GenomeAxisTrack()
 txdb <- TxDb.Mmusculus.UCSC.mm39.knownGene
+message("5: extracting genes")
 genes <- genes(txdb)
-#geneTrack <- AnnotationTrack(annot, name = "Genes")
+message("6: creating GeneRegionTrack")
 geneTrack <- GeneRegionTrack(genes, genome = "mm39", 
                              chromosome = "chr19", 
                              name = "Genes", 
                              rotation.title = 0)
+message("6pt5: preparing chr track")
 chrTrack <- IdeogramTrack(genome = "mm39", chromosome = "chr19")
 
+message("7: preparing peak track")
 ## Prepare peak track
 peaksGr <- makeGRangesFromDataFrame(rowData(se))
 peaksGr$peakName = names(peaksGr)
 peakTrack <- AnnotationTrack(peaksGr, name = "Peaks", rotation.title = 0)
 
+message("8: plotting")
 ## Plot tracks
 plotTracks(c(chrTrack, genomeTrack, tracks, peakTrack, geneTrack), 
            chromosome="chr19", 
            from = trackStart, 
            to = trackEnd, 
            ylim = ylims, title.width = 2, cex.title = 0.5, just.title = "center")
+message("9: finished")
 ```
 
 We can appreciate the benefit and importance of having several replicates per condition to detect constant changes in signal, especially smaller changes in signal. This becomes even more important for TFs that are hard to pull down or experiments where we see a lot of background noise. In the figure above we can for example see that for wt_rep4 the CTCF signal for our peak of interest was not as high as the other 3 replicates. When examining and placing importance on individual peaks and interpreting them correctly, having several replicates is necessary to be sure of the effect we are seeing beyond variability between replicates. 
