@@ -1108,6 +1108,8 @@ Let's choose a peak that is showing strong differential binding between BPTFko a
 First, we will need to produce BigWig files for each sample. [BigWig](https://genome.ucsc.edu/goldenpath/help/bigWig.html) files are a file format used to visualize continuous data in the genome browser. We will use the `qExportWig` function from `QuasR` to produce these files, shifting the reads by 75 bases in the 3' direction and setting the `binsize` to 100. Reads are scaled by the total number of reads to correct for library size differences between samples. See the help page of the `qExportWig` function for more details.
 
 ```{r}
+#| eval: false
+
 ## Create BigWig files (this can take a few seconds)
 dir.create("bigwigs")
 bwFiles <- file.path("bigwigs", 
@@ -1115,6 +1117,14 @@ bwFiles <- file.path("bigwigs",
 bwFiles <- gsub("ChIPseq_ESC_CTCF_", "", bwFiles)
 qExportWig(proj, file = bwFiles, binsize = 100, shift = 75, 
            createBigWig = TRUE, clObj = cl)
+```
+
+```{r}
+#| echo: false
+
+bwFiles <- file.path("bigwigs", 
+                     paste0(basename(alignments(proj)$genome$SampleName), ".bw"))
+bwFiles <- gsub("ChIPseq_ESC_CTCF_", "", bwFiles)
 ```
 
 
