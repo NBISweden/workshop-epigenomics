@@ -26,6 +26,7 @@ Let's start by loading the `R` packages we will need. The `cpus` variable is set
 ```{r}
 .libPaths(c("/Users/daniamachlab/Library/R/arm64/4.6-Bioc-3.23/library/", .libPaths()))
 
+## Librararies
 suppressPackageStartupMessages({
   library(QuasR)
   library(limma)
@@ -56,33 +57,119 @@ cpus <- 2
 
 ## Useful Bioconductor classes
 
-Throughout this lab we will be making use of a few data objects and packages from Bioconductor that are convenient when working with genomic data. They are described here and additional links are provided should you want to explore more or get a better understanding.
+Throughout this lab we will be making use of a few classes and packages from Bioconductor that are convenient when working with genomic data. They are described here and additional links are provided should you want to explore more or get a better understanding.
 
-### GRanges
+### `GRanges`
 
-### BSgenome objects
+`GRanges` objects are a useful way to represent genomic regions or locations in `R`. Many functions to manipulate regions and do operations on them are also available. You can find more information in the [GenomicRanges](https://bioconductor.org/packages/GenomicRanges) package.
 
-### DNAstringSet
+We illustrate an example `GRanges` object below. We need to specify positions along the genome, including the chromosome name, start position, and end position. The strand may be set to `+`, `-` or `*` (ignore strand information).
+```{r}
+## Example GRanges
+gr <- GRanges(seqnames = c("chr1", "chr2", "chr2"), 
+              ranges = IRanges(start = c(30000000, 30000200, 40000800), 
+                               end = c(30000040, 30000250, 40000900)), 
+              strand = "*")
+names(gr) <- paste0("region_", 1:length(gr))
+gr
+```
 
-### SummarizedExperiment
+```{r}
+seqnames(gr)
+```
 
-## Mapping
+```{r}
+start(gr)
+```
+
+```{r}
+end(gr)
+```
 
 
-Download bam files from Pelle.
+```{r}
+width(gr)
+```
 
+```{r}
+strand(gr)
+```
+
+
+### `BSgenome` 
+
+[BSgenome](https://bioconductor.org/packages/BSgenome) packages provide access to the reference genome's sequence. For example the [BSgenome.Mmusculus.UCSC.mm39](https://bioconductor.org/packages/BSgenome.Mmusculus.UCSC.mm39/) package which we will be using provides access to the mm39 reference genome.
+
+```{r}
+BSgenome <- BSgenome.Mmusculus.UCSC.mm39
+class(BSgenome)
+```
+
+```{r}
+BSgenome
+```
+
+
+### `DNAStringSet`
+
+We can use the `getSeq` funtion from the [Biostrings](https://bioconductor.org/packages/Biostrings/) package to access the sequence of the reference genome described above. This will return an object of class `DNAStringSet` which can be used to for example calculate mono- di- or n-nucleotide composition, like GC content, in the regions of interest.
+```{r}
+## Get the reference sequences for the regions in gr
+seqs <- getSeq(BSgenome, gr)
+seqs
+```
+
+
+### `SummarizedExperiment`
+
+The [SummarizedExperiment](https://bioconductor.org/packages/SummarizedExperiment) class of objects is a convenient way to store matrices as well as the corresponding row and column metadata in one place. 
+
+![Image from the SumamrizedExperiment pckage vignette.](assets/SE.webp){#fig-SE}
+
+Let's create an example object here.
+```{r}
+## Assays (our matrices)
+cnt <- matrix(sample(x = 0:10, size = 9), nrow = 3)
+rownames(cnt) <- paste0("gene_", 1:3)
+colnames(cnt) <- paste0("sample_", 1:3)
+cntNorm <- sweep(cnt, 2, colSums(cnt), "/")*5
+
+## Row information
+rd <- DataFrame(chr = as.character(seqnames(gr)), 
+                chrStart = start(gr), 
+                chrEnd = end(gr))
+
+## Column information
+cd <- DataFrame(condition = c("control", "treatmentA", "treatmentB"))
+
+## Create SE object
+se <- SummarizedExperiment(assays = list(counts = cnt, normCounts = cntNorm), 
+                           rowData = rd, colData = cd)
+se
+```
+
+```{r}
+assays(se)$counts
+```
+
+```{r}
+rowData(se)
+```
+
+```{r}
+colData(se)
+```
+
+
+## Downloading the data
+
+Let's download the `bam` files we will be using in this tutorial from Pelle, the HPC from UPPMAX. Make sure you do this in the same working directory you are using.
 ```{bash}
 #| eval: false
 
-rsync [username]@pelle.uppmax.uu.se:[path_to_file]
-
-## Download the bam files
+## Download the bam files. Replace 'username' with your actual username
 mkdir data
-rsync danmac@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/dataMapped/*_chr19.ucsc.fixed.bam*' data/ 
-  
-## Download the reference genome used
-#mkdir reference
-#rsync danmac@pelle.uppmax.uu.se:/proj/uppmax2026-1-197/ChIP/reference/Mus_musculus.GRCm39.dna.primary_assembly.fa reference/ 
+rsync username@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/dataMapped/*_chr19.ucsc.fixed.bam*' data/ 
 ```
 
 
