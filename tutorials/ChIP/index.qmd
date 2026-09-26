@@ -48,6 +48,7 @@ suppressPackageStartupMessages({
   library(rtracklayer)
   library(Gviz)
   library(GenomicFeatures)
+  library(edgeR)
 })
 
 ## Params
@@ -96,7 +97,7 @@ strand(gr)
 ```
 
 
-### `BSgenome` 
+### `BSgenome` and `TxDb` 
 
 [BSgenome](https://bioconductor.org/packages/BSgenome) packages provide access to the reference genome's sequence. For example the [BSgenome.Mmusculus.UCSC.mm39](https://bioconductor.org/packages/BSgenome.Mmusculus.UCSC.mm39/) package which we will be using provides access to the mm39 reference genome.
 
@@ -107,6 +108,25 @@ class(BSgenome)
 
 ```{r}
 BSgenome
+```
+
+TxDb objects provide ease of access to annotation files like this [one](https://bioconductor.org/packages/TxDb.Mmusculus.UCSC.mm39.knownGene/). We can use them to extract gene and transcript locations.
+
+```{r}
+txdb <- TxDb.Mmusculus.UCSC.mm39.knownGene
+txdb
+```
+
+```{r}
+transcripts(txdb)
+```
+
+```{r}
+genes(txdb)
+```
+
+```{r}
+promoters(txdb)
 ```
 
 
@@ -203,7 +223,7 @@ qQCReport(input = proj,  pdfFilename = "figures/mappingQC.pdf", clObj=cl)
 
 Examine the generated `pdf` file and the plots it contains. We like to see high mapping rates typically close to 95% and no big differences in duplicate levels between the samples. Note that here you will see 100% since the `bam` files have already been filtered for only reads mapping to chr19.
 
-Let's examine the distribution of hte mapping quality scores of the reads in sample `ChIPseq_ESC_CTCF_IP_wt_rep1`.
+Let's examine the distribution of the mapping quality scores of the reads in sample `ChIPseq_ESC_CTCF_IP_wt_rep1`.
 ```{r}
 ## get the mapping quality scores of the reads
 bamFile <- "data/ChIPseq_ESC_CTCF_IP_wt_rep1_chr19.ucsc.fixed.bam"
@@ -227,11 +247,17 @@ We observe that for this aligner, a mapping score of 42 (which is the maximum he
 
 An important plot we often look at in ChIP-seq data is the GC-bias trends the samples have. Do they have very different ones and what are the consequences of that?
 
+![Count vs GC percent across the tiled genome for the H3K27Ac mark for Embryonic stage 18 (E18) and 4 days post natally (P4) for mouse barrelette neurons. In red are regions which overlap with CpG Islands, where we have a lot of signal.](assets/GCbias.webp){#fig-GCbias}
+
+@fig-GCbias shows very different relationships with GC per condition. The difference is really on the background tiles in black, and this need to be corrected before quantitatively comparing the two samples. Otherwise the difference we see will be driven or explained largely by this difference in GC trend. 
+
+Let's make these plots on the data we have.
 ```{r}
 ## BSgenome
 BSgenome <- BSgenome.Mmusculus.UCSC.mm39
 
-## Tile the genome (on chr19 in our case) into 100 bp regions
+## Tile the genome (on chr19 in our case) into 500 bp regions (the tile size
+## ... can be set to 1000 or 5000 bp for the histone marks)
 tiles <- tileGenome(seqlengths = seqlengths(BSgenome)["chr19"], 
                     tilewidth = 500, 
                     cut.last.tile.in.chrom = TRUE)
@@ -242,7 +268,7 @@ Next, we will make use of the BSgenome object to extract the reference genome se
 
 ```{r}
 
-## Extract the raw reference sequences
+## Extract the reference genome sequences
 tileSeq <- getSeq(BSgenome, tiles)
 
 ## Calculate G+C and CpG obs/expected
@@ -281,7 +307,7 @@ head(tiles)
 
 ::: {.callout-tip}
 ## Exercise
-Examine the different objects above and get more familiar with what they show. You can use the help pages of the used functions with `?functionName` ro inspect that the functions does, expects and gives back.
+Examine the different objects above and get more familiar with what they show. You can use the help pages of the used functions with `?functionName` to inspect that the functions does, expects and gives back.
 :::
 
 We can now proceed to counting the reads on the tiles we have produced. This will take a few seconds.
@@ -323,27 +349,30 @@ ggplot(df, aes(x = fracGC, y = log2(rawCount+1))) +
 
 Compare the input samples to those where the TF was pulled down. What do you notice? 
 
-In this data set we notice a few things. Firstly, there is not relationship between count and GC content. It looks to be flat, and secondly that the samples have the same relationship between read count and GC content. If we had considerable differences in GC trends between samples we wish to quantitatively compare we would have had to normalize them accordingly before comparing them or doing differential analyses, as the differences in counts could be purely driven by differences in GC trends. We will explore how to correct for this in the advanced ChIP-seq tutorial. 
+In this data set we notice a few things. Firstly, there is no relationship between count and GC content. It looks to be flat. Secondly, the samples have the same relationship between read count and GC content. If we had considerable differences in GC trends between samples we wish to quantitatively compare we would have had to normalize them accordingly before comparing them or doing differential analyses, as the differences in counts could be largely driven by differences in GC trends. We will explore more how to correct for this in the advanced ChIP-seq tutorial. 
 
 Notice that the cloud above the background represents tiles with signal, where the TF is bound. Another thing to look out for is how similar the signal or enrichment is for these samples. Was there one replicate which had a very poor signal for instance?
 
 
 ::: {.callout-tip}
 ## Exercise
-Re-do the plots above, coloring by `oeCpG` and `overlappingCpG`. Depending on the mark, the signal can sometimes overlap with CpG islands. Do you see this here?
+Re-do the plots above, coloring by `oeCpG` and `overlappingCpG`. Depending on the ChIP, the signal can sometimes overlap with CpG islands. Do you see this here?
 :::
 
 ### Global correlation
 
 Another quick QC step already at the tile level, is to look at how the samples group together. Ideally, we want to see replicates of the same condition grouping together, unless there are other reasons they shouldn't. For example if the signals differ a lot between samples and that drives the correlation, if the biological source of variation between conditions is smaller than the technical source of variation, or if there are no biological differences between conditions.
 
-First, we need to normalize for difference in library size between samples. Let's do this by calculating count per million. Briefly, for each sample, each tile's count is divided by the total numebr of reads in that sample and then multiplied by 1 million to get reads per million.
+First, we need to normalize for difference in library size between samples. Let's do this by calculating counts per million. Briefly, for each sample, each tile's count is divided by the total number of reads in that sample and then multiplied by 1 million to get counts per million (CPM).
 ```{r}
 #| fig-width: 10
 #| fig-height: 8
 
 ## log2(CPM+1)
-cpm <- sweep(x = cntTiles[, -1], MARGIN = 2, STATS = colSums(cntTiles[, -1]), FUN = "/")*1e6
+cpm <- sweep(x = cntTiles[, -1], 
+             MARGIN = 2, 
+             STATS = colSums(cntTiles[, -1]), 
+             FUN = "/")*1e6
 log2cpm <- log2(cpm + 1)
 
 ## Shorten the sample names
@@ -362,7 +391,7 @@ We can notice a separation between input and IP samples. Within the IP samples w
 ### Enrichment over the input sample
 
 
-Let's next use the tile count matrix to calculate enrichment values for the ChIP-seq samples. We will first calculate normalized counts, correcting for library size differences between samples.
+Let's next use the tile count matrix to calculate enrichment values for the IP samples. We will first calculate normalized counts, correcting for library size differences between samples.
 ```{r}
 ## Normalized count matrix
 cnt <- cntTiles[, -1]
@@ -498,7 +527,7 @@ Choose another sample and estimate the average fragment size. How does it compar
 
 ## Peak calling
 
-Shifting the forward and reverse reads by half the fragment size will be important during peak calling. We will be using `MACS3` for peak calling. MACS stands for **M**odel-based **A**nalysis of **C**hIP-**S**eq. The main function we will be using there is `callpeak`. Note that we have chipped for TFs and so need to call narrow peaks representing the TF binding site. When chipping histone marks such as H3K27-acetylation, we expect broader peaks and there we would need to add the `--broad` argument when doing peak calling. We will also make use of our input samples when peak calling. This will be useful, especially since we have experiments on cell lines (ESCs), so that we can avoid problematic and repetitive parts of the genome which may appear as false peaks otherwise. This should be less of a problem in in-vivo data, but having inputs is always a benefit to be able to avoid false peaks.
+Shifting the forward and reverse reads by half the fragment size will be important during peak calling. We will be using `MACS3` for peak calling. MACS stands for **M**odel-based **A**nalysis of **C**hIP-**S**eq. The main function we will be using there is `callpeak`. Note that we have chipped for TFs and so need to call narrow peaks representing the TF binding site. When chipping histone marks such as H3K27-acetylation, we expect broader peaks and there we would need to add the `--broad` argument when doing peak calling. We will also make use of our input samples when peak calling. This will be useful, especially since we have experiments on cell lines (ESCs), so that we can avoid problematic and repetitive parts of the genome which may appear as false peaks otherwise. This should be less of a problem in in-vivo data, but having inputs is always a benefit to be able to avoid false peaks especially when comparing different samples.
 
 The peak caller will by default filter duplicates by keeping one duplicate read both in the IP and its input sample. It will also estimate the average fragment size and shift the reads accordingly before doing peak calling. Generally speaking, peak calling is done by using a sliding window and comparing the counts in that to a background sliding window to see if there are more counts than expected. For more details on how peak calling is done in `MACS3` see [this](https://macs3-project.github.io/MACS/docs/Advanced_Step-by-step_Peak_Calling.html) section in the manual. You can also have a look at all the parameters the aligner offers by using `macs3 -h`.
 
@@ -535,15 +564,15 @@ This command has been run for the rest of the samples. We will now download the 
 ```{bash}
 #| eval: false
 
-## Download the peak files
+## Download the peak files. Replace 'username' with your Pelle username.
 mkdir peaks
-rsync danmac@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/peaks/*_peaks.narrowPeak' peaks/ 
+rsync username@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/peaks/*_peaks.narrowPeak' peaks/ 
 ```
 
 
 ### Peak overlap
 
-Let's examine how well our peaks overlap, particularly the repliactes.
+Let's examine how well our peaks overlap, particularly the replicates.
 
 ```{r}
 ## Read in peaks
@@ -602,9 +631,9 @@ H2 <- Heatmap(fracOvMat, name = "fracOverlaps",
 H1 + H2
 ```
 
-Here we also don't see an obvious grouping of samples by condition (wt vs BPTFko). This could be due to reasons related to overall low signal and lots of background noise.
+Here we also don't see an obvious grouping of samples by condition (wt vs BPTFko). This could be due to reasons related to overall lower signal and lots of background noise.
 
-Note that we are looking at pairwise overlaps. Below we make use of the `plotOverlaps` function from the `extraChIPs` package to look at how well the peask in each sample agree with the rest. Under the hood this is creating a union set of peaks and checking if each sample overlaps this set, so the numbers don't reflect the true number of peaks we have here.
+Note that we are looking at pairwise overlaps. Below we make use of the `plotOverlaps` function from the `extraChIPs` package to look at how well the peaks in each sample agree with the rest. Under the hood this is creating a union set of peaks and checking if each sample overlaps this set, so the numbers don't reflect the true number of peaks we have here.
 ```{r}
 #| fig-width: 12
 #| fig-height: 6
@@ -615,23 +644,26 @@ plotOverlaps(GRangesList(peaksL), type = "upset")
 It's only at bar number 7 where we see 35 peaks shared only in the wt replicates. Otherwise most peaks seem shared, although the wt_rep1 sample has a lot of unique peaks.
 
 
-## Quantify counts on peaks
+## Count reads on peaks
 
 Let's create a common set of peaks that we can use to create a count matrix across all samples so we can have a more global and quantitative overview of how well the samples agree.
 ```{r}
 ## Define common set of peaks as the union
 peaks <- reduce(unlist(GRangesList(peaksL)))
 head(peaks)
+```
+
+```{r}
 length(peaks)
 ```
 
 
 ::: {.callout-tip}
 ## Exercise
-Plot the histogram of the peak width sizes for the unified set of peaks. Do these widths make sense for a TF? What do you think this would look like for a histone mark like H3K27Ac?
+Plot the histogram of the peak widths for the unified set of peaks. Do these widths make sense for a TF? What do you think this would look like for a histone mark like H3K27Ac?
 :::
 
-Let's count the reads on the peaks. Now that we have made use of the input samples during peak calling we will ignore them on focus on the counts of the IP samples.
+Let's count the reads on the peaks. Now that we have made use of the input samples during peak calling we will ignore them for the time being and on focus on the counts of the IP samples.
 ```{r}
 ## Count reads across peaks (shifting by 1/2 the fragment length).
 ## ... Looking at the output of fragment size estimates (d) in MACS3 in the .xls 
@@ -665,9 +697,35 @@ cpgPeaks <- unique(queryHits(ov))
 peaks$overlappingCpG <- ifelse(test = 1:length(peaks) %in% cpgPeaks, 
                                yes = TRUE, no = FALSE)
 
-## View peaks
+## Annotate peaks:
+## ... overlapping gene (overlapping any transcript)
+## ... distal: at least 1 kb away from any transcription start site (TSS) and 
+## ... not overlapping a transcript
+## ... overlapping promoters (1kb around tss)
+## ... other
+peaks$type <- rep("other", length(peaks))
+txdb <- TxDb.Mmusculus.UCSC.mm39.knownGene
+txs <- transcripts(txdb)
+ov <- findOverlaps(peaks, txs)
+peaks$type[unique(queryHits(ov))] <- "gene"
+tss <- resize(txs, width = 1)
+dist <- distanceToNearest(x = peaks, subject = tss)
+dist <- elementMetadata(dist)$distance
+peaks$type[dist >= 1000 & peaks$type != "gene"] <- "distal"
+promoters <- tss + 1000
+ov <- findOverlaps(peaks, promoters)
+peaks$type[unique(queryHits(ov))] <- "promoter"
+
+## View peaks GRanges
 head(peaks)
 ```
+
+
+```{r}
+## View peak types
+table(peaks$type)
+```
+
 
 ```{r}
 ## Prepare for SummarizedExperiment object
@@ -699,13 +757,13 @@ colData(se)
 
 ::: {.callout-tip}
 ## Exercise
-Subset the `se` object, keeping peaks which have a GC fraction greater than 0.5 and keeping the samples which are `wt` only. Make sure to store it into a new variable for example `seSub`. Access the counts, rowData and colData in this new object. Are they also subsetted?
+Subset the `se` object, keeping peaks which have a GC fraction greater than 0.5 and keeping the samples which are `wt` only. Make sure to store it into a new variable for example `seSub`. Access the counts, rowData and colData in this new object. Are they also subsetted? The point here is to illustrate how these objects can be used.
 :::
 
 
 ## Scatter plots
 
-We will scatter plots comparing all samples against each other and color by density. This is also an important QC plot to see if there are global trends that differ a lot between the samples and if there is a need to correct for them, assuming we do not expect genome-wide differences between samples. This can be for instance driven by differences in the count vs GC content trends. 
+We will next make scatter plots comparing all samples against each other and color by density. This is also an important QC plot to see if there are global trends that differ a lot between the samples and if there is a need to correct for them, assuming we do not expect genome-wide differences between samples. This can be for instance driven by differences in the count vs GC content trends. 
 
 ```{r}
 ## Create a CPM matrix (correting for library size differences)
@@ -731,13 +789,13 @@ pairs(assays(se)$log2cpm, panel = function(...){
   abline(a=0,b=1,col="white")}, main = "log2(CPM+1")
 ```
 
-We can notice that for all comparisons, most data points fall on the diagonal (white line) indicating to global shifts we need to worry about. The density is reflected in the colors, the more red the more dense that part of the plot is. Notice also that within a condition, for example within wt, the scatter plots look more narrow (globally more similar) to each other, and that this become a little bit wider when you compare to the samples from the other contiditon. Take `wt_rep4` for instance and compare it against the other samples above.
+We can notice that for all comparisons, most data points fall on the diagonal (white line) indicating no global shifts or non-linearities we need to worry about. The density is reflected in the colors, the more red the more dense that part of the plot is. Notice also that within a condition, for example within wt, the scatter plots look more narrow (globally more similar) to each other, and that this becomes a little bit wider when you compare to the samples from the other contiditon. Take `wt_rep4` for instance and compare it against the other samples above.
 
 
 ## Global groupings
 
 
-Let's revisit the correlation heatmap. Earlier we did this on the tiles and did not see clear groupings. Can we see better grouping in the peaks count matrix? Focusing on the peaks should improve our signal, since the tiles will contain a lot of noisy background counts, especially with TF ChIP, where we expect most tiles not to have the TF bound.
+Let's revisit the correlation heatmap. Earlier we did this on the tiles and did not see clear groupings. Can we see better groupings in the peaks count matrix? Focusing on the peaks should improve our signal, since the tiles will contain a lot of noisy background counts, especially with TF ChIP-seq, where we expect most tiles not to have the TF bound.
 ```{r}
 ## Correlation heatmap
 cor <- cor(assays(se)$log2cpm)
@@ -768,15 +826,16 @@ df <- cbind(as.data.frame(pca$x), colData(se))
 ggplot(df, aes(x = PC1, y = PC2)) + 
   geom_point(aes(color = genotype)) + 
   labs(title = "PCA", x = paste0("PC1 (", pc1var, "%)"), y = paste0("PC2 (", pc2var, "%)")) +
+  coord_fixed(ratio = pc2var/pc1var) + 
   theme_bw()
 ```
 
-PC1 which captures around 35% of the variance explained is separating the wt from the BPTFko condition. This is informative and indicates that our biological signal of interest (the difference between the two conditions) is nicely explaining a big source of variance. Notice also that in this PC1 and PC2 space, the wt samples seem to group together more tightly whereas the BPTFko samples are a little more scattered indicating more variation between the replicates there, captured in PC2.
+PC1 which captures around 35% of the variance is separating the wt from the BPTFko condition. This is informative and indicates that our biological signal of interest (the difference between the two conditions) is nicely explaining a big source of variance. Notice also that in this PC1 and PC2 space, the wt samples seem to group together more tightly whereas the BPTFko samples are a little more scattered indicating more variation between the replicates there, captured in PC2.
 
 
 ## Profile plots
 
-The called peaks should reflect the binding sites of the CTCF TF. Let's take the peaks, center them and look at the overall reads distribution, somapring the BPTFko to the wt. We will use `QuasR` to create these profile plots. 
+The called peaks should reflect the binding sites of the CTCF TF. Let's take the peaks, center them and look at the overall reads distribution, comparing the BPTFko to the wt. We will use `QuasR` to create these profile plots. 
 
 ```{r}
 ## Center peaks
@@ -798,7 +857,7 @@ We can see the number of summed reads at each position relative to the center of
 profile$ChIPseq_ESC_CTCF_IP_BPTFko_rep1[, 1:10]
 ```
 
-
+Next we will normalize the counts for library size difference between the samples. Note that in our case we are summing the reads over the same set of peaks across the samples. However, one can also make these plots on groups of regions by naming the regions by the group they should belong to. Reads belonging to the same group are summed up. In this case one will also want to normalize for differences in the number of regions per group which is captured in the `coverage` matrix of the returned list.
 ```{r}
 ## Calculate scaling factors to normalize for the library size difference
 libSizes <- alignmentStats(proj)[, "mapped"]
@@ -858,7 +917,7 @@ profile <- qProfile(proj, query = centeredPeaks, upstream = 1000,
 head(profile$ChIPseq_ESC_CTCF_IP_BPTFko_rep1[, 1:10])
 ```
 
-Let's normalize these raw count matrices for library size differences again, and this time sum up the reads per condition to have an aggregate view.
+Let's normalize these raw count matrices for library size differences again, and this time sum up the reads per condition (sum the replicates) to have an aggregate view.
 ```{r}
 #| fig-width: 15
 #| fig-height: 15
@@ -924,12 +983,10 @@ H1 + H2 + H3
 
 We can see clear losses of CTCF binding in the top variable peaks.
 
-choose one of the peaks with big diff, make bigwig files and use gviz. add peak annotations up here..
-
 
 ## Differential binding
 
-For the differential binding let's first plot the log2 fold change between BPTFko and wt vs the average exrpession across all samples. We want to see most points centered on the `y=0` line and no non-linearities. This plot is often called an MA plot. We don't have many peaks here which may affect the fit. With histone marks we typically have more peaks.
+For the differential binding let's first plot the log2 fold change between BPTFko and wt vs the average exrpession across all samples. We want to see most points centered on the `y=0` line and no non-linearities. This plot is often called an MA plot. Notice that there is more variability for low expression and that this variability decreases with a higher average count.
 ```{r}
 ## Calculate log2FC(BPTFko cpm / wt cpm)
 cpm <- assays(se)$cpm
@@ -957,7 +1014,6 @@ colnames(design) <- levels(condition)
 design
 
 ## Prepare DGE object for edgeR
-library(edgeR)
 dge <- DGEList(counts = assays(se)$counts, group = condition, genes = rowData(se))
 
 ## Library sizes
@@ -1127,10 +1183,20 @@ plotTracks(c(chrTrack, genomeTrack, tracks, peakTrack, geneTrack),
            ylim = ylims, title.width = 2, cex.title = 0.5, just.title = "center")
 ```
 
-We can appreciate the benefit and importance of having several replicates per condition to detect constant changes in signal, especially smaller changes in signal. This becomes even more important for TFs that are hard to pull down or experiments where we see a lot of background noise. In the figure above we can for example see that for wt_rep4 the CTCF signal for our peak of interest was not as high as the other 3 replicates. When examining and placing importance individual peaks and interpreting them correctly, have several replicates is necessary to be sure of the effect we are seeing beyond variability between replicates. 
+We can appreciate the benefit and importance of having several replicates per condition to detect constant changes in signal, especially smaller changes in signal. This becomes even more important for TFs that are hard to pull down or experiments where we see a lot of background noise. In the figure above we can for example see that for wt_rep4 the CTCF signal for our peak of interest was not as high as the other 3 replicates. When examining and placing importance on individual peaks and interpreting them correctly, having several replicates is necessary to be sure of the effect we are seeing beyond variability between replicates. 
 
 ::: {.callout-tip}
 ## Exercise
 Pick another peak(s) and make the same plot. Feel free to alter the range around the peak you wish to see.
 :::
+
+## Session
+
+```{r}
+#| output-fold: true
+
+date()
+sessionInfo()
+```
+
 
