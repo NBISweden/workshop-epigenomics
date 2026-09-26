@@ -203,8 +203,10 @@ bamFiles <- file.path(getwd(),
                       list.files("data", pattern = ".bam$", full.names = TRUE))
 meta <- data.frame(FileName = bamFiles, 
                    SampleName = limma::strsplit2(basename(bamFiles), "_chr19")[, 1])
-write.table(meta, file = "data/sampleSheet.txt", quote = FALSE, sep = "\t", 
-            row.names = FALSE, append = FALSE)
+if (! file.exists("data/sampleSheet.txt")) {
+  write.table(meta, file = "data/sampleSheet.txt", quote = FALSE, sep = "\t", 
+              row.names = FALSE, append = FALSE)
+}
 
 ## Create proj object on aligned bam files
 ## ... you can set the number of cores here according to what works on you machine
@@ -1137,6 +1139,7 @@ head(bwGrL$IP_BPTFko_rep1)
 
 Since we have input samples we will include them in our visualization. They are a good check to have that we aren't looking at a false signal. 
 ```{r}
+#| eval: false
 #| fig-width: 10
 #| fig-height: 16
 
@@ -1169,11 +1172,11 @@ tracks <- lapply(names(bwGrL), function(sn){
 ## Prepare genome and gene annotations track
 genomeTrack <- GenomeAxisTrack()
 txdb <- TxDb.Mmusculus.UCSC.mm39.knownGene
-# genes <- genes(txdb)
-# geneTrack <- GeneRegionTrack(genes, genome = "mm39", 
-#                              chromosome = "chr19", 
-#                              name = "Genes", 
-#                              rotation.title = 0)
+genes <- genes(txdb)
+geneTrack <- GeneRegionTrack(genes, genome = "mm39",
+                             chromosome = "chr19",
+                             name = "Genes",
+                             rotation.title = 0)
 chrTrack <- IdeogramTrack(genome = "mm39", chromosome = "chr19")
 
 ## Prepare peak track
@@ -1188,6 +1191,9 @@ plotTracks(c(chrTrack, genomeTrack, tracks, peakTrack),
            to = trackEnd, 
            ylim = ylims, title.width = 2, cex.title = 0.5, just.title = "center")
 ```
+
+![](assets/genomeTrack.webp)
+
 
 We can appreciate the benefit and importance of having several replicates per condition to detect constant changes in signal, especially smaller changes in signal. This becomes even more important for TFs that are hard to pull down or experiments where we see a lot of background noise. In the figure above we can for example see that for wt_rep4 the CTCF signal for our peak of interest was not as high as the other 3 replicates. When examining and placing importance on individual peaks and interpreting them correctly, having several replicates is necessary to be sure of the effect we are seeing beyond variability between replicates. 
 
