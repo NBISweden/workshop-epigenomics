@@ -67,9 +67,9 @@ Some useful tutorials:
 
 After you complete setting-up and you receive a notification from NAISS that your account **has been added to the course allocation**.
 
-1. Log in to [pelle.uppmax.uu.se](pelle.uppmax.uu.se)
-2. Type id in the command line
-3. Copy the output of the command and email back (to the course organisers at [edu.epigenomics@nbis.se](edu.epigenomics@nbis.se))
+1. Log in to `pelle.uppmax.uu.se` using a terminal app and `ssh`
+2. Type `id` in the command line
+3. Copy the output of the command and email back (to the course organisers at `edu.epigenomics@nbis.se`
 
 
 ## Working from your local machine

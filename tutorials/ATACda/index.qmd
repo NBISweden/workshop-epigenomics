@@ -1,0 +1,797 @@
+---
+title: "ATAC-seq Peak Differential Accessibility"
+format: 
+  html:
+    toc: true
+    toc-depth: 2
+    fig-format: png
+    mermaid:
+      theme: default
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+editor: 
+  markdown: 
+    wrap: 72
+bibliography: references.bib
+---
+
+
+```{r echo=FALSE,include=FALSE,cache=FALSE}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE, 
+                      collapse = TRUE, 
+                      warning = FALSE, 
+                      message = FALSE,
+                      include=TRUE,
+                      cache=FALSE,
+                      out.width = "99%")
+
+options(knitr.duplicate.label = "allow")
+
+```
+
+```{=html}
+<!-- 
+Author:         Agata Smialowska
+About:          This qmd file is used to render the .html file. To modify or 
+                update the .html file, please do so in the .qmd file here and 
+                render it.
+-->
+```
+
+
+<br />
+
+## Learning outcomes
+
+
+Using packages from Bioconductor:
+
+
+* to assess GC bias in ATAC-seq data;
+
+* to select appropriate scaling normalisation of ATAC-seq data;
+
+* to detect differentially accessible regions using `edgeR`.
+
+
+
+<br />
+<br />
+
+
+::: {.callout-note}
+
+  
+   We continue working with data from [@Tsao2022]. We will use the count table derived from non subset data (already prepared).
+
+   Optionally, we will also use peaks annotated to closest genomic feature obtained as described in [Peak Annotation](../ATACpeakAnnot/index.html).
+
+   Data processing recap: reads were mapped to reference genome `mm39`.
+
+:::
+
+
+<br />
+<br />
+
+
+## Introduction
+
+
+In this tutorial we use an R / Bioconductor packages `edgeR` [@TMM], [@Chen2016], `EDASeq` [@Risso2011] and `cqn` [@Hansen2012] to perform normalisation and analysis of differential accessibility in ATAC-seq data.
+
+<br />
+<br />
+
+## Data & Methods
+
+
+We will build upon the main lab ATACseq data analysis:
+
+* we will interrogate GC bias in peaks and in adjacent non-overlapping genomic bins;
+
+* we will use the counts table encompassing **complete data** for differential accessibility analysis; 
+
+
+<br />
+<br />
+
+### Setting Up
+
+You can continue working in the directory `atacseq/analysis/counts`. This directory contains merged peaks called earlier using `Genrich` as well as count tables derived from summarising of non-subset data. We will use file `AB_Batf_KO_invivo.genrich_joint.merged_peaks.featureCounts`.
+
+
+<br />
+<br />
+
+::: {.callout-note}
+  
+   We take advantage of the module system on Pelle in this tutorial. The code was tested under `R 4.6.1` The lab was developed under the R version stated in session info.
+
+:::
+
+<br />
+<br />
+
+
+We access the R environment via:
+
+```
+module load R_packages/4.6.1
+```
+
+We activate R console upon typing `R` in the terminal.
+
+
+<br />
+<br />
+
+
+We begin by loading necessary libraries:
+
+```{r}
+#| label: libraries
+#| echo: true
+
+library(tidyverse)
+library(dplyr)
+library(kableExtra)
+
+library(ggplot2)
+library(wesanderson)
+
+library(GenomicRanges)
+library(Hmisc)
+library(Biostrings)
+library(regioneR)
+require(MASS)
+
+library(BSgenome.Mmusculus.UCSC.mm39)
+
+library(edgeR)
+library(limma)
+library(SummarizedExperiment)
+library(EDASeq)
+library(cqn)
+
+```
+
+<br />
+<br />
+
+
+## Data
+
+We can now load data. We will subset the count table to only contain the peaks on assembled chromosomes.
+
+```{r}
+count_table_fname="AB_Batf_KO_invivo.genrich_joint.merged_peaks.featureCounts"
+#cnt_table_pth=file.path(file.path(workdir,"assets","data"),count_table_fname)
+
+
+cnt_table_pth=file.path(file.path("assets","data"),count_table_fname)
+
+
+cnt_table=read.table(cnt_table_pth, sep="\t", header=TRUE, blank.lines.skip=TRUE)
+rownames(cnt_table)=cnt_table$Geneid
+rownames(cnt_table)=c(gsub("AB_Batf_KO_invivo.genrich_joint.","",rownames(cnt_table)))
+colnames(cnt_table)=c(colnames(cnt_table)[1:6],gsub(".filt.bam","",colnames(cnt_table)[7:10]))
+
+colnames(cnt_table)[7:10]=c("B1_WT_Batf-floxed","B2_WT_Batf-floxed","A1_Batf_cKO","A2_Batf_cKO")
+
+#remove peaks not on the assembled chromosomes
+cnt_table_chr=cnt_table|>
+  dplyr::filter(Chr%in%c(1:19) | Chr%in%c("X","Y"))
+
+reads.peak=cnt_table_chr[,c(7:10)]
+
+head(reads.peak)
+```
+
+
+* All peaks: n = `r nrow(cnt_table)`;
+
+* Peaks on assembled chromosomes: n = `r nrow(cnt_table_chr)`. These peaks will be used for further analysis.
+
+<br />
+<br />
+
+## GC Bias
+
+### GC Bias in Genomic Bins
+
+To ivestigate the GC bias in adjacent genomic bins (background), we start with creating the `GRanges` object holding the tiled genome intervals. We will do it for one chromosome only (chr1), to save compute time.
+
+```{r}
+chr.lengths = seqlengths(Mmusculus)[1:21]
+chr.lengths.chr1=chr.lengths[1]
+
+#tiles
+tiles_chr1=GenomicRanges::tileGenome(chr.lengths.chr1,tilewidth=5000, cut.last.tile.in.chrom=TRUE)
+
+#sequence
+tileSeqs=BSgenome::getSeq(Mmusculus,tiles_chr1)
+
+#GCcontent
+gcContentTiles=Biostrings::letterFrequency(tileSeqs, "GC",as.prob=TRUE)[,1]
+mcols(tiles_chr1)$gc=gcContentTiles
+```
+
+We need to tweak chromosome names to match the genome reference used for read mapping:
+
+```{r} 
+# tiles_chr1
+# remove chr from granges obj
+seqlevels(tiles_chr1)=gsub("chr","",seqlevels(tiles_chr1))
+```
+
+We can now count reads in all bam files in the data set, and plot them.
+
+
+```
+# comment this out for production on gh-pages
+bam_dir="/Users/agatasmialowska/NBIS/fr_backup/teaching/epigenomics/labs2025/atacseq/Tsao2022/bam"
+
+bam_fnames=list.files(bam_dir,pattern = "\\.bam$",)
+
+bam_cnts_bins=list()
+
+for (bam_fname in bam_fnames){
+
+    bam_path=file.path(bam_dir,bam_fname)
+
+    tiles_bam=tiles_chr1
+
+    tiled_counts=bamCount(bam_path, tiles_bam, verbose=FALSE)
+    mcols(tiles_bam)$readcount=tiled_counts
+
+    bam_cnts_bins[[bam_fname]]=tiles_bam
+
+}
+
+saveRDS(bam_cnts_bins, 
+  file = "assets/rds/Batf_WT_KO.cnts-bins.chr1.rds", 
+  ascii = FALSE, 
+  version = NULL, 
+  compress = TRUE, 
+  refhook = NULL)
+
+```
+
+```{r}
+bam_cnts_bins=readRDS("assets/rds/Batf_WT_KO.cnts-bins.chr1.rds")
+bam_fnames=names(bam_cnts_bins)
+```
+
+<br />
+
+::: {#fig-GCbias-bins}
+
+```{r}
+#| echo: false
+
+par(mfrow = c(2, length(bam_fnames)/2 ) )
+
+for (bam_fname in bam_fnames){
+
+    tiles_bam=bam_cnts_bins[[bam_fname]]
+
+    smoothScatter(tiles_bam$gc, log2(tiles_bam$readcount+1), 
+      main=paste("Logcounts vs GC in bins",bam_fname,sep="\n"), ylab="log(counts+1)", xlab="GC content")
+}
+```
+
+Values of (non–normalised) logcounts as a function of GC content in genomic bins.
+:::
+
+<br />
+
+
+We can see that the signal of logcounts vs GC content looks very similar in all libraries.
+
+
+<br />
+<br />
+
+
+### GC Bias in Peaks
+
+To ivestigate the GC bias in peaks (signal), we start with creating the `GRanges` object holding the peak intervals.
+
+We need to prefix the chromosome name by "chr" (per UCSC convention) in the first step to be able to use a `BSgenome` object from the Bioconductor package `BSgenome.Mmusculus.UCSC.mm39`. Please note this only works with assembled chromosomes; the non-assembled contigs follow different naming conventions in Ensembl (the source of the reference assembly for read mapping) and UCSC (the source of BSgenome package).
+
+
+
+```{r}
+peaks_gr=GRanges(seqnames=paste0("chr",cnt_table_chr$Chr), ranges=IRanges(cnt_table_chr$Start, cnt_table_chr$End), strand="*", mcols=data.frame(peakID=rownames(cnt_table_chr)))
+```
+
+We now prepare data with GC content of the peak regions for GC-aware normalisation.
+
+
+```{r}
+peakSeqs=BSgenome::getSeq(Mmusculus,peaks_gr)
+
+gcContentPeaks=Biostrings::letterFrequency(peakSeqs, "GC",as.prob=TRUE)[,1]
+
+#divide into 20 bins by GC content
+gcGroups=Hmisc::cut2(gcContentPeaks, g=20)
+mcols(peaks_gr)$gc=gcContentPeaks
+mcols(peaks_gr)$gc_group=gcGroups
+
+peaks_gr
+```
+<br />
+<br />
+
+
+
+Figure below shows that the accessibility measure of a particular genomic region is associated with its GC content. In this data set, the curves are almost identical for all samples, indicating no difference in GC bias between samples.
+
+However, in some cases the slope and shape of the curves may differ between samples, which indicates that GC content effects are sample–specific and can therefore bias between–sample comparisons. 
+
+
+We start by creating a data frame with gc contents and read count in each peak in each sample as well as perform `lowess` (locally weighted scatterplot smoothing) regression to fit the trend:
+
+
+```{r}
+lowListGC = list()
+for(kk in 1:ncol(reads.peak)){
+  set.seed(kk)
+  lowListGC[[kk]] = lowess(x=gcContentPeaks, y=log1p(reads.peak[,kk]), f=1/10)
+}
+
+names(lowListGC)=colnames(reads.peak)
+
+dfList = list()
+for(ss in 1:length(lowListGC)){
+  oox = order(lowListGC[[ss]]$x)
+  dfList[[ss]] = data.frame(x=lowListGC[[ss]]$x[oox], y=lowListGC[[ss]]$y[oox], sample=names(lowListGC)[[ss]])
+}
+dfAll = do.call(rbind, dfList)
+dfAll$sample = factor(dfAll$sample)
+```
+
+
+We can now plot the relationship of logcounts vs GC content:
+
+```{r}
+plotGCHex = function(gr, counts){
+  counts2=counts
+  df=as_tibble(cbind(counts2,gc=mcols(gr)$gc))
+  df=gather(df, sample, value, -gc)
+  ggplot(data=df, aes(x=gc, y=log(value+1)) ) + 
+    ylab("log(count + 1)") + xlab("GC-content") + 
+    geom_hex(bins = 50) + theme_bw()
+}
+
+plot_GC_bias=plotGCHex(peaks_gr, rowMeans(reads.peak)) +
+  theme(axis.title = element_text(size=16)) +
+  labs(fill="Nr. of peaks") + 
+  geom_line(aes(x=x, y=y, group=sample, color=sample), data=dfAll, linewidth=1) +
+  scale_color_discrete()
+```
+
+
+<br />
+
+::: {#fig-GCbias-peaks}
+
+```{r}
+#| echo: false
+plot_GC_bias
+```
+
+Fitted lowess curves of (non–normalised) logcounts as a function of GC content.
+:::
+
+<br />
+
+
+
+
+## Differential Accessibility
+
+We can define experimental groups:
+
+```{r}
+groups=factor(c(rep("ctrl",2),rep("KO_Batf",2)))
+groups
+
+design=model.matrix(~groups)
+rownames(design)=colnames(reads.peak)
+design
+```
+
+
+We will detect differentially accessible regions using ``edgeR``. As we do not observe strong effects of GC content on signal neither in peaks nor in genomic bins, we decided to use the scaling normalisation by trimmed mean of M-values (TMM) [@TMM].
+
+We start by creating `DGEList`, the object `edgeR` uses to store data for calculations.
+Before we start the DA analysis, it is advisable to remove peaks with very low counts.
+
+```{r}
+reads.dge = DGEList(counts=reads.peak, group=groups)
+keep = filterByExpr(reads.dge)
+reads.dge=reads.dge[keep,,keep.lib.sizes=FALSE]
+
+summary(keep)
+
+reads.dge
+```
+
+
+These steps perform the standard `edgeR` workflow for differential analysis:
+
+```{r}
+reads.dge.tmm = normLibSizes(reads.dge)
+```
+
+We can inspect sample grouping on multidimensional scaling (MDS) plot before proceeding:
+
+```{r}
+plotMDS(reads.dge.tmm)
+```
+
+
+All looks as expected, we can proceed with the differential analysis:
+
+
+```{r}
+reads.dge.tmm = estimateDisp(reads.dge.tmm, design)
+qlf.fit.tmm = glmQLFit(reads.dge.tmm, design, robust=TRUE)
+qlf.ftest.tmm = glmQLFTest(qlf.fit.tmm, coef=2)
+DA_res.qlf.tmm = as.data.frame(topTags(qlf.ftest.tmm, nrow(qlf.ftest.tmm$table)))
+DA_res.qlf.tmm = DA_res.qlf.tmm|>
+  dplyr::mutate(peakID=rownames(DA_res.qlf.tmm))
+```
+
+This results in a table with results of DA analysis:
+
+```{r}
+head(DA_res.qlf.tmm)
+```
+
+::: {.callout-note collapse="true"}
+
+### DA results can be saved to a file as a table or rds object
+
+```
+write.table(DA_res.qlf.tmm, "Batf_WT_KO.merged_peaks.DA_TMM.tsv", 
+    append = FALSE, 
+    quote = FALSE, 
+    sep = "\t",
+    row.names = FALSE,
+    col.names = TRUE, 
+    fileEncoding = "")
+```
+
+```
+saveRDS(DA_res.qlf.tmm, 
+  file = "assets/rds/Batf_WT_KO.merged_peaks.DA_TMM.rds", 
+  ascii = FALSE, 
+  version = NULL, 
+  compress = TRUE, 
+  refhook = NULL)
+```
+
+:::
+
+We should also take a look at the diagnostic plots to verify that they look as expected.
+
+
+```{r}
+plotMD(qlf.ftest.tmm)
+```
+
+<br />
+<br />
+
+At this point we can add the information from peak annotation (../ATAC-peakAnnot/PeakAnnot.tsao2022.fulldata.14ix2026.html)
+
+
+If you are still in **the same R session**, you can skip the step below. 
+
+If you started a **new R session**, you can read in the table with peak annotations:
+
+
+```{r}
+peak_annots_pth=file.path("assets","rds","Batf_WT_KO.merged_peaks.annot.rds")
+
+peakAnno_df=readRDS(peak_annots_pth)
+
+#until cleaned up
+peakAnno_df=peakAnno_df|>dplyr::rename(peakID=mcols.peakID)
+```
+
+
+We can now join the tables with peak annotations and DA results:
+
+```{r}
+DA_res_table=DA_res.qlf.tmm |>
+  dplyr::left_join(peakAnno_df,by="peakID")|>
+  dplyr::select(seqnames,start,end,peakID,logFC,PValue,FDR,annotation,geneChr,geneStart,geneEnd,geneStrand,geneId,transcriptId,external_gene_name,distanceToTSS)|>
+  dplyr::mutate(annotation=str_replace_all(annotation,  " \\s*\\([^\\)]+\\)", ""))
+```
+
+```{r}
+head(DA_res_table)
+```
+
+```
+saveRDS(DA_res_table, 
+  file = "assets/rds/Batf_WT_KO.merged_peaks.DA_TMM.annot.rds", 
+  ascii = FALSE, 
+  version = NULL, 
+  compress = TRUE, 
+  refhook = NULL)
+```
+
+
+
+<br />
+<br />
+
+## GC Bias Correction
+
+
+### Plotting Log2FC in GC Bins
+
+When a strong effect of GC content on signal is observed, a GC aware scaling normalisation can be considered. It is important to perform all diagnostic plots, however, to verify whether it does not distort the data in an unexpected manner. One should always be aware that the GC bias, although technical, may also reflect sample biology, therefore removing it may lead to signal loss.
+
+
+We can first verify whether there is a GC bias in log2FC detection using GC agnostic TMM scaling.
+
+We can plot log2FC distribution in GC content bins.
+
+For this we will need the GC bins we calculated before, so we need to join that information to the results of DA analysis:
+
+
+<br />
+<br />
+
+
+```{r}
+peak_info_df=as.data.frame(peaks_gr)|>
+  dplyr::rename(peakID=mcols.peakID)
+
+df_GCbias=DA_res.qlf.tmm |>
+    dplyr::left_join(peak_info_df, by="peakID") |>
+    dplyr::select(logFC,gc_group)
+```
+
+
+
+We can plot the log2FC in GC bins:
+
+
+```{r}
+plot_lfc_GC_TMM = ggplot(df_GCbias) +
+  aes(x=gc_group, y=logFC, color=gc_group) +
+  geom_violin(width=0.95) +
+  geom_boxplot(width=0.15, color="grey20") +
+  scale_color_manual(values=wesanderson::wes_palette("Zissou1", nlevels(df_GCbias$gc_group), "continuous")) +
+  geom_abline(intercept = 0, slope = 0, col="black", lty=2) +
+  #ylim(c(-1,1)) + ## this was in the original code from EDAseq paper; it calculates medians for values within the ylim interval - not from the entire data
+  coord_cartesian(ylim=c(-1,1)) +
+  ggtitle(paste0("log2FCs in bins by GC content, normalisation: TMM")) +
+  xlab("GC-content bin") +
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45, vjust = .5),
+        legend.position = "none",
+        axis.title = element_text(size=16))
+
+plot_lfc_GC_TMM
+```
+
+In this case a negligible bias in log2FC can be observed within the range of log2FC (-1,1).
+
+You can alter the plotted range by changing `coord_cartesian(ylim=c(-1,1))` to your desired range.
+
+In any case, **for this data set** the systematic effect of GC contents on detected log2FC is very small, and below the reasonable size effect cutoff.
+
+
+### Correcting for GC contents
+
+If required, the raw counts can be scaled in a GC aware manner, rather than using the TMM method.
+
+Two related methods are presented below. Both perform conditional quantile scaling, and output the *offsets* which can then be used in `edgeR` statistical framework.
+
+
+
+
+#### Full Quantile GC-GC Scaling
+
+This method is implemented in Bioconductor package `EDASeq` [@Risso2011].
+
+To calculate the offsets, which correct for library size as well as GC content (full quantile normalisation in both cases):
+
+```{r}
+exprsSet.eda=newSeqExpressionSet(reads.dge$counts)
+peaks_gr.keep=peaks_gr[keep]
+fData(exprsSet.eda)$gc=peaks_gr.keep$gc
+
+exprsSet.eda.wl=withinLaneNormalization(exprsSet.eda,"gc",num.bins=20, which="full",offset=TRUE)
+exprsSet.eda.bl=betweenLaneNormalization(exprsSet.eda.wl,which="full",offset=TRUE)
+```
+
+These peak and library level offsets can be inspected:
+
+```{r}
+head(offst(exprsSet.eda.bl))
+```
+
+We will input the offset to ``edgeR``:
+
+
+```{r}
+reads.dge.edaseq = reads.dge
+reads.dge.edaseq$offset = -offst(exprsSet.eda.bl)
+```
+
+The statistical testing follows:
+
+
+```{r}
+reads.dge.edaseq=estimateDisp(reads.dge.edaseq, design)
+qlf.fit.edaseq=glmQLFit(reads.dge.edaseq, design, robust=TRUE)
+qlf.ftest.edaseq=glmQLFTest(qlf.fit.edaseq, coef=2)
+DA_res.qlf.edaseq=as.data.frame(topTags(qlf.ftest.edaseq, nrow(qlf.ftest.edaseq$table)))
+DA_res.qlf.edaseq=DA_res.qlf.edaseq|>dplyr::mutate(peakID=rownames(DA_res.qlf.edaseq))
+```
+
+We can now plot the log2FC in GC bins, as for TMM scaling:
+
+
+```{r}
+df_GCbias=DA_res.qlf.edaseq |>
+    dplyr::left_join(peak_info_df, by="peakID") |>
+    dplyr::select(logFC,gc_group)
+
+plot_lfc_GC_edaseq = ggplot(df_GCbias) +
+  aes(x=gc_group, y=logFC, color=gc_group) +
+  geom_violin(width=0.95) +
+  geom_boxplot(width=0.15, color="grey20") +
+  scale_color_manual(values=wesanderson::wes_palette("Zissou1", nlevels(df_GCbias$gc_group), "continuous")) +
+  geom_abline(intercept = 0, slope = 0, col="black", lty=2) +
+  #ylim(c(-1,1)) + ## this was in the original code from EDAseq paper; it calculates medians for values within the ylim interval - not from the entire data
+  coord_cartesian(ylim=c(-1,1)) +
+  ggtitle(paste0("log2FCs in bins by GC content, normalisation: GC FQ-FQ")) +
+  xlab("GC-content bin") +
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45, vjust = .5),
+        legend.position = "none",
+        axis.title = element_text(size=16))
+
+plot_lfc_GC_edaseq
+```
+
+
+<br />
+<br />
+
+
+
+#### Conditional Quantile Normalization
+
+This method is implemented in Bioconductor package `cqn` [@Hansen2012].
+
+In calculating offsets, it can correct both for GC content as well as peak length.
+
+
+```{r}
+#assuming we have the subset peaks_gr
+peaks_gr.keep=peaks_gr[keep]
+
+
+peaks=as.data.frame(cbind(
+      gc=peaks_gr.keep$gc,
+      length=width(peaks_gr.keep)
+    ))
+rownames(peaks)=peaks_gr.keep$mcols.peakID
+
+cqn_out=cqn(counts=reads.dge$counts,lengths=peaks$length,x=peaks$gc,
+             sizeFactors=reads.dge$samples$lib.size,verbose=TRUE)
+
+cqn_out
+
+head(cqn_out$glm.offset)
+```
+
+We will input the offset to ``edgeR``:
+
+
+```{r}
+reads.dge.cqn = reads.dge
+reads.dge.cqn$offset = cqn_out$glm.offset
+```
+
+The statistical testing follows:
+
+
+```{r}
+reads.dge.cqn=estimateDisp(reads.dge.cqn, design)
+qlf.fit.cqn=glmQLFit(reads.dge.cqn, design, robust=TRUE)
+qlf.ftest.cqn=glmQLFTest(qlf.fit.cqn, coef=2)
+DA_res.qlf.cqn=as.data.frame(topTags(qlf.ftest.cqn, nrow(qlf.ftest.cqn$table)))
+DA_res.qlf.cqn=DA_res.qlf.cqn|>dplyr::mutate(peakID=rownames(DA_res.qlf.cqn))
+```
+
+We can now plot the log2FC in GC bins, as for TMM scaling:
+
+
+```{r}
+df_GCbias=DA_res.qlf.cqn |>
+    dplyr::left_join(peak_info_df, by="peakID") |>
+    dplyr::select(logFC,gc_group)
+
+plot_lfc_GC_cqn = ggplot(df_GCbias) +
+  aes(x=gc_group, y=logFC, color=gc_group) +
+  geom_violin(width=0.95) +
+  geom_boxplot(width=0.15, color="grey20") +
+  scale_color_manual(values=wesanderson::wes_palette("Zissou1", nlevels(df_GCbias$gc_group), "continuous")) +
+  geom_abline(intercept = 0, slope = 0, col="black", lty=2) +
+  #ylim(c(-1,1)) + ## this was in the original code from EDAseq paper; it calculates medians for values within the ylim interval - not from the entire data
+  coord_cartesian(ylim=c(-1,1)) +
+  ggtitle(paste0("log2FCs in bins by GC content, normalisation: cqn")) +
+  xlab("GC-content bin") +
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45, vjust = .5),
+        legend.position = "none",
+        axis.title = element_text(size=16))
+
+plot_lfc_GC_cqn
+```
+
+
+<br />
+<br />
+
+
+<br />
+<br />
+
+
+::: {.callout-note}
+
+   It is advised to verify the estimated model parameters and fit using the diagnostic plots provided in `edgeR` i.e. `plotBCV(reads.dge)` and `plotQLDisp(fit)`
+
+:::
+
+
+<br />
+<br />
+
+<br />
+<br />
+<br />
+<br />
+
+## Session Info
+
+<br />
+<br />
+
+
+::: {.callout-note collapse="true"}
+
+
+## Session Info
+
+
+```{r}
+#| label: session-info
+
+sessionInfo()
+```
+
+:::
+
+<br />
+<br />
+
+
+## References
+
+
+

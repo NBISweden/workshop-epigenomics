@@ -1,5 +1,5 @@
 ---
-pagetitle: "NBIS Workshop"
+pagetitle: "Epigenomics Data Analysis • From Bulk to Single Cell"
 subtitle: ""
 toc: false
 date: ""

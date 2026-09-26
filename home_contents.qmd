@@ -1,6 +1,6 @@
 ---
 title: "Contents"
-description: "Sample reports and slides. Slides: {{< fa file-powerpoint >}} / {{< fa file-pdf >}}, Reports: {{< fa file-lines >}}"
+description: "Course materials including presentations (slides) and practical exercises (tutorials)"
 date: ""
 toc: false
 number-sections: false
@@ -8,23 +8,25 @@ sidebar: false
 format: html
 ---
 
-## Reports
 
-HTML report using the Quarto format `html`.
+:::{.contents-table .column-body-outset}
 
-[Listing page](reports/) for all reports.
+|Topic                                                          |Instructor	                                      | Links 												                     |
+|---------------------------------------------------------------|-------------------------------------------------|----------------------------------------------------|
+|[05-Oct-2026 (Mon)]{.badge .badge-primary}                                                                                                                          |||
+| DNA methylation                                               | Louella Vasquez                                 |                                                    |
+| Methylation methods & technologies (NGI)                      | Jessica Nordlund                                |                                                    |
+|[06-Oct-2026 (Tue)]{.badge .badge-primary}                                                                                                                          |||
+| ATAC-seq                                                      | Agata Smialowska                                |                                                    |
+| Presentation and Q&A with NGI                                 | Orlando Contreras Lopez and Michelle Ljungmark  |                                                    |
+|[07-Oct-2026 (Wed)]{.badge .badge-primary}                                                                                                                          |||
+| ChIP-seq                                                      | Dania Machlab                                   |                                                    |
+| Cut & Tag/Run                                                 | Prasoon Agarwal                                 |                                                    |
+|[08-Oct-2026 (Thu)]{.badge .badge-primary}                                                                                                                          |||
+| Motifs                                                        | Dania Machlab                                   |                                                    |
+| BiG Talk (keynote)                                            | Mattias Mannervik                               |                                                    |
+|[09-Oct-2026 (Fri)]{.badge .badge-primary}                                                                                                                          |||
+| Integrative and single cell omics                             | Markus Ringnér                                  |                                                    |
 
-- Using Quarto and custom theme [{{< fa file-lines >}}](reports/usage/index.html)
-- Minimal demo [{{< fa file-lines >}}](reports/sample/index.html)
-- Quarto basics [{{< fa file-lines >}}](reports/demo/index.html)
-- Quarto with R [{{< fa file-lines >}}](reports/demo-with-r/index.html)
-- OJS and mermaid [{{< fa file-lines >}}](reports/more/index.html)
+:::
 
-## Slides
-
-Presentation using the Quarto `revealjs` format.
-
-[Listing page](slides/) for all slides.
-
-- Minimal demo [{{< fa file-powerpoint >}}](slides/sample/index.html)
-- Quarto with R [{{< fa file-powerpoint >}}](slides/demo/index.html)

@@ -18,6 +18,7 @@ quarto add --no-prompt mcanouil/quarto-collapse-output@1.4.0
 quarto add --no-prompt royfrancis/quarto-accordion
 quarto add --no-prompt royfrancis/quarto-leaflet
 quarto add --no-prompt royfrancis/quarto-team
+quarto add --no-prompt royfrancis/quarto-toastui
 ```
 
 We will be using `R-4.6.1` coupled with Bioconductor release `3.23` for this
@@ -63,12 +64,12 @@ your local repo, and switch to that branch to work.
 > `workshop-epigenomics` and click 'Create Project'. 
 
 Next, we will install the `R` packages listed in the `renv.lock` file. You will
-need to do runt he following commands the first time you are setting up. Make
+need to do run the following commands the first time you are setting up. Make
 sure that you are using the correct `R` version and that you are in the root
 directory of the repo.
 ```r
 # check status
-renv:status()
+renv::status()
 
 # make sure the library paths are correct (should be pointing to the local renv folder)
 .libPaths()
@@ -86,7 +87,7 @@ Now you are set up to start making changes and add new material. If there are
 # check status of packages
 # ... this should also report missing packages if they are present in .qmd files 
 # ... but not present in the lock file
-renv:status()
+renv::status()
 
 # install the missing packages
 renv::hydrate()
@@ -107,9 +108,10 @@ New material can be added by topic as follows:
 - slides: `presentations/yourTopic`
 - tutorials: `tutorials/yourTopic`
 
-PDF slides may be added as presentation. However, if you are comfortable with 
-quarto, we recommend creating quarto presentation to keep the repository at a
-good size.
+In your `qmd` files please start with two hashtags as the top header level 
+(`##`). PDF slides may be added as presentation. However, if you are comfortable 
+with quarto, we recommend creating quarto presentation to keep the repository at 
+a good size.
 
 > [!TIP]
 > Consider using images in the `.webp` format to limit the size even more.

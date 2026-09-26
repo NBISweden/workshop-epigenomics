@@ -6,11 +6,11 @@ website:
   open-graph: true
   site-url: "https://nbisweden.github.io/workshop-epigenomics"
   image: "assets/images/seo.webp"
-  description: "A quarto website template for courses and workshops."
+  description: "An introduction to best practice bioinformatics methods for processing, analyses and integration of epigenomics data. This online workshop includes lectures, programming tutorials and interactive group sessions."
   favicon: "assets/favicon.png"
   navbar:
     logo: "assets/logos/nbis-scilifelab.webp"
-    logo-alt: "logo"
+    logo-alt: "nbis scilifelab logo"
     right:
       - text: "Home"
         href: "index.html"
@@ -18,9 +18,9 @@ website:
       - text: "Schedule"
         href: "home_schedule.html"
         aria-label: "Schedule"
-      #- text: "Contents"
-      #  href: "home_contents.html"
-      #  aria-label: "Contents"
+      - text: "Contents"
+        href: "home_contents.html"
+        aria-label: "Contents"
       - text: "Syllabus"
         href: "home_syllabus.html"
         aria-label: "Syllabus"
@@ -30,9 +30,21 @@ website:
       #- text: "Tutorial Setup"
       #  href: "home_tutorialsetup.html"
       #  aria-label: "tutorialSetup"
+      - text: "Tutorials"
+        menu:
+          - text: "DNA methylation"
+            href: "landingPages/DNAme/index.html"
+          - text: "ATACseq"
+            href: "landingPages/ATAC/index.html"
+          - text: "ChIPseq"
+            href: "landingPages/ChIP/index.html"
+          - text: "TFs"
+            href: "landingPages/TF/index.html"
+          - text: "Single Cell ATACseq"
+            href: "landingPages/scATAC/index.html"
       - text: "FAQ"
         href: "home_faq.html"
-        aria-label: "FAQ"
+        aria-label: "Frequently Asked Questions"
       - text: About
         href: "home_about.html"
         aria-label: "About"
@@ -70,12 +82,11 @@ format:
     code-copy: true
     code-overflow: wrap
     df-print: kable
-    standalone: false
     fig-align: left
     title-block-banner: "assets/images/banner.webp"
     subtitle: "NBIS Workshop"
     callout-icon: true
-    date:  last-modified
+    date: last-modified
     date-format: "DD-MMM-YYYY"
     image: "assets/images/featured.webp"
     lightbox: auto
@@ -96,26 +107,26 @@ format:
     slide-level: 2
     slide-number: true
     progress: true
-    date:  last-modified
+    date: last-modified
     date-format: "DD-MMM-YYYY"
     fig-align: left
     chalkboard: true
     callout-icon: true
-    image: "/assets/images/featured.webp"
-    hero: "/assets/images/slide-hero.webp"
+    image: "assets/images/featured.webp"
+    hero: "assets/images/slide-hero.webp"
     title-slide-attributes:
-      data-background-image: "/assets/images/home.jpg"
+      data-background-image: "assets/images/home.jpg"
       data-background-size: "cover"
       data-background-opacity: "1"
     subtitle: "NBIS Workshop"
-    header-logo-left: /assets/logos/nbis.webp
+    header-logo-left: assets/logos/nbis.webp
     header-logo-left-height: 25px
-    header-logo-left-url: https://royfrancis.github.io/specky/home_contents.html
-    header-logo-right: /assets/logos/scilifelab.webp
+    header-logo-left-url: https://nbisweden.github.io/workshop-epigenomics/home_contents.html
+    header-logo-right: assets/logos/scilifelab.webp
     header-logo-right-height: 25px
-    header-logo-right-url: https://royfrancis.github.io/specky/home_contents.html
+    header-logo-right-url: https://nbisweden.github.io/workshop-epigenomics/home_schedule.html
     template-partials:
-      - "/assets/title-slide.html"
+      - "assets/title-slide.html"
     pointer:
       color: "#95b540"
       pointerSize: 12
@@ -129,7 +140,7 @@ execute:
   message: false
   freeze: false
 
-metadata-files: 
+metadata-files:
   - _metadata.yml
 
 filters:

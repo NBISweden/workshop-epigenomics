@@ -22,15 +22,28 @@ jobs:
             libbz2-dev \
             liblzma-dev \
             bzip2-doc \
-            libgsl-dev
+            libgsl-dev \
+            cmake \
+            gsfonts \
+            libcairo2-dev \
+            libfontconfig1-dev \
+            libfreetype6-dev \
+            libglpk-dev \
+            libjpeg-dev \
+            libmagick++-dev \
+            libpng-dev \
+            libx11-dev \
+            pandoc
 
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
         with:
-          r-version: '4.6.0'
+          r-version: '4.6.1'
 
       - name: Setup renv
         uses: r-lib/actions/setup-renv@v2
+        with:
+          cache-version: 1
 
       - name: Install quarto
         uses: quarto-dev/quarto-actions/setup@v2
