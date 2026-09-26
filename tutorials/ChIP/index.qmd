@@ -15,9 +15,14 @@ bibliography: references.bib
 
 ## Overview
 
+This tutorial will walk you through QC steps, peak calling, differential binding as well as various ways to visualize and get to know the ChIP-seq data set. We will be using CTCF ChIP-seq data from mouse ESCs from @Iurlaro2024, focusing on the wild type (wt) and BPTFko conditions. We will start from mapped reads in the form of a [bam](https://samtools.github.io/hts-specs/SAMv1.pdf) file, which has been filtered for reads mapping to chromosome 19 of the mouse reference genome, so that we can run all steps in a short time for the purpose of this tutorial.
 
 
+### Libraries
 
+Make sure you have decided where you would like to run this tutorial. If you have cloned the repository to the workshop, you could simply navigate to `tutorials/ChIP` where you will find this `qmd` file. Alternatively, if you work in a another folder of your choosing, make sure to copy this `qmd` there and to stick to your chosen working directory. We will be downloading data into this directory.
+
+Let's start by loading the `R` packages we will need. The `cpus` variable is set to 2 below. Feel free to increase this if your machine or system can handle it.
 ```{r}
 .libPaths(c("/Users/daniamachlab/Library/R/arm64/4.6-Bioc-3.23/library/", .libPaths()))
 
@@ -46,7 +51,6 @@ suppressPackageStartupMessages({
 
 ## Params
 cpus <- 2
-
 ```
 
 
