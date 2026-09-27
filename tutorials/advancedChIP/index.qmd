@@ -18,29 +18,30 @@ This tutorial covers more advanced analyses pertaining to ChIP-seq data. We will
 
 ### The data set
 
-As mentioned, we will be looking at histone marks from several time points across development. For this we will be using the data generated in this study by @Kitazawa2021Polycomb. The authors describe a new epigenetic signature on genes characterized by open and H3K27-acetylated promoters (active marks) and H3K27-methylated gene bodies (repressive mark), called bipartite genes. These genes are not expressed but can be within minutes as soon as the repressive H3K27me3 mark is removed from the gene body upon exposure to the right stimulus. They tend to be transcription factors (TFs) and play key developmental roles. 
+As mentioned, we will be looking at histone marks from several time points across development. For this we will be using the data generated in this study by @Kitazawa2021Polycomb. The authors describe a new epigenetic signature on genes characterized by open and H3K27-acetylated promoters (active marks) and H3K27-methylated gene bodies (repressive mark), called bipartite genes. These genes are not expressed but can be within minutes as soon as the repressive H3K27me3 mark is removed from the gene body upon exposure to the right stimulus. They tend to be transcription factors (TFs) and play key developmental roles. @fig-BipBivGene below depicts how the chromatin marks present themselves on bipartite and the previously described bivalent genes.
+
+![ATAC-seq (purple), H3K27Ac (red), H3K27Me3 (blue) and H3K4Me3 (yellow) distribution around the promoters (green box) and gene bodies (grey box) of bipartite and bivalent genes](assets/BipBivGene.webp){#fig-BipBivGene}
+
+
 
 
 ```{r}
 .libPaths(c("/Users/daniamachlab/Library/R/arm64/4.6-Bioc-3.23/library/", .libPaths()))
 suppressPackageStartupMessages({
   library(GenomicRanges)
-  #library(QuasR)
+  library(limma)
+  library(dplyr)
+  library(tidyr)
+  library(ggplot2)
 })
 
 ```
 
 
-```{r}
-jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
-```
-
 
 ## Read in the data
 
-Our starting point for this tutorial is two raw count matrices: one on promoters and another on gene bodies. Promoters were defined as 1kb upstream and 500 bases downstream the transcription start site (TSS) and gene bodies as regions from 1kb to 3 kb downstream the TSS. The rows in these count matrices correspond to genes and the columns correspond to the different modalities quantified on the promoter and gene body level and at three different developmental time points, namely E14, E18 and P4, where E14 means day 14 at the embryonic stage and P4 means 4 days post natally or after birth. The marks that were quantified are ATAC-seq, H3K27me3, H3K27Ac and H3K4me2. 
-
-todo: make pairs plot for P and GB, what do you see and where could this be coming from?
+Our starting point for this tutorial is two raw count matrices: one on promoters and another on gene bodies. Promoters were defined as 1kb upstream and 500 bases downstream the transcription start site (TSS) and gene bodies as regions from 1kb to 3kb downstream the TSS. The rows in these count matrices correspond to genes and the columns correspond to the different modalities quantified on the promoter and gene body level and at three different developmental time points, namely E14, E18 and P4, where E14 means day 14 at the embryonic stage and P4 means 4 days post-natally or after birth. The marks that were quantified are ATAC-seq, H3K27me3, H3K27Ac and H3K4me2. 
 
 Let's begin by reading in the data.
 
@@ -50,7 +51,7 @@ promoters <- readRDS("dataObjects/promotersGRanges.rds")
 pCnt <- readRDS("dataObjects/promotersCnt.rds")
 ```
 
-Examine the `promoters` object and what it contains. Notice that it is of class [GRanges](https://bioconductor.org/packages/GenomicRanges/) which is a useful way to represent genomic ranges in `R` and do efficient operations on them. What information do you see?
+Let's have a look at the objects.
 ```{r}
 head(promoters)
 ```
@@ -71,27 +72,105 @@ gbCnt <- readRDS("dataObjects/geneBodiesCnt.rds")
 ::: {.callout-tip}
 ## Exercise
 1. Examine the gene body regions and counts.
-2. Pick either on of the two count matrices (promoter or gene body level) and summarize how many time points there are, how many marks are measured, and how many replicates each mark has per time point. You can make use of the `table` function to do this.
+2. Pick either one of the two count matrices (promoter or gene body level) and summarize how many time points there are, how many marks are measured, and how many replicates each mark has per time point. You can make use of the `table` function to do this.
 :::
 
-## Explore the count matrices
+## Create SingleCellExperiment objects
 
-We will now get a global picture of our data. We want to know if there is any global non-linearitites or problems with the counts. Do we expect global shifts across time?
+The SingleCellExperiment class is an extension of the SummarizedExperiment class we have seen in the previous tutorial, with additional slots for the reduced dimensions, which we will make use of later.
 
 ```{r}
+
+```
+
+
+## Examining the promoter H3K4Me2 count matrix 
+
+We will focus on the promoter H3K4Me2 count matrix as an example, to illustrate how to get a global picture of our data. We want to know if there is any global non-linearitites or problems with the counts. Do we expect global shifts across time?
+
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+
 # cnt <- pCnt[, grep("K4Me2", colnames(pCnt))]
 # 
 # pairs(cnt, panel = function(...){smoothScatter(..., nrpoints = 0, colramp = jet.colors, add=TRUE);abline(a=0,b=1,col="white")}, 
 #       main = paste0("Original log2(RPKM) - ", conditions[i]))
 # 
 
+cnt <- pCnt[, grep("K4Me2", colnames(pCnt))]
+cpm <- sweep(x = cnt, MARGIN = 2, 
+             STATS = colSums(cnt), FUN = "/")*1e6
+log2cpm <- log2(cpm + 1)
+
+jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", 
+                                 "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
+pairs(log2cpm, panel = function(...){smoothScatter(..., nrpoints = 0, colramp = jet.colors, add=TRUE);
+  abline(a=0,b=1,col="white")}, main = "Promoter log2(CPM+1)")
+
 
 ```
 
 
+::: {.callout-tip}
+## Exercise
+Comment on the pairs scatter plot above. Do you notice the non-linearities between samples? Examine the count vs GC content trends per sample to see if they explain these differences. Use the `promoters` object to get the GC percent of promoters and plot the log2(cnt+1) vs percGC for each sample on the promoter level for the H3K4Me2 mark depicted above. You may refer to the previous tutorial if needed.
+:::
+
+## Correcting for non-linearities
+
+Before doing any normalization or correction it is important to understand why you are doing this, as well as how. In our case, we have discovered that the non-linearities in the scatter plots above can be explained by the differences in GC trends between samples. These technically-caused differences in counts will drive the differences we see if we don't account for them in some way. 
+
+We will continue with the promoter H3K4Me2 count matrix from above to illustrate the normalization procedure. We will use the `normalizeCyclicLoess` function from the `limma` package to do this. An important assumption we are making here is that we do not expect genome-wide difference between the samples we are comparing, the time points in our case, meaning that most promoters don't change over time.
+
+So what does the function do? Briefly, the mean count across samples is calculated for all promoters. Then, for each sample, the difference from this mean is caluclated and a loess fit is done for this difference vs the mean. The fitted values are used and subtracted from the original sample counts. This is done over a few iterations, hence the name cyclic loess. See the help page as well as the code in the function for more details. We can think of it as correcting the reads towards the same count vs GC trend since this is what's driving hte non-linearities in our counts. The linear relationship between count and GC content is not removed, but the counts are moved towards the same trend. This makes the samples comparable across the same region. This is a softer approach than completely removing the linear reltionship between count and GC content. 
+
+Let's aply this on our count matirx.
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+
+## Normalize with cyclic loess
+log2cpmNorm <- normalizeCyclicLoess(log2cpm)
+
+## Plot the corrected counts
+pairs(log2cpmNorm, panel = function(...){smoothScatter(..., nrpoints = 0, colramp = jet.colors, add=TRUE);
+  abline(a=0,b=1,col="white")}, main = "Promoter Norm log2(CPM+1)")
+```
+
+
+::: {.callout-tip}
+## Exercise
+Take these corrected counts, which are corrected log2 CPM counts, and plot them against the percent GC for promoters for each sample. Do you see a change in the trends? Are they more similar than before?
+:::
+
+
+::: {.callout-tip}
+## Exercise
+Make an MA plot showing the log2 fold change vs log2 average expression for P4 vs E14. Do this using the log2cpm matrix, and using the log2cpmNorm matrix. Compare the two MA plots and what can you notice? You may refer to the first tutorial to see how we did MA plots.
+:::
+
+
+## RPKMs on promoters and gene bodies
+
+Now that we have illustrated how to correct for non-linearities coming from differences in count vs GC content trends, let's create one matrix from the promoter and gene body counts. The purpose will be become apparent in the next section. The matrix we want to construct should have genes from the three developmental time points as rows, and the promoter and gene body ATAC, H3K27Me2, H3K27Ac and H3K27me3 as columns. In essence, we want to have genes as rows and the different chromatin measurements on promoter and gene body as columns for those genes, and we want to do this for each time point.
+
+The promoters and gene bodies we defined here have different widths, so the counts will have to be corrected for both library size difference between samples, as well as width differences. We will calculate reads per kilobase per million (RPKM) to accomplish this.
+
+
+### normalization
+
+## t-SNE
+
+color by rna seq
+eucledian dist
+bip and biv genes
 
 
 
+::: {.callout-tip}
+## Exercise
+:::
 
 
 ## Session
