@@ -11,3 +11,4 @@ _site/
 **/*.quarto_ipynb
 
 tutorials/ChIP/figures
+tutorials/advancedChIP/dataObjects
