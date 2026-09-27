@@ -32,6 +32,7 @@ suppressPackageStartupMessages({
   library(limma)
   library(dplyr)
   library(tidyr)
+  library(tibble)
   library(ggplot2)
 })
 
@@ -75,13 +76,6 @@ gbCnt <- readRDS("dataObjects/geneBodiesCnt.rds")
 2. Pick either one of the two count matrices (promoter or gene body level) and summarize how many time points there are, how many marks are measured, and how many replicates each mark has per time point. You can make use of the `table` function to do this.
 :::
 
-## Create SingleCellExperiment objects
-
-The SingleCellExperiment class is an extension of the SummarizedExperiment class we have seen in the previous tutorial, with additional slots for the reduced dimensions, which we will make use of later.
-
-```{r}
-
-```
 
 
 ## Examining the promoter H3K4Me2 count matrix 
@@ -155,10 +149,122 @@ Make an MA plot showing the log2 fold change vs log2 average expression for P4 v
 
 Now that we have illustrated how to correct for non-linearities coming from differences in count vs GC content trends, let's create one matrix from the promoter and gene body counts. The purpose will be become apparent in the next section. The matrix we want to construct should have genes from the three developmental time points as rows, and the promoter and gene body ATAC, H3K27Me2, H3K27Ac and H3K27me3 as columns. In essence, we want to have genes as rows and the different chromatin measurements on promoter and gene body as columns for those genes, and we want to do this for each time point.
 
-The promoters and gene bodies we defined here have different widths, so the counts will have to be corrected for both library size difference between samples, as well as width differences. We will calculate reads per kilobase per million (RPKM) to accomplish this.
+The promoters and gene bodies we defined here have different widths, so the counts will have to be corrected for both library size difference between samples, as well as width differences. We will calculate reads per kilobase per million reads (RPKM) to accomplish this.
+
+```{r}
+## Calculate RPKMs
+all(colnames(pCnt) == colnames(gbCnt))
+all(rownames(pCnt) == rownames(gbCnt))
+libSizes <- colSums(pCnt[,-1]) + colSums(gbCnt[,-1])
+pRPKM <- t(t(pCnt[,-1] / pCnt[,1] * 1000) / libSizes * 1e6)
+gbRPKM <- t(t(gbCnt[,-1] / gbCnt[,1] * 1000) / libSizes * 1e6)
+```
+
+Let's calculate the average RPKM per condition (average the replicates).
+```{r}
+## Group by condition and calculate average rpkm per condition for each time pt.
+conditions <- gsub('.{2}$', '', colnames(pRPKM))
+spl <- split(colnames(pRPKM), conditions)
+lengths(spl)
+```
 
 
-### normalization
+```{r}
+## Average replicates per sample
+pRPKMavr <- do.call(cbind, lapply(spl, function(i){rowMeans(pRPKM[, i])}))
+gbRPKMavr <- do.call(cbind, lapply(spl, function(i){rowMeans(gbRPKM[, i])}))
+
+## log2(RPKM+0.1)
+log2pRPKM <- log2(pRPKMavr+0.1)
+log2gbRPKM <- log2(gbRPKMavr+0.1)
+```
+
+### Normalization
+
+Next we will use `normalizeCyclicLoess` per chromatin mark across the time points, separately for promoters and gene bodies.
+```{r}
+## Create groupings on which to use normalizeCyclicLoess
+all(colnames(log2pRPKM) == colnames(log2gbRPKM))
+conditions <- limma::strsplit2(colnames(log2pRPKM), "_")[, 3]
+spl <- split(colnames(log2pRPKM), conditions)
+lengths(spl)
+```
+
+```{r}
+## Apply normalization per chromatin mark across conditions per P and GB
+pNormL <- lapply(spl, function(timePts){
+  normalizeCyclicLoess(log2pRPKM[, timePts])
+})
+gbNormL <- lapply(spl, function(timePts){
+  normalizeCyclicLoess(log2gbRPKM[, timePts])
+})
+head(pNormL$K27Ac)
+```
+
+::: {.callout-tip}
+## Exercise
+Take a few marks of your choice on either promoter or gene body level (after normalization), and look at the pairs scatter plots. Does everything seem in order?
+:::
+
+Next, we will construct a count matrix where the columns display normalized log2 RPKMs for each mark, and the rows the genes at a specific developmental time point. We do this again for P and GB separately.
+```{r}
+## For each mark, haev the time points per gene as rows
+pNormExpandedL <- lapply(names(pNormL), function(mark){
+  normMat <- pNormL[[mark]]
+  normMat %>% 
+    as.data.frame() %>% 
+    rownames_to_column("geneID") %>% 
+    pivot_longer(cols = -geneID, names_to = "timePt", values_to = "log2rpkm") %>% 
+    mutate(geneIDtimePt = paste0(geneID, "_", limma::strsplit2(timePt, "_")[, 1])) %>% 
+    select(geneIDtimePt, log2rpkm) %>% 
+    column_to_rownames("geneIDtimePt") %>% 
+    rename(!!mark := log2rpkm)  %>% 
+    as.matrix()
+})
+gbNormExpandedL <- lapply(names(gbNormL), function(mark){
+  normMat <- gbNormL[[mark]]
+  normMat %>% 
+    as.data.frame() %>% 
+    rownames_to_column("geneID") %>% 
+    pivot_longer(cols = -geneID, names_to = "timePt", values_to = "log2rpkm") %>% 
+    mutate(geneIDtimePt = paste0(geneID, "_", limma::strsplit2(timePt, "_")[, 1])) %>% 
+    select(geneIDtimePt, log2rpkm) %>% 
+    column_to_rownames("geneIDtimePt") %>% 
+    rename(!!mark := log2rpkm)  %>% 
+    as.matrix()
+})
+
+## Check the row names are identical
+sapply(pNormExpandedL, function(mat){
+  all(rownames(mat)==rownames(pNormExpandedL[[1]]))
+})
+sapply(gbNormExpandedL, function(mat){
+  all(rownames(mat)==rownames(gbNormExpandedL[[1]]))
+})
+
+## Combine marks
+promoterlog2RPKM <- do.call(cbind, pNormExpandedL)
+geneBodylog2RPKM <- do.call(cbind, gbNormExpandedL)
+head(promoterlog2RPKM)
+```
+
+Now we can combine the promoter and gene body matrices.
+```{r}
+## Prepare to combine
+all(rownames(promoterlog2RPKM) == rownames(geneBodylog2RPKM))
+colnames(promoterlog2RPKM) <- paste0(colnames(promoterlog2RPKM), "_P")
+colnames(geneBodylog2RPKM) <- paste0(colnames(geneBodylog2RPKM), "_GB")
+
+## Combine
+combinedLog2RPKM <- cbind(promoterlog2RPKM, geneBodylog2RPKM)
+head(combinedLog2RPKM)
+```
+
+Why did we do all this? Now we have the chromatin marks of interest on the gene level, capturing quantitatively comparable promoter and gene body levels per mark over all genes. In a way we are already thinking of these different columns as dimensions in the chromatin landscape of these genes. Furthermore, the rows are showing these values for each of the three time points. This will make it possible to see how the chromatin landscape changes over time, when we compare the different time points. 
+
+## PCA
+
+
 
 ## t-SNE
 
