@@ -1122,9 +1122,7 @@ qExportWig(proj, file = bwFiles, binsize = 100, shift = 75,
 ```{r}
 #| echo: false
 
-bwFiles <- file.path("bigwigs", 
-                     paste0(basename(alignments(proj)$genome$SampleName), ".bw"))
-bwFiles <- gsub("ChIPseq_ESC_CTCF_", "", bwFiles)
+bwFiles <- list.files("bigwigs", full.names = TRUE)
 ```
 
 
@@ -1139,6 +1137,7 @@ head(bwGrL$IP_BPTFko_rep1)
 
 Since we have input samples we will include them in our visualization. They are a good check to have that we aren't looking at a false signal. 
 ```{r}
+#| eval: false
 #| fig-width: 10
 #| fig-height: 16
 
@@ -1172,10 +1171,9 @@ tracks <- lapply(names(bwGrL), function(sn){
 genomeTrack <- GenomeAxisTrack()
 txdb <- TxDb.Mmusculus.UCSC.mm39.knownGene
 genes <- genes(txdb)
-#geneTrack <- AnnotationTrack(annot, name = "Genes")
-geneTrack <- GeneRegionTrack(genes, genome = "mm39", 
-                             chromosome = "chr19", 
-                             name = "Genes", 
+geneTrack <- GeneRegionTrack(genes, genome = "mm39",
+                             chromosome = "chr19",
+                             name = "Genes",
                              rotation.title = 0)
 chrTrack <- IdeogramTrack(genome = "mm39", chromosome = "chr19")
 
@@ -1185,12 +1183,15 @@ peaksGr$peakName = names(peaksGr)
 peakTrack <- AnnotationTrack(peaksGr, name = "Peaks", rotation.title = 0)
 
 ## Plot tracks
-plotTracks(c(chrTrack, genomeTrack, tracks, peakTrack, geneTrack), 
+plotTracks(c(chrTrack, genomeTrack, tracks, peakTrack), 
            chromosome="chr19", 
            from = trackStart, 
            to = trackEnd, 
            ylim = ylims, title.width = 2, cex.title = 0.5, just.title = "center")
 ```
+
+![](assets/genomeTrack.webp)
+
 
 We can appreciate the benefit and importance of having several replicates per condition to detect constant changes in signal, especially smaller changes in signal. This becomes even more important for TFs that are hard to pull down or experiments where we see a lot of background noise. In the figure above we can for example see that for wt_rep4 the CTCF signal for our peak of interest was not as high as the other 3 replicates. When examining and placing importance on individual peaks and interpreting them correctly, having several replicates is necessary to be sure of the effect we are seeing beyond variability between replicates. 
 

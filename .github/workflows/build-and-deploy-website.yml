@@ -51,7 +51,13 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
 
       - name: Render website
-        run: quarto render
+        run: |
+          set -x
+          date
+          df -h
+          free -h
+          nproc
+          quarto render --verbose
 
       - name: Deploy to gh-pages
         uses: quarto-dev/quarto-actions/publish@v2
