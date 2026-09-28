@@ -110,13 +110,13 @@ You can continue working in the directory `atacseq/analysis/counts`. This direct
 <br />
 <br />
 
-We navigate to our working directory for this tutorial. Assuming we are at the top of the `atacseq`
+We navigate to our working directory for this tutorial. Assuming we are at the top of the `ataqseq/analysis`
 
 ```{bash}
 #| eval: FALSE
 #| echo: TRUE
 
-cd  %€/&(()&/%&#%"")
+cd counts
 ```
 
 <br />
@@ -170,8 +170,8 @@ library(biomaRt)
 library(txdbmaker)
 library(GenomicFeatures)
 
-library(clusterProfiler)
 library(org.Mm.eg.db)
+library(fgsea)
 library(ReactomePA)
 ```
 <br />
@@ -190,7 +190,10 @@ We will use TSS and gene annotations from Ensembl. We can fetch them from `bioma
 
 ### Obtaining the annotation objects
 
-```
+```{r}
+#| eval: false
+#| echo: true
+
 txdb_mm39 = txdbmaker::makeTxDbFromBiomart(biomart="ensembl",
                                dataset="mmusculus_gene_ensembl",
                                circ_seqs=NULL,
@@ -211,23 +214,42 @@ gene_annot_mm39=getBM(attributes =
 <br />
 <br />
 
-We have prepared these for you, so you can load them via:
+We have prepared these annotation files for you, so you can load them via:
+
+<br />
+
+```{r}
+#| eval: false
+#| echo: true
+
+annotdir=file.path(getwd(),"annotation")
+
+gene_annot_mm39=read.delim(file.path(annotdir,"mm39_gene_names.tab"), sep="\t", header=TRUE, quote = "")
+```
 
 
 ```{r}
+#| echo: false
+
 annotdir=file.path("assets","annotation")
 
 gene_annot_mm39=read.delim(file.path(annotdir,"mm39_gene_names.tab"), sep="\t", header=TRUE, quote = "")
 ```
 
+<br />
+
 and
+
+<br />
 
 ```{r}
 #| eval: FALSE
+#| echo: true
 
 pth_txdbens=file.path(annotdir,"Ensembl.txdb.GRCm39.Rdata")
 txdb_mm39=loadDb(pth_txdbens)
 ```
+
 
 <br />
 <br />
@@ -236,7 +258,10 @@ txdb_mm39=loadDb(pth_txdbens)
 You can inspect the objects:
 
 
-```
+```{r}
+#| eval: FALSE
+#| echo: true
+
 txdb_mm39
 ## TxDb object:
 ## # Db type: TxDb
@@ -295,14 +320,32 @@ Please note that UCSC and Ensembl use different contig naming schemes, so it is 
 
 ## Data
 
-We can now load data. We will subset the count table to only contain the peaks on assembled chromosomes.
+We can now load data: 
 
 ```{r}
+#| eval: FALSE
+#| echo: true
+
 count_table_fname="AB_Batf_KO_invivo.genrich_joint.merged_peaks.featureCounts"
+cnt_table=read.table(count_table_fname, sep="\t", header=TRUE, blank.lines.skip=TRUE)
+```
 
+```{r}
+#| eval: true
+#| echo: false
+
+count_table_fname="AB_Batf_KO_invivo.genrich_joint.merged_peaks.featureCounts"
 cnt_table_pth=file.path("assets","data",count_table_fname)
-
 cnt_table=read.table(cnt_table_pth, sep="\t", header=TRUE, blank.lines.skip=TRUE)
+```
+
+<br />
+<br />
+
+We will format the column names and subset the count table to only contain the peaks on assembled chromosomes.
+
+
+```{r}
 rownames(cnt_table)=cnt_table$Geneid
 rownames(cnt_table)=c(gsub("AB_Batf_KO_invivo.genrich_joint.","",rownames(cnt_table)))
 colnames(cnt_table)=c(colnames(cnt_table)[1:6],gsub(".filt.bam","",colnames(cnt_table)[7:10]))
@@ -351,12 +394,15 @@ peaks_gr
 We are ready to annotate the peaks to their closest feature:
 
 
-```
+```{r}
+#| eval: FALSE
+#| echo: true
 peakAnno=annotatePeak(peaks_gr, tssRegion=c(-3000, 3000),TxDb=txdb_mm39)
 ```
 
-```
+```{r}
 #| echo: FALSE
+#| eval: FALSE
 saveRDS(peakAnno, 
   file = "assets/rds/Batf_WT_KO.merged_peaks.annot.obj.rds", 
   ascii = FALSE, 
@@ -366,6 +412,7 @@ saveRDS(peakAnno,
 ```
 
 ```{r}
+#| eval: TRUE
 #| echo: FALSE
 peakAnno=readRDS("assets/rds/Batf_WT_KO.merged_peaks.annot.obj.rds")
 ```
@@ -389,14 +436,9 @@ To inspect peak annotations:
 peakAnno_df=as.data.frame(peakAnno)
 ```
 
-```
-  seqnames   start     end width strand   mcols.peakID        annotation geneChr geneStart geneEnd geneLength geneStrand             geneId       transcriptId distanceToTSS
-1        1 3050939 3052959  2021      * merged_peaks_1 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -90517
-2        1 3053048 3054634  1587      * merged_peaks_2 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -88842
-3        1 3054861 3055532   672      * merged_peaks_3 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -87944
-4        1 3057260 3057785   526      * merged_peaks_4 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -85691
-5        1 3059375 3061360  1986      * merged_peaks_5 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -82116
-6        1 3066555 3069092  2538      * merged_peaks_6 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -74384
+
+```{r}
+head(peakAnno_df)
 ```
 
 <br />
@@ -422,7 +464,10 @@ peakAnno_df=peakAnno_df|>
 
 ### Annotated peaks can be saved to a file as a table or rds object
 
-```
+```{r}
+#| eval: FALSE
+#| echo: true
+
 write.table(peakAnno_df, "Batf_WT_KO.merged_peaks.tsv", 
     append = FALSE, 
     quote = FALSE, 
@@ -435,7 +480,10 @@ write.table(peakAnno_df, "Batf_WT_KO.merged_peaks.tsv",
 <br />
 <br />
 
-```
+```{r}
+#| eval: FALSE
+#| echo: false
+
 saveRDS(peakAnno_df, 
   file = "assets/rds/Batf_WT_KO.merged_peaks.annot.rds", 
   ascii = FALSE, 
@@ -452,14 +500,18 @@ saveRDS(peakAnno_df,
 
 We can also assess the read density at annotated TSS regions. The plot of read density at the transcription start sites (TSS) for all peaks is presented on @fig-tss-profile.
 
-```
-promoter = getPromoters(TxDb=txdb_mm39, upstream=3000, downstream=3000)
+```{r}
+#| eval: FALSE
+#| echo: true
+
+promoter=getPromoters(TxDb=txdb_mm39, upstream=3000, downstream=3000)
 ```
 
-<!-- 
+```{r}
+#| eval: FALSE
+#| echo: false
 
-```
-promoter = getPromoters(TxDb=txdb_mm39, upstream=3000, downstream=3000)
+promoter=getPromoters(TxDb=txdb_mm39, upstream=3000, downstream=3000)
 saveRDS(promoter, 
   file = "assets/rds/prom.ensembl.rds", 
   ascii = FALSE, 
@@ -467,19 +519,21 @@ saveRDS(promoter,
   compress = TRUE, 
   refhook = NULL)
 ```
- -->
+
 
 
 ```{r}
 #| echo: FALSE
+#| eval: true
+
 promoter=readRDS("assets/rds/prom.ensembl.rds")
 ```
 
 
 ```{r}
-tagMatrix = getTagMatrix(peaks_gr, windows=promoter)
+tagMatrix=getTagMatrix(peaks_gr, windows=promoter)
 
-TSS_profile = plotAvgProf(tagMatrix, xlim=c(-3000, 3000), xlab="Genomic Region (5'->3')", ylab = "Read Count in Peaks")
+TSS_profile=plotAvgProf(tagMatrix, xlim=c(-3000, 3000), xlab="Genomic Region (5'->3')", ylab = "Read Count in Peaks")
 ```
 
 
@@ -521,7 +575,10 @@ Summary of features annotated to peaks.
 ### Saving the plots
 
 
-```
+```{r}
+#| eval: FALSE
+#| echo: true
+
 pdf("TSSdist.pdf")
   TSS_profile
 dev.off()
@@ -558,10 +615,18 @@ We can use several approaches and peak sets for this, e.g.:
 <br />
 <br />
 
+### Pathway Over-Representation Analysis
 
-Let’s first annotate the consensus peaks with **Reactome**.
+<br />
 
-Reactome uses **entrez gene ID** space.
+Overrepresentation analysis (ORA) is a method to test whether genes within given gene set are overepresented in the **subset** (open chromatin, DA peaks, etc.) **vs. the universe** (all genes). 
+
+
+<br />
+
+Let’s first annotate the consensus peaks, representing open chromatin regions (OCRs) with **Reactome** pathways. 
+
+Reactome uses **entrez gene ID** space for gene - pathway annotation.
 
 <br />
 <br />
@@ -601,24 +666,50 @@ We can see familar terms which can be connected to sample biology:
 <br />
 
 
+### Gene Set Enrichment Analysis
 
-We can also check for GO terms enriched amongst DA OCRs by using GSEA.
+<br />
+
+Gene set enrichment analysis (GSEA) is a test whether gene set member genes are present towards to top of the **ranked list** of genes [@gsea]. The rank usually corresponds to the effect size and statistical significance. Ties in the ranked list are discouraged, as they may lead to unexpected results.
+
+<br />
+
+We can check for GO terms enriched amongst DA OCRs by using GSEA.
 
 
 We need to read in the results of the DA analysis:
 
+<br />
+
 ```{r}
+#| eval: TRUE
+#| echo: false
+
 DA_res=readRDS("assets/rds/Batf_WT_KO.merged_peaks.DA_TMM.annot.rds")
 ```
 
-The metric to use in GSEA ideally should combine effect size and statistical significance. Ties in the ranked list are discouraged, as they may lead to unexpected results.
+
+```{r}
+#| eval: false
+#| echo: true
+
+DA_res=readRDS("../../results/DA/objects/Batf_WT_KO.merged_peaks.DA_TMM.annot.rds")
+```
+
+<br />
+
+The metric to use in GSEA ideally should combine effect size and statistical significance. 
 
 Common practice for constructing the metric based on `edgeR` results is:
+
+<br />
 
 ```{r}
 DA_res=DA_res|>
   dplyr::mutate(gsea_metric=PValue*logFC)
 ```
+
+<br />
 
 GSEA statistical framework recommends that the ranked gene list is duplicate free; yet often a gene may have more than one peak annotated. If we leave the list as is (i.e. with duplicated gene ids and different value for ranking metric for each entry), we have no control over which peak / metric value gets selected for GSEA, which may lead to unexpected results. Applying some selection strategy for genes with multiple peaks helps with interpretability of the GSEA results.
 
@@ -645,59 +736,121 @@ DA_res.prom.top=DA_res|>
   dplyr::filter(abs(logFC)==gene_max_abs_lfc)|>
   dplyr::distinct(gene_name, .keep_all=TRUE)|>
   as.data.frame()
+
+## we also need to add entrez gene id and clean up entries without it
+DA_res.prom.top=DA_res.prom.top|>
+    left_join(gene_annot_mm39[,c(2,4)], by=c("transcriptId"="ensembl_transcript_id"))|>
+    dplyr::distinct(entrezgene_id, .keep_all=TRUE)|>
+    dplyr::filter_at(vars(entrezgene_id), all_vars(!is.na(.)))
+
 ```
+
+
 
 <br />
 <br />
 
-We can now create a named list, sort it, and use it in GSEA:
+We can now create a *named list* (names are entrez gene id) and sort it:
 
-```
+```{r}
+#| eval: false
+#| echo: true
+
 gene_list=DA_res.prom.top$gsea_metric #using pval*logFC
-names(gene_list)=DA_res.prom.top$geneId
+names(gene_list)=DA_res.prom.top$entrezgene_id
 gene_list=gene_list[order(gene_list,decreasing=TRUE)]
 
-gsea_go=clusterProfiler::gseGO(
-        geneList     = gene_list,
-        OrgDb        = org.Mm.eg.db,
-        keyType      = "ENSEMBL",
-        ont          = "BP",
-        pvalueCutoff = 0.05,
-        seed         = TRUE,
-        verbose      = FALSE,
-        nPermSimple  = 1000,
-        eps          = 0,
-        scoreType    = "std",
-        by           = "fgsea"
-    )
+head(gene_list)
+```
 
+<br />
+
+We prepare the GO terms and run GSEA:
+
+<br />
+
+```{r}
+#| eval: false
+#| echo: true
+
+all_go.bp=as.data.frame(org.Mm.egGO)|>
+  dplyr::filter(Ontology=="BP")
+
+go_terms=as.list(org.Mm.egGO2ALLEGS)
+go_terms=go_terms[names(go_terms)%in%all_go.bp$go_id]
+
+gsea_go=fgsea(pathways = go_terms, 
+                  stats    = gene_list,
+                  minSize  = 15,
+                  maxSize  = 500,
+                  scoreType    = "std")
 ```
 
 <br />
 <br />
 
-`clusterProfiler` outputs an object with its own internal structure, which can be used for plotting using [enrichplot](https://yulab-smu.top/biomedical-knowledge-mining-book/enrichplot.html). To view just the result of GSEA test we can:
+The resulting object contains basic statistics of the GSEA test.
 
-```
-go_res=gsea_go@result
-go_res=go_res|>
-    rowwise()|>
-    dplyr::mutate(core_enrichment_ls=strsplit(core_enrichment,split="/"))|>
-    dplyr::mutate(gene_count=length(core_enrichment_ls))|>    
-    dplyr::mutate(GeneRatio=length(core_enrichment_ls)/setSize)|>
-    dplyr::select(!core_enrichment_ls)
+```{r}
+#| eval: false
+#| echo: true
 
+ head(gsea_go)
+     pathway      pval      padj    log2err         ES        NES size
+1 GO:0000018 0.9928571 1.0000000 0.05400883  0.1824006  0.6768697  120
+2 GO:0000027 0.9490446 1.0000000 0.05080541  0.2415674  0.6675675   24
+3 GO:0000028 0.1902072 0.8391112 0.13649044 -0.4844570 -1.2474683   19
+4 GO:0000038 0.2611111 0.8800840 0.11284336 -0.4165674 -1.1610107   27
+5 GO:0000041 0.3404255 0.9065779 0.09374654 -0.2997705 -1.0499786   83
+6 GO:0000045 0.3294118 0.8975844 0.11331291  0.2753809  1.0549553  137
+   leadingEdge
+1 19264, 7....
+2 72831, 2....
+3 67097, 9....
+4 14081, 1....
+5 226025, ....
+6 240327, ....
 
-go_res_peaks_up=as.data.frame(go_res)|>
-    dplyr::select(ID,Description,enrichmentScore,NES,p.adjust,qvalue,gene_count,setSize,GeneRatio)|>
-    dplyr::filter(NES>0)|>
-    dplyr::arrange(desc(abs(NES)))
 ```
 
 <br />
+
+We can format these results:
+
 <br />
 
-Upon object inspection we can see terms related to interleukin signalling, amongst other GO terms. 
+```{r}
+#| eval: false
+#| echo: true
+
+gsea_go=as.data.frame(gsea_go)
+
+library(GO.db)
+go_terms=select(GO.db, columns=c("GOID","TERM"), keys=gsea_go$pathway, keytype="GOID")
+
+gsea_go=gsea_go|>
+    dplyr::filter(pval<0.01)|>
+    dplyr::select(pathway,NES,pval,padj,size)|>
+    left_join(go_terms, by=c("pathway"="GOID"))
+
+> head(gsea_go)
+     pathway       NES        pval      padj size                         TERM
+1 GO:0002064 -1.539558 0.001013134 0.5754347  181  epithelial cell development
+2 GO:0003014 -1.542754 0.004758923 0.5757116   85         renal system process
+3 GO:0006814 -1.434938 0.006011068 0.5757116  171         sodium ion transport
+4 GO:0006836 -1.473969 0.002957773 0.5754347  184   neurotransmitter transport
+5 GO:0007431 -1.702995 0.003805549 0.5757116   31   salivary gland development
+6 GO:0007435 -1.738422 0.002137247 0.5754347   27 salivary gland morphogenesis
+```
+
+
+
+
+Upon object inspection we can see terms related to immune cell biology, amongst other GO terms. 
+
+* antigen processing and presentation (GO:0019882)
+
+* antigen processing and presentation of peptide antigen (GO:0048002)
 
 <br />
 <br />
