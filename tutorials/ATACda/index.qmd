@@ -117,11 +117,28 @@ You can continue working in the directory `atacseq/analysis/counts`. This direct
 
 We access the R environment via:
 
-```
-module load R_packages/4.6.1
+```{bash}
+#| eval: FALSE
+#| echo: TRUE
+
+module load R/4.6.1-gfbf-2026.1
+module load R-bundle-CRAN/2026.07-foss-2026.1
+module load R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1
 ```
 
 We activate R console upon typing `R` in the terminal.
+
+To be able to load all necessary libraries we need to update the paths to custom library locations:
+
+
+```{r}
+#| eval: FALSE
+#| echo: TRUE
+
+.libPaths(c(.libPaths(),"/proj/epi2026/library/Rpackages/4.6.1"))
+```
+
+Alternatively you can work on this tutorial locally, using R libraries installed via `renv`.
 
 
 <br />
@@ -161,19 +178,35 @@ library(cqn)
 <br />
 
 
+
 ## Data
 
-We can now load data. We will subset the count table to only contain the peaks on assembled chromosomes.
+We can now load data: 
 
 ```{r}
+#| eval: FALSE
+#| echo: true
+
 count_table_fname="AB_Batf_KO_invivo.genrich_joint.merged_peaks.featureCounts"
-#cnt_table_pth=file.path(file.path(workdir,"assets","data"),count_table_fname)
+cnt_table=read.table(count_table_fname, sep="\t", header=TRUE, blank.lines.skip=TRUE)
+```
 
+```{r}
+#| eval: true
+#| echo: false
 
-cnt_table_pth=file.path(file.path("assets","data"),count_table_fname)
-
-
+count_table_fname="AB_Batf_KO_invivo.genrich_joint.merged_peaks.featureCounts"
+cnt_table_pth=file.path("assets","data",count_table_fname)
 cnt_table=read.table(cnt_table_pth, sep="\t", header=TRUE, blank.lines.skip=TRUE)
+```
+
+<br />
+<br />
+
+We will format the column names and subset the count table to only contain the peaks on assembled chromosomes.
+
+
+```{r}
 rownames(cnt_table)=cnt_table$Geneid
 rownames(cnt_table)=c(gsub("AB_Batf_KO_invivo.genrich_joint.","",rownames(cnt_table)))
 colnames(cnt_table)=c(colnames(cnt_table)[1:6],gsub(".filt.bam","",colnames(cnt_table)[7:10]))
@@ -190,6 +223,7 @@ head(reads.peak)
 ```
 
 
+
 * All peaks: n = `r nrow(cnt_table)`;
 
 * Peaks on assembled chromosomes: n = `r nrow(cnt_table_chr)`. These peaks will be used for further analysis.
@@ -199,9 +233,15 @@ head(reads.peak)
 
 ## GC Bias
 
+<br />
+
 ### GC Bias in Genomic Bins
 
+<br />
+
 To ivestigate the GC bias in adjacent genomic bins (background), we start with creating the `GRanges` object holding the tiled genome intervals. We will do it for one chromosome only (chr1), to save compute time.
+
+<br />
 
 ```{r}
 chr.lengths = seqlengths(Mmusculus)[1:21]
@@ -217,21 +257,43 @@ tileSeqs=BSgenome::getSeq(Mmusculus,tiles_chr1)
 gcContentTiles=Biostrings::letterFrequency(tileSeqs, "GC",as.prob=TRUE)[,1]
 mcols(tiles_chr1)$gc=gcContentTiles
 ```
+<br />
 
 We need to tweak chromosome names to match the genome reference used for read mapping:
+
+<br />
 
 ```{r} 
 # tiles_chr1
 # remove chr from granges obj
 seqlevels(tiles_chr1)=gsub("chr","",seqlevels(tiles_chr1))
 ```
+<br />
 
 We can now count reads in all bam files in the data set, and plot them.
 
+<br />
+
+```{r}
+#| eval: FALSE
+#| echo: false
+
+bam_dir="/Users/agatasmialowska/NBIS/fr_backup/teaching/epigenomics/labs2025/atacseq/Tsao2022/bam"
+
 
 ```
-# comment this out for production on gh-pages
-bam_dir="/Users/agatasmialowska/NBIS/fr_backup/teaching/epigenomics/labs2025/atacseq/Tsao2022/bam"
+
+<br />
+
+The chunk below may take some time because it needs to read the data from `bam` files.
+
+<br />
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+bam_dir="/proj/epi2026/ATAC/atacseq_proc/bam"
 
 bam_fnames=list.files(bam_dir,pattern = "\\.bam$",)
 
@@ -250,6 +312,14 @@ for (bam_fname in bam_fnames){
 
 }
 
+```
+
+<br />
+
+```{r}
+#| eval: FALSE
+#| echo: false
+
 saveRDS(bam_cnts_bins, 
   file = "assets/rds/Batf_WT_KO.cnts-bins.chr1.rds", 
   ascii = FALSE, 
@@ -259,10 +329,29 @@ saveRDS(bam_cnts_bins,
 
 ```
 
+Alternatively, we can load the object containing the summarised reads:
+
+<br />
+
 ```{r}
+#| eval: true
+#| echo: false
+
 bam_cnts_bins=readRDS("assets/rds/Batf_WT_KO.cnts-bins.chr1.rds")
 bam_fnames=names(bam_cnts_bins)
 ```
+
+```{r}
+#| eval: false
+#| echo: true
+
+bam_cnts_bins=readRDS("/proj/epi2026/ATAC/atacseq_proc/bam/Batf_WT_KO.cnts-bins.chr1.rds")
+bam_fnames=names(bam_cnts_bins)
+```
+
+<br />
+
+We can produce the scatter plots of logcounts vs. GC content:
 
 <br />
 
@@ -456,7 +545,10 @@ head(DA_res.qlf.tmm)
 
 ### DA results can be saved to a file as a table or rds object
 
-```
+```{r}
+#| eval: false
+#| echo: true
+
 write.table(DA_res.qlf.tmm, "Batf_WT_KO.merged_peaks.DA_TMM.tsv", 
     append = FALSE, 
     quote = FALSE, 
@@ -466,7 +558,10 @@ write.table(DA_res.qlf.tmm, "Batf_WT_KO.merged_peaks.DA_TMM.tsv",
     fileEncoding = "")
 ```
 
-```
+```{r}
+#| eval: false
+#| echo: true
+
 saveRDS(DA_res.qlf.tmm, 
   file = "assets/rds/Batf_WT_KO.merged_peaks.DA_TMM.rds", 
   ascii = FALSE, 
@@ -487,25 +582,43 @@ plotMD(qlf.ftest.tmm)
 <br />
 <br />
 
-At this point we can add the information from peak annotation (../ATAC-peakAnnot/PeakAnnot.tsao2022.fulldata.14ix2026.html)
+At this point we can add the information from the peak annotation lab ([Peak Annotation](../ATACpeakAnnot/index.html))
 
+<br />
 
 If you are still in **the same R session**, you can skip the step below. 
 
-If you started a **new R session**, you can read in the table with peak annotations:
+If you started a **new R session**, or have not completed the peak annotation yet, you can read in the table with peak annotations:
 
+<br />
 
 ```{r}
-peak_annots_pth=file.path("assets","rds","Batf_WT_KO.merged_peaks.annot.rds")
+#| eval: false
+#| echo: true
 
-peakAnno_df=readRDS(peak_annots_pth)
-
-#until cleaned up
-peakAnno_df=peakAnno_df|>dplyr::rename(peakID=mcols.peakID)
+peak_annots_pth=file.path("/proj/epi2026/ATAC/atacseq_proc/rds","Batf_WT_KO.merged_peaks.annot.rds")
 ```
 
 
+```{r}
+#| eval: true
+#| echo: false
+
+peak_annots_pth=file.path("assets","rds","Batf_WT_KO.merged_peaks.annot.rds")
+```
+<br />
+
+```{r}
+peakAnno_df=readRDS(peak_annots_pth)
+peakAnno_df=peakAnno_df|>dplyr::rename(peakID=mcols.peakID)
+```
+
+<br />
+
+
 We can now join the tables with peak annotations and DA results:
+
+<br />
 
 ```{r}
 DA_res_table=DA_res.qlf.tmm |>
@@ -514,11 +627,19 @@ DA_res_table=DA_res.qlf.tmm |>
   dplyr::mutate(annotation=str_replace_all(annotation,  " \\s*\\([^\\)]+\\)", ""))
 ```
 
+<br />
+
 ```{r}
 head(DA_res_table)
 ```
 
-```
+<br />
+
+
+```{r}
+#| eval: false
+#| echo: true
+
 saveRDS(DA_res_table, 
   file = "assets/rds/Batf_WT_KO.merged_peaks.DA_TMM.annot.rds", 
   ascii = FALSE, 
@@ -527,7 +648,7 @@ saveRDS(DA_res_table,
   refhook = NULL)
 ```
 
-
+<br />
 
 <br />
 <br />
@@ -754,7 +875,7 @@ plot_lfc_GC_cqn
 
 ::: {.callout-note}
 
-   It is advised to verify the estimated model parameters and fit using the diagnostic plots provided in `edgeR` i.e. `plotBCV(reads.dge)` and `plotQLDisp(fit)`
+   It is advised to verify the estimated model parameters and fit using the diagnostic plots provided in `edgeR` i.e. `plotBCV(reads.dge)` and `plotQLDisp(fit)`. This may be especially important when applying any additional data manipulation such as GC bias correction.
 
 :::
 
