@@ -12,3 +12,7 @@ _site/
 
 tutorials/ChIP/data
 tutorials/ChIP/figures
+
+
+#local
+renv.lock
