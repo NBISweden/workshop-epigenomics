@@ -264,6 +264,12 @@ Why did we do all this? Now we have the chromatin marks of interest on the gene 
 
 ## PCA
 
+So how can we visualize this chromatin landscape? Since we have 8 columns or dimensions which together represent the chromatin landscape we are interested in, we need to reduce this to 2 (or 3) dimensions to visualize this space. Principle component analysis (PCA) which we have already seen in the previous tutorial could be used to look at the top principle components and see if they capture most of this landscape.
+
+Let's try this.
+```{r}
+
+```
 
 
 ## t-SNE
