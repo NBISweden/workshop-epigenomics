@@ -26,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -223,7 +258,7 @@ background-size: cover;
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">27-Sep-2026</p>
+        <p class="date">28-Sep-2026</p>
       </div>
     </div>
     
@@ -247,6 +282,8 @@ background-size: cover;
   <li><a href="#processing-alignments" id="toc-processing-alignments" class="nav-link" data-scroll-target="#processing-alignments"><span class="header-section-number">6</span> Processing alignments</a></li>
   <li><a href="#peak-independent-qc-for-atac-seq-data" id="toc-peak-independent-qc-for-atac-seq-data" class="nav-link" data-scroll-target="#peak-independent-qc-for-atac-seq-data"><span class="header-section-number">7</span> Peak independent QC for ATAC-seq data</a></li>
   <li><a href="#quality-control-for-atac-seq" id="toc-quality-control-for-atac-seq" class="nav-link" data-scroll-target="#quality-control-for-atac-seq"><span class="header-section-number">8</span> Quality Control for ATAC-seq</a></li>
+  <li><a href="#assessing-signal-at-transcription-start-sites" id="toc-assessing-signal-at-transcription-start-sites" class="nav-link" data-scroll-target="#assessing-signal-at-transcription-start-sites"><span class="header-section-number">9</span> Assessing Signal at Transcription Start Sites</a></li>
+  <li><a href="#signal-visualisation-using-igv" id="toc-signal-visualisation-using-igv" class="nav-link" data-scroll-target="#signal-visualisation-using-igv"><span class="header-section-number">10</span> Signal Visualisation Using IGV</a></li>
   </ul>
 </nav>
     </div>
@@ -395,18 +432,26 @@ Figure&nbsp;1: ATAC-seq data analysis workflow, assuming the starting point are 
 <p>The aim of this part of the data analysis workflow is to remove alignments which most likely are artifacts and could interfere with data analysis (upper-left part of the concept map). These include:</p>
 <ul>
 <li><p>alignments to organelles (mitchondria);</p></li>
-<li><p>alignments within “blacklisted regions”: regions of unusually high signal in many functional genomics experiments, described in @[Amemiya2019];</p></li>
+<li><p>alignments within “blacklisted regions”: regions of unusually high signal in many functional genomics experiments, described in <span class="citation" data-cites="Amemiya2019">(<a href="#ref-Amemiya2019" role="doc-biblioref">Amemiya et al. 2019</a>)</span>;</p></li>
 <li><p>low quality alignments;</p></li>
-<li><p>duplicate alignments (i.e.&nbsp;both mates of a pair map to identical genomic locations).</p></li>
 </ul>
-<p>We assume that starting point are reads mapped to a reference sequence.</p>
+<p>We will also mark (not remove):</p>
+<ul>
+<li>duplicate alignments (i.e.&nbsp;both mates of a pair map to identical genomic locations).</li>
+</ul>
+<p>We assume that starting point are reads mapped to a reference sequence (<code>GRCm39</code>).</p>
 <p><br> <br></p>
 </section>
 <section id="before-we-start" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="before-we-start"><span class="header-section-number">3</span> Before we start</h2>
-<p>Today we are going to work on <a href="https://docs.uppmax.uu.se/cluster_guides/pelle/">Pelle</a> an HPC cluster hosted by <a href="https://www.uu.se/centrum/uppmax/">Uppmax</a>.</p>
+<p>Today we are going to work on <a href="https://docs.uppmax.uu.se/cluster_guides/pelle/">Pelle</a>, an HPC cluster hosted by <a href="https://www.uu.se/centrum/uppmax/">Uppmax</a>.</p>
 <p><br></p>
-<p>Please follow the setup procedure to book a node and log in to it as desribed in section <a href="../ATAC/index.html">Setting Up</a></p>
+<p>Please follow the setup procedure to book a node and log in to it. The following gives you access to part of a node prebooked for this workshop for 3 hours (until lunch).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-Y</span> <span class="op">&lt;</span>USERNAME<span class="op">&gt;</span>@pelle.uppmax.uu.se</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">interactive</span> <span class="at">-A</span> uppmax2026-1-197 <span class="at">-t</span> 3:00:00 <span class="at">-c</span> 5</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br> <br></p>
 </section>
 <section id="data" class="level2" data-number="4">
@@ -465,16 +510,20 @@ Figure&nbsp;1: ATAC-seq data analysis workflow, assuming the starting point are 
 </ul>
 <p><br></p>
 <p>Copy the script to your home directory and execute it:</p>
-<pre><code>cp /proj/epi2026/atacseq_proc/atacseq_data.sh .
-  
-bash atacseq_data.sh</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> /proj/epi2026/ATAC/atacseq_proc/atacseq_data.sh .</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> atacseq_data.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br></p>
 <p>You should see a newly created directory named <code>atacseq</code>. Everything you need for completing the ATAC-seq tutorials is located there. When you enter <code>atacseq</code> you’ll see several other directories. <code>results</code> contains precomputed results of (most of) the steps, so you can continue in case something goes wrong along the way. You can enter <code>analysis</code>; this is where we’ll be working today.</p>
 <p><br></p>
-<pre><code>cd atacseq
-
-ls .
-cd analysis</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> atacseq</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> .</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> analysis</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br> <br></p>
 </section>
 </section>
@@ -482,72 +531,76 @@ cd analysis</code></pre>
 <h2 data-number="5" class="anchored" data-anchor-id="read-mapping-statistics"><span class="header-section-number">5</span> Read Mapping Statistics</h2>
 <p>As stated above, we use data which has already been mapped to a reference. To start with, we can inspect the statistics of these unprocessed data. We will be working in directory <code>processedData</code>:</p>
 <p><br></p>
-<pre><code>mkdir processedData
-cd processedData
-
-module load bioinfo-tools
-module load samtools/1.19
-
-samtools idxstats ../../data/SRR17296554.mapped.bowtie2.chr1.bam  &gt;SRR17296554.idxstats
-samtools stats ../../data/SRR17296554.mapped.bowtie2.chr1.bam  &gt;SRR17296554.stats</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> processedData</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> processedData</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load SAMtools/1.19.2-GCC-13.3.0</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> idxstats ../../data/SRR17296554.mapped.bowtie2.chr1.bam  <span class="op">&gt;</span>SRR17296554.idxstats</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> stats ../../data/SRR17296554.mapped.bowtie2.chr1.bam  <span class="op">&gt;</span>SRR17296554.stats</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br></p>
 <p>One of the characteristics of the ATAC-seq signal is the presence of reads mapped to organelles. These reads may constitute even 40% of the library, depending on the library preparation method. MT contents be used to flag failed libraries early on.</p>
 <p>We can inspect the Mt contents of our data::</p>
 <p><br></p>
-<pre><code>#total fragments
-awk '{sum += $3} END {print sum}' SRR17296554.idxstats
-11335599
-
-#chrM fragments
-awk '$1 ~ /MT/ {print $3}' SRR17296554.idxstats
-75245</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#total fragments</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{sum += $3} END {print sum}'</span> SRR17296554.idxstats</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">11335599</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#chrM fragments</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'$1 ~ /MT/ {print $3}'</span> SRR17296554.idxstats</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="ex">75245</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br></p>
 <p><code>MT/total</code> ratio in this file is <code>0.007</code> (thanks to data subsetting). The fraction of MT reads in the nonsubset file was <code>0.053</code>, a value to be expected if using the Omni ATAC library prep <span class="citation" data-cites="Corces2017">(<a href="#ref-Corces2017" role="doc-biblioref">Corces et al. 2017</a>)</span>. Older protocols result in much higher values.</p>
 <p><br> <br></p>
 <p>We can inspect the read mapping statistics in <code>SRR17296554.stats</code>:</p>
 <p><br></p>
-<pre><code>grep ^SN SRR17296554.stats | cut -f 2-
-
-  raw total sequences:  11399457  # excluding supplementary and secondary reads
-  filtered sequences: 0
-  sequences:  11399457
-  is sorted:  1
-  1st fragments:  5694081
-  last fragments: 5705376
-  reads mapped: 11335599
-  reads mapped and paired:  11271741  # paired-end technology bit set + both mates mapped
-  reads unmapped: 63858
-  reads properly paired:  11230312  # proper-pair bit set
-  reads paired: 11399457  # paired-end technology bit set
-  reads duplicated: 0 # PCR or optical duplicate bit set
-  reads MQ0:  5945  # mapped and MQ=0
-  reads QC failed:  0
-  non-primary alignments: 0
-  supplementary alignments: 0
-  total length: 420662620 # ignores clipping
-  total first fragment length:  210119227 # ignores clipping
-  total last fragment length: 210543393 # ignores clipping
-  bases mapped: 418303160 # ignores clipping
-  bases mapped (cigar): 417695422 # more accurate
-  bases trimmed:  0
-  bases duplicated: 0
-  mismatches: 822766  # from NM fields
-  error rate: 1.969775e-03  # mismatches / bases mapped (cigar)
-  average length: 37
-  average first fragment length:  37
-  average last fragment length: 37
-  maximum length: 37
-  maximum first fragment length:  37
-  maximum last fragment length: 37
-  average quality:  34.1
-  insert size average:  220.2
-  insert size standard deviation: 134.6
-  inward oriented pairs:  5597226
-  outward oriented pairs: 19488
-  pairs with other orientation: 1094
-  pairs on different chromosomes: 18062
-  percentage of properly paired reads (%):  98.5
-</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> ^SN SRR17296554.stats <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f</span> 2-</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">raw</span> total sequences:  11399457  <span class="co"># excluding supplementary and secondary reads</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="ex">filtered</span> sequences: 0</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">sequences:</span>  11399457</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">is</span> sorted:  1</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="ex">1st</span> fragments:  5694081</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">last</span> fragments: 5705376</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">reads</span> mapped: 11335599</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="ex">reads</span> mapped and paired:  11271741  <span class="co"># paired-end technology bit set + both mates mapped</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="ex">reads</span> unmapped: 63858</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="ex">reads</span> properly paired:  11230312  <span class="co"># proper-pair bit set</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="ex">reads</span> paired: 11399457  <span class="co"># paired-end technology bit set</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="ex">reads</span> duplicated: 0 <span class="co"># PCR or optical duplicate bit set</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="ex">reads</span> MQ0:  5945  <span class="co"># mapped and MQ=0</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="ex">reads</span> QC failed:  0</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="ex">non-primary</span> alignments: 0</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="ex">supplementary</span> alignments: 0</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="ex">total</span> length: 420662620 <span class="co"># ignores clipping</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="ex">total</span> first fragment length:  210119227 <span class="co"># ignores clipping</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="ex">total</span> last fragment length: 210543393 <span class="co"># ignores clipping</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="ex">bases</span> mapped: 418303160 <span class="co"># ignores clipping</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="ex">bases</span> mapped <span class="er">(</span><span class="ex">cigar</span><span class="kw">)</span><span class="bu">:</span> 417695422 <span class="co"># more accurate</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  <span class="ex">bases</span> trimmed:  0</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="ex">bases</span> duplicated: 0</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="ex">mismatches:</span> 822766  <span class="co"># from NM fields</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="ex">error</span> rate: 1.969775e-03  <span class="co"># mismatches / bases mapped (cigar)</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  <span class="ex">average</span> length: 37</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>  <span class="ex">average</span> first fragment length:  37</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>  <span class="ex">average</span> last fragment length: 37</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>  <span class="ex">maximum</span> length: 37</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  <span class="ex">maximum</span> first fragment length:  37</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  <span class="ex">maximum</span> last fragment length: 37</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>  <span class="ex">average</span> quality:  34.1</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>  <span class="ex">insert</span> size average:  220.2</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>  <span class="ex">insert</span> size standard deviation: 134.6</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>  <span class="ex">inward</span> oriented pairs:  5597226</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>  <span class="ex">outward</span> oriented pairs: 19488</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>  <span class="ex">pairs</span> with other orientation: 1094</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>  <span class="ex">pairs</span> on different chromosomes: 18062</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>  <span class="ex">percentage</span> of properly paired reads <span class="er">(</span><span class="ex">%</span><span class="kw">)</span><span class="bu">:</span>  98.5</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br> <br></p>
 </section>
 <section id="processing-alignments" class="level2" data-number="6">
@@ -558,51 +611,64 @@ awk '$1 ~ /MT/ {print $3}' SRR17296554.idxstats
 <p>We will perform this as a “complement” operation, i.e.&nbsp;we will retain alignments which overlap the <em>non-blacklisted</em> regions (<code>complementBed</code> from <a href="https://bedtools.readthedocs.io/en/latest/content/tools/complement.html">bedtools</a>).</p>
 <p>Before we can do this we need to prepare the genomic regions:</p>
 <p><br></p>
-<pre><code>module load BEDTools/2.31.1
-
-sortBed -i  ../../annot/ENCFF999QPV.mm39_ens.bed  | complementBed -i stdin -g ../../annot/GRCm39.sizes &gt; mm39.noblcklst.bed</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load BEDTools/2.31.1-GCC-13.3.0</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">sortBed</span> <span class="at">-i</span>  ../../annot/ENCFF999QPV.mm39_ens.bed  <span class="kw">|</span> <span class="ex">complementBed</span> <span class="at">-i</span> stdin <span class="at">-g</span> ../../annot/GRCm39.sizes <span class="op">&gt;</span> mm39.noblcklst.bed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br></p>
 <p>While we are at it, we can also remove the MT contig from the <em>non-blacklist</em> regions:</p>
 <p><br></p>
-<pre><code>awk '$1 != "MT" { print $0 }' mm39.noblcklst.bed &gt; mm39.noblcklst_MT.bed</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'$1 != "MT" { print $0 }'</span> mm39.noblcklst.bed <span class="op">&gt;</span> mm39.noblcklst_MT.bed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br></p>
 <p>We can now remove the alignments in problematic reagions (blacklists and MT). Please note the bam file should be sorted and indexed first (required by <code>samtools view</code>), which we have done beforehand.</p>
 <p><br></p>
 <p>We retain alignments <strong>not</strong> within the blacklisted regions, which also are <em>properly paired</em> and of minimum MAPQ 5 (<code>-f 0x2 -q 5</code>):</p>
 <p><br></p>
-<pre><code>samtools view -f 0x2 -q 5 -M -L mm39.noblcklst_MT.bed -hbo SRR17296554.blstMT_filt.bam ../../data/SRR17296554.mapped.bowtie2.chr1.bam
-
-samtools index SRR17296554.blstMT_filt.bam</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-f</span> 0x2 <span class="at">-q</span> 5 <span class="at">-M</span> <span class="at">-L</span> mm39.noblcklst_MT.bed <span class="at">-hbo</span> SRR17296554.blstMT_filt.bam ../../data/SRR17296554.mapped.bowtie2.chr1.bam</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> index SRR17296554.blstMT_filt.bam</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br></p>
 <p>How many alignments are retained?</p>
 <p><br></p>
-<pre><code>samtools idxstats SRR17296554.blstMT_filt.bam &gt;SRR17296554.blstMT_filt.idxstats
-
-awk '{sum += $3} END {print sum}' SRR17296554.blstMT_filt.idxstats
-
-9440817 alignments are retained after filtering (out of initial 11335599).</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> idxstats SRR17296554.blstMT_filt.bam <span class="op">&gt;</span>SRR17296554.blstMT_filt.idxstats</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">awk</span> <span class="st">'{sum += $3} END {print sum}'</span> SRR17296554.blstMT_filt.idxstats</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ex">9440817</span> alignments are retained after filtering <span class="er">(</span><span class="ex">out</span> of initial 11335599<span class="kw">)</span><span class="bu">.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br></p>
 <p>Finally, we can mark / remove duplicated alignments. Note: we are not removing the duplicated alignments, just marking them.</p>
 <p><br></p>
-<pre><code>module load picard/3.1.1
-
-java -Xmx31G -jar $PICARD MarkDuplicates -I SRR17296554.blstMT_filt.bam \
-   -O SRR17296554.blstMT_filt.dedup.bam -M SRR17296554.dedup_metrics \
-   -VALIDATION_STRINGENCY LENIENT -REMOVE_DUPLICATES false -ASSUME_SORTED true
-
-samtools index SRR17296554.blstMT_filt.dedup.bam
-</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load picard/3.0.0-Java-17</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">java</span> <span class="at">-Xmx31G</span> <span class="at">-jar</span> <span class="va">$EBROOTPICARD</span>/picard.jar MarkDuplicates <span class="at">-I</span> SRR17296554.blstMT_filt.bam <span class="dt">\</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">-O</span> SRR17296554.blstMT_filt.dedup.bam <span class="at">-M</span> SRR17296554.dedup_metrics <span class="dt">\</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">-VALIDATION_STRINGENCY</span> LENIENT <span class="at">-REMOVE_DUPLICATES</span> false <span class="at">-ASSUME_SORTED</span> true</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> index SRR17296554.blstMT_filt.dedup.bam</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br></p>
 <p>Resulting file <code>SRR17296554.blstMT_filt.dedup.bam</code> containes preprocessed alignments we can use in the analysis and visualisations.</p>
 <p>We can inspect the duplication status of the library. This is another early QC step we perform, and it informs us of library complexity.</p>
 <p><br></p>
-<pre><code>head SRR17296554.dedup_metrics</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> SRR17296554.dedup_metrics</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br></p>
 <p>Key information from <code>SRR17296554.dedup_metrics</code>:</p>
 <p><br></p>
-<pre><code>  READ_PAIRS_EXAMINED 4720408
-  READ_PAIR_DUPLICATES 1389167
-  PERCENT_DUPLICATION 0.29429</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>  <span class="ex">READ_PAIRS_EXAMINED</span> 4720408</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="ex">READ_PAIR_DUPLICATES</span> 1389167</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">PERCENT_DUPLICATION</span> 0.29429</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br></p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
@@ -616,11 +682,13 @@ samtools index SRR17296554.blstMT_filt.dedup.bam
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<pre><code>  ## METRICS CLASS  picard.sam.DuplicationMetrics
-  
-  LIBRARY UNPAIRED_READS_EXAMINED READ_PAIRS_EXAMINED SECONDARY_OR_SUPPLEMENTARY_RDS  UNMAPPED_READS  UNPAIRED_READ_DUPLICATES  READ_PAIR_DUPLICATES  READ_PAIR_OPTICAL_DUPLICATES  PERCENT_DUPLICATION ESTIMATED_LIBRARY_SIZE
-  
-  Unknown Library 0 4720408 0 0 0 1389167 0 0.29429 6354197</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">## METRICS CLASS  picard.sam.DuplicationMetrics</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">LIBRARY</span> UNPAIRED_READS_EXAMINED READ_PAIRS_EXAMINED SECONDARY_OR_SUPPLEMENTARY_RDS  UNMAPPED_READS  UNPAIRED_READ_DUPLICATES  READ_PAIR_DUPLICATES  READ_PAIR_OPTICAL_DUPLICATES  PERCENT_DUPLICATION ESTIMATED_LIBRARY_SIZE</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="ex">Unknown</span> Library 0 4720408 0 0 0 1389167 0 0.29429 6354197</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 </div>
@@ -641,21 +709,33 @@ samtools index SRR17296554.blstMT_filt.dedup.bam
 <section id="cumulative-enrichment" class="level3" data-number="7.1">
 <h3 data-number="7.1" class="anchored" data-anchor-id="cumulative-enrichment"><span class="header-section-number">7.1</span> Cumulative Enrichment</h3>
 <p><br> <br></p>
-<p><a href="https://deeptools.readthedocs.io/en/3.5.2/content/tools/plotFingerprint.html">Cumulative enrichment</a> aka BAM <strong>fingerprint</strong>, is a way of assesing the quality of signal concentrated predeminantly in a small fraction of a genome (such as peaks detected in ATAC-seq and ChIP-seq). It determines how well the signal in the sample can be differentiated from the background.</p>
+<p><a href="https://deeptools.readthedocs.io/en/3.5.2/content/tools/plotFingerprint.html">Cumulative enrichment</a> aka BAM <strong>fingerprint</strong>, is a way of assessing the quality of signal concentrated predeminantly in a small fraction of a genome (such as peaks detected in ATAC-seq and ChIP-seq). It determines how well the signal in the sample can be differentiated from the background.</p>
 <p>Cumulative enrichment is obtained by sampling indexed BAM files and plotting a profile of cumulative read coverages for each sample. All reads overlapping a window (bin) of the specified length are counted; these counts are sorted and the cumulative sum is plotted.</p>
 <p>To compute cumulative enrichment for processed bam files in our ATAC-seq data set (assuming we are in drectory <code>analysis</code>, so if you have followed the previous tutorial, you should move one directory level up <code>cd ..</code>). Here we use files preprocessed earlier:</p>
 <p><br></p>
-<pre><code>mkdir deepTools
-cd deepTools
-
-#link necessary files to avoid long paths in commands
-ln -s ../../data_proc/* .
-
-module load deepTools/3.5.6
-
-plotFingerprint --bamfiles SRR17296554.filt.chr1.bam SRR17296555.filt.chr1.bam SRR17296556.filt.chr1.bam SRR17296557.filt.chr1.bam \
-   --binSize=1000 --plotFile Invivo_proc.fingerprint.pdf \
-   --smartLabels -p 5 &amp;&gt; fingerprint.log</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> deepTools</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> deepTools</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">#link necessary files to avoid long paths in commands</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> ../../data_proc/<span class="pp">*</span> .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>We will use <code>deepTools</code> installed as a software container. First, we build a command we want to use from paths to the container and other parameters:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="va">topdir</span><span class="op">=</span><span class="st">"/proj/epi2026/"</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="va">contdir</span><span class="op">=</span><span class="st">"/proj/epi2026/library/containers"</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="va">pFingerprnt</span><span class="op">=</span><span class="st">"apptainer exec --bind </span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st"> --bind </span><span class="va">${topdir}</span><span class="st"> --pwd </span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st"> </span><span class="va">${contdir}</span><span class="st">/deeptools:3.5.6.img plotFingerprint"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>We can now execute the command:</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="va">$pFingerprnt</span> <span class="at">--bamfiles</span> SRR17296554.filt.chr1.bam SRR17296555.filt.chr1.bam SRR17296556.filt.chr1.bam SRR17296557.filt.chr1.bam <span class="dt">\</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">--binSize</span><span class="op">=</span>1000 <span class="at">--plotFile</span> Invivo_proc.fingerprint.pdf <span class="dt">\</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">--smartLabels</span> <span class="at">-p</span> 5 <span class="op">&amp;&gt;</span> fingerprint.log</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br></p>
 <p>You can copy the resulting file to your local system to view it.</p>
 <p><br></p>
@@ -672,13 +752,21 @@ plotFingerprint --bamfiles SRR17296554.filt.chr1.bam SRR17296555.filt.chr1.bam S
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>To copy files from Pelle (or any remote host) you need to know the path to the file on Pelle (i.e.&nbsp;the remote side). Type in the terminal::</p>
-<pre><code>pwd</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">pwd</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p>This gives you the path to the working directory, e.g::</p>
-<pre><code>/proj/epi2025/nobackup/agata/tst/atac_proc/atacseq/analysis/deepTools/</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">/proj/epi2026/private/agata/atac_tst/atacseq/analysis/deepTools</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p>To copy file <code>Invivo_proc.fingerprint.pdf</code> to <em>current directory</em>, type in the <strong>local</strong> terminal:</p>
-<pre><code>scp &lt;username&gt;@pelle.uppmax.uu.se:/path/to/file .</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scp</span> <span class="op">&lt;</span>username<span class="op">&gt;</span>@pelle.uppmax.uu.se:/path/to/file .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p>E.g.:</p>
-<pre><code>scp agata@pelle.uppmax.uu.se:/proj/epi2025/nobackup/agata/tst/atac_proc/atacseq/analysis/deepTools/Invivo_proc.fingerprint.pdf .</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scp</span> agata@pelle.uppmax.uu.se:/proj/epi2026/private/agata/atac_tst/atacseq/analysis/deepTools/Invivo_proc.fingerprint.pdf .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p>You will be prompted to input the 2FA code following the password to Uppmax.</p>
 </div>
 </div>
@@ -738,20 +826,24 @@ plotFingerprint --bamfiles SRR17296554.filt.chr1.bam SRR17296555.filt.chr1.bam S
 <p><strong>To assess overall similarity between libraries from different samples</strong> one can compute sample clustering heatmaps using <a href="http://deeptools.readthedocs.io/en/latest/content/tools/multiBamSummary.html">multiBamSummary</a> and <a href="http://deeptools.readthedocs.io/en/latest/content/tools/plotCorrelation.html">plotCorrelation</a> in bins mode from <code>deepTools</code>.</p>
 <p>In this method the genome is divided into bins of specified size (<code>--binSize</code> parameter) and reads mapped to each bin are counted. The resulting signal profiles are used to cluster libraries to identify groups of similar signal profile.</p>
 <p>In this part we use bam files prepared before the workshop, to save time.</p>
-<pre><code>multiBamSummary bins --bamfiles SRR17296554.filt.chr1.bam SRR17296555.filt.chr1.bam SRR17296556.filt.chr1.bam SRR17296557.filt.chr1.bam \
-   --smartLabels \
-   --outFileName Invivo_proc.npz --binSize 5000 -p 5 &amp;&gt; multiBamSummary.log
-
-
-plotCorrelation --corData Invivo_proc.npz \
-   --plotFile Invivo_proc_correlation_bin.pdf --outFileCorMatrix Invivo_proc_correlation_bin.txt \
-   --whatToPlot heatmap --corMethod pearson --plotNumbers
-
-
-# to change the min number plotted
-plotCorrelation --corData Invivo_proc.npz \
-   --plotFile Invivo_proc_correlation_bin.pdf --outFileCorMatrix Invivo_proc_correlation_bin.txt \
-   --whatToPlot heatmap --corMethod pearson --plotNumbers -min 0.95</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="va">mBS</span><span class="op">=</span><span class="st">"apptainer exec --bind </span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st"> --bind </span><span class="va">${topdir}</span><span class="st"> --pwd </span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st"> </span><span class="va">${contdir}</span><span class="st">/deeptools:3.5.6.img multiBamSummary"</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="va">$mBS</span> bins <span class="at">--bamfiles</span> SRR17296554.filt.chr1.bam SRR17296555.filt.chr1.bam SRR17296556.filt.chr1.bam SRR17296557.filt.chr1.bam <span class="dt">\</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">--smartLabels</span> <span class="dt">\</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">--outFileName</span> Invivo_proc.npz <span class="at">--binSize</span> 5000 <span class="at">-p</span> 5 <span class="op">&amp;&gt;</span> multiBamSummary.log</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="va">pCor</span><span class="op">=</span><span class="st">"apptainer exec --bind </span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st"> --bind </span><span class="va">${topdir}</span><span class="st"> --pwd </span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st"> </span><span class="va">${contdir}</span><span class="st">/deeptools:3.5.6.img plotCorrelation"</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="va">$pCor</span> <span class="at">--corData</span> Invivo_proc.npz <span class="dt">\</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>   <span class="at">--plotFile</span> Invivo_proc_correlation_bin.pdf <span class="at">--outFileCorMatrix</span> Invivo_proc_correlation_bin.txt <span class="dt">\</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>   <span class="at">--whatToPlot</span> heatmap <span class="at">--corMethod</span> pearson <span class="at">--plotNumbers</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="co"># to change the correlation range plotted</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="va">$pCor</span> <span class="at">--corData</span> Invivo_proc.npz <span class="dt">\</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>   <span class="at">--plotFile</span> Invivo_proc_correlation_bin.pdf <span class="at">--outFileCorMatrix</span> Invivo_proc_correlation_bin.txt <span class="dt">\</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>   <span class="at">--whatToPlot</span> heatmap <span class="at">--corMethod</span> pearson <span class="at">--plotNumbers</span> <span class="at">-min</span> 0.95</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p>You can copy the resulting file to your local system to view it.</p>
 <p>What do you think?</p>
 <ul>
@@ -843,18 +935,20 @@ Figure&nbsp;2: Library fragments in the ATAC-seq data.
 <p><br></p>
 <p>To compute fragment length distribution for processed bam file in our ATAC-seq data set (assuming we are in drectory <code>analysis</code>):</p>
 <p><br></p>
-<pre><code>mkdir QC
-cd QC
-
-ln -s ../processedData/SRR17296554.blstMT_filt.dedup.bam  .
-ln -s ../processedData/SRR17296554.blstMT_filt.dedup.bam.bai  .
-  
-module load picard/3.1.1
-
-java -Xmx31G -jar $PICARD CollectInsertSizeMetrics \
-  -I SRR17296554.blstMT_filt.dedup.bam \
-  -O SRR17296554.chr1.proc.fraglen.stats \
-  -H SRR17296554.chr1.proc.fraglen.pdf -M 0.5</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> QC</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> QC</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> ../processedData/SRR17296554.blstMT_filt.dedup.bam  .</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> ../processedData/SRR17296554.blstMT_filt.dedup.bam.bai  .</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load picard/3.0.0-Java-17</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="ex">java</span> <span class="at">-Xmx31G</span> <span class="at">-jar</span> <span class="va">$EBROOTPICARD</span>/picard.jar CollectInsertSizeMetrics <span class="dt">\</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span> SRR17296554.blstMT_filt.dedup.bam <span class="dt">\</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">-O</span> SRR17296554.chr1.proc.fraglen.stats <span class="dt">\</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> SRR17296554.chr1.proc.fraglen.pdf <span class="at">-M</span> 0.5</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br></p>
 <p>You can copy the resulting file to your local system to view it.</p>
 <p>Have a look at <code>SRR17296554.chr1.proc.fraglen.pdf</code> (<a href="#fig-fraglen-1" class="quarto-xref">Figure&nbsp;3</a>), and answer</p>
@@ -930,15 +1024,470 @@ Figure&nbsp;4: Examples of insert size distribution for ATAC-seq experiments.
 </figure>
 </div>
 <p><br> <br></p>
-<p><br> <br></p>
-<p><br> <br></p>
-
-
-
 </section>
+</section>
+<section id="assessing-signal-at-transcription-start-sites" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="assessing-signal-at-transcription-start-sites"><span class="header-section-number">9</span> Assessing Signal at Transcription Start Sites</h2>
+<p><br></p>
+<section id="data-preparation-for-probing-signal-at-transcription-start-sites-tss" class="level3" data-number="9.1">
+<h3 data-number="9.1" class="anchored" data-anchor-id="data-preparation-for-probing-signal-at-transcription-start-sites-tss"><span class="header-section-number">9.1</span> Data Preparation for Probing Signal at Transcription Start Sites (TSS)</h3>
+<p>We will be working in <code>R</code> in this section. First, we load the required version together with libraries:</p>
+<p><br> <br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R/4.6.1-gfbf-2026.1</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R-bundle-CRAN/2026.07-foss-2026.1</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>We can now update paths to library with R packages load necessary R libraries:</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>(<span class="fu">c</span>(<span class="fu">.libPaths</span>(),<span class="st">"/proj/epi2026/library/Rpackages/4.6.1"</span>))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ATACseqQC)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BSgenome.Mmusculus.UCSC.mm39)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(TxDb.Mmusculus.UCSC.mm39.knownGene)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ChIPpeakAnno)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rsamtools)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>We can read in the bam file:</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>bamFile<span class="ot">=</span><span class="st">"SRR17296554.blstMT_filt.dedup.bam"</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>bamFileLabels<span class="ot">=</span><span class="st">"SRR17296554"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>We collect library statistics:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>bam_qc<span class="ot">=</span><span class="fu">bamQC</span>(bamFile, <span class="at">outPath =</span> <span class="cn">NULL</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We can now inspect the statistics:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>bam_qc[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The output:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>  bam_qc[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">$</span>totalQNAMEs</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">1</span>] <span class="dv">4720683</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="sc">$</span>duplicateRate</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">1</span>] <span class="fl">0.2942896</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="sc">$</span>mitochondriaRate</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">1</span>] <span class="dv">0</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="sc">$</span>properPairRate</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">1</span>] <span class="dv">1</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  <span class="sc">$</span>unmappedRate</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">1</span>] <span class="dv">0</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>  <span class="sc">$</span>hasUnmappedMateRate</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">1</span>] <span class="dv">0</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>  <span class="sc">$</span>notPassingQualityControlsRate</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">1</span>] <span class="dv">0</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>  <span class="sc">$</span>nonRedundantFraction</span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">1</span>] <span class="fl">0.5100756</span></span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>  <span class="sc">$</span>PCRbottleneckCoefficient_1</span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">1</span>] <span class="fl">0.710388</span></span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>  <span class="sc">$</span>PCRbottleneckCoefficient_2</span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">1</span>] <span class="fl">3.366668</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br> <br></p>
+<p>Some of these values are meaningless at this point, as we have already processed the bam file (i.e.&nbsp;filtered fragments in problematic regions etc.) To compare the statistics for the non-subset file, please see below.</p>
+<p><br></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Summary statistics for filtered non-subset SRR17296554.filt.bam data
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>bam_qc_nonsub[1:10]:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>    <span class="sc">$</span>totalQNAMEs</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>] <span class="dv">58847066</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="sc">$</span>duplicateRate</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>] <span class="fl">0.302227</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="sc">$</span>mitochondriaRate</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>] <span class="dv">0</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    <span class="sc">$</span>properPairRate</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>] <span class="dv">1</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>    <span class="sc">$</span>unmappedRate</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>] <span class="dv">0</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    <span class="sc">$</span>hasUnmappedMateRate</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>] <span class="dv">0</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>    <span class="sc">$</span>notPassingQualityControlsRate</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>] <span class="dv">0</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>    <span class="sc">$</span>nonRedundantFraction</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>] <span class="fl">0.4967934</span></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>    <span class="sc">$</span>PCRbottleneckCoefficient_1</span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>] <span class="fl">0.699404</span></span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>    <span class="sc">$</span>PCRbottleneckCoefficient_2</span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>] <span class="fl">3.18878</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+<p><br> <br></p>
+</section>
+<section id="shiftig-and-splitting-aligned-reads" class="level3" data-number="9.2">
+<h3 data-number="9.2" class="anchored" data-anchor-id="shiftig-and-splitting-aligned-reads"><span class="header-section-number">9.2</span> Shiftig and Splitting Aligned Reads</h3>
+<p><br></p>
+<p>Tagmentation by Tn5 transposase produces 5’ overhang of 9 base long, the coordinates of reads mapping to the positive and negative strands need to be shifted by + 4 and - 5, respectively, to account for the 9-bp duplication created by DNA repair of the nick by Tn5 transposase and achieve base-pair resolution of TF footprint and motif-related analyses.</p>
+<p>We perform it at this point to <strong>plot signal at TSS</strong>, and we save the resulting object for later use.</p>
+<p>We create a directory where the processed bam files will be saved:</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="do">## files will be saved into outPath respective to the working directory</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>outPath <span class="ot">=</span> <span class="st">"splitBam"</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(outPath)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>First, we collect information on which SAM/BAM tags are present in our bam file:</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>possibleTag <span class="ot">=</span> <span class="fu">combn</span>(LETTERS, <span class="dv">2</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>possibleTag <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">paste0</span>(possibleTag[<span class="dv">1</span>, ], possibleTag[<span class="dv">2</span>, ]),</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">paste0</span>(possibleTag[<span class="dv">2</span>, ], possibleTag[<span class="dv">1</span>, ]))</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>bamTop100 <span class="ot">=</span> <span class="fu">scanBam</span>(<span class="fu">BamFile</span>(bamFile, <span class="at">yieldSize =</span> <span class="dv">100</span>),</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">param =</span> <span class="fu">ScanBamParam</span>(<span class="at">tag =</span> possibleTag))[[<span class="dv">1</span>]]<span class="sc">$</span>tag</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>tags <span class="ot">=</span> <span class="fu">names</span>(bamTop100)[<span class="fu">lengths</span>(bamTop100)<span class="sc">&gt;</span><span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>We <strong>shift the coordinates</strong> only for alignments on chr1, which is where most of our data is. We need to rename the chromosome id few times during this lab because of mismatch between annotation packages available via <em>Bioconductor</em> and the reference genome used for read mapping. Please note that prepending / removing “chr” only works for assembled chromosomes, and is somewhat hacky, so for other genomes, use it at your own risk.</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>seqlev<span class="ot">=</span><span class="st">"chr1"</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>which<span class="ot">=</span><span class="fu">as</span>(<span class="fu">seqinfo</span>(Mmusculus)[seqlev], <span class="st">"GRanges"</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co">#rename chr ids to match reference genome</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="fu">seqlevels</span>(which)<span class="ot">=</span><span class="fu">gsub</span>(<span class="st">"chr"</span>,<span class="st">""</span>,<span class="fu">seqlevels</span>(which))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>We create an object with genomic alignments:</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>gal<span class="ot">=</span><span class="fu">readBamFile</span>(bamFile, <span class="at">tag=</span>tags, <span class="at">which=</span>which,<span class="at">asMates=</span><span class="cn">TRUE</span>, <span class="at">bigFile=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>This object is empty, because we used <code>bigFile=TRUE</code> - this is expected, so do not be alarmed.</p>
+<p>The function <code>shiftGAlignmentsList</code> in the <code>ATACseqQC</code> package is used for shifting the alignments:</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>shiftedBamFile<span class="ot">=</span><span class="fu">file.path</span>(outPath, <span class="st">"shifted.bam"</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>gal1<span class="ot">=</span><span class="fu">shiftGAlignmentsList</span>(gal, <span class="at">outbam=</span>shiftedBamFile)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br> <br></p>
+<p>Next, we <strong>split</strong> the shifted alignments into different fractions <strong>by length</strong> (nucleosome free, mononucleosome, dinucleosome, and trinucleosome).</p>
+<p>Shifted reads that do not fit into any of the above bins can be discarded.</p>
+<p>Splitting reads is a time-consuming step because we are using random forest to classify the fragments based on fragment length and GC content.</p>
+<p>By default, we assign the top 10% of short reads (reads below 100_bp) as nucleosome-free regions and the top 10% of intermediate length reads as (reads between 180 and 247 bp) mononucleosome. This serves as the training set to classify the rest of the fragments.</p>
+<p>We need genomic locations of TSS:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>txs<span class="ot">=</span><span class="fu">transcripts</span>(TxDb.Mmusculus.UCSC.mm39.knownGene)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>txs<span class="ot">=</span>txs[<span class="fu">seqnames</span>(txs) <span class="sc">%in%</span> <span class="st">"chr1"</span>]</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">seqlevels</span>(txs)<span class="ot">=</span><span class="fu">gsub</span>(<span class="st">"chr"</span>,<span class="st">""</span>,<span class="fu">seqlevels</span>(txs))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We need to rename chromosome ids in the <code>BSgenome</code> object:</p>
+<p><br> <br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>GenomeInfoDb<span class="sc">::</span><span class="fu">seqlevelsStyle</span>(BSgenome.Mmusculus.UCSC.mm39)<span class="ot">=</span><span class="st">"NCBI"</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">seqinfo</span>(BSgenome.Mmusculus.UCSC.mm39)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>genome<span class="ot">=</span>Mmusculus</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We split the alignments (this process takes a few minutes):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>objs<span class="ot">=</span><span class="fu">splitGAlignmentsByCut</span>(gal1, <span class="at">txs=</span>txs, <span class="at">genome=</span>genome, <span class="at">outPath =</span> outPath)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(objs, <span class="at">file=</span><span class="st">"atacsqQC.objs.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Finally, we have prepared the data for <strong>plotting the signal in NFR and mononuclesome fraction</strong> and calculating <strong>signal distribution at TSS</strong>.</p>
+<p><br> <br></p>
+</section>
+<section id="signal-in-nfr-and-mononucleosome-fractions" class="level3" data-number="9.3">
+<h3 data-number="9.3" class="anchored" data-anchor-id="signal-in-nfr-and-mononucleosome-fractions"><span class="header-section-number">9.3</span> Signal in NFR and Mononucleosome Fractions</h3>
+<p>Files we are going to use and TSS coordinates:</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>bamFiles<span class="ot">=</span><span class="fu">file.path</span>(outPath,</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">c</span>(<span class="st">"NucleosomeFree.bam"</span>,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"mononucleosome.bam"</span>,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"dinucleosome.bam"</span>,</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"trinucleosome.bam"</span>))</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>TSS<span class="ot">=</span><span class="fu">promoters</span>(txs, <span class="at">upstream=</span><span class="dv">0</span>, <span class="at">downstream=</span><span class="dv">1</span>)</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>TSS<span class="ot">=</span><span class="fu">unique</span>(TSS)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>Calculate and log2 transform the signal around TSS:</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>librarySize<span class="ot">=</span><span class="fu">estLibSize</span>(bamFiles)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>seqlev<span class="ot">=</span><span class="st">"1"</span> <span class="co">#we only consider one chromosome</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>NTILE<span class="ot">=</span><span class="dv">101</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>dws<span class="ot">=</span><span class="dv">1010</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>ups<span class="ot">=</span><span class="dv">1010</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>sigs<span class="ot">=</span><span class="fu">enrichedFragments</span>(<span class="at">gal=</span>objs[<span class="fu">c</span>(<span class="st">"NucleosomeFree"</span>,</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>                                       <span class="st">"mononucleosome"</span>,</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>                                       <span class="st">"dinucleosome"</span>,</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>                                       <span class="st">"trinucleosome"</span>)],</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>                            <span class="at">TSS=</span>TSS,</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>                            <span class="at">librarySize=</span>librarySize,</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>                            <span class="at">seqlev=</span>seqlev,</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>                            <span class="at">TSS.filter=</span><span class="fl">0.5</span>,</span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>                            <span class="at">n.tile =</span> NTILE,</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>                            <span class="at">upstream =</span> ups,</span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>                            <span class="at">downstream =</span> dws)</span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(sigs, <span class="at">file=</span><span class="st">"atacsqQC.sigs.rds"</span>)</span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>sigs.log2<span class="ot">=</span><span class="fu">lapply</span>(sigs, <span class="cf">function</span>(.ele) <span class="fu">log2</span>(.ele<span class="sc">+</span><span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>We can now save the signal heatmap:</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="st">"Heatmap_splitbam.pdf"</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">featureAlignedHeatmap</span>(sigs.log2, <span class="fu">reCenterPeaks</span>(TSS, <span class="at">width=</span>ups<span class="sc">+</span>dws),</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">zeroAt=</span>.<span class="dv">5</span>, <span class="at">n.tile=</span>NTILE)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<ul>
+<li>What are the differences in the signal profile in these two fractions? Why do we observe them?</li>
+</ul>
+<p><br></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Heatmap of ATAC-seq signal in NFR and mononculeosome fractions
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><a href="assets/figures/Heatmap_splitbam.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="assets/figures/Heatmap_splitbam.png" class="img-fluid" style="width:70.0%"></a></p>
+</div>
+</div>
+</div>
+<p><br> <br></p>
+<p>We can now calculate signal density at TSS:</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>out<span class="ot">=</span><span class="fu">featureAlignedDistribution</span>(sigs, </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">reCenterPeaks</span>(TSS, <span class="at">width=</span>ups<span class="sc">+</span>dws),</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">zeroAt=</span>.<span class="dv">5</span>, <span class="at">n.tile=</span>NTILE, <span class="at">type=</span><span class="st">"l"</span>, </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">ylab=</span><span class="st">"Averaged coverage"</span>)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="do">## rescale the nucleosome-free and nucleosome signals to 0~1 for plotting</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>range01<span class="ot">=</span><span class="cf">function</span>(x){(x<span class="sc">-</span><span class="fu">min</span>(x))<span class="sc">/</span>(<span class="fu">max</span>(x)<span class="sc">-</span><span class="fu">min</span>(x))}</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>out<span class="ot">=</span><span class="fu">apply</span>(out, <span class="dv">2</span>, range01)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>And plot it:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="st">"TSSprofile_splitbam.pdf"</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matplot</span>(out, <span class="at">type=</span><span class="st">"l"</span>, <span class="at">xaxt=</span><span class="st">"n"</span>,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">xlab=</span><span class="st">"Position (bp)"</span>,</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">ylab=</span><span class="st">"Fraction of signal"</span>)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at=</span><span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">by=</span><span class="dv">10</span>)<span class="sc">+</span><span class="dv">1</span>,</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"-1K"</span>, <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">800</span>, <span class="dv">800</span>, <span class="at">by=</span><span class="dv">200</span>), <span class="st">"1K"</span>), <span class="at">las=</span><span class="dv">2</span>)</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abline</span>(<span class="at">v=</span><span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">by=</span><span class="dv">10</span>)<span class="sc">+</span><span class="dv">1</span>, <span class="at">lty=</span><span class="dv">2</span>, <span class="at">col=</span><span class="st">"gray"</span>)</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<ul>
+<li>What are the differences in the signal profile in these two fractions? Why do we observe them?</li>
+</ul>
+<p><br></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Profiles of ATAC-seq signal in NFR and mononculeosome fractions
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><a href="assets/figures/TSSprofile_splitbam.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14"><img src="assets/figures/TSSprofile_splitbam.png" class="img-fluid" style="width:70.0%"></a></p>
+</div>
+</div>
+</div>
+<p><br></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>To finish working in <code>R</code> type <code>q()</code>. Do not save workspace image - in this case, to save space.</p>
+</div>
+</div>
+<p><br> <br></p>
+</section>
+</section>
+<section id="signal-visualisation-using-igv" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="signal-visualisation-using-igv"><span class="header-section-number">10</span> Signal Visualisation Using IGV</h2>
+<p>In this part we will look more closely at our data, which is a good practice, as data summaries can be at times misleading. In principle we could look at the data on Uppmax using installed tools but it is much easier (and glitch-free) to work with genome browser locally. If you have not done this before the course, install Interactive Genome Browser <a href="https://www.broadinstitute.org/igv/">IGV</a>.</p>
+<p>We would like to visualise processed alignments (bam and corresponding bai) at several loci with strong signal. We can also view the bam files split into nucleosome-free, mono- di- and tri- nucleosome fractions.</p>
+<p><br></p>
+<p>We will need the following files:</p>
+<ul>
+<li><p><code>atacseq/analysis/processedData/SRR17296554.blstMT_filt.dedup.bam</code> and <code>bai</code></p></li>
+<li><p><code>atacseq/analysis/QC/splitBam/NucleosomeFree.bam</code> and <code>bai</code></p></li>
+<li><p><code>atacseq/analysis/QC/splitBam/mononucleosome.bam</code> and <code>bai</code></p></li>
+<li><p><code>atacseq/analysis/QC/splitBam/dinucleosome.bam</code> and <code>bai</code></p></li>
+<li><p><code>atacseq/analysis/QC/splitBam/trinucleosome.bam</code> and <code>bai</code></p></li>
+</ul>
+<p><br> <br></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Copying files from remote server
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>To copy files from Pelle (or any remote host) you need to know the path to the file on Pelle (i.e.&nbsp;the remote side). Type in the terminal::</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="bu">pwd</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This gives you the path to the working directory, e.g::</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="ex">/proj/epi2026/private/agata/atac_tst/atacseq/analysis/deepTools</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>To copy file <code>Invivo_proc.fingerprint.pdf</code> to <em>current directory</em>, type in the <strong>local</strong> terminal:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scp</span> <span class="op">&lt;</span>username<span class="op">&gt;</span>@pelle.uppmax.uu.se:/path/to/file .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>E.g.:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scp</span> agata@pelle.uppmax.uu.se:/proj/epi2026/private/agata/atac_tst/atacseq/analysis/deepTools/Invivo_proc.fingerprint.pdf .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>You will be prompted to input the 2FA code following the password to Uppmax.</p>
+</div>
+</div>
+</div>
+<p><br> <br></p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The reads are mapped to genome assembly <strong>GRCm39</strong> / <strong>mm39</strong> which may need to be downloaded in your IGV version. To download a new genome, in IGV: Genomes &gt; Hosted Genomes, then search for mm39.</p>
+</div>
+</div>
+<p><br></p>
+<p>You will have to zoom in to view the alignments and coverage tracks.</p>
+<p>Change the default viewing settings in IGV by <code>shift-clicking</code> (or <code>right-clicking</code> on some OS) onto a track name (left panel):</p>
+<p><strong>bam</strong> tracks:</p>
+<ul>
+<li><p>alignment view to <code>Squished</code></p></li>
+<li><p>colour alignments to <code>insert size and pair orientation</code></p></li>
+</ul>
+<p><strong>coverage</strong> tracks:</p>
+<ul>
+<li>pay attention to track scale (signal range); it is set to <code>Auto</code>; the tracks are not displayed at the same range, you can harmonise the scale if you want to see the differences in signal range</li>
+</ul>
+<p><br></p>
+<p>You can move along the chromosome 1 and you will spot locations with high signal density.</p>
+<p>Examples:</p>
+<ul>
+<li><p><code>chr1:10,009,356-10,018,135</code></p></li>
+<li><p><code>chr1:10,105,613-10,114,392</code></p></li>
+<li><p><code>chr1:161,497,776-161,499,970</code></p></li>
+<li><p><code>chr1:155,074,991-155,079,380</code></p></li>
+<li><p><code>chr1:95,191,577-95,200,356</code></p></li>
+</ul>
+<p><br></p>
+<div id="fig-tracks1" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tracks1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="assets/figures/splitBam_chr1_95M.png" class="lightbox" data-gallery="quarto-lightbox-gallery-15" title="Figure&nbsp;5: Signal in bam files split into fractions by fragment length."><img src="assets/figures/splitBam_chr1_95M.png" class="img-fluid figure-img" style="width:80.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tracks1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Signal in bam files split into fractions by fragment length.
+</figcaption>
+</figure>
+</div>
+<p><br></p>
+<p>Another example is shown on <a href="#fig-tracks2" class="quarto-xref">Figure&nbsp;6</a> (obtained using a different data set). This figure includes also detected peak intervals - we will discuss them in detail in the following sections).</p>
+<p><br></p>
+<div id="fig-tracks2" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tracks2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="assets/figures/igv_qc_split1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16" title="Figure&nbsp;6: Signal in bam files split into fractions by fragment length."><img src="assets/figures/igv_qc_split1.png" class="img-fluid figure-img" style="width:80.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tracks2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Signal in bam files split into fractions by fragment length.
+</figcaption>
+</figure>
+</div>
+<p><br></p>
+<p><em>Bonus question</em></p>
+<ul>
+<li>Why does the NFR track show unusually high fraction of discordant alignments (labeled green)?</li>
+</ul>
+<p><br> <br></p>
+<p>After the processing and QC performed in this tutorial, we can now move to <a href="../ATACpeaks/index.html">ATAC-seq data analysis</a>.</p>
+
+
+
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-Amemiya2019" class="csl-entry" role="listitem">
+Amemiya, Haley M., Anshul Kundaje, and Alan P. Boyle. 2019. <span>“The ENCODE Blacklist: Identification of Problematic Regions of the Genome.”</span> <em>Scientific Reports</em> 9 (1). <a href="https://doi.org/10.1038/s41598-019-45839-z">https://doi.org/10.1038/s41598-019-45839-z</a>.
+</div>
 <div id="ref-Buenrostro2015" class="csl-entry" role="listitem">
 Buenrostro, Jason D., Beijing Wu, Howard Y. Chang, and William J. Greenleaf. 2015. <span>“ATAC-Seq: A Method for Assaying Chromatin Accessibility Genome-Wide.”</span> <em>Current Protocols in Molecular Biology</em> 109 (January): 21.29.1–9. <a href="https://doi.org/10.1002/0471142727.mb2129s109">https://doi.org/10.1002/0471142727.mb2129s109</a>.
 </div>

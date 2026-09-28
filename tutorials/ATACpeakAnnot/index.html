@@ -254,7 +254,7 @@ background-size: cover;
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">27-Sep-2026</p>
+        <p class="date">28-Sep-2026</p>
       </div>
     </div>
     
@@ -356,37 +356,48 @@ Note
 </div>
 </div>
 <p><br> <br></p>
+<p>We navigate to our working directory for this tutorial. Assuming we are at the top of the <code>ataqseq/analysis</code></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> counts</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br> <br></p>
 <p>We access the R environment via:</p>
-<pre><code>module load R_packages/4.6.1</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R/4.6.1-gfbf-2026.1</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R-bundle-CRAN/2026.07-foss-2026.1</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p>We activate R console upon typing <code>R</code> in the terminal.</p>
+<p>To be able to load all necessary libraries we need to update the paths to custom library locations:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>(<span class="fu">c</span>(<span class="fu">.libPaths</span>(),<span class="st">"/proj/epi2026/library/Rpackages/4.6.1"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p>Alternatively you can work on this tutorial locally, using R libraries installed via <code>renv</code>.</p>
 <p>We begin by loading necessary libraries:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GenomicRanges)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ChIPseeker)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggupset)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggimage)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biomaRt)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(txdbmaker)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GenomicFeatures)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clusterProfiler)</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(org.Mm.eg.db)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ReactomePA)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GenomicRanges)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ChIPseeker)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggupset)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggimage)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biomaRt)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(txdbmaker)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GenomicFeatures)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(org.Mm.eg.db)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fgsea)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ReactomePA)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<pre><code>workdir=getwd()
-
-workdir=setwd()</code></pre>
+<p><br> <br></p>
 <p><br> <br></p>
 </section>
 <section id="preparing-annotations" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="preparing-annotations"><span class="header-section-number">5</span> Preparing Annotations</h2>
-<p>We will use TSS annotations from Ensembl. We can fetch them from <code>biomaRt</code>:</p>
+<p>We will use TSS and gene annotations from Ensembl. We can fetch them from <code>biomaRt</code>:</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -399,57 +410,66 @@ workdir=setwd()</code></pre>
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<pre><code>txdb_mm39 = txdbmaker::makeTxDbFromBiomart(biomart="ensembl",
-                               dataset="mmusculus_gene_ensembl",
-                               circ_seqs=NULL,
-                               taxonomyId=NA)
-
-ensembl = useEnsembl(biomart="genes", dataset="mmusculus_gene_ensembl")
-all_genes = names(transcriptsBy(txdb_mm39, "gene"))
-
-gene_annot_mm39=getBM(attributes = 
-   c('ensembl_gene_id', 'ensembl_transcript_id','external_gene_name','entrezgene_id','description','gene_biotype','chromosome_name','start_position','end_position','strand','transcription_start_site'),
-       filters = 'ensembl_gene_id',
-       values = all_genes, 
-        mart = ensembl)</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>txdb_mm39 <span class="ot">=</span> txdbmaker<span class="sc">::</span><span class="fu">makeTxDbFromBiomart</span>(<span class="at">biomart=</span><span class="st">"ensembl"</span>,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">dataset=</span><span class="st">"mmusculus_gene_ensembl"</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">circ_seqs=</span><span class="cn">NULL</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">taxonomyId=</span><span class="cn">NA</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>ensembl <span class="ot">=</span> <span class="fu">useEnsembl</span>(<span class="at">biomart=</span><span class="st">"genes"</span>, <span class="at">dataset=</span><span class="st">"mmusculus_gene_ensembl"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>all_genes <span class="ot">=</span> <span class="fu">names</span>(<span class="fu">transcriptsBy</span>(txdb_mm39, <span class="st">"gene"</span>))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>gene_annot_mm39<span class="ot">=</span><span class="fu">getBM</span>(<span class="at">attributes =</span> </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>   <span class="fu">c</span>(<span class="st">'ensembl_gene_id'</span>, <span class="st">'ensembl_transcript_id'</span>,<span class="st">'external_gene_name'</span>,<span class="st">'entrezgene_id'</span>,<span class="st">'description'</span>,<span class="st">'gene_biotype'</span>,<span class="st">'chromosome_name'</span>,<span class="st">'start_position'</span>,<span class="st">'end_position'</span>,<span class="st">'strand'</span>,<span class="st">'transcription_start_site'</span>),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">filters =</span> <span class="st">'ensembl_gene_id'</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">values =</span> all_genes, </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">mart =</span> ensembl)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 </div>
 <p><br> <br></p>
-<p>We have prepared these for you, so you can load them via:</p>
+<p>We have prepared these annotation files for you, so you can load them via:</p>
+<p><br></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>annotdir<span class="ot">=</span><span class="fu">file.path</span>(<span class="st">"assets"</span>,<span class="st">"annotation"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#pth_txdbens=file.path(annotdir,"Ensembl.txdb.GRCm39.Rdata")</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#txdb_mm39=loadDb(pth_txdbens)</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>gene_annot_mm39<span class="ot">=</span><span class="fu">read.delim</span>(<span class="fu">file.path</span>(annotdir,<span class="st">"mm39_gene_names.tab"</span>), <span class="at">sep=</span><span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">header=</span><span class="cn">TRUE</span>, <span class="at">quote =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>annotdir<span class="ot">=</span><span class="fu">file.path</span>(<span class="fu">getwd</span>(),<span class="st">"annotation"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>gene_annot_mm39<span class="ot">=</span><span class="fu">read.delim</span>(<span class="fu">file.path</span>(annotdir,<span class="st">"mm39_gene_names.tab"</span>), <span class="at">sep=</span><span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">header=</span><span class="cn">TRUE</span>, <span class="at">quote =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>and</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pth_txdbens<span class="ot">=</span><span class="fu">file.path</span>(annotdir,<span class="st">"Ensembl.txdb.GRCm39.Rdata"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>txdb_mm39<span class="ot">=</span><span class="fu">loadDb</span>(pth_txdbens)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br> <br></p>
 <p>You can inspect the objects:</p>
-<pre><code>txdb_mm39
-## TxDb object:
-## # Db type: TxDb
-## # Supporting package: GenomicFeatures
-## # Data source: BioMart
-## # Organism: Mus musculus
-## # Taxonomy ID: 10090
-## # Resource URL: www.ensembl.org:443
-## # BioMart database: ENSEMBL_MART_ENSEMBL
-## # BioMart database version: Ensembl Genes 115
-## # BioMart dataset: mmusculus_gene_ensembl
-## # BioMart dataset description: Mouse genes (GRCm39)
-## # BioMart dataset version: GRCm39
-## # Full dataset: yes
-## # miRBase build ID: NA
-## # Nb of transcripts: 278396
-## # Db created by: txdbmaker package from Bioconductor
-## # Creation time: 2025-09-08 11:35:27 +0200 (Mon, 08 Sep 2025)
-## # txdbmaker version at creation time: 1.0.1
-## # RSQLite version at creation time: 2.4.3
-## # DBSCHEMAVERSION: 1.2</code></pre>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gene_annot_mm39)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>txdb_mm39</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="do">## TxDb object:</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="do">## # Db type: TxDb</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="do">## # Supporting package: GenomicFeatures</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="do">## # Data source: BioMart</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="do">## # Organism: Mus musculus</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="do">## # Taxonomy ID: 10090</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="do">## # Resource URL: www.ensembl.org:443</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="do">## # BioMart database: ENSEMBL_MART_ENSEMBL</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="do">## # BioMart database version: Ensembl Genes 115</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="do">## # BioMart dataset: mmusculus_gene_ensembl</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="do">## # BioMart dataset description: Mouse genes (GRCm39)</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="do">## # BioMart dataset version: GRCm39</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="do">## # Full dataset: yes</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="do">## # miRBase build ID: NA</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="do">## # Nb of transcripts: 278396</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="do">## # Db created by: txdbmaker package from Bioconductor</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="do">## # Creation time: 2025-09-08 11:35:27 +0200 (Mon, 08 Sep 2025)</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="do">## # txdbmaker version at creation time: 1.0.1</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="do">## # RSQLite version at creation time: 2.4.3</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="do">## # DBSCHEMAVERSION: 1.2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gene_annot_mm39)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="caption-top table table-sm table-striped small">
@@ -589,26 +609,27 @@ txdb = TxDb.Hsapiens.UCSC.mm39.knownGene</code></pre>
 </section>
 <section id="data" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="data"><span class="header-section-number">6</span> Data</h2>
-<p>We can now load data. We will subset the count table to only contain the peaks on assembled chromosomes.</p>
+<p>We can now load data:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>count_table_fname<span class="ot">=</span><span class="st">"AB_Batf_KO_invivo.genrich_joint.merged_peaks.featureCounts"</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>cnt_table_pth<span class="ot">=</span><span class="fu">file.path</span>(<span class="st">"assets"</span>,<span class="st">"data"</span>,count_table_fname)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>cnt_table<span class="ot">=</span><span class="fu">read.table</span>(cnt_table_pth, <span class="at">sep=</span><span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">header=</span><span class="cn">TRUE</span>, <span class="at">blank.lines.skip=</span><span class="cn">TRUE</span>)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(cnt_table)<span class="ot">=</span>cnt_table<span class="sc">$</span>Geneid</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(cnt_table)<span class="ot">=</span><span class="fu">c</span>(<span class="fu">gsub</span>(<span class="st">"AB_Batf_KO_invivo.genrich_joint."</span>,<span class="st">""</span>,<span class="fu">rownames</span>(cnt_table)))</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(cnt_table)<span class="ot">=</span><span class="fu">c</span>(<span class="fu">colnames</span>(cnt_table)[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>],<span class="fu">gsub</span>(<span class="st">".filt.bam"</span>,<span class="st">""</span>,<span class="fu">colnames</span>(cnt_table)[<span class="dv">7</span><span class="sc">:</span><span class="dv">10</span>]))</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(cnt_table)[<span class="dv">7</span><span class="sc">:</span><span class="dv">10</span>]<span class="ot">=</span><span class="fu">c</span>(<span class="st">"B1_WT_Batf-floxed"</span>,<span class="st">"B2_WT_Batf-floxed"</span>,<span class="st">"A1_Batf_cKO"</span>,<span class="st">"A2_Batf_cKO"</span>)</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#remove peaks not on the assembled chromosomes</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>cnt_table_chr<span class="ot">=</span>cnt_table<span class="sc">|&gt;</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Chr<span class="sc">%in%</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">19</span>) <span class="sc">|</span> Chr<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"X"</span>,<span class="st">"Y"</span>))</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>reads.peak<span class="ot">=</span>cnt_table_chr[,<span class="fu">c</span>(<span class="dv">7</span><span class="sc">:</span><span class="dv">10</span>)]</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(reads.peak)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>count_table_fname<span class="ot">=</span><span class="st">"AB_Batf_KO_invivo.genrich_joint.merged_peaks.featureCounts"</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>cnt_table<span class="ot">=</span><span class="fu">read.table</span>(count_table_fname, <span class="at">sep=</span><span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">header=</span><span class="cn">TRUE</span>, <span class="at">blank.lines.skip=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br> <br></p>
+<p>We will format the column names and subset the count table to only contain the peaks on assembled chromosomes.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(cnt_table)<span class="ot">=</span>cnt_table<span class="sc">$</span>Geneid</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(cnt_table)<span class="ot">=</span><span class="fu">c</span>(<span class="fu">gsub</span>(<span class="st">"AB_Batf_KO_invivo.genrich_joint."</span>,<span class="st">""</span>,<span class="fu">rownames</span>(cnt_table)))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(cnt_table)<span class="ot">=</span><span class="fu">c</span>(<span class="fu">colnames</span>(cnt_table)[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>],<span class="fu">gsub</span>(<span class="st">".filt.bam"</span>,<span class="st">""</span>,<span class="fu">colnames</span>(cnt_table)[<span class="dv">7</span><span class="sc">:</span><span class="dv">10</span>]))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(cnt_table)[<span class="dv">7</span><span class="sc">:</span><span class="dv">10</span>]<span class="ot">=</span><span class="fu">c</span>(<span class="st">"B1_WT_Batf-floxed"</span>,<span class="st">"B2_WT_Batf-floxed"</span>,<span class="st">"A1_Batf_cKO"</span>,<span class="st">"A2_Batf_cKO"</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#remove peaks not on the assembled chromosomes</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>cnt_table_chr<span class="ot">=</span>cnt_table<span class="sc">|&gt;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Chr<span class="sc">%in%</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">19</span>) <span class="sc">|</span> Chr<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"X"</span>,<span class="st">"Y"</span>))</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>reads.peak<span class="ot">=</span>cnt_table_chr[,<span class="fu">c</span>(<span class="dv">7</span><span class="sc">:</span><span class="dv">10</span>)]</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(reads.peak)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="caption-top table table-sm table-striped small">
@@ -687,76 +708,213 @@ txdb = TxDb.Hsapiens.UCSC.mm39.knownGene</code></pre>
 <p>We will be working on a <code>GRanges</code> object <code>peaks_gr</code> containing non-subset peaks (i.e.&nbsp;all assebled chromosome peaks).</p>
 <p>We create the <code>GRanges</code> object:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>peaks_gr<span class="ot">=</span><span class="fu">GRanges</span>(<span class="at">seqnames=</span>cnt_table_chr<span class="sc">$</span>Chr, <span class="at">ranges=</span><span class="fu">IRanges</span>(cnt_table_chr<span class="sc">$</span>Start, cnt_table_chr<span class="sc">$</span>End), <span class="at">strand=</span><span class="st">"*"</span>, <span class="at">mcols=</span><span class="fu">data.frame</span>(<span class="at">peakID=</span><span class="fu">rownames</span>(cnt_table_chr)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>peaks_gr<span class="ot">=</span><span class="fu">GRanges</span>(<span class="at">seqnames=</span>cnt_table_chr<span class="sc">$</span>Chr, <span class="at">ranges=</span><span class="fu">IRanges</span>(cnt_table_chr<span class="sc">$</span>Start, cnt_table_chr<span class="sc">$</span>End), <span class="at">strand=</span><span class="st">"*"</span>, <span class="at">mcols=</span><span class="fu">data.frame</span>(<span class="at">peakID=</span><span class="fu">rownames</span>(cnt_table_chr)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>and inspect it:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>peaks_gr</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="do">## GRanges object with 64879 ranges and 1 metadata column:</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="do">##           seqnames            ranges strand |       mcols.peakID</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;         &lt;IRanges&gt;  &lt;Rle&gt; |        &lt;character&gt;</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="do">##       [1]        1   3050939-3052959      * |     merged_peaks_1</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="do">##       [2]        1   3053048-3054634      * |     merged_peaks_2</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="do">##       [3]        1   3054861-3055532      * |     merged_peaks_3</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="do">##       [4]        1   3057260-3057785      * |     merged_peaks_4</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="do">##       [5]        1   3059375-3061360      * |     merged_peaks_5</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="do">##       ...      ...               ...    ... .                ...</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="do">##   [64875]        Y 90814281-90815165      * | merged_peaks_64875</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="do">##   [64876]        Y 90815739-90816707      * | merged_peaks_64876</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="do">##   [64877]        Y 90818033-90819321      * | merged_peaks_64877</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="do">##   [64878]        Y 90819900-90820364      * | merged_peaks_64878</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="do">##   [64879]        Y 90821996-90824312      * | merged_peaks_64879</span></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="do">##   seqinfo: 21 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>peaks_gr</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="do">## GRanges object with 64879 ranges and 1 metadata column:</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="do">##           seqnames            ranges strand |       mcols.peakID</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;         &lt;IRanges&gt;  &lt;Rle&gt; |        &lt;character&gt;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="do">##       [1]        1   3050939-3052959      * |     merged_peaks_1</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">##       [2]        1   3053048-3054634      * |     merged_peaks_2</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="do">##       [3]        1   3054861-3055532      * |     merged_peaks_3</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="do">##       [4]        1   3057260-3057785      * |     merged_peaks_4</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">##       [5]        1   3059375-3061360      * |     merged_peaks_5</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="do">##       ...      ...               ...    ... .                ...</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="do">##   [64875]        Y 90814281-90815165      * | merged_peaks_64875</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="do">##   [64876]        Y 90815739-90816707      * | merged_peaks_64876</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="do">##   [64877]        Y 90818033-90819321      * | merged_peaks_64877</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="do">##   [64878]        Y 90819900-90820364      * | merged_peaks_64878</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="do">##   [64879]        Y 90821996-90824312      * | merged_peaks_64879</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="do">##   seqinfo: 21 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br> <br></p>
 <p>We are ready to annotate the peaks to their closest feature:</p>
-<pre><code>peakAnno=annotatePeak(peaks_gr, tssRegion=c(-3000, 3000),TxDb=txdb_mm39)</code></pre>
-<pre><code>#| echo: FALSE
-saveRDS(peakAnno, 
-  file = "assets/rds/Batf_WT_KO.merged_peaks.annot.obj.rds", 
-  ascii = FALSE, 
-  version = NULL, 
-  compress = TRUE, 
-  refhook = NULL)</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>peakAnno<span class="ot">=</span><span class="fu">annotatePeak</span>(peaks_gr, <span class="at">tssRegion=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">3000</span>, <span class="dv">3000</span>),<span class="at">TxDb=</span>txdb_mm39)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p>Summary of the regions annotated to peaks:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>peakAnno</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Annotated peaks generated by ChIPseeker</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 64879/64879  peaks were annotated</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Genomic Annotation Summary:</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="do">##               Feature   Frequency</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 9    Promoter (&lt;=1kb) 36.09642565</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 10   Promoter (1-2kb)  8.69464696</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 11   Promoter (2-3kb)  6.88204196</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 4              5' UTR  0.12022380</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 3              3' UTR  1.63843462</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 1            1st Exon  0.04469859</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 7          Other Exon  3.04104564</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 2          1st Intron 10.21594044</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 8        Other Intron 18.13838068</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 6  Downstream (&lt;=300)  0.13717844</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 5   Distal Intergenic 14.99098321</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>peakAnno</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Annotated peaks generated by ChIPseeker</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 64879/64879  peaks were annotated</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Genomic Annotation Summary:</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="do">##               Feature   Frequency</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 9    Promoter (&lt;=1kb) 36.09642565</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 10   Promoter (1-2kb)  8.69464696</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 11   Promoter (2-3kb)  6.88204196</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 4              5' UTR  0.12022380</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 3              3' UTR  1.63843462</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 1            1st Exon  0.04469859</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 7          Other Exon  3.04104564</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 2          1st Intron 10.21594044</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 8        Other Intron 18.13838068</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 6  Downstream (&lt;=300)  0.13717844</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 5   Distal Intergenic 14.99098321</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Over 30% peaks localised to TSS, as expected in an ATAC-seq experiment.</p>
 <p><br> <br></p>
 <p>To inspect peak annotations:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>peakAnno_df<span class="ot">=</span><span class="fu">as.data.frame</span>(peakAnno)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>peakAnno_df<span class="ot">=</span><span class="fu">as.data.frame</span>(peakAnno)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<pre><code>  seqnames   start     end width strand   mcols.peakID        annotation geneChr geneStart geneEnd geneLength geneStrand             geneId       transcriptId distanceToTSS
-1        1 3050939 3052959  2021      * merged_peaks_1 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -90517
-2        1 3053048 3054634  1587      * merged_peaks_2 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -88842
-3        1 3054861 3055532   672      * merged_peaks_3 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -87944
-4        1 3057260 3057785   526      * merged_peaks_4 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -85691
-5        1 3059375 3061360  1986      * merged_peaks_5 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -82116
-6        1 3066555 3069092  2538      * merged_peaks_6 Distal Intergenic       1   3143476 3144545       1070          1 ENSMUSG00000102693 ENSMUST00000193812        -74384</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(peakAnno_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 3%">
+<col style="width: 4%">
+<col style="width: 8%">
+<col style="width: 10%">
+<col style="width: 4%">
+<col style="width: 5%">
+<col style="width: 4%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">seqnames</th>
+<th style="text-align: right;">start</th>
+<th style="text-align: right;">end</th>
+<th style="text-align: right;">width</th>
+<th style="text-align: left;">strand</th>
+<th style="text-align: left;">mcols.peakID</th>
+<th style="text-align: left;">annotation</th>
+<th style="text-align: right;">geneChr</th>
+<th style="text-align: right;">geneStart</th>
+<th style="text-align: right;">geneEnd</th>
+<th style="text-align: right;">geneLength</th>
+<th style="text-align: right;">geneStrand</th>
+<th style="text-align: left;">geneId</th>
+<th style="text-align: left;">transcriptId</th>
+<th style="text-align: right;">distanceToTSS</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">3050939</td>
+<td style="text-align: right;">3052959</td>
+<td style="text-align: right;">2021</td>
+<td style="text-align: left;">*</td>
+<td style="text-align: left;">merged_peaks_1</td>
+<td style="text-align: left;">Distal Intergenic</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3143476</td>
+<td style="text-align: right;">3144545</td>
+<td style="text-align: right;">1070</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">ENSMUSG00000102693</td>
+<td style="text-align: left;">ENSMUST00000193812</td>
+<td style="text-align: right;">-90517</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">3053048</td>
+<td style="text-align: right;">3054634</td>
+<td style="text-align: right;">1587</td>
+<td style="text-align: left;">*</td>
+<td style="text-align: left;">merged_peaks_2</td>
+<td style="text-align: left;">Distal Intergenic</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3143476</td>
+<td style="text-align: right;">3144545</td>
+<td style="text-align: right;">1070</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">ENSMUSG00000102693</td>
+<td style="text-align: left;">ENSMUST00000193812</td>
+<td style="text-align: right;">-88842</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">3054861</td>
+<td style="text-align: right;">3055532</td>
+<td style="text-align: right;">672</td>
+<td style="text-align: left;">*</td>
+<td style="text-align: left;">merged_peaks_3</td>
+<td style="text-align: left;">Distal Intergenic</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3143476</td>
+<td style="text-align: right;">3144545</td>
+<td style="text-align: right;">1070</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">ENSMUSG00000102693</td>
+<td style="text-align: left;">ENSMUST00000193812</td>
+<td style="text-align: right;">-87944</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">3057260</td>
+<td style="text-align: right;">3057785</td>
+<td style="text-align: right;">526</td>
+<td style="text-align: left;">*</td>
+<td style="text-align: left;">merged_peaks_4</td>
+<td style="text-align: left;">Distal Intergenic</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3143476</td>
+<td style="text-align: right;">3144545</td>
+<td style="text-align: right;">1070</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">ENSMUSG00000102693</td>
+<td style="text-align: left;">ENSMUST00000193812</td>
+<td style="text-align: right;">-85691</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">3059375</td>
+<td style="text-align: right;">3061360</td>
+<td style="text-align: right;">1986</td>
+<td style="text-align: left;">*</td>
+<td style="text-align: left;">merged_peaks_5</td>
+<td style="text-align: left;">Distal Intergenic</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3143476</td>
+<td style="text-align: right;">3144545</td>
+<td style="text-align: right;">1070</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">ENSMUSG00000102693</td>
+<td style="text-align: left;">ENSMUST00000193812</td>
+<td style="text-align: right;">-82116</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">3066555</td>
+<td style="text-align: right;">3069092</td>
+<td style="text-align: right;">2538</td>
+<td style="text-align: left;">*</td>
+<td style="text-align: left;">merged_peaks_6</td>
+<td style="text-align: left;">Distal Intergenic</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3143476</td>
+<td style="text-align: right;">3144545</td>
+<td style="text-align: right;">1070</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">ENSMUSG00000102693</td>
+<td style="text-align: left;">ENSMUST00000193812</td>
+<td style="text-align: right;">-74384</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 <p><br> <br></p>
 <p>We may want to include more gene related information:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>peakAnno_df<span class="ot">=</span>peakAnno_df<span class="sc">|&gt;</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(gene_annot_mm39, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"transcriptId"</span><span class="ot">=</span><span class="st">"ensembl_transcript_id"</span>))<span class="sc">|&gt;</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">peakID=</span>mcols.peakID)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>peakAnno_df<span class="ot">=</span>peakAnno_df<span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(gene_annot_mm39, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"transcriptId"</span><span class="ot">=</span><span class="st">"ensembl_transcript_id"</span>))<span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">peakID=</span>mcols.peakID)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br> <br></p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -771,55 +929,41 @@ saveRDS(peakAnno,
 </div>
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<pre><code>write.table(peakAnno_df, "Batf_WT_KO.merged_peaks.tsv", 
-    append = FALSE, 
-    quote = FALSE, 
-    sep = "\t",
-    row.names = FALSE,
-    col.names = TRUE, 
-    fileEncoding = "")</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(peakAnno_df, <span class="st">"Batf_WT_KO.merged_peaks.tsv"</span>, </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">append =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">quote =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">row.names =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.names =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fileEncoding =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br> <br></p>
-<pre><code>saveRDS(peakAnno_df, 
-  file = "assets/rds/Batf_WT_KO.merged_peaks.annot.rds", 
-  ascii = FALSE, 
-  version = NULL, 
-  compress = TRUE, 
-  refhook = NULL)</code></pre>
 </div>
 </div>
 </div>
 <p><br> <br></p>
 <p>We can also assess the read density at annotated TSS regions. The plot of read density at the transcription start sites (TSS) for all peaks is presented on <a href="#fig-tss-profile" class="quarto-xref">Figure&nbsp;1</a>.</p>
-<pre><code>promoter = getPromoters(TxDb=txdb_mm39, upstream=3000, downstream=3000)</code></pre>
-<!-- 
-
-```
-promoter = getPromoters(TxDb=txdb_mm39, upstream=3000, downstream=3000)
-saveRDS(promoter, 
-  file = "assets/rds/prom.ensembl.rds", 
-  ascii = FALSE, 
-  version = NULL, 
-  compress = TRUE, 
-  refhook = NULL)
-```
- -->
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>tagMatrix <span class="ot">=</span> <span class="fu">getTagMatrix</span>(peaks_gr, <span class="at">windows=</span>promoter)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing start_site regions by gene... 2026-09-27 00:08:29</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing tag matrix...  2026-09-27 00:08:29</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>TSS_profile <span class="ot">=</span> <span class="fu">plotAvgProf</span>(tagMatrix, <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">3000</span>, <span class="dv">3000</span>), <span class="at">xlab=</span><span class="st">"Genomic Region (5'-&gt;3')"</span>, <span class="at">ylab =</span> <span class="st">"Read Count in Peaks"</span>)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; plotting figure...             2026-09-27 00:08:53</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>promoter<span class="ot">=</span><span class="fu">getPromoters</span>(<span class="at">TxDb=</span>txdb_mm39, <span class="at">upstream=</span><span class="dv">3000</span>, <span class="at">downstream=</span><span class="dv">3000</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>tagMatrix<span class="ot">=</span><span class="fu">getTagMatrix</span>(peaks_gr, <span class="at">windows=</span>promoter)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing start_site regions by gene... 2026-09-28 14:07:53</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing tag matrix...  2026-09-28 14:07:53</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>TSS_profile<span class="ot">=</span><span class="fu">plotAvgProf</span>(tagMatrix, <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">3000</span>, <span class="dv">3000</span>), <span class="at">xlab=</span><span class="st">"Genomic Region (5'-&gt;3')"</span>, <span class="at">ylab =</span> <span class="st">"Read Count in Peaks"</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; plotting figure...             2026-09-28 14:08:17</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="fig-tss-profile" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-tss-profile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>TSS_profile</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>TSS_profile</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="index_files/figure-html/unnamed-chunk-14-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Plot of signal density in peaks in relation to transcription start sites (TSS). Expected is an enrichment of signal proximal to TSS."><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" style="width:99.0%"></a></p>
+<p><a href="index_files/figure-html/unnamed-chunk-29-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Plot of signal density in peaks in relation to transcription start sites (TSS). Expected is an enrichment of signal proximal to TSS."><img src="index_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" style="width:99.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -833,17 +977,17 @@ Figure&nbsp;1: Plot of signal density in peaks in relation to transcription star
 <p><br> <br></p>
 <p>We can also plot summary of the annotations:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>peakAnnoplot<span class="ot">=</span><span class="fu">upsetplot</span>(peakAnno, <span class="at">vennpie=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>peakAnnoplot<span class="ot">=</span><span class="fu">upsetplot</span>(peakAnno, <span class="at">vennpie=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="fig-annot-upset" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-annot-upset-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>peakAnnoplot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>peakAnnoplot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><a href="index_files/figure-html/unnamed-chunk-16-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Summary of features annotated to peaks."><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" style="width:99.0%"></a></p>
+<p><a href="index_files/figure-html/unnamed-chunk-31-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Summary of features annotated to peaks."><img src="index_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" style="width:99.0%"></a></p>
 </figure>
 </div>
 </div>
@@ -866,14 +1010,15 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<pre><code>pdf("TSSdist.pdf")
-  TSS_profile
-dev.off()
-
-pdf("AnnotVis.pdf")
-  peakAnnoplot
-dev.off()
-</code></pre>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="st">"TSSdist.pdf"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  TSS_profile</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="st">"AnnotVis.pdf"</span>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  peakAnnoplot</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </div>
 </div>
 </div>
@@ -891,26 +1036,31 @@ dev.off()
 <li><p>genes annotated to merged consensus peaks set ranked by an effect size metric (Gene Set Enrichment Analysis, GSEA).</p></li>
 </ul>
 <p><br> <br></p>
-<p>Let’s first annotate the consensus peaks with <strong>Reactome</strong>.</p>
-<p>Reactome uses <strong>entrez gene ID</strong> space.</p>
+<section id="pathway-over-representation-analysis" class="level3" data-number="8.1">
+<h3 data-number="8.1" class="anchored" data-anchor-id="pathway-over-representation-analysis"><span class="header-section-number">8.1</span> Pathway Over-Representation Analysis</h3>
+<p><br></p>
+<p>Overrepresentation analysis (ORA) is a method to test whether genes within given gene set are overepresented in the <strong>subset</strong> (open chromatin, DA peaks, etc.) <strong>vs.&nbsp;the universe</strong> (all genes).</p>
+<p><br></p>
+<p>Let’s first annotate the consensus peaks, representing open chromatin regions (OCRs) with <strong>Reactome</strong> pathways.</p>
+<p>Reactome uses <strong>entrez gene ID</strong> space for gene - pathway annotation.</p>
 <p><br> <br></p>
 <p>Reactome pathway enrichment of genes defined as the nearest feature to the peaks:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>entrez_ids<span class="ot">=</span>peakAnno_df<span class="sc">$</span>entrezgene_id</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>entrez_ids<span class="ot">=</span>entrez_ids[<span class="sc">!</span><span class="fu">is.na</span>(<span class="fu">unique</span>(entrez_ids))]</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>pathway.reac<span class="ot">=</span>ReactomePA<span class="sc">::</span><span class="fu">enrichPathway</span>(entrez_ids, <span class="at">organism =</span> <span class="st">"mouse"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>entrez_ids<span class="ot">=</span>peakAnno_df<span class="sc">$</span>entrezgene_id</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>entrez_ids<span class="ot">=</span>entrez_ids[<span class="sc">!</span><span class="fu">is.na</span>(<span class="fu">unique</span>(entrez_ids))]</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>pathway.reac<span class="ot">=</span>ReactomePA<span class="sc">::</span><span class="fu">enrichPathway</span>(entrez_ids, <span class="at">organism =</span> <span class="st">"mouse"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br> <br></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#previewing enriched Reactome pathways</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(<span class="fu">as.data.frame</span>(pathway.reac))</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "ID"             "Description"    "GeneRatio"      "BgRatio"       </span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] "RichFactor"     "FoldEnrichment" "zScore"         "pvalue"        </span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "p.adjust"       "qvalue"         "geneID"         "Count"</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co">#we skip the preview of some columns which contain long strings of gene IDs</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>pathway.reac[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>,<span class="dv">9</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#previewing enriched Reactome pathways</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(<span class="fu">as.data.frame</span>(pathway.reac))</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "ID"             "Description"    "GeneRatio"      "BgRatio"       </span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] "RichFactor"     "FoldEnrichment" "zScore"         "pvalue"        </span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "p.adjust"       "qvalue"         "geneID"         "Count"</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co">#we skip the preview of some columns which contain long strings of gene IDs</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>pathway.reac[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>,<span class="dv">9</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="caption-top table table-sm table-striped small">
@@ -1061,17 +1211,27 @@ dev.off()
 <li><p>Class I MHC mediated antigen processing &amp; presentation</p></li>
 </ul>
 <p><br> <br></p>
-<p>We can also check for GO terms enriched amongst DA OCRs by using GSEA.</p>
+</section>
+<section id="gene-set-enrichment-analysis" class="level3" data-number="8.2">
+<h3 data-number="8.2" class="anchored" data-anchor-id="gene-set-enrichment-analysis"><span class="header-section-number">8.2</span> Gene Set Enrichment Analysis</h3>
+<p><br></p>
+<p>Gene set enrichment analysis (GSEA) is a test whether gene set member genes are present towards to top of the <strong>ranked list</strong> of genes <span class="citation" data-cites="gsea">(<a href="#ref-gsea" role="doc-biblioref">Subramanian et al. 2005</a>)</span>. The rank usually corresponds to the effect size and statistical significance. Ties in the ranked list are discouraged, as they may lead to unexpected results.</p>
+<p><br></p>
+<p>We can check for GO terms enriched amongst DA OCRs by using GSEA.</p>
 <p>We need to read in the results of the DA analysis:</p>
+<p><br></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>DA_res<span class="ot">=</span><span class="fu">readRDS</span>(<span class="st">"assets/rds/Batf_WT_KO.merged_peaks.DA_TMM.annot.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>DA_res<span class="ot">=</span><span class="fu">readRDS</span>(<span class="st">"../../results/DA/objects/Batf_WT_KO.merged_peaks.DA_TMM.annot.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The metric to use in GSEA ideally should combine effect size and statistical significance. Ties in the ranked list are discouraged, as they may lead to unexpected results.</p>
+<p><br></p>
+<p>The metric to use in GSEA ideally should combine effect size and statistical significance.</p>
 <p>Common practice for constructing the metric based on <code>edgeR</code> results is:</p>
+<p><br></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>DA_res<span class="ot">=</span>DA_res<span class="sc">|&gt;</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">gsea_metric=</span>PValue<span class="sc">*</span>logFC)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>DA_res<span class="ot">=</span>DA_res<span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">gsea_metric=</span>PValue<span class="sc">*</span>logFC)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p><br></p>
 <p>GSEA statistical framework recommends that the ranked gene list is duplicate free; yet often a gene may have more than one peak annotated. If we leave the list as is (i.e.&nbsp;with duplicated gene ids and different value for ranking metric for each entry), we have no control over which peak / metric value gets selected for GSEA, which may lead to unexpected results. Applying some selection strategy for genes with multiple peaks helps with interpretability of the GSEA results.</p>
 <p><br> <br></p>
 <p>In this tutorial, we select:</p>
@@ -1081,56 +1241,98 @@ dev.off()
 </ul>
 <p>This will require some data wrangling:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>DA_res.prom.top<span class="ot">=</span>DA_res<span class="sc">|&gt;</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">gene_name=</span><span class="fu">coalesce</span>(external_gene_name,geneId))<span class="sc">|&gt;</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(annotation<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"Promoter"</span>))<span class="sc">|&gt;</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(gene_name)<span class="sc">|&gt;</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">gene_max_abs_lfc=</span><span class="fu">max</span>(<span class="fu">abs</span>(logFC)))<span class="sc">|&gt;</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">ungroup</span>()<span class="sc">|&gt;</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rowwise</span>()<span class="sc">|&gt;</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="fu">abs</span>(logFC)<span class="sc">==</span>gene_max_abs_lfc)<span class="sc">|&gt;</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>(gene_name, <span class="at">.keep_all=</span><span class="cn">TRUE</span>)<span class="sc">|&gt;</span></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>DA_res.prom.top<span class="ot">=</span>DA_res<span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">gene_name=</span><span class="fu">coalesce</span>(external_gene_name,geneId))<span class="sc">|&gt;</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(annotation<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"Promoter"</span>))<span class="sc">|&gt;</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(gene_name)<span class="sc">|&gt;</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">gene_max_abs_lfc=</span><span class="fu">max</span>(<span class="fu">abs</span>(logFC)))<span class="sc">|&gt;</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">ungroup</span>()<span class="sc">|&gt;</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rowwise</span>()<span class="sc">|&gt;</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="fu">abs</span>(logFC)<span class="sc">==</span>gene_max_abs_lfc)<span class="sc">|&gt;</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">distinct</span>(gene_name, <span class="at">.keep_all=</span><span class="cn">TRUE</span>)<span class="sc">|&gt;</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="do">## we also need to add entrez gene id and clean up entries without it</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>DA_res.prom.top<span class="ot">=</span>DA_res.prom.top<span class="sc">|&gt;</span></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(gene_annot_mm39[,<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>)], <span class="at">by=</span><span class="fu">c</span>(<span class="st">"transcriptId"</span><span class="ot">=</span><span class="st">"ensembl_transcript_id"</span>))<span class="sc">|&gt;</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">distinct</span>(entrezgene_id, <span class="at">.keep_all=</span><span class="cn">TRUE</span>)<span class="sc">|&gt;</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">filter_at</span>(<span class="fu">vars</span>(entrezgene_id), <span class="fu">all_vars</span>(<span class="sc">!</span><span class="fu">is.na</span>(.)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br> <br></p>
-<p>We can now create a named list, sort it, and use it in GSEA:</p>
-<pre><code>gene_list=DA_res.prom.top$gsea_metric #using pval*logFC
-names(gene_list)=DA_res.prom.top$geneId
-gene_list=gene_list[order(gene_list,decreasing=TRUE)]
-
-gsea_go=clusterProfiler::gseGO(
-        geneList     = gene_list,
-        OrgDb        = org.Mm.eg.db,
-        keyType      = "ENSEMBL",
-        ont          = "BP",
-        pvalueCutoff = 0.05,
-        seed         = TRUE,
-        verbose      = FALSE,
-        nPermSimple  = 1000,
-        eps          = 0,
-        scoreType    = "std",
-        by           = "fgsea"
-    )
-</code></pre>
+<p>We can now create a <em>named list</em> (names are entrez gene id) and sort it:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>gene_list<span class="ot">=</span>DA_res.prom.top<span class="sc">$</span>gsea_metric <span class="co">#using pval*logFC</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(gene_list)<span class="ot">=</span>DA_res.prom.top<span class="sc">$</span>entrezgene_id</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>gene_list<span class="ot">=</span>gene_list[<span class="fu">order</span>(gene_list,<span class="at">decreasing=</span><span class="cn">TRUE</span>)]</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gene_list)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>We prepare the GO terms and run GSEA:</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>all_go.bp<span class="ot">=</span><span class="fu">as.data.frame</span>(org.Mm.egGO)<span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Ontology<span class="sc">==</span><span class="st">"BP"</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>go_terms<span class="ot">=</span><span class="fu">as.list</span>(org.Mm.egGO2ALLEGS)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>go_terms<span class="ot">=</span>go_terms[<span class="fu">names</span>(go_terms)<span class="sc">%in%</span>all_go.bp<span class="sc">$</span>go_id]</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>gsea_go<span class="ot">=</span><span class="fu">fgsea</span>(<span class="at">pathways =</span> go_terms, </span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">stats    =</span> gene_list,</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">minSize  =</span> <span class="dv">15</span>,</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">maxSize  =</span> <span class="dv">500</span>,</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">scoreType    =</span> <span class="st">"std"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><br> <br></p>
-<p><code>clusterProfiler</code> outputs an object with its own internal structure, which can be used for plotting using <a href="https://yulab-smu.top/biomedical-knowledge-mining-book/enrichplot.html">enrichplot</a>. To view just the result of GSEA test we can:</p>
-<pre><code>go_res=gsea_go@result
-go_res=go_res|&gt;
-    rowwise()|&gt;
-    dplyr::mutate(core_enrichment_ls=strsplit(core_enrichment,split="/"))|&gt;
-    dplyr::mutate(gene_count=length(core_enrichment_ls))|&gt;    
-    dplyr::mutate(GeneRatio=length(core_enrichment_ls)/setSize)|&gt;
-    dplyr::select(!core_enrichment_ls)
-
-
-go_res_peaks_up=as.data.frame(go_res)|&gt;
-    dplyr::select(ID,Description,enrichmentScore,NES,p.adjust,qvalue,gene_count,setSize,GeneRatio)|&gt;
-    dplyr::filter(NES&gt;0)|&gt;
-    dplyr::arrange(desc(abs(NES)))</code></pre>
+<p>The resulting object contains basic statistics of the GSEA test.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">head</span>(gsea_go)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>     pathway      pval      padj    log2err         ES        NES size</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> GO<span class="sc">:</span><span class="dv">0000018</span> <span class="fl">0.9928571</span> <span class="fl">1.0000000</span> <span class="fl">0.05400883</span>  <span class="fl">0.1824006</span>  <span class="fl">0.6768697</span>  <span class="dv">120</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> GO<span class="sc">:</span><span class="dv">0000027</span> <span class="fl">0.9490446</span> <span class="fl">1.0000000</span> <span class="fl">0.05080541</span>  <span class="fl">0.2415674</span>  <span class="fl">0.6675675</span>   <span class="dv">24</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> GO<span class="sc">:</span><span class="dv">0000028</span> <span class="fl">0.1902072</span> <span class="fl">0.8391112</span> <span class="fl">0.13649044</span> <span class="sc">-</span><span class="fl">0.4844570</span> <span class="sc">-</span><span class="fl">1.2474683</span>   <span class="dv">19</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> GO<span class="sc">:</span><span class="dv">0000038</span> <span class="fl">0.2611111</span> <span class="fl">0.8800840</span> <span class="fl">0.11284336</span> <span class="sc">-</span><span class="fl">0.4165674</span> <span class="sc">-</span><span class="fl">1.1610107</span>   <span class="dv">27</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> GO<span class="sc">:</span><span class="dv">0000041</span> <span class="fl">0.3404255</span> <span class="fl">0.9065779</span> <span class="fl">0.09374654</span> <span class="sc">-</span><span class="fl">0.2997705</span> <span class="sc">-</span><span class="fl">1.0499786</span>   <span class="dv">83</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span> GO<span class="sc">:</span><span class="dv">0000045</span> <span class="fl">0.3294118</span> <span class="fl">0.8975844</span> <span class="fl">0.11331291</span>  <span class="fl">0.2753809</span>  <span class="fl">1.0549553</span>  <span class="dv">137</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>   leadingEdge</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">19264</span>, <span class="dv">7</span>....</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="dv">72831</span>, <span class="dv">2</span>....</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="dv">67097</span>, <span class="dv">9</span>....</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="dv">14081</span>, <span class="dv">1</span>....</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> <span class="dv">226025</span>, ....</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span> <span class="dv">240327</span>, ....</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>We can format these results:</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>gsea_go<span class="ot">=</span><span class="fu">as.data.frame</span>(gsea_go)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GO.db)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>go_terms<span class="ot">=</span><span class="fu">select</span>(GO.db, <span class="at">columns=</span><span class="fu">c</span>(<span class="st">"GOID"</span>,<span class="st">"TERM"</span>), <span class="at">keys=</span>gsea_go<span class="sc">$</span>pathway, <span class="at">keytype=</span><span class="st">"GOID"</span>)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>gsea_go<span class="ot">=</span>gsea_go<span class="sc">|&gt;</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(pval<span class="sc">&lt;</span><span class="fl">0.01</span>)<span class="sc">|&gt;</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(pathway,NES,pval,padj,size)<span class="sc">|&gt;</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(go_terms, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"pathway"</span><span class="ot">=</span><span class="st">"GOID"</span>))</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">head</span>(gsea_go)</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>     pathway       NES        pval      padj size                         TERM</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> GO<span class="sc">:</span><span class="dv">0002064</span> <span class="sc">-</span><span class="fl">1.539558</span> <span class="fl">0.001013134</span> <span class="fl">0.5754347</span>  <span class="dv">181</span>  epithelial cell development</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> GO<span class="sc">:</span><span class="dv">0003014</span> <span class="sc">-</span><span class="fl">1.542754</span> <span class="fl">0.004758923</span> <span class="fl">0.5757116</span>   <span class="dv">85</span>         renal system process</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> GO<span class="sc">:</span><span class="dv">0006814</span> <span class="sc">-</span><span class="fl">1.434938</span> <span class="fl">0.006011068</span> <span class="fl">0.5757116</span>  <span class="dv">171</span>         sodium ion transport</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> GO<span class="sc">:</span><span class="dv">0006836</span> <span class="sc">-</span><span class="fl">1.473969</span> <span class="fl">0.002957773</span> <span class="fl">0.5754347</span>  <span class="dv">184</span>   neurotransmitter transport</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> GO<span class="sc">:</span><span class="dv">0007431</span> <span class="sc">-</span><span class="fl">1.702995</span> <span class="fl">0.003805549</span> <span class="fl">0.5757116</span>   <span class="dv">31</span>   salivary gland development</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span> GO<span class="sc">:</span><span class="dv">0007435</span> <span class="sc">-</span><span class="fl">1.738422</span> <span class="fl">0.002137247</span> <span class="fl">0.5754347</span>   <span class="dv">27</span> salivary gland morphogenesis</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Upon object inspection we can see terms related to immune cell biology, amongst other GO terms.</p>
+<ul>
+<li><p>antigen processing and presentation (GO:0019882)</p></li>
+<li><p>antigen processing and presentation of peptide antigen (GO:0048002)</p></li>
+</ul>
 <p><br> <br></p>
-<p>Upon object inspection we can see terms related to interleukin signalling, amongst other GO terms.</p>
 <p><br> <br></p>
-<p><br> <br></p>
+</section>
 </section>
 <section id="session-info" class="level2" data-number="9">
 <h2 data-number="9" class="anchored" data-anchor-id="session-info"><span class="header-section-number">9</span> Session Info</h2>
@@ -1148,189 +1350,188 @@ go_res_peaks_up=as.data.frame(go_res)|&gt;
 <div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="do">## R version 4.6.1 (2026-06-24)</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Platform: x86_64-pc-linux-gnu</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Running under: Ubuntu 24.04.5 LTS</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Matrix products: default</span></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="do">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="do">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0</span></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="do">## locale:</span></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       </span></span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   </span></span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          </span></span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   </span></span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a><span class="do">## time zone: UTC</span></span>
-<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="do">## tzcode source: system (glibc)</span></span>
-<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a><span class="do">## attached base packages:</span></span>
-<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] stats4    stats     graphics  grDevices datasets  utils     methods  </span></span>
-<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [8] base     </span></span>
-<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a><span class="do">## other attached packages:</span></span>
-<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] ReactomePA_1.56.0      org.Mm.eg.db_3.23.0    clusterProfiler_4.20.0</span></span>
-<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] txdbmaker_1.8.0        GenomicFeatures_1.64.0 AnnotationDbi_1.74.0  </span></span>
-<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] Biobase_2.72.0         biomaRt_2.68.0         ggimage_0.3.5         </span></span>
-<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] ggupset_0.4.1          ChIPseeker_1.48.0      GenomicRanges_1.64.0  </span></span>
-<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] Seqinfo_1.2.0          IRanges_2.46.0         S4Vectors_0.50.2      </span></span>
-<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] BiocGenerics_0.58.1    generics_0.1.4         kableExtra_1.4.1      </span></span>
-<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] lubridate_1.9.5        forcats_1.0.1          stringr_1.6.0         </span></span>
-<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a><span class="do">## [22] dplyr_1.2.1            purrr_1.2.2            readr_2.2.0           </span></span>
-<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a><span class="do">## [25] tidyr_1.3.2            tibble_3.3.1           ggplot2_4.0.3         </span></span>
-<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a><span class="do">## [28] tidyverse_2.0.0        knitr_1.51            </span></span>
-<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a><span class="do">## loaded via a namespace (and not attached):</span></span>
-<span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a><span class="do">##   [1] splines_4.6.1                           </span></span>
-<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a><span class="do">##   [2] BiocIO_1.22.0                           </span></span>
-<span id="cb33-38"><a href="#cb33-38" aria-hidden="true" tabindex="-1"></a><span class="do">##   [3] bitops_1.0-9                            </span></span>
-<span id="cb33-39"><a href="#cb33-39" aria-hidden="true" tabindex="-1"></a><span class="do">##   [4] ggplotify_0.1.3                         </span></span>
-<span id="cb33-40"><a href="#cb33-40" aria-hidden="true" tabindex="-1"></a><span class="do">##   [5] filelock_1.0.3                          </span></span>
-<span id="cb33-41"><a href="#cb33-41" aria-hidden="true" tabindex="-1"></a><span class="do">##   [6] polyclip_1.10-7                         </span></span>
-<span id="cb33-42"><a href="#cb33-42" aria-hidden="true" tabindex="-1"></a><span class="do">##   [7] graph_1.90.0                            </span></span>
-<span id="cb33-43"><a href="#cb33-43" aria-hidden="true" tabindex="-1"></a><span class="do">##   [8] enrichit_0.2.4                          </span></span>
-<span id="cb33-44"><a href="#cb33-44" aria-hidden="true" tabindex="-1"></a><span class="do">##   [9] XML_3.99-0.23                           </span></span>
-<span id="cb33-45"><a href="#cb33-45" aria-hidden="true" tabindex="-1"></a><span class="do">##  [10] lifecycle_1.0.5                         </span></span>
-<span id="cb33-46"><a href="#cb33-46" aria-hidden="true" tabindex="-1"></a><span class="do">##  [11] httr2_1.2.2                             </span></span>
-<span id="cb33-47"><a href="#cb33-47" aria-hidden="true" tabindex="-1"></a><span class="do">##  [12] processx_3.9.0                          </span></span>
-<span id="cb33-48"><a href="#cb33-48" aria-hidden="true" tabindex="-1"></a><span class="do">##  [13] lattice_0.22-9                          </span></span>
-<span id="cb33-49"><a href="#cb33-49" aria-hidden="true" tabindex="-1"></a><span class="do">##  [14] MASS_7.3-65                             </span></span>
-<span id="cb33-50"><a href="#cb33-50" aria-hidden="true" tabindex="-1"></a><span class="do">##  [15] magrittr_2.0.5                          </span></span>
-<span id="cb33-51"><a href="#cb33-51" aria-hidden="true" tabindex="-1"></a><span class="do">##  [16] rmarkdown_2.31                          </span></span>
-<span id="cb33-52"><a href="#cb33-52" aria-hidden="true" tabindex="-1"></a><span class="do">##  [17] yaml_2.3.12                             </span></span>
-<span id="cb33-53"><a href="#cb33-53" aria-hidden="true" tabindex="-1"></a><span class="do">##  [18] plotrix_3.8-14                          </span></span>
-<span id="cb33-54"><a href="#cb33-54" aria-hidden="true" tabindex="-1"></a><span class="do">##  [19] otel_0.2.0                              </span></span>
-<span id="cb33-55"><a href="#cb33-55" aria-hidden="true" tabindex="-1"></a><span class="do">##  [20] ggtangle_0.1.2                          </span></span>
-<span id="cb33-56"><a href="#cb33-56" aria-hidden="true" tabindex="-1"></a><span class="do">##  [21] DBI_1.3.0                               </span></span>
-<span id="cb33-57"><a href="#cb33-57" aria-hidden="true" tabindex="-1"></a><span class="do">##  [22] RColorBrewer_1.1-3                      </span></span>
-<span id="cb33-58"><a href="#cb33-58" aria-hidden="true" tabindex="-1"></a><span class="do">##  [23] abind_1.4-8                             </span></span>
-<span id="cb33-59"><a href="#cb33-59" aria-hidden="true" tabindex="-1"></a><span class="do">##  [24] ggraph_2.2.2                            </span></span>
-<span id="cb33-60"><a href="#cb33-60" aria-hidden="true" tabindex="-1"></a><span class="do">##  [25] RCurl_1.98-1.18                         </span></span>
-<span id="cb33-61"><a href="#cb33-61" aria-hidden="true" tabindex="-1"></a><span class="do">##  [26] yulab.utils_0.2.5                       </span></span>
-<span id="cb33-62"><a href="#cb33-62" aria-hidden="true" tabindex="-1"></a><span class="do">##  [27] tweenr_2.0.3                            </span></span>
-<span id="cb33-63"><a href="#cb33-63" aria-hidden="true" tabindex="-1"></a><span class="do">##  [28] rappdirs_0.3.4                          </span></span>
-<span id="cb33-64"><a href="#cb33-64" aria-hidden="true" tabindex="-1"></a><span class="do">##  [29] aisdk_1.4.12                            </span></span>
-<span id="cb33-65"><a href="#cb33-65" aria-hidden="true" tabindex="-1"></a><span class="do">##  [30] gdtools_0.5.1                           </span></span>
-<span id="cb33-66"><a href="#cb33-66" aria-hidden="true" tabindex="-1"></a><span class="do">##  [31] enrichplot_1.32.0                       </span></span>
-<span id="cb33-67"><a href="#cb33-67" aria-hidden="true" tabindex="-1"></a><span class="do">##  [32] ggrepel_0.9.8                           </span></span>
-<span id="cb33-68"><a href="#cb33-68" aria-hidden="true" tabindex="-1"></a><span class="do">##  [33] tidytree_0.4.8                          </span></span>
-<span id="cb33-69"><a href="#cb33-69" aria-hidden="true" tabindex="-1"></a><span class="do">##  [34] reactome.db_1.96.0                      </span></span>
-<span id="cb33-70"><a href="#cb33-70" aria-hidden="true" tabindex="-1"></a><span class="do">##  [35] svglite_2.2.2                           </span></span>
-<span id="cb33-71"><a href="#cb33-71" aria-hidden="true" tabindex="-1"></a><span class="do">##  [36] codetools_0.2-20                        </span></span>
-<span id="cb33-72"><a href="#cb33-72" aria-hidden="true" tabindex="-1"></a><span class="do">##  [37] DelayedArray_0.38.1                     </span></span>
-<span id="cb33-73"><a href="#cb33-73" aria-hidden="true" tabindex="-1"></a><span class="do">##  [38] DOSE_4.6.0                              </span></span>
-<span id="cb33-74"><a href="#cb33-74" aria-hidden="true" tabindex="-1"></a><span class="do">##  [39] xml2_1.6.0                              </span></span>
-<span id="cb33-75"><a href="#cb33-75" aria-hidden="true" tabindex="-1"></a><span class="do">##  [40] ggforce_0.5.0                           </span></span>
-<span id="cb33-76"><a href="#cb33-76" aria-hidden="true" tabindex="-1"></a><span class="do">##  [41] tidyselect_1.2.1                        </span></span>
-<span id="cb33-77"><a href="#cb33-77" aria-hidden="true" tabindex="-1"></a><span class="do">##  [42] aplot_0.3.1                             </span></span>
-<span id="cb33-78"><a href="#cb33-78" aria-hidden="true" tabindex="-1"></a><span class="do">##  [43] UCSC.utils_1.8.0                        </span></span>
-<span id="cb33-79"><a href="#cb33-79" aria-hidden="true" tabindex="-1"></a><span class="do">##  [44] farver_2.1.2                            </span></span>
-<span id="cb33-80"><a href="#cb33-80" aria-hidden="true" tabindex="-1"></a><span class="do">##  [45] viridis_0.6.5                           </span></span>
-<span id="cb33-81"><a href="#cb33-81" aria-hidden="true" tabindex="-1"></a><span class="do">##  [46] matrixStats_1.5.0                       </span></span>
-<span id="cb33-82"><a href="#cb33-82" aria-hidden="true" tabindex="-1"></a><span class="do">##  [47] BiocFileCache_3.2.0                     </span></span>
-<span id="cb33-83"><a href="#cb33-83" aria-hidden="true" tabindex="-1"></a><span class="do">##  [48] GenomicAlignments_1.48.0                </span></span>
-<span id="cb33-84"><a href="#cb33-84" aria-hidden="true" tabindex="-1"></a><span class="do">##  [49] jsonlite_2.0.0                          </span></span>
-<span id="cb33-85"><a href="#cb33-85" aria-hidden="true" tabindex="-1"></a><span class="do">##  [50] tidygraph_1.3.1                         </span></span>
-<span id="cb33-86"><a href="#cb33-86" aria-hidden="true" tabindex="-1"></a><span class="do">##  [51] systemfonts_1.3.2                       </span></span>
-<span id="cb33-87"><a href="#cb33-87" aria-hidden="true" tabindex="-1"></a><span class="do">##  [52] tools_4.6.1                             </span></span>
-<span id="cb33-88"><a href="#cb33-88" aria-hidden="true" tabindex="-1"></a><span class="do">##  [53] ggnewscale_0.5.2                        </span></span>
-<span id="cb33-89"><a href="#cb33-89" aria-hidden="true" tabindex="-1"></a><span class="do">##  [54] progress_1.2.3                          </span></span>
-<span id="cb33-90"><a href="#cb33-90" aria-hidden="true" tabindex="-1"></a><span class="do">##  [55] treeio_1.36.1                           </span></span>
-<span id="cb33-91"><a href="#cb33-91" aria-hidden="true" tabindex="-1"></a><span class="do">##  [56] TxDb.Hsapiens.UCSC.hg19.knownGene_3.22.1</span></span>
-<span id="cb33-92"><a href="#cb33-92" aria-hidden="true" tabindex="-1"></a><span class="do">##  [57] Rcpp_1.1.1-1.1                          </span></span>
-<span id="cb33-93"><a href="#cb33-93" aria-hidden="true" tabindex="-1"></a><span class="do">##  [58] glue_1.8.1                              </span></span>
-<span id="cb33-94"><a href="#cb33-94" aria-hidden="true" tabindex="-1"></a><span class="do">##  [59] gridExtra_2.3.1                         </span></span>
-<span id="cb33-95"><a href="#cb33-95" aria-hidden="true" tabindex="-1"></a><span class="do">##  [60] SparseArray_1.12.2                      </span></span>
-<span id="cb33-96"><a href="#cb33-96" aria-hidden="true" tabindex="-1"></a><span class="do">##  [61] xfun_0.57                               </span></span>
-<span id="cb33-97"><a href="#cb33-97" aria-hidden="true" tabindex="-1"></a><span class="do">##  [62] qvalue_2.44.0                           </span></span>
-<span id="cb33-98"><a href="#cb33-98" aria-hidden="true" tabindex="-1"></a><span class="do">##  [63] MatrixGenerics_1.24.0                   </span></span>
-<span id="cb33-99"><a href="#cb33-99" aria-hidden="true" tabindex="-1"></a><span class="do">##  [64] GenomeInfoDb_1.48.0                     </span></span>
-<span id="cb33-100"><a href="#cb33-100" aria-hidden="true" tabindex="-1"></a><span class="do">##  [65] withr_3.0.2                             </span></span>
-<span id="cb33-101"><a href="#cb33-101" aria-hidden="true" tabindex="-1"></a><span class="do">##  [66] BiocManager_1.30.27                     </span></span>
-<span id="cb33-102"><a href="#cb33-102" aria-hidden="true" tabindex="-1"></a><span class="do">##  [67] fastmap_1.2.0                           </span></span>
-<span id="cb33-103"><a href="#cb33-103" aria-hidden="true" tabindex="-1"></a><span class="do">##  [68] boot_1.3-32                             </span></span>
-<span id="cb33-104"><a href="#cb33-104" aria-hidden="true" tabindex="-1"></a><span class="do">##  [69] callr_3.8.0                             </span></span>
-<span id="cb33-105"><a href="#cb33-105" aria-hidden="true" tabindex="-1"></a><span class="do">##  [70] caTools_1.18.3                          </span></span>
-<span id="cb33-106"><a href="#cb33-106" aria-hidden="true" tabindex="-1"></a><span class="do">##  [71] digest_0.6.39                           </span></span>
-<span id="cb33-107"><a href="#cb33-107" aria-hidden="true" tabindex="-1"></a><span class="do">##  [72] timechange_0.4.0                        </span></span>
-<span id="cb33-108"><a href="#cb33-108" aria-hidden="true" tabindex="-1"></a><span class="do">##  [73] R6_2.6.1                                </span></span>
-<span id="cb33-109"><a href="#cb33-109" aria-hidden="true" tabindex="-1"></a><span class="do">##  [74] gridGraphics_0.5-1                      </span></span>
-<span id="cb33-110"><a href="#cb33-110" aria-hidden="true" tabindex="-1"></a><span class="do">##  [75] textshaping_1.0.5                       </span></span>
-<span id="cb33-111"><a href="#cb33-111" aria-hidden="true" tabindex="-1"></a><span class="do">##  [76] GO.db_3.23.1                            </span></span>
-<span id="cb33-112"><a href="#cb33-112" aria-hidden="true" tabindex="-1"></a><span class="do">##  [77] gtools_3.9.5                            </span></span>
-<span id="cb33-113"><a href="#cb33-113" aria-hidden="true" tabindex="-1"></a><span class="do">##  [78] dichromat_2.0-1                         </span></span>
-<span id="cb33-114"><a href="#cb33-114" aria-hidden="true" tabindex="-1"></a><span class="do">##  [79] RSQLite_3.53.1                          </span></span>
-<span id="cb33-115"><a href="#cb33-115" aria-hidden="true" tabindex="-1"></a><span class="do">##  [80] cigarillo_1.2.0                         </span></span>
-<span id="cb33-116"><a href="#cb33-116" aria-hidden="true" tabindex="-1"></a><span class="do">##  [81] fontLiberation_0.1.0                    </span></span>
-<span id="cb33-117"><a href="#cb33-117" aria-hidden="true" tabindex="-1"></a><span class="do">##  [82] renv_1.2.3                              </span></span>
-<span id="cb33-118"><a href="#cb33-118" aria-hidden="true" tabindex="-1"></a><span class="do">##  [83] rtracklayer_1.72.0                      </span></span>
-<span id="cb33-119"><a href="#cb33-119" aria-hidden="true" tabindex="-1"></a><span class="do">##  [84] graphlayouts_1.2.5                      </span></span>
-<span id="cb33-120"><a href="#cb33-120" aria-hidden="true" tabindex="-1"></a><span class="do">##  [85] prettyunits_1.2.0                       </span></span>
-<span id="cb33-121"><a href="#cb33-121" aria-hidden="true" tabindex="-1"></a><span class="do">##  [86] httr_1.4.8                              </span></span>
-<span id="cb33-122"><a href="#cb33-122" aria-hidden="true" tabindex="-1"></a><span class="do">##  [87] htmlwidgets_1.6.4                       </span></span>
-<span id="cb33-123"><a href="#cb33-123" aria-hidden="true" tabindex="-1"></a><span class="do">##  [88] S4Arrays_1.12.1                         </span></span>
-<span id="cb33-124"><a href="#cb33-124" aria-hidden="true" tabindex="-1"></a><span class="do">##  [89] scatterpie_0.2.6                        </span></span>
-<span id="cb33-125"><a href="#cb33-125" aria-hidden="true" tabindex="-1"></a><span class="do">##  [90] graphite_1.58.0                         </span></span>
-<span id="cb33-126"><a href="#cb33-126" aria-hidden="true" tabindex="-1"></a><span class="do">##  [91] pkgconfig_2.0.3                         </span></span>
-<span id="cb33-127"><a href="#cb33-127" aria-hidden="true" tabindex="-1"></a><span class="do">##  [92] gtable_0.3.6                            </span></span>
-<span id="cb33-128"><a href="#cb33-128" aria-hidden="true" tabindex="-1"></a><span class="do">##  [93] blob_1.3.0                              </span></span>
-<span id="cb33-129"><a href="#cb33-129" aria-hidden="true" tabindex="-1"></a><span class="do">##  [94] S7_0.2.2                                </span></span>
-<span id="cb33-130"><a href="#cb33-130" aria-hidden="true" tabindex="-1"></a><span class="do">##  [95] XVector_0.52.0                          </span></span>
-<span id="cb33-131"><a href="#cb33-131" aria-hidden="true" tabindex="-1"></a><span class="do">##  [96] htmltools_0.5.9                         </span></span>
-<span id="cb33-132"><a href="#cb33-132" aria-hidden="true" tabindex="-1"></a><span class="do">##  [97] fontBitstreamVera_0.1.1                 </span></span>
-<span id="cb33-133"><a href="#cb33-133" aria-hidden="true" tabindex="-1"></a><span class="do">##  [98] scales_1.4.0                            </span></span>
-<span id="cb33-134"><a href="#cb33-134" aria-hidden="true" tabindex="-1"></a><span class="do">##  [99] png_0.1-9                               </span></span>
-<span id="cb33-135"><a href="#cb33-135" aria-hidden="true" tabindex="-1"></a><span class="do">## [100] ggfun_0.2.1                             </span></span>
-<span id="cb33-136"><a href="#cb33-136" aria-hidden="true" tabindex="-1"></a><span class="do">## [101] rstudioapi_0.19.0                       </span></span>
-<span id="cb33-137"><a href="#cb33-137" aria-hidden="true" tabindex="-1"></a><span class="do">## [102] tzdb_0.5.0                              </span></span>
-<span id="cb33-138"><a href="#cb33-138" aria-hidden="true" tabindex="-1"></a><span class="do">## [103] reshape2_1.4.5                          </span></span>
-<span id="cb33-139"><a href="#cb33-139" aria-hidden="true" tabindex="-1"></a><span class="do">## [104] rjson_0.2.23                            </span></span>
-<span id="cb33-140"><a href="#cb33-140" aria-hidden="true" tabindex="-1"></a><span class="do">## [105] nlme_3.1-169                            </span></span>
-<span id="cb33-141"><a href="#cb33-141" aria-hidden="true" tabindex="-1"></a><span class="do">## [106] curl_7.1.0                              </span></span>
-<span id="cb33-142"><a href="#cb33-142" aria-hidden="true" tabindex="-1"></a><span class="do">## [107] cachem_1.1.0                            </span></span>
-<span id="cb33-143"><a href="#cb33-143" aria-hidden="true" tabindex="-1"></a><span class="do">## [108] KernSmooth_2.23-26                      </span></span>
-<span id="cb33-144"><a href="#cb33-144" aria-hidden="true" tabindex="-1"></a><span class="do">## [109] parallel_4.6.1                          </span></span>
-<span id="cb33-145"><a href="#cb33-145" aria-hidden="true" tabindex="-1"></a><span class="do">## [110] restfulr_0.0.16                         </span></span>
-<span id="cb33-146"><a href="#cb33-146" aria-hidden="true" tabindex="-1"></a><span class="do">## [111] pillar_1.11.1                           </span></span>
-<span id="cb33-147"><a href="#cb33-147" aria-hidden="true" tabindex="-1"></a><span class="do">## [112] grid_4.6.1                              </span></span>
-<span id="cb33-148"><a href="#cb33-148" aria-hidden="true" tabindex="-1"></a><span class="do">## [113] vctrs_0.7.3                             </span></span>
-<span id="cb33-149"><a href="#cb33-149" aria-hidden="true" tabindex="-1"></a><span class="do">## [114] gplots_3.3.0                            </span></span>
-<span id="cb33-150"><a href="#cb33-150" aria-hidden="true" tabindex="-1"></a><span class="do">## [115] tidydr_0.0.6                            </span></span>
-<span id="cb33-151"><a href="#cb33-151" aria-hidden="true" tabindex="-1"></a><span class="do">## [116] dbplyr_2.5.2                            </span></span>
-<span id="cb33-152"><a href="#cb33-152" aria-hidden="true" tabindex="-1"></a><span class="do">## [117] cluster_2.1.8.2                         </span></span>
-<span id="cb33-153"><a href="#cb33-153" aria-hidden="true" tabindex="-1"></a><span class="do">## [118] evaluate_1.0.5                          </span></span>
-<span id="cb33-154"><a href="#cb33-154" aria-hidden="true" tabindex="-1"></a><span class="do">## [119] magick_2.9.1                            </span></span>
-<span id="cb33-155"><a href="#cb33-155" aria-hidden="true" tabindex="-1"></a><span class="do">## [120] cli_3.6.6                               </span></span>
-<span id="cb33-156"><a href="#cb33-156" aria-hidden="true" tabindex="-1"></a><span class="do">## [121] compiler_4.6.1                          </span></span>
-<span id="cb33-157"><a href="#cb33-157" aria-hidden="true" tabindex="-1"></a><span class="do">## [122] Rsamtools_2.28.0                        </span></span>
-<span id="cb33-158"><a href="#cb33-158" aria-hidden="true" tabindex="-1"></a><span class="do">## [123] rlang_1.3.0                             </span></span>
-<span id="cb33-159"><a href="#cb33-159" aria-hidden="true" tabindex="-1"></a><span class="do">## [124] crayon_1.5.3                            </span></span>
-<span id="cb33-160"><a href="#cb33-160" aria-hidden="true" tabindex="-1"></a><span class="do">## [125] labeling_0.4.3                          </span></span>
-<span id="cb33-161"><a href="#cb33-161" aria-hidden="true" tabindex="-1"></a><span class="do">## [126] ps_1.9.3                                </span></span>
-<span id="cb33-162"><a href="#cb33-162" aria-hidden="true" tabindex="-1"></a><span class="do">## [127] plyr_1.8.9                              </span></span>
-<span id="cb33-163"><a href="#cb33-163" aria-hidden="true" tabindex="-1"></a><span class="do">## [128] fs_2.1.0                                </span></span>
-<span id="cb33-164"><a href="#cb33-164" aria-hidden="true" tabindex="-1"></a><span class="do">## [129] ggiraph_0.9.6                           </span></span>
-<span id="cb33-165"><a href="#cb33-165" aria-hidden="true" tabindex="-1"></a><span class="do">## [130] stringi_1.8.7                           </span></span>
-<span id="cb33-166"><a href="#cb33-166" aria-hidden="true" tabindex="-1"></a><span class="do">## [131] viridisLite_0.4.3                       </span></span>
-<span id="cb33-167"><a href="#cb33-167" aria-hidden="true" tabindex="-1"></a><span class="do">## [132] BiocParallel_1.46.0                     </span></span>
-<span id="cb33-168"><a href="#cb33-168" aria-hidden="true" tabindex="-1"></a><span class="do">## [133] Biostrings_2.80.0                       </span></span>
-<span id="cb33-169"><a href="#cb33-169" aria-hidden="true" tabindex="-1"></a><span class="do">## [134] lazyeval_0.2.3                          </span></span>
-<span id="cb33-170"><a href="#cb33-170" aria-hidden="true" tabindex="-1"></a><span class="do">## [135] GOSemSim_2.38.3                         </span></span>
-<span id="cb33-171"><a href="#cb33-171" aria-hidden="true" tabindex="-1"></a><span class="do">## [136] fontquiver_0.2.1                        </span></span>
-<span id="cb33-172"><a href="#cb33-172" aria-hidden="true" tabindex="-1"></a><span class="do">## [137] Matrix_1.7-5                            </span></span>
-<span id="cb33-173"><a href="#cb33-173" aria-hidden="true" tabindex="-1"></a><span class="do">## [138] hms_1.1.4                               </span></span>
-<span id="cb33-174"><a href="#cb33-174" aria-hidden="true" tabindex="-1"></a><span class="do">## [139] patchwork_1.3.2                         </span></span>
-<span id="cb33-175"><a href="#cb33-175" aria-hidden="true" tabindex="-1"></a><span class="do">## [140] bit64_4.8.2                             </span></span>
-<span id="cb33-176"><a href="#cb33-176" aria-hidden="true" tabindex="-1"></a><span class="do">## [141] KEGGREST_1.52.0                         </span></span>
-<span id="cb33-177"><a href="#cb33-177" aria-hidden="true" tabindex="-1"></a><span class="do">## [142] SummarizedExperiment_1.42.0             </span></span>
-<span id="cb33-178"><a href="#cb33-178" aria-hidden="true" tabindex="-1"></a><span class="do">## [143] igraph_2.3.3                            </span></span>
-<span id="cb33-179"><a href="#cb33-179" aria-hidden="true" tabindex="-1"></a><span class="do">## [144] memoise_2.0.1                           </span></span>
-<span id="cb33-180"><a href="#cb33-180" aria-hidden="true" tabindex="-1"></a><span class="do">## [145] ggtree_4.2.0                            </span></span>
-<span id="cb33-181"><a href="#cb33-181" aria-hidden="true" tabindex="-1"></a><span class="do">## [146] bit_4.6.0                               </span></span>
-<span id="cb33-182"><a href="#cb33-182" aria-hidden="true" tabindex="-1"></a><span class="do">## [147] gson_0.2.1                              </span></span>
-<span id="cb33-183"><a href="#cb33-183" aria-hidden="true" tabindex="-1"></a><span class="do">## [148] ape_5.8-1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="do">## R version 4.6.1 (2026-06-24)</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Platform: x86_64-pc-linux-gnu</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Running under: Ubuntu 24.04.5 LTS</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Matrix products: default</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="do">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="do">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="do">## locale:</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       </span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   </span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          </span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   </span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a><span class="do">## time zone: UTC</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a><span class="do">## tzcode source: system (glibc)</span></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a><span class="do">## attached base packages:</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] stats4    stats     graphics  grDevices datasets  utils     methods  </span></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [8] base     </span></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a><span class="do">## other attached packages:</span></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] ReactomePA_1.56.0      fgsea_1.38.0           org.Mm.eg.db_3.23.0   </span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] txdbmaker_1.8.0        GenomicFeatures_1.64.0 AnnotationDbi_1.74.0  </span></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] Biobase_2.72.0         biomaRt_2.68.0         ggimage_0.3.5         </span></span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] ggupset_0.4.1          ChIPseeker_1.48.0      GenomicRanges_1.64.0  </span></span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] Seqinfo_1.2.0          IRanges_2.46.0         S4Vectors_0.50.2      </span></span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] BiocGenerics_0.58.1    generics_0.1.4         kableExtra_1.4.1      </span></span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] lubridate_1.9.5        forcats_1.0.1          stringr_1.6.0         </span></span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a><span class="do">## [22] dplyr_1.2.1            purrr_1.2.2            readr_2.2.0           </span></span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a><span class="do">## [25] tidyr_1.3.2            tibble_3.3.1           ggplot2_4.0.3         </span></span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a><span class="do">## [28] tidyverse_2.0.0        knitr_1.51            </span></span>
+<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a><span class="do">## loaded via a namespace (and not attached):</span></span>
+<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a><span class="do">##   [1] splines_4.6.1                           </span></span>
+<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a><span class="do">##   [2] BiocIO_1.22.0                           </span></span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a><span class="do">##   [3] bitops_1.0-9                            </span></span>
+<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a><span class="do">##   [4] ggplotify_0.1.3                         </span></span>
+<span id="cb36-40"><a href="#cb36-40" aria-hidden="true" tabindex="-1"></a><span class="do">##   [5] filelock_1.0.3                          </span></span>
+<span id="cb36-41"><a href="#cb36-41" aria-hidden="true" tabindex="-1"></a><span class="do">##   [6] polyclip_1.10-7                         </span></span>
+<span id="cb36-42"><a href="#cb36-42" aria-hidden="true" tabindex="-1"></a><span class="do">##   [7] graph_1.90.0                            </span></span>
+<span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a><span class="do">##   [8] enrichit_0.2.4                          </span></span>
+<span id="cb36-44"><a href="#cb36-44" aria-hidden="true" tabindex="-1"></a><span class="do">##   [9] XML_3.99-0.23                           </span></span>
+<span id="cb36-45"><a href="#cb36-45" aria-hidden="true" tabindex="-1"></a><span class="do">##  [10] lifecycle_1.0.5                         </span></span>
+<span id="cb36-46"><a href="#cb36-46" aria-hidden="true" tabindex="-1"></a><span class="do">##  [11] httr2_1.2.2                             </span></span>
+<span id="cb36-47"><a href="#cb36-47" aria-hidden="true" tabindex="-1"></a><span class="do">##  [12] lattice_0.22-9                          </span></span>
+<span id="cb36-48"><a href="#cb36-48" aria-hidden="true" tabindex="-1"></a><span class="do">##  [13] MASS_7.3-65                             </span></span>
+<span id="cb36-49"><a href="#cb36-49" aria-hidden="true" tabindex="-1"></a><span class="do">##  [14] magrittr_2.0.5                          </span></span>
+<span id="cb36-50"><a href="#cb36-50" aria-hidden="true" tabindex="-1"></a><span class="do">##  [15] rmarkdown_2.31                          </span></span>
+<span id="cb36-51"><a href="#cb36-51" aria-hidden="true" tabindex="-1"></a><span class="do">##  [16] yaml_2.3.12                             </span></span>
+<span id="cb36-52"><a href="#cb36-52" aria-hidden="true" tabindex="-1"></a><span class="do">##  [17] plotrix_3.8-14                          </span></span>
+<span id="cb36-53"><a href="#cb36-53" aria-hidden="true" tabindex="-1"></a><span class="do">##  [18] otel_0.2.0                              </span></span>
+<span id="cb36-54"><a href="#cb36-54" aria-hidden="true" tabindex="-1"></a><span class="do">##  [19] ggtangle_0.1.2                          </span></span>
+<span id="cb36-55"><a href="#cb36-55" aria-hidden="true" tabindex="-1"></a><span class="do">##  [20] cowplot_1.2.0                           </span></span>
+<span id="cb36-56"><a href="#cb36-56" aria-hidden="true" tabindex="-1"></a><span class="do">##  [21] DBI_1.3.0                               </span></span>
+<span id="cb36-57"><a href="#cb36-57" aria-hidden="true" tabindex="-1"></a><span class="do">##  [22] RColorBrewer_1.1-3                      </span></span>
+<span id="cb36-58"><a href="#cb36-58" aria-hidden="true" tabindex="-1"></a><span class="do">##  [23] abind_1.4-8                             </span></span>
+<span id="cb36-59"><a href="#cb36-59" aria-hidden="true" tabindex="-1"></a><span class="do">##  [24] ggraph_2.2.2                            </span></span>
+<span id="cb36-60"><a href="#cb36-60" aria-hidden="true" tabindex="-1"></a><span class="do">##  [25] RCurl_1.98-1.18                         </span></span>
+<span id="cb36-61"><a href="#cb36-61" aria-hidden="true" tabindex="-1"></a><span class="do">##  [26] yulab.utils_0.2.5                       </span></span>
+<span id="cb36-62"><a href="#cb36-62" aria-hidden="true" tabindex="-1"></a><span class="do">##  [27] tweenr_2.0.3                            </span></span>
+<span id="cb36-63"><a href="#cb36-63" aria-hidden="true" tabindex="-1"></a><span class="do">##  [28] rappdirs_0.3.4                          </span></span>
+<span id="cb36-64"><a href="#cb36-64" aria-hidden="true" tabindex="-1"></a><span class="do">##  [29] gdtools_0.5.1                           </span></span>
+<span id="cb36-65"><a href="#cb36-65" aria-hidden="true" tabindex="-1"></a><span class="do">##  [30] enrichplot_1.32.0                       </span></span>
+<span id="cb36-66"><a href="#cb36-66" aria-hidden="true" tabindex="-1"></a><span class="do">##  [31] ggrepel_0.9.8                           </span></span>
+<span id="cb36-67"><a href="#cb36-67" aria-hidden="true" tabindex="-1"></a><span class="do">##  [32] tidytree_0.4.8                          </span></span>
+<span id="cb36-68"><a href="#cb36-68" aria-hidden="true" tabindex="-1"></a><span class="do">##  [33] reactome.db_1.96.0                      </span></span>
+<span id="cb36-69"><a href="#cb36-69" aria-hidden="true" tabindex="-1"></a><span class="do">##  [34] svglite_2.2.2                           </span></span>
+<span id="cb36-70"><a href="#cb36-70" aria-hidden="true" tabindex="-1"></a><span class="do">##  [35] codetools_0.2-20                        </span></span>
+<span id="cb36-71"><a href="#cb36-71" aria-hidden="true" tabindex="-1"></a><span class="do">##  [36] DelayedArray_0.38.1                     </span></span>
+<span id="cb36-72"><a href="#cb36-72" aria-hidden="true" tabindex="-1"></a><span class="do">##  [37] DOSE_4.6.0                              </span></span>
+<span id="cb36-73"><a href="#cb36-73" aria-hidden="true" tabindex="-1"></a><span class="do">##  [38] xml2_1.6.0                              </span></span>
+<span id="cb36-74"><a href="#cb36-74" aria-hidden="true" tabindex="-1"></a><span class="do">##  [39] ggforce_0.5.0                           </span></span>
+<span id="cb36-75"><a href="#cb36-75" aria-hidden="true" tabindex="-1"></a><span class="do">##  [40] tidyselect_1.2.1                        </span></span>
+<span id="cb36-76"><a href="#cb36-76" aria-hidden="true" tabindex="-1"></a><span class="do">##  [41] aplot_0.3.1                             </span></span>
+<span id="cb36-77"><a href="#cb36-77" aria-hidden="true" tabindex="-1"></a><span class="do">##  [42] UCSC.utils_1.8.0                        </span></span>
+<span id="cb36-78"><a href="#cb36-78" aria-hidden="true" tabindex="-1"></a><span class="do">##  [43] farver_2.1.2                            </span></span>
+<span id="cb36-79"><a href="#cb36-79" aria-hidden="true" tabindex="-1"></a><span class="do">##  [44] viridis_0.6.5                           </span></span>
+<span id="cb36-80"><a href="#cb36-80" aria-hidden="true" tabindex="-1"></a><span class="do">##  [45] matrixStats_1.5.0                       </span></span>
+<span id="cb36-81"><a href="#cb36-81" aria-hidden="true" tabindex="-1"></a><span class="do">##  [46] BiocFileCache_3.2.0                     </span></span>
+<span id="cb36-82"><a href="#cb36-82" aria-hidden="true" tabindex="-1"></a><span class="do">##  [47] GenomicAlignments_1.48.0                </span></span>
+<span id="cb36-83"><a href="#cb36-83" aria-hidden="true" tabindex="-1"></a><span class="do">##  [48] jsonlite_2.0.0                          </span></span>
+<span id="cb36-84"><a href="#cb36-84" aria-hidden="true" tabindex="-1"></a><span class="do">##  [49] tidygraph_1.3.1                         </span></span>
+<span id="cb36-85"><a href="#cb36-85" aria-hidden="true" tabindex="-1"></a><span class="do">##  [50] systemfonts_1.3.2                       </span></span>
+<span id="cb36-86"><a href="#cb36-86" aria-hidden="true" tabindex="-1"></a><span class="do">##  [51] tools_4.6.1                             </span></span>
+<span id="cb36-87"><a href="#cb36-87" aria-hidden="true" tabindex="-1"></a><span class="do">##  [52] ggnewscale_0.5.2                        </span></span>
+<span id="cb36-88"><a href="#cb36-88" aria-hidden="true" tabindex="-1"></a><span class="do">##  [53] progress_1.2.3                          </span></span>
+<span id="cb36-89"><a href="#cb36-89" aria-hidden="true" tabindex="-1"></a><span class="do">##  [54] treeio_1.36.1                           </span></span>
+<span id="cb36-90"><a href="#cb36-90" aria-hidden="true" tabindex="-1"></a><span class="do">##  [55] TxDb.Hsapiens.UCSC.hg19.knownGene_3.22.1</span></span>
+<span id="cb36-91"><a href="#cb36-91" aria-hidden="true" tabindex="-1"></a><span class="do">##  [56] Rcpp_1.1.1-1.1                          </span></span>
+<span id="cb36-92"><a href="#cb36-92" aria-hidden="true" tabindex="-1"></a><span class="do">##  [57] glue_1.8.1                              </span></span>
+<span id="cb36-93"><a href="#cb36-93" aria-hidden="true" tabindex="-1"></a><span class="do">##  [58] gridExtra_2.3.1                         </span></span>
+<span id="cb36-94"><a href="#cb36-94" aria-hidden="true" tabindex="-1"></a><span class="do">##  [59] SparseArray_1.12.2                      </span></span>
+<span id="cb36-95"><a href="#cb36-95" aria-hidden="true" tabindex="-1"></a><span class="do">##  [60] xfun_0.57                               </span></span>
+<span id="cb36-96"><a href="#cb36-96" aria-hidden="true" tabindex="-1"></a><span class="do">##  [61] qvalue_2.44.0                           </span></span>
+<span id="cb36-97"><a href="#cb36-97" aria-hidden="true" tabindex="-1"></a><span class="do">##  [62] MatrixGenerics_1.24.0                   </span></span>
+<span id="cb36-98"><a href="#cb36-98" aria-hidden="true" tabindex="-1"></a><span class="do">##  [63] GenomeInfoDb_1.48.0                     </span></span>
+<span id="cb36-99"><a href="#cb36-99" aria-hidden="true" tabindex="-1"></a><span class="do">##  [64] withr_3.0.2                             </span></span>
+<span id="cb36-100"><a href="#cb36-100" aria-hidden="true" tabindex="-1"></a><span class="do">##  [65] BiocManager_1.30.27                     </span></span>
+<span id="cb36-101"><a href="#cb36-101" aria-hidden="true" tabindex="-1"></a><span class="do">##  [66] fastmap_1.2.0                           </span></span>
+<span id="cb36-102"><a href="#cb36-102" aria-hidden="true" tabindex="-1"></a><span class="do">##  [67] boot_1.3-32                             </span></span>
+<span id="cb36-103"><a href="#cb36-103" aria-hidden="true" tabindex="-1"></a><span class="do">##  [68] caTools_1.18.3                          </span></span>
+<span id="cb36-104"><a href="#cb36-104" aria-hidden="true" tabindex="-1"></a><span class="do">##  [69] digest_0.6.39                           </span></span>
+<span id="cb36-105"><a href="#cb36-105" aria-hidden="true" tabindex="-1"></a><span class="do">##  [70] timechange_0.4.0                        </span></span>
+<span id="cb36-106"><a href="#cb36-106" aria-hidden="true" tabindex="-1"></a><span class="do">##  [71] R6_2.6.1                                </span></span>
+<span id="cb36-107"><a href="#cb36-107" aria-hidden="true" tabindex="-1"></a><span class="do">##  [72] gridGraphics_0.5-1                      </span></span>
+<span id="cb36-108"><a href="#cb36-108" aria-hidden="true" tabindex="-1"></a><span class="do">##  [73] textshaping_1.0.5                       </span></span>
+<span id="cb36-109"><a href="#cb36-109" aria-hidden="true" tabindex="-1"></a><span class="do">##  [74] GO.db_3.23.1                            </span></span>
+<span id="cb36-110"><a href="#cb36-110" aria-hidden="true" tabindex="-1"></a><span class="do">##  [75] gtools_3.9.5                            </span></span>
+<span id="cb36-111"><a href="#cb36-111" aria-hidden="true" tabindex="-1"></a><span class="do">##  [76] dichromat_2.0-1                         </span></span>
+<span id="cb36-112"><a href="#cb36-112" aria-hidden="true" tabindex="-1"></a><span class="do">##  [77] RSQLite_3.53.1                          </span></span>
+<span id="cb36-113"><a href="#cb36-113" aria-hidden="true" tabindex="-1"></a><span class="do">##  [78] cigarillo_1.2.0                         </span></span>
+<span id="cb36-114"><a href="#cb36-114" aria-hidden="true" tabindex="-1"></a><span class="do">##  [79] data.table_1.18.6.1                     </span></span>
+<span id="cb36-115"><a href="#cb36-115" aria-hidden="true" tabindex="-1"></a><span class="do">##  [80] fontLiberation_0.1.0                    </span></span>
+<span id="cb36-116"><a href="#cb36-116" aria-hidden="true" tabindex="-1"></a><span class="do">##  [81] renv_1.2.3                              </span></span>
+<span id="cb36-117"><a href="#cb36-117" aria-hidden="true" tabindex="-1"></a><span class="do">##  [82] rtracklayer_1.72.0                      </span></span>
+<span id="cb36-118"><a href="#cb36-118" aria-hidden="true" tabindex="-1"></a><span class="do">##  [83] graphlayouts_1.2.5                      </span></span>
+<span id="cb36-119"><a href="#cb36-119" aria-hidden="true" tabindex="-1"></a><span class="do">##  [84] prettyunits_1.2.0                       </span></span>
+<span id="cb36-120"><a href="#cb36-120" aria-hidden="true" tabindex="-1"></a><span class="do">##  [85] httr_1.4.8                              </span></span>
+<span id="cb36-121"><a href="#cb36-121" aria-hidden="true" tabindex="-1"></a><span class="do">##  [86] htmlwidgets_1.6.4                       </span></span>
+<span id="cb36-122"><a href="#cb36-122" aria-hidden="true" tabindex="-1"></a><span class="do">##  [87] S4Arrays_1.12.1                         </span></span>
+<span id="cb36-123"><a href="#cb36-123" aria-hidden="true" tabindex="-1"></a><span class="do">##  [88] scatterpie_0.2.6                        </span></span>
+<span id="cb36-124"><a href="#cb36-124" aria-hidden="true" tabindex="-1"></a><span class="do">##  [89] graphite_1.58.0                         </span></span>
+<span id="cb36-125"><a href="#cb36-125" aria-hidden="true" tabindex="-1"></a><span class="do">##  [90] pkgconfig_2.0.3                         </span></span>
+<span id="cb36-126"><a href="#cb36-126" aria-hidden="true" tabindex="-1"></a><span class="do">##  [91] gtable_0.3.6                            </span></span>
+<span id="cb36-127"><a href="#cb36-127" aria-hidden="true" tabindex="-1"></a><span class="do">##  [92] blob_1.3.0                              </span></span>
+<span id="cb36-128"><a href="#cb36-128" aria-hidden="true" tabindex="-1"></a><span class="do">##  [93] S7_0.2.2                                </span></span>
+<span id="cb36-129"><a href="#cb36-129" aria-hidden="true" tabindex="-1"></a><span class="do">##  [94] XVector_0.52.0                          </span></span>
+<span id="cb36-130"><a href="#cb36-130" aria-hidden="true" tabindex="-1"></a><span class="do">##  [95] htmltools_0.5.9                         </span></span>
+<span id="cb36-131"><a href="#cb36-131" aria-hidden="true" tabindex="-1"></a><span class="do">##  [96] fontBitstreamVera_0.1.1                 </span></span>
+<span id="cb36-132"><a href="#cb36-132" aria-hidden="true" tabindex="-1"></a><span class="do">##  [97] scales_1.4.0                            </span></span>
+<span id="cb36-133"><a href="#cb36-133" aria-hidden="true" tabindex="-1"></a><span class="do">##  [98] png_0.1-9                               </span></span>
+<span id="cb36-134"><a href="#cb36-134" aria-hidden="true" tabindex="-1"></a><span class="do">##  [99] ggfun_0.2.1                             </span></span>
+<span id="cb36-135"><a href="#cb36-135" aria-hidden="true" tabindex="-1"></a><span class="do">## [100] rstudioapi_0.19.0                       </span></span>
+<span id="cb36-136"><a href="#cb36-136" aria-hidden="true" tabindex="-1"></a><span class="do">## [101] tzdb_0.5.0                              </span></span>
+<span id="cb36-137"><a href="#cb36-137" aria-hidden="true" tabindex="-1"></a><span class="do">## [102] reshape2_1.4.5                          </span></span>
+<span id="cb36-138"><a href="#cb36-138" aria-hidden="true" tabindex="-1"></a><span class="do">## [103] rjson_0.2.23                            </span></span>
+<span id="cb36-139"><a href="#cb36-139" aria-hidden="true" tabindex="-1"></a><span class="do">## [104] nlme_3.1-169                            </span></span>
+<span id="cb36-140"><a href="#cb36-140" aria-hidden="true" tabindex="-1"></a><span class="do">## [105] curl_7.1.0                              </span></span>
+<span id="cb36-141"><a href="#cb36-141" aria-hidden="true" tabindex="-1"></a><span class="do">## [106] cachem_1.1.0                            </span></span>
+<span id="cb36-142"><a href="#cb36-142" aria-hidden="true" tabindex="-1"></a><span class="do">## [107] KernSmooth_2.23-26                      </span></span>
+<span id="cb36-143"><a href="#cb36-143" aria-hidden="true" tabindex="-1"></a><span class="do">## [108] parallel_4.6.1                          </span></span>
+<span id="cb36-144"><a href="#cb36-144" aria-hidden="true" tabindex="-1"></a><span class="do">## [109] restfulr_0.0.16                         </span></span>
+<span id="cb36-145"><a href="#cb36-145" aria-hidden="true" tabindex="-1"></a><span class="do">## [110] pillar_1.11.1                           </span></span>
+<span id="cb36-146"><a href="#cb36-146" aria-hidden="true" tabindex="-1"></a><span class="do">## [111] grid_4.6.1                              </span></span>
+<span id="cb36-147"><a href="#cb36-147" aria-hidden="true" tabindex="-1"></a><span class="do">## [112] vctrs_0.7.3                             </span></span>
+<span id="cb36-148"><a href="#cb36-148" aria-hidden="true" tabindex="-1"></a><span class="do">## [113] gplots_3.3.0                            </span></span>
+<span id="cb36-149"><a href="#cb36-149" aria-hidden="true" tabindex="-1"></a><span class="do">## [114] tidydr_0.0.6                            </span></span>
+<span id="cb36-150"><a href="#cb36-150" aria-hidden="true" tabindex="-1"></a><span class="do">## [115] dbplyr_2.5.2                            </span></span>
+<span id="cb36-151"><a href="#cb36-151" aria-hidden="true" tabindex="-1"></a><span class="do">## [116] cluster_2.1.8.2                         </span></span>
+<span id="cb36-152"><a href="#cb36-152" aria-hidden="true" tabindex="-1"></a><span class="do">## [117] evaluate_1.0.5                          </span></span>
+<span id="cb36-153"><a href="#cb36-153" aria-hidden="true" tabindex="-1"></a><span class="do">## [118] magick_2.9.1                            </span></span>
+<span id="cb36-154"><a href="#cb36-154" aria-hidden="true" tabindex="-1"></a><span class="do">## [119] cli_3.6.6                               </span></span>
+<span id="cb36-155"><a href="#cb36-155" aria-hidden="true" tabindex="-1"></a><span class="do">## [120] compiler_4.6.1                          </span></span>
+<span id="cb36-156"><a href="#cb36-156" aria-hidden="true" tabindex="-1"></a><span class="do">## [121] Rsamtools_2.28.0                        </span></span>
+<span id="cb36-157"><a href="#cb36-157" aria-hidden="true" tabindex="-1"></a><span class="do">## [122] rlang_1.3.0                             </span></span>
+<span id="cb36-158"><a href="#cb36-158" aria-hidden="true" tabindex="-1"></a><span class="do">## [123] crayon_1.5.3                            </span></span>
+<span id="cb36-159"><a href="#cb36-159" aria-hidden="true" tabindex="-1"></a><span class="do">## [124] labeling_0.4.3                          </span></span>
+<span id="cb36-160"><a href="#cb36-160" aria-hidden="true" tabindex="-1"></a><span class="do">## [125] plyr_1.8.9                              </span></span>
+<span id="cb36-161"><a href="#cb36-161" aria-hidden="true" tabindex="-1"></a><span class="do">## [126] fs_2.1.0                                </span></span>
+<span id="cb36-162"><a href="#cb36-162" aria-hidden="true" tabindex="-1"></a><span class="do">## [127] ggiraph_0.9.6                           </span></span>
+<span id="cb36-163"><a href="#cb36-163" aria-hidden="true" tabindex="-1"></a><span class="do">## [128] stringi_1.8.7                           </span></span>
+<span id="cb36-164"><a href="#cb36-164" aria-hidden="true" tabindex="-1"></a><span class="do">## [129] viridisLite_0.4.3                       </span></span>
+<span id="cb36-165"><a href="#cb36-165" aria-hidden="true" tabindex="-1"></a><span class="do">## [130] BiocParallel_1.46.0                     </span></span>
+<span id="cb36-166"><a href="#cb36-166" aria-hidden="true" tabindex="-1"></a><span class="do">## [131] Biostrings_2.80.0                       </span></span>
+<span id="cb36-167"><a href="#cb36-167" aria-hidden="true" tabindex="-1"></a><span class="do">## [132] lazyeval_0.2.3                          </span></span>
+<span id="cb36-168"><a href="#cb36-168" aria-hidden="true" tabindex="-1"></a><span class="do">## [133] GOSemSim_2.38.3                         </span></span>
+<span id="cb36-169"><a href="#cb36-169" aria-hidden="true" tabindex="-1"></a><span class="do">## [134] fontquiver_0.2.1                        </span></span>
+<span id="cb36-170"><a href="#cb36-170" aria-hidden="true" tabindex="-1"></a><span class="do">## [135] Matrix_1.7-5                            </span></span>
+<span id="cb36-171"><a href="#cb36-171" aria-hidden="true" tabindex="-1"></a><span class="do">## [136] hms_1.1.4                               </span></span>
+<span id="cb36-172"><a href="#cb36-172" aria-hidden="true" tabindex="-1"></a><span class="do">## [137] patchwork_1.3.2                         </span></span>
+<span id="cb36-173"><a href="#cb36-173" aria-hidden="true" tabindex="-1"></a><span class="do">## [138] bit64_4.8.2                             </span></span>
+<span id="cb36-174"><a href="#cb36-174" aria-hidden="true" tabindex="-1"></a><span class="do">## [139] KEGGREST_1.52.0                         </span></span>
+<span id="cb36-175"><a href="#cb36-175" aria-hidden="true" tabindex="-1"></a><span class="do">## [140] SummarizedExperiment_1.42.0             </span></span>
+<span id="cb36-176"><a href="#cb36-176" aria-hidden="true" tabindex="-1"></a><span class="do">## [141] igraph_2.3.3                            </span></span>
+<span id="cb36-177"><a href="#cb36-177" aria-hidden="true" tabindex="-1"></a><span class="do">## [142] memoise_2.0.1                           </span></span>
+<span id="cb36-178"><a href="#cb36-178" aria-hidden="true" tabindex="-1"></a><span class="do">## [143] ggtree_4.2.0                            </span></span>
+<span id="cb36-179"><a href="#cb36-179" aria-hidden="true" tabindex="-1"></a><span class="do">## [144] fastmatch_1.1-8                         </span></span>
+<span id="cb36-180"><a href="#cb36-180" aria-hidden="true" tabindex="-1"></a><span class="do">## [145] bit_4.6.0                               </span></span>
+<span id="cb36-181"><a href="#cb36-181" aria-hidden="true" tabindex="-1"></a><span class="do">## [146] gson_0.2.1                              </span></span>
+<span id="cb36-182"><a href="#cb36-182" aria-hidden="true" tabindex="-1"></a><span class="do">## [147] ape_5.8-1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1350,6 +1551,9 @@ Ashburner, M., C. A. Ball, J. A. Blake, et al. 2000. <span>“<span class="nocas
 </div>
 <div id="ref-reactome" class="csl-entry" role="listitem">
 Griss, J., G. Viteri, K. Sidiropoulos, V. Nguyen, A. Fabregat, and H. Hermjakob. 2020. <span>“<span class="nocase"><span>R</span>eactome<span>G</span><span>S</span><span>A</span> - <span>E</span>fficient <span>M</span>ulti-<span>O</span>mics <span>C</span>omparative <span>P</span>athway <span>A</span>nalysis</span>.”</span> <em>Mol Cell Proteomics</em> 19 (12): 2115–25.
+</div>
+<div id="ref-gsea" class="csl-entry" role="listitem">
+Subramanian, A., P. Tamayo, V. K. Mootha, et al. 2005. <span>“<span class="nocase"><span>G</span>ene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles</span>.”</span> <em>Proc Natl Acad Sci U S A</em> 102 (43): 15545–50.
 </div>
 <div id="ref-Tsao2022" class="csl-entry" role="listitem">
 Tsao, Hsiao-Wei, James Kaminski, Makoto Kurachi, et al. 2022. <span>“Batf-Mediated Epigenetic Control of Effector CD8 + t Cell Differentiation.”</span> <em>Science Immunology</em> 7 (68). <a href="https://doi.org/10.1126/sciimmunol.abi4919">https://doi.org/10.1126/sciimmunol.abi4919</a>.
