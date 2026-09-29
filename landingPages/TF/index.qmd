@@ -39,4 +39,5 @@ Tutorials in this module:
 
 * [TF motifs](../../tutorials/TFs/representingMotifs.html)
 
+* [TF footprinting](../../tutorials/TFftprnt/index.html)
 
