@@ -155,14 +155,16 @@ The aim of this part of the data analysis workflow is to remove alignments which
 
 * alignments to organelles (mitchondria);
 
-* alignments within "blacklisted regions": regions of unusually high signal in many functional genomics experiments, described in @[Amemiya2019];
+* alignments within "blacklisted regions": regions of unusually high signal in many functional genomics experiments, described in [@Amemiya2019];
 
 * low quality alignments;
+
+We will also mark (not remove):
 
 * duplicate alignments (i.e. both mates of a pair map to identical genomic locations).
 
 
-We assume that starting point are reads mapped to a reference sequence.
+We assume that starting point are reads mapped to a reference sequence (`GRCm39`).
 
 
 
@@ -172,14 +174,21 @@ We assume that starting point are reads mapped to a reference sequence.
 
 ## Before we start
 
-Today we are going to work on [Pelle](https://docs.uppmax.uu.se/cluster_guides/pelle/)
+Today we are going to work on [Pelle](https://docs.uppmax.uu.se/cluster_guides/pelle/),
 an HPC cluster hosted by [Uppmax](https://www.uu.se/centrum/uppmax/).
 
 <br />
 
-Please follow the setup procedure to book a node and log in to it as desribed in section
-[Setting Up](../ATAC/index.html)
+Please follow the setup procedure to book a node and log in to it. The following gives you access to part of a node prebooked for this workshop for 3 hours (until lunch).
 
+```{bash}
+#| eval: false
+#| echo: true
+
+ssh -Y <USERNAME>@pelle.uppmax.uu.se
+
+interactive -A uppmax2026-1-197 -t 3:00:00 -c 5
+```
 
 <br />
 <br />
@@ -251,8 +260,11 @@ Normally you process several files from your data set using the same workflow. W
 Copy the script to your home directory and execute it:
 
 
-```
-cp /proj/epi2026/atacseq_proc/atacseq_data.sh .
+```{bash}
+#| eval: false
+#| echo: true
+
+cp /proj/epi2026/ATAC/atacseq_proc/atacseq_data.sh .
   
 bash atacseq_data.sh
 ```
@@ -263,7 +275,10 @@ You should see a newly created directory named `atacseq`. Everything you need fo
 
 <br />
 
-```
+```{bash}
+#| eval: false
+#| echo: true
+
 cd atacseq
 
 ls .
@@ -283,12 +298,14 @@ To start with, we can inspect the statistics of these unprocessed data. We will 
 
 <br />
 
-```
+```{bash}
+#| eval: false
+#| echo: true
+
 mkdir processedData
 cd processedData
 
-module load bioinfo-tools
-module load samtools/1.19
+module load SAMtools/1.19.2-GCC-13.3.0
 
 samtools idxstats ../../data/SRR17296554.mapped.bowtie2.chr1.bam  >SRR17296554.idxstats
 samtools stats ../../data/SRR17296554.mapped.bowtie2.chr1.bam  >SRR17296554.stats
@@ -301,7 +318,10 @@ We can inspect the Mt contents of our data::
 
 <br />
 
-```
+```{bash}
+#| eval: false
+#| echo: true
+
 #total fragments
 awk '{sum += $3} END {print sum}' SRR17296554.idxstats
 11335599
@@ -321,7 +341,10 @@ We can inspect the read mapping statistics in `SRR17296554.stats`:
 
 <br />
 
-```
+```{bash}
+#| eval: false
+#| echo: true
+
 grep ^SN SRR17296554.stats | cut -f 2-
 
   raw total sequences:  11399457  # excluding supplementary and secondary reads
@@ -387,8 +410,11 @@ Before we can do this we need to prepare the genomic regions:
 
 <br />
 
-```
-module load BEDTools/2.31.1
+```{bash}
+#| eval: false
+#| echo: true
+
+module load BEDTools/2.31.1-GCC-13.3.0
 
 sortBed -i  ../../annot/ENCFF999QPV.mm39_ens.bed  | complementBed -i stdin -g ../../annot/GRCm39.sizes > mm39.noblcklst.bed
 ```
@@ -398,7 +424,10 @@ While we are at it, we can also remove the MT contig from the *non-blacklist* re
 
 <br />
 
-```
+```{bash}
+#| eval: false
+#| echo: true
+
 awk '$1 != "MT" { print $0 }' mm39.noblcklst.bed > mm39.noblcklst_MT.bed
 ```
 
@@ -412,7 +441,10 @@ We retain alignments **not** within the blacklisted regions, which also are *pro
 
 <br />
 
-```
+```{bash}
+#| eval: false
+#| echo: true
+
 samtools view -f 0x2 -q 5 -M -L mm39.noblcklst_MT.bed -hbo SRR17296554.blstMT_filt.bam ../../data/SRR17296554.mapped.bowtie2.chr1.bam
 
 samtools index SRR17296554.blstMT_filt.bam
@@ -424,7 +456,10 @@ How many alignments are retained?
 
 <br />
 
-```
+```{bash}
+#| eval: false
+#| echo: true
+
 samtools idxstats SRR17296554.blstMT_filt.bam >SRR17296554.blstMT_filt.idxstats
 
 awk '{sum += $3} END {print sum}' SRR17296554.blstMT_filt.idxstats
@@ -438,10 +473,13 @@ Finally, we can mark / remove duplicated alignments. Note: we are not removing t
 
 <br />
 
-```
-module load picard/3.1.1
+```{bash}
+#| eval: false
+#| echo: true
 
-java -Xmx31G -jar $PICARD MarkDuplicates -I SRR17296554.blstMT_filt.bam \
+module load picard/3.0.0-Java-17
+
+java -Xmx31G -jar $EBROOTPICARD/picard.jar MarkDuplicates -I SRR17296554.blstMT_filt.bam \
    -O SRR17296554.blstMT_filt.dedup.bam -M SRR17296554.dedup_metrics \
    -VALIDATION_STRINGENCY LENIENT -REMOVE_DUPLICATES false -ASSUME_SORTED true
 
@@ -457,7 +495,10 @@ We can inspect the duplication status of the library. This is another early QC s
 
 <br />
 
-```
+```{bash}
+#| eval: false
+#| echo: true
+
 head SRR17296554.dedup_metrics
 ```
 <br />
@@ -466,7 +507,10 @@ Key information from `SRR17296554.dedup_metrics`:
 
 <br />
 
-```
+```{bash}
+#| eval: false
+#| echo: true
+
   READ_PAIRS_EXAMINED 4720408
   READ_PAIR_DUPLICATES 1389167
   PERCENT_DUPLICATION 0.29429
@@ -479,7 +523,10 @@ Key information from `SRR17296554.dedup_metrics`:
 
 ### Inspecting file contents
 
-```
+```{bash}
+#| eval: false
+#| echo: true
+
   ## METRICS CLASS  picard.sam.DuplicationMetrics
   
   LIBRARY UNPAIRED_READS_EXAMINED READ_PAIRS_EXAMINED SECONDARY_OR_SUPPLEMENTARY_RDS  UNMAPPED_READS  UNPAIRED_READ_DUPLICATES  READ_PAIR_DUPLICATES  READ_PAIR_OPTICAL_DUPLICATES  PERCENT_DUPLICATION ESTIMATED_LIBRARY_SIZE
@@ -525,7 +572,7 @@ Basic read count statistics were already collected in the previous part.
 <br />
 
 
-[Cumulative enrichment](https://deeptools.readthedocs.io/en/3.5.2/content/tools/plotFingerprint.html) aka BAM **fingerprint**, is a way of assesing the quality of signal concentrated predeminantly in a small fraction of a genome (such as peaks detected in ATAC-seq and ChIP-seq). It determines how well the signal in the sample can be differentiated from the background.
+[Cumulative enrichment](https://deeptools.readthedocs.io/en/3.5.2/content/tools/plotFingerprint.html) aka BAM **fingerprint**, is a way of assessing the quality of signal concentrated predeminantly in a small fraction of a genome (such as peaks detected in ATAC-seq and ChIP-seq). It determines how well the signal in the sample can be differentiated from the background.
 
 Cumulative enrichment is obtained by sampling indexed BAM files and plotting a profile of cumulative read coverages for each sample. All reads overlapping a window (bin) of the specified length are counted; these counts are sorted and the cumulative sum is plotted.
 
@@ -534,16 +581,42 @@ To compute cumulative enrichment for processed bam files in our ATAC-seq data se
 <br />
 
 
-```
+```{bash}
+#| eval: false
+#| echo: true
+
 mkdir deepTools
 cd deepTools
 
 #link necessary files to avoid long paths in commands
 ln -s ../../data_proc/* .
+```
 
-module load deepTools/3.5.6
+<br />
 
-plotFingerprint --bamfiles SRR17296554.filt.chr1.bam SRR17296555.filt.chr1.bam SRR17296556.filt.chr1.bam SRR17296557.filt.chr1.bam \
+We will use `deepTools` installed as a software container. First, we build a command we want to use from paths to the container and other parameters:
+
+```{bash}
+#| eval: false
+#| echo: true
+
+topdir="/proj/epi2026/"
+contdir="/proj/epi2026/library/containers"
+
+pFingerprnt="apptainer exec --bind $(pwd) --bind ${topdir} --pwd $(pwd) ${contdir}/deeptools:3.5.6.img plotFingerprint"
+```
+
+<br />
+
+We can now execute the command:
+
+<br />
+
+```{bash}
+#| eval: false
+#| echo: true
+
+$pFingerprnt --bamfiles SRR17296554.filt.chr1.bam SRR17296555.filt.chr1.bam SRR17296556.filt.chr1.bam SRR17296557.filt.chr1.bam \
    --binSize=1000 --plotFile Invivo_proc.fingerprint.pdf \
    --smartLabels -p 5 &> fingerprint.log
 ```
@@ -560,26 +633,38 @@ You can copy the resulting file to your local system to view it.
 
 To copy files from Pelle (or any remote host) you need to know the path to the file on Pelle  (i.e. the remote side). Type in the terminal::
 
-```
+```{bash}
+#| eval: false
+#| echo: true
+
 pwd
 ```
 
 This gives you the path to the working directory, e.g::
 
-```
-/proj/epi2025/nobackup/agata/tst/atac_proc/atacseq/analysis/deepTools/
+```{bash}
+#| eval: false
+#| echo: true
+
+/proj/epi2026/private/agata/atac_tst/atacseq/analysis/deepTools
 ```
 
 To copy file `Invivo_proc.fingerprint.pdf` to *current directory*, type in the **local** terminal:
 
-```
+```{bash}
+#| eval: false
+#| echo: true
+
 scp <username>@pelle.uppmax.uu.se:/path/to/file .
 ```
 
 E.g.:
 
-```
-scp agata@pelle.uppmax.uu.se:/proj/epi2025/nobackup/agata/tst/atac_proc/atacseq/analysis/deepTools/Invivo_proc.fingerprint.pdf .
+```{bash}
+#| eval: false
+#| echo: true
+
+scp agata@pelle.uppmax.uu.se:/proj/epi2026/private/agata/atac_tst/atacseq/analysis/deepTools/Invivo_proc.fingerprint.pdf .
 ```
 
 You will be prompted to input the 2FA code following the password to Uppmax.
@@ -635,19 +720,24 @@ In this method the genome is divided into bins of specified size (`--binSize` pa
 In this part we use bam files prepared before the workshop, to save time.
 
 
-```
-multiBamSummary bins --bamfiles SRR17296554.filt.chr1.bam SRR17296555.filt.chr1.bam SRR17296556.filt.chr1.bam SRR17296557.filt.chr1.bam \
+```{bash}
+#| eval: false
+#| echo: true
+
+mBS="apptainer exec --bind $(pwd) --bind ${topdir} --pwd $(pwd) ${contdir}/deeptools:3.5.6.img multiBamSummary"
+
+$mBS bins --bamfiles SRR17296554.filt.chr1.bam SRR17296555.filt.chr1.bam SRR17296556.filt.chr1.bam SRR17296557.filt.chr1.bam \
    --smartLabels \
    --outFileName Invivo_proc.npz --binSize 5000 -p 5 &> multiBamSummary.log
 
+pCor="apptainer exec --bind $(pwd) --bind ${topdir} --pwd $(pwd) ${contdir}/deeptools:3.5.6.img plotCorrelation"
 
-plotCorrelation --corData Invivo_proc.npz \
+$pCor --corData Invivo_proc.npz \
    --plotFile Invivo_proc_correlation_bin.pdf --outFileCorMatrix Invivo_proc_correlation_bin.txt \
    --whatToPlot heatmap --corMethod pearson --plotNumbers
 
-
-# to change the min number plotted
-plotCorrelation --corData Invivo_proc.npz \
+# to change the correlation range plotted
+$pCor --corData Invivo_proc.npz \
    --plotFile Invivo_proc_correlation_bin.pdf --outFileCorMatrix Invivo_proc_correlation_bin.txt \
    --whatToPlot heatmap --corMethod pearson --plotNumbers -min 0.95
 ```
@@ -751,16 +841,19 @@ To compute fragment length distribution for processed bam file in our ATAC-seq d
 
 <br />
 
-```
+```{bash}
+#| eval: false
+#| echo: true
+
 mkdir QC
 cd QC
 
 ln -s ../processedData/SRR17296554.blstMT_filt.dedup.bam  .
 ln -s ../processedData/SRR17296554.blstMT_filt.dedup.bam.bai  .
   
-module load picard/3.1.1
+module load picard/3.0.0-Java-17
 
-java -Xmx31G -jar $PICARD CollectInsertSizeMetrics \
+java -Xmx31G -jar $EBROOTPICARD/picard.jar CollectInsertSizeMetrics \
   -I SRR17296554.blstMT_filt.dedup.bam \
   -O SRR17296554.chr1.proc.fraglen.stats \
   -H SRR17296554.chr1.proc.fraglen.pdf -M 0.5
@@ -818,17 +911,622 @@ To give some context compare to plots on @fig-fraglen-2.
 Examples of insert size distribution for ATAC-seq experiments.
 :::
 
+<br />
+<br />
+
+## Assessing Signal at Transcription Start Sites
+
+<br />
+
+### Data Preparation for Probing Signal at Transcription Start Sites (TSS)
+
+
+We will be working in `R` in this section. First, we load the required version together with libraries:
 
 
 
 <br />
 <br />
 
+
+```{bash}
+#| eval: false
+#| echo: true
+
+module load R/4.6.1-gfbf-2026.1
+module load R-bundle-CRAN/2026.07-foss-2026.1
+module load R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1
+
+R
+```
+<br />
+
+We can now update paths to library with R packages load necessary R libraries:
+
+<br />
+
+```{r}
+#| eval: false
+#| echo: true
+
+.libPaths(c(.libPaths(),"/proj/epi2026/library/Rpackages/4.6.1"))
+
+
+library(ATACseqQC)
+library(BSgenome.Mmusculus.UCSC.mm39)
+library(TxDb.Mmusculus.UCSC.mm39.knownGene)
+library(ChIPpeakAnno)
+library(Rsamtools)
+```
+<br />
+
+We can read in the bam file:
+
+<br />
+
+```{r}
+#| eval: false
+#| echo: true
+
+bamFile="SRR17296554.blstMT_filt.dedup.bam"
+bamFileLabels="SRR17296554"
+```
+
+<br />
+
+We collect library statistics:
+
+```{r}
+#| eval: false
+#| echo: true
+
+bam_qc=bamQC(bamFile, outPath = NULL)
+```
+
+
+We can now inspect the statistics:
+
+```{r}
+#| eval: false
+#| echo: true
+
+bam_qc[1:10]
+```
+
+The output:
+
+```{r}
+#| eval: false
+#| echo: true
+
+  bam_qc[1:10]
+
+  $totalQNAMEs
+  [1] 4720683
+
+  $duplicateRate
+  [1] 0.2942896
+
+  $mitochondriaRate
+  [1] 0
+
+  $properPairRate
+  [1] 1
+
+  $unmappedRate
+  [1] 0
+
+  $hasUnmappedMateRate
+  [1] 0
+
+  $notPassingQualityControlsRate
+  [1] 0
+
+  $nonRedundantFraction
+  [1] 0.5100756
+
+  $PCRbottleneckCoefficient_1
+  [1] 0.710388
+
+  $PCRbottleneckCoefficient_2
+  [1] 3.366668
+```
+
 <br />
 <br />
+
+Some of these values are meaningless at this point, as we have already processed the bam file (i.e. filtered fragments in problematic regions etc.) To compare the statistics for the non-subset file, please see below.
+
+<br />
+
+::: {.callout-note collapse="true"}
+
+### Summary statistics for filtered non-subset SRR17296554.filt.bam data
+
+  bam_qc_nonsub[1:10]:
+
+```{r}
+#| eval: false
+#| echo: true
+
+    $totalQNAMEs
+    [1] 58847066
+
+    $duplicateRate
+    [1] 0.302227
+
+    $mitochondriaRate
+    [1] 0
+
+    $properPairRate
+    [1] 1
+
+    $unmappedRate
+    [1] 0
+
+    $hasUnmappedMateRate
+    [1] 0
+
+    $notPassingQualityControlsRate
+    [1] 0
+
+    $nonRedundantFraction
+    [1] 0.4967934
+
+    $PCRbottleneckCoefficient_1
+    [1] 0.699404
+
+    $PCRbottleneckCoefficient_2
+    [1] 3.18878
+```
+:::
+
+<br />
+<br />
+
+### Shiftig and Splitting Aligned Reads
+
+<br />
+
+Tagmentation by Tn5 transposase produces 5’ overhang of 9 base long, the coordinates of reads mapping to the positive and negative strands need to be shifted by + 4 and - 5, respectively, to account for the 9-bp duplication created by DNA repair of the nick by Tn5 transposase and achieve base-pair resolution of TF footprint and motif-related analyses.
+
+We perform it at this point to **plot signal at TSS**, and we save the resulting object for later use.
+
+We create a directory where the processed bam files will be saved:
+
+
+<br />
+
+```{r}
+#| eval: false
+#| echo: true
+
+## files will be saved into outPath respective to the working directory
+outPath = "splitBam"
+dir.create(outPath)
+```
+
+<br />
+
+First, we collect information on which SAM/BAM tags are present in our bam file:
+
+<br />
+
+```{r}
+#| eval: false
+#| echo: true
+
+possibleTag = combn(LETTERS, 2)
+possibleTag = c(paste0(possibleTag[1, ], possibleTag[2, ]),
+                   paste0(possibleTag[2, ], possibleTag[1, ]))
+  
+bamTop100 = scanBam(BamFile(bamFile, yieldSize = 100),
+                       param = ScanBamParam(tag = possibleTag))[[1]]$tag
+tags = names(bamTop100)[lengths(bamTop100)>0]
+```
+
+<br />
+
+We **shift the coordinates** only for alignments on chr1, which is where most of our data is. We need to rename the chromosome id few times during this lab because of mismatch between annotation packages available via _Bioconductor_ and the reference genome used for read mapping. Please note that prepending / removing "chr" only works for assembled chromosomes, and is somewhat hacky, so for other genomes, use it at your own risk.
+
+<br />
+
+```{r}
+#| eval: false
+#| echo: true
+
+seqlev="chr1"
+which=as(seqinfo(Mmusculus)[seqlev], "GRanges")
+  
+#rename chr ids to match reference genome
+seqlevels(which)=gsub("chr","",seqlevels(which))
+```
+<br />
+
+We create an object with genomic alignments:
+
+<br />
+
+```{r}
+#| eval: false
+#| echo: true
+
+gal=readBamFile(bamFile, tag=tags, which=which,asMates=TRUE, bigFile=TRUE)
+```
+<br />
+
+This object is empty, because we used `bigFile=TRUE` - this is expected, so do not be alarmed.
+
+
+The function `shiftGAlignmentsList` in the `ATACseqQC` package is used for shifting the alignments:
+
+<br />
+
+```{r}
+#| eval: false
+#| echo: true
+
+shiftedBamFile=file.path(outPath, "shifted.bam")
+gal1=shiftGAlignmentsList(gal, outbam=shiftedBamFile)
+```
+<br />
+<br />
+
+Next, we **split** the shifted alignments into different fractions **by length** (nucleosome free, mononucleosome, dinucleosome, and trinucleosome).
+
+Shifted reads that do not fit into any of the above bins can be discarded. 
+
+Splitting reads is a time-consuming step because we are using random forest to classify the fragments based on fragment length and GC content.
+
+By default, we assign the top 10% of short reads (reads below 100_bp) as nucleosome-free regions and the top 10% of intermediate length reads as (reads between 180 and 247 bp) mononucleosome. This serves as the training set to classify the rest of the fragments.
+ 
+
+We need genomic locations of TSS:
+
+```{r}
+#| eval: false
+#| echo: true
+
+txs=transcripts(TxDb.Mmusculus.UCSC.mm39.knownGene)
+txs=txs[seqnames(txs) %in% "chr1"]
+seqlevels(txs)=gsub("chr","",seqlevels(txs))
+```
+
+We need to rename chromosome ids in the `BSgenome` object:
+
+<br />
+<br />
+
+```{r}
+#| eval: false
+#| echo: true
+
+GenomeInfoDb::seqlevelsStyle(BSgenome.Mmusculus.UCSC.mm39)="NCBI"
+seqinfo(BSgenome.Mmusculus.UCSC.mm39)
+
+genome=Mmusculus
+```
+
+
+We split the alignments (this process takes a few minutes):
+
+```{r}
+#| eval: false
+#| echo: true
+
+objs=splitGAlignmentsByCut(gal1, txs=txs, genome=genome, outPath = outPath)
+
+saveRDS(objs, file="atacsqQC.objs.rds")
+```
+
+
+Finally, we have prepared the data for **plotting the signal in NFR and mononuclesome fraction** and calculating **signal distribution at TSS**.
+
+
 
 <br />
 <br />
 
 
+### Signal in NFR and Mononucleosome Fractions
+
+Files we are going to use and TSS coordinates:
+
+<br />
+
+```{r}
+#| eval: false
+#| echo: true
+
+bamFiles=file.path(outPath,
+                       c("NucleosomeFree.bam",
+                       "mononucleosome.bam",
+                       "dinucleosome.bam",
+                       "trinucleosome.bam"))
+
+TSS=promoters(txs, upstream=0, downstream=1)
+TSS=unique(TSS)
+```
+<br />
+
+Calculate and log2 transform the signal around TSS:
+
+<br />
+
+```{r}
+#| eval: false
+#| echo: true
+
+librarySize=estLibSize(bamFiles)
+
+seqlev="1" #we only consider one chromosome
+  
+NTILE=101
+dws=1010
+ups=1010
+
+sigs=enrichedFragments(gal=objs[c("NucleosomeFree",
+                                       "mononucleosome",
+                                       "dinucleosome",
+                                       "trinucleosome")],
+                            TSS=TSS,
+                            librarySize=librarySize,
+                            seqlev=seqlev,
+                            TSS.filter=0.5,
+                            n.tile = NTILE,
+                            upstream = ups,
+                            downstream = dws)
+
+saveRDS(sigs, file="atacsqQC.sigs.rds")
+
+sigs.log2=lapply(sigs, function(.ele) log2(.ele+1))
+```
+<br />
+
+We can now save the signal heatmap:
+
+<br />
+
+```{r}
+#| eval: false
+#| echo: true
+
+pdf("Heatmap_splitbam.pdf")
+  featureAlignedHeatmap(sigs.log2, reCenterPeaks(TSS, width=ups+dws),
+                        zeroAt=.5, n.tile=NTILE)
+
+dev.off()
+
+```
+
+<br />
+
+* What are the differences in the signal profile in these two fractions? Why do we observe them?
+
+
+<br />
+
+::: {.callout-note collapse="true"}
+
+### Heatmap of ATAC-seq signal in NFR and mononculeosome fractions
+
+![](assets/figures/Heatmap_splitbam.png){width=70%}
+
+:::
+
+<br />
+<br />
+
+We can now calculate signal density at TSS:
+
+<br />
+
+```{r}
+#| eval: false
+#| echo: true
+
+out=featureAlignedDistribution(sigs, 
+                                    reCenterPeaks(TSS, width=ups+dws),
+                                    zeroAt=.5, n.tile=NTILE, type="l", 
+                                    ylab="Averaged coverage")
+
+## rescale the nucleosome-free and nucleosome signals to 0~1 for plotting
+range01=function(x){(x-min(x))/(max(x)-min(x))}
+out=apply(out, 2, range01)
+
+```
+
+And plot it:
+
+
+```{r}
+#| eval: false
+#| echo: true
+
+pdf("TSSprofile_splitbam.pdf")
+    matplot(out, type="l", xaxt="n",
+          xlab="Position (bp)",
+          ylab="Fraction of signal")
+    axis(1, at=seq(0, 100, by=10)+1,
+       labels=c("-1K", seq(-800, 800, by=200), "1K"), las=2)
+    abline(v=seq(0, 100, by=10)+1, lty=2, col="gray")
+dev.off()
+
+```
+
+<br />
+
+* What are the differences in the signal profile in these two fractions? Why do we observe them?
+
+
+<br />
+
+::: {.callout-note collapse="true"}
+
+### Profiles of ATAC-seq signal in NFR and mononculeosome fractions
+
+![](assets/figures/TSSprofile_splitbam.png){width=70%}
+
+:::
+
+<br />
+
+::: {.callout-note}
+
+To finish working in `R` type `q()`. Do not save workspace image - in this case, to save space.
+
+:::
+
+
+<br />
+<br />
+
+
+## Signal Visualisation Using IGV
+
+
+In this part we will look more closely at our data, which is a good practice, as data summaries can be at times misleading. In principle we could look at the data on Uppmax using installed tools but it is much easier (and glitch-free) to work with genome browser locally. 
+If you have not done this before the course, install Interactive Genome Browser [IGV](https://www.broadinstitute.org/igv/).
+
+We would like to visualise processed alignments (bam and corresponding bai) at several loci with strong signal. We can also view the bam files split into nucleosome-free, mono- di- and tri- nucleosome fractions.
+
+<br />
+
+
+We will need the following files:
+
+* `atacseq/analysis/processedData/SRR17296554.blstMT_filt.dedup.bam` and `bai`
+
+* `atacseq/analysis/QC/splitBam/NucleosomeFree.bam` and `bai`
+
+* `atacseq/analysis/QC/splitBam/mononucleosome.bam` and `bai`
+
+* `atacseq/analysis/QC/splitBam/dinucleosome.bam` and `bai`
+
+* `atacseq/analysis/QC/splitBam/trinucleosome.bam` and `bai`
+
+<br />
+<br />
+
+::: {.callout-note collapse="true"}
+
+### Copying files from remote server
+
+To copy files from Pelle (or any remote host) you need to know the path to the file on Pelle  (i.e. the remote side). Type in the terminal::
+
+```{bash}
+#| eval: false
+#| echo: true
+
+pwd
+```
+
+This gives you the path to the working directory, e.g::
+
+```{bash}
+#| eval: false
+#| echo: true
+
+/proj/epi2026/private/agata/atac_tst/atacseq/analysis/deepTools
+```
+
+To copy file `Invivo_proc.fingerprint.pdf` to *current directory*, type in the **local** terminal:
+
+```{bash}
+#| eval: false
+#| echo: true
+
+scp <username>@pelle.uppmax.uu.se:/path/to/file .
+```
+
+E.g.:
+
+```{bash}
+#| eval: false
+#| echo: true
+
+scp agata@pelle.uppmax.uu.se:/proj/epi2026/private/agata/atac_tst/atacseq/analysis/deepTools/Invivo_proc.fingerprint.pdf .
+```
+
+You will be prompted to input the 2FA code following the password to Uppmax.
+:::
+
+<br />
+<br />
+
+::: {.callout-important icon=false}
+  
+  The reads are mapped to genome assembly **GRCm39**  / **mm39** which may need to be downloaded in your IGV version. To download a new genome, in IGV: Genomes > Hosted Genomes, then search for mm39.
+
+:::
+
+
+<br />
+
+You will have to zoom in to view the alignments and coverage tracks.
+
+Change the default viewing settings in IGV by `shift-clicking` (or `right-clicking` on some OS) onto a track name (left panel):
+
+**bam** tracks:
+
+* alignment view to `Squished`
+
+* colour alignments to `insert size and pair orientation`
+
+**coverage** tracks:
+
+* pay attention to track scale (signal range); it is set to `Auto`; the tracks are not displayed at the same range, you can harmonise the scale if you want to see the differences in signal range
+
+
+<br />
+
+You can move along the chromosome 1 and you will spot locations with high signal density.
+
+Examples:
+
+* `chr1:10,009,356-10,018,135`
+
+* `chr1:10,105,613-10,114,392`
+
+* `chr1:161,497,776-161,499,970`
+
+* `chr1:155,074,991-155,079,380`
+
+* `chr1:95,191,577-95,200,356`
+
+<br />
+
+
+::: {#fig-tracks1}
+
+![](assets/figures/splitBam_chr1_95M.png){width=80%}
+
+Signal in bam files split into fractions by fragment length.
+:::
+
+<br />
+
+Another example is shown on @fig-tracks2 (obtained using a different data set). This figure includes also detected peak intervals - we will discuss them in detail in the following sections).
+
+<br />
+
+::: {#fig-tracks2}
+
+![](assets/figures/igv_qc_split1.png){width=80%}
+
+Signal in bam files split into fractions by fragment length.
+:::
+
+<br />
+
+
+*Bonus question*
+
+* Why does the NFR track show unusually high fraction of discordant alignments (labeled green)?
+
+<br />
+<br />
+
+
+After the processing and QC performed in this tutorial, we can now move to [ATAC-seq data analysis](../ATACpeaks/index.html). 
 
