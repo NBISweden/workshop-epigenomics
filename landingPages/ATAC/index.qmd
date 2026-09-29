@@ -139,6 +139,7 @@ Additional ATAC-seq related tutorials:
 
 * [Identifying Relevant TFs](../../tutorials/TFs/representingMotifs.html)
 
+* [TF footprinting](../../tutorials/TFftprnt/index.html)
 
 
 <br />
