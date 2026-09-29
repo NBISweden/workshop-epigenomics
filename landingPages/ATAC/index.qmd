@@ -26,14 +26,36 @@ About:          This qmd file is used to render the .html file. To modify or
 <br />
 <br />
 
-ATAC-seq (Assay for Transposase-Accessible Chromatin with high-throughput sequencing) is a method for determining chromatin accessibility across the genome. It utilizes a hyperactive Tn5 transposase to insert sequencing adapters into open chromatin regions [@Buenrostro2015]. The principle of the assay is presented on Figure 1. High-throughput sequencing yields reads that indicate the regions of increased accessibility (Figure 2).
+ATAC-seq (Assay for Transposase-Accessible Chromatin with high-throughput sequencing) is a method for determining chromatin accessibility across the genome. It utilizes a hyperactive Tn5 transposase to insert sequencing adapters into open chromatin regions [@Buenrostro2015]. The principle of the assay is presented on @fig-1. High-throughput sequencing yields reads that indicate the regions of increased accessibility (@fig-2).
 
-![Fig 1. Overview of ATAC-seq](assets/atacSeqFigure1.png){width=70%}
+<br />
+
+
+::: {#fig-1}
+
+![](assets/atacSeqFigure1.png){width=70%}
+
+
+Overview of ATAC-seq
+:::
+
+<br />
 
 <br />
 <br />
 
-![Fig 2. ATAC-seq Signal](assets/atacSignal.png){width=70%}
+<br />
+
+
+::: {#fig-2}
+
+![](assets/atacSignal.png){width=70%}
+
+ATAC-seq Signal
+:::
+
+<br />
+
 
 <br />
 <br />
@@ -101,7 +123,7 @@ Tutorials in this module:
 
 * [Data Processing and QC](../../tutorials/ATACprocessing/index.html)
 
-* [Peak Detection](../../tutorials/ATACpeakAnnot/index.html)
+* [Peak Detection](../../tutorials/ATACpeaks/index.html)
 
 * [Differential Accessibility](../../tutorials/ATACda/index.html)
 
@@ -117,6 +139,7 @@ Additional ATAC-seq related tutorials:
 
 * [Identifying Relevant TFs](../../tutorials/TFs/representingMotifs.html)
 
+* [TF footprinting](../../tutorials/TFftprnt/index.html)
 
 
 <br />
