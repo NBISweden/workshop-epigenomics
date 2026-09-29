@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>ATAC-seq</title>
+<title>Transcription Factor Footprinting</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,6 +25,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 /* CSS for citations */
 div.csl-bib-body { }
@@ -108,13 +143,9 @@ background-size: cover;
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&amp;family=Nunito:ital,wght@0,200..700;1,200..700&amp;display=swap" rel="stylesheet">
   
-<meta name="mermaid-theme" content="default">
-<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
-<meta property="og:title" content="ATAC-seq">
+<meta property="og:title" content="Transcription Factor Footprinting">
 <meta property="og:description" content="NBIS Workshop">
 <meta property="og:image" content="https://nbisweden.github.io/workshop-epigenomics/assets/images/featured.webp">
 </head>
@@ -211,7 +242,7 @@ background-size: cover;
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">ATAC-seq</h1>
+      <h1 class="title">Transcription Factor Footprinting</h1>
             <p class="subtitle lead">NBIS Workshop</p>
                       </div>
   </div>
@@ -223,7 +254,7 @@ background-size: cover;
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">Invalid Date</p>
+        <p class="date">29-Sep-2026</p>
       </div>
     </div>
     
@@ -238,9 +269,12 @@ background-size: cover;
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul>
-  <li><a href="#atac-seq-tutorials" id="toc-atac-seq-tutorials" class="nav-link active" data-scroll-target="#atac-seq-tutorials">ATAC-seq tutorials</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <ul class="collapse">
+  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link active" data-scroll-target="#learning-outcomes"><span class="header-section-number">1</span> Learning outcomes</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">2</span> Introduction</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">3</span> Data</a></li>
+  <li><a href="#setting-up" id="toc-setting-up" class="nav-link" data-scroll-target="#setting-up"><span class="header-section-number">4</span> Setting-up</a></li>
+  <li><a href="#detection-of-tf-binding-signatures" id="toc-detection-of-tf-binding-signatures" class="nav-link" data-scroll-target="#detection-of-tf-binding-signatures"><span class="header-section-number">5</span> Detection of TF Binding Signatures</a></li>
   </ul>
 </nav>
     </div>
@@ -252,114 +286,166 @@ background-size: cover;
 
 
 
-<!-- 
-Author:         Agata Smialowska
-About:          This qmd file is used to render the .html file. To modify or 
-                update the .html file, please do so in the .qmd file here and 
-                render it.
--->
-<p><br> <br></p>
-<p>ATAC-seq (Assay for Transposase-Accessible Chromatin with high-throughput sequencing) is a method for determining chromatin accessibility across the genome. It utilizes a hyperactive Tn5 transposase to insert sequencing adapters into open chromatin regions <span class="citation" data-cites="Buenrostro2015">(<a href="#ref-Buenrostro2015" role="doc-biblioref">Buenrostro et al. 2015</a>)</span>. The principle of the assay is presented on Figure 1. High-throughput sequencing yields reads that indicate the regions of increased accessibility (Figure 2).</p>
-<div class="quarto-figure quarto-figure-left">
-<figure class="figure">
-<p><a href="assets/atacSeqFigure1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Fig 1. Overview of ATAC-seq"><img src="assets/atacSeqFigure1.png" class="img-fluid figure-img" style="width:70.0%" alt="Fig 1. Overview of ATAC-seq"></a></p>
-<figcaption>Fig 1. Overview of ATAC-seq</figcaption>
-</figure>
-</div>
-<p><br> <br></p>
-<div class="quarto-figure quarto-figure-left">
-<figure class="figure">
-<p><a href="assets/atacSignal.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Fig 2. ATAC-seq Signal"><img src="assets/atacSignal.png" class="img-fluid figure-img" style="width:70.0%" alt="Fig 2. ATAC-seq Signal"></a></p>
-<figcaption>Fig 2. ATAC-seq Signal</figcaption>
-</figure>
-</div>
-<p><br> <br></p>
 <p><br></p>
-<div id="fig-flowchart-1" class="quarto-float quarto-figure quarto-figure-left anchored">
+<section id="learning-outcomes" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="learning-outcomes"><span class="header-section-number">1</span> Learning outcomes</h2>
+<ul>
+<li>detect transcription factor binding signatures in ATAC-seq data</li>
+</ul>
+<p><br></p>
+<div id="fig-1" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-flowchart-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell" data-fig-width="6" data-layout-align="left">
-<div class="cell-output-display">
-<div id="fig-mermaid-flowchart1" class="quarto-float quarto-figure quarto-figure-left anchored">
-<figure class="quarto-float quarto-subfloat-fig figure">
-<div aria-describedby="fig-mermaid-flowchart1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div>
-<pre class="mermaid mermaid-js" data-label="fig-mermaid-flowchart1">flowchart LR
-  subgraph QC
-    D(Quality Control, Feature Agnostic)
-    H(Quality Control, Feature Focused)
-  end
-  subgraph Analysis
-    C(Feature Detection)
-    E(Feature Annotation)
-    F(Statistical Analysis)
-    E(Feature Annotation)
-  end
-
-  A[Data] --&gt; B([Data Processing])
-  B([Data Processing]) --&gt; C(Feature Detection)
-  B([Data Processing]) --&gt; D(Quality Control, Feature Agnostic)
-  C(Feature Detection) --&gt; E(Feature Annotation)
-  C(Feature Detection) --&gt; F(Statistical Analysis)
-  C(Feature Detection) --&gt; G(Visualisation)
-  B([Data Processing]) --&gt; G(Visualisation)
-  E(Feature Annotation) --&gt; I{Analysed}
-  F(Statistical Analysis) --&gt; I{Analysed}
-  D(Quality Control, Feature Agnostic) --&gt; H(Quality Control, Feature Focused)
-  C(Feature Detection) --&gt; H(Quality Control, Feature Focused)
-  G(Visualisation) --&gt; I{Analysed}
-  H(Quality Control, Feature Focused) --&gt; I{Analysed}
-
-  style A fill:#8FB4F7,stroke:#2768F5
-  style I fill:#DF8FF7,stroke:#C11DF2
-  style QC fill:#D4D1C5,stroke:#87857C 
-  style Analysis fill:#D4D1C5,stroke:#87857C 
-
-</pre>
+<div aria-describedby="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="assets/figures/TFfootprinting_tobias.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Overview of TF footprinting in ATAC-seq data. Figure from TOBIAS."><img src="assets/figures/TFfootprinting_tobias.png" class="img-fluid figure-img" style="width:70.0%"></a>
 </div>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-mermaid-flowchart1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-(a)
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Overview of TF footprinting in ATAC-seq data. Figure from <a href="https://github.com/loosolab/TOBIAS/wiki/">TOBIAS</a>.
 </figcaption>
 </figure>
 </div>
-</div>
-</div>
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flowchart-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: ATAC-seq data analysis workflow.
-</figcaption>
-</figure>
-</div>
-<p><br> <br> <br></p>
-<section id="atac-seq-tutorials" class="level2">
-<h2 class="anchored" data-anchor-id="atac-seq-tutorials">ATAC-seq tutorials</h2>
-<p><br> <br></p>
-<p>Tutorials in this module:</p>
-<ul>
-<li><p><a href="../ATACprocessing/index.html">Data Processing and QC</a></p></li>
-<li><p><a href="../ATACpeakAnnot/index.html">Peak Detection</a></p></li>
-<li><p><a href="../ATACda/index.html">Differential Accessibility</a></p></li>
-<li><p><a href="../ATACpeakAnnot/index.html">Peak Annotation</a></p></li>
-</ul>
-<p><br> <br></p>
-<p>Additional ATAC-seq related tutorials:</p>
-<ul>
-<li><p><a href="../TFs/representingMotifs.html">TF motifs</a></p></li>
-<li><p><a href="../TFs/representingMotifs.html">Identifying Relevant TFs</a></p></li>
-</ul>
 <p><br> <br></p>
 </section>
-<section id="references" class="level2">
+<section id="introduction" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">2</span> Introduction</h2>
+<p>Transcription factor (TF) footprinting allows for the prediction of binding of a TF at a particular locus. This is because the DNA bases that are directly bound by the TF are actually protected from transposition while the DNA bases immediately adjacent to TF binding are accessible <a href="#fig-1" class="quarto-xref">Figure&nbsp;1</a>. This results in <strong>footprints</strong>: defined regions of decreased signal strength within larger regions of high signal. One caveat of TF footprinting is that not all TFs leave footprints detectable in ATAC-seq data, and not all footprints for given TF can be detected.</p>
+<p>While ATAC-seq can uncover accessible regions where transcription factors (TFs) <em>might</em> bind, reliable identification of specific TF binding sites (TFBS) still relies on chromatin immunoprecipitation methods such as ChIP-seq.</p>
+<p><br></p>
+<p>To sum up, both approaches are complementary, and both have limitations:</p>
+<ul>
+<li><p><strong>ATAC-seq</strong> footprinting methods require excellent data quality and deep read coverage, give evidence of <em>motif occupancy</em> rather than factor binding, and are limited to TFs which leave a footprint (estimates say of &lt;70% TFs leaving a detectable footprint);</p></li>
+<li><p><strong>ChIP-seq</strong> methods require high input cell numbers, are limited to one TF per assay, and are further restricted to TFs for which antibodies are available.</p></li>
+</ul>
+<p><br> <br></p>
+<p>In this tutorial we use <a href="https://github.com/loosolab/TOBIAS/wiki/">TOBIAS</a> to detect TF binding signatures in ATAC-seq data <span class="citation" data-cites="Bentsen2020">(<a href="#ref-Bentsen2020" role="doc-biblioref">Bentsen et al. 2020</a>)</span>.</p>
+<p><br> <br></p>
+</section>
+<section id="data" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="data"><span class="header-section-number">3</span> Data</h2>
+<p>We will continue using data that from publication <code>Batf-mediated epigenetic control of effector CD8+ T cell differentiation</code> (Tsao et al 2022). These are <strong>ATAC-seq</strong> libraries (in duplicates) prepared to analyse chromatin accessibility status in murine CD8+ T lymphocytes prior to and upon Batf knockout.</p>
+<p>The response of naive CD8+ T cells to their cognate antigen involves rapid and broad changes to gene expression that are coupled with extensive chromatin remodeling. Basic leucine zipper ATF-like transcription factor <strong>Batf</strong> is essential for the early phases of the process.</p>
+<p><br> <br></p>
+<p>To save time, we will use <em>precomputed tracks</em> and perform the last step: <strong>footprints detection</strong>.</p>
+<p>We will use motifs of <strong>selected TFs</strong>, to shorten the computation time.</p>
+<p>We will inspect the results of footprinting of a comprehensive TF landscape of non-redundant vertebrate TF motif collection from <a href="https://jaspar.elixir.no/">JASPAR</a> .</p>
+<p>The starting point for this analyses are bam files with alignments <strong>merged across replicates</strong> i.e.&nbsp;one bam file per condition. This is done to increase read depth.</p>
+<p><br> <br></p>
+</section>
+<section id="setting-up" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="setting-up"><span class="header-section-number">4</span> Setting-up</h2>
+<p>Starting at <code>atacseq/analysis</code> we will create a dedicated directory and link and copy necessary files.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> TF_footprinting</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> TF_footprinting</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="va">tracksdir</span><span class="op">=</span><span class="st">"/proj/epi2026/TF_ftprnt/data/TF_footprinting/tracks"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> <span class="st">"</span><span class="va">${tracksdir}</span><span class="st">/A_Batf_KO/Footprint/A_Batf_KO_footprints.bw"</span> .</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> <span class="st">"</span><span class="va">${tracksdir}</span><span class="st">/B_WT/Footprint/B_WT_footprints.bw"</span> .</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> /proj/epi2026/TF_ftprnt/TF_ftprnt/JASPAR2024_selTFs_pfms_meme.txt .</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> /proj/epi2026/TF_ftprnt/TF_ftprnt/genrich_joint_peaks_merged.Allpeaks_annot.Ensembl.bed .</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> results</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-r</span> /proj/epi2026/TF_ftprnt/TF_ftprnt/Batf_KO_vs_WT_selTFs  results</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> results/Batf_KO_vs_WT_allTFs</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-r</span> /proj/epi2026/TF_ftprnt/results/Batf_KO_vs_WT/BINDdetect/bindetect<span class="pp">*</span> results/Batf_KO_vs_WT_allTFs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br> <br></p>
+</section>
+<section id="detection-of-tf-binding-signatures" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="detection-of-tf-binding-signatures"><span class="header-section-number">5</span> Detection of TF Binding Signatures</h2>
+<p><br></p>
+<p><code>TOBIAS</code> TF footprinting workflow consists of three stages:</p>
+<ol type="1">
+<li><p>Correction for the Tn5 transposase insertion sequence bias using <code>ATACorrect</code>;</p></li>
+<li><p>Identify regions of protein binding in open chromatin (within peaks) using <code>ScoreBigwig</code>;</p></li>
+<li><p>Calculate TF binding by combining footprint scores and TF binding motif information using <code>BINDetect</code>.</p></li>
+</ol>
+<p><br> <br></p>
+<section id="atacorrect-and-scorebigwig" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="atacorrect-and-scorebigwig"><span class="header-section-number">5.1</span> ATACorrect and ScoreBigwig</h3>
+<p><br></p>
+<p>We have precomputed these tracks, as it takes time and CPU resources.</p>
+<p>In brief, the commands were [<em>do not run</em>]:</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">TOBIAS</span> ATACorrect <span class="at">--bam</span> B_WT_merged_replicates.sorted.bam <span class="at">--genome</span> GRCm39/Mus_musculus.GRCm39.dna.primary_assembly.fa <span class="at">--peaks</span> genrich_joint_peaks_merged.Allpeaks_annot.Ensembl.bed <span class="at">--outdir</span> TF_footprinting/tracks/B_WT/Footprint/</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">TOBIAS</span> ScoreBigwig <span class="at">--signal</span> Footprint/B_WT_merged_replicates.sorted_corrected.bw <span class="at">--regions</span> genrich_joint_peaks_merged.Allpeaks_annot.Ensembl.bed <span class="at">--output</span> B_WT_footprints.bw</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+</section>
+<section id="tf-binding-detection" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="tf-binding-detection"><span class="header-section-number">5.2</span> TF Binding Detection</h3>
+<p>We will run <code>TOBIAS</code> <code>BINDetect</code> in <strong>comparative mode</strong> where we compare TF footprints in <strong>BATF KO vs WT</strong>.</p>
+<p>We need to set some paths first:</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">container_pth</span><span class="op">=</span><span class="st">"/proj/epi2026/library/containers/agatasm-tobias-uropa.img"</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="va">file_fa</span><span class="op">=</span><span class="st">"/proj/epi2026/TF_ftprnt/ref/Mus_musculus.GRCm39.dna.primary_assembly.fa"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="va">motifs_file</span><span class="op">=</span><span class="st">"JASPAR2024_selTFs_pfms_meme.txt"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="va">peaks</span><span class="op">=</span><span class="st">"genrich_joint_peaks_merged.Allpeaks_annot.Ensembl.bed"</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="va">footprnt_1</span><span class="op">=</span><span class="st">"A_Batf_KO_footprints.bw"</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="va">footprnt_2</span><span class="op">=</span><span class="st">"B_WT_footprints.bw"</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="va">smpl</span><span class="op">=</span><span class="st">"Batf_KO_vs_WT_selTFs"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>We will execute <code>TOBIAS</code> in a software container:</p>
+<p><br> <br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">projroot</span><span class="op">=</span><span class="st">"/proj/epi2026/"</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">apptainer</span> exec <span class="at">--bind</span> <span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span> <span class="at">--bind</span> <span class="va">${projroot}</span> <span class="at">--pwd</span> <span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span> <span class="va">${container_pth}</span> <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>TOBIAS  BINDetect <span class="at">--motifs</span> <span class="va">${motifs_file}</span> <span class="dt">\</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--signals</span> <span class="va">${footprnt_1}</span> <span class="va">${footprnt_2}</span> <span class="dt">\</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--genome</span> <span class="va">${file_fa}</span> <span class="dt">\</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--peaks</span> <span class="va">${peaks}</span> <span class="dt">\</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">--cores</span> 5 <span class="dt">\</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> <span class="va">${smpl}</span>/BINDdetect</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br> <br></p>
+<p>Output description can be found at <a href="https://github.com/loosolab/TOBIAS/wiki/BINDetect#output">BINDdetect documentation homepage</a>.</p>
+<p>You can view summary of the results obtained for the subset JASPAR vertebrate consensus motif collection in directory <code>Batf_KO_vs_WT_selTFs/BINDdetect</code>. In particular, file <code>bindetect_A_Batf_KO_footprints_B_WT_footprints.html</code> contains an interactive volcano plot highlighting the TFs with most extreme differences in their footprint scores upon Batf knock-out. The results obtained by interrogation of the non-subset JASPAR collection are presented on <a href="#fig-2" class="quarto-xref">Figure&nbsp;2</a>.</p>
+<p><br></p>
+<p><br></p>
+<div id="fig-2" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="assets/figures/BINDetect_allTFs.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Results of TF footprinting in Batf KO vs WT. Interrogated were motifs in non-subset JASPAR vertebrate consensus motif collection."><img src="assets/figures/BINDetect_allTFs.png" class="img-fluid figure-img" style="width:70.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Results of TF footprinting in Batf KO vs WT. Interrogated were motifs in non-subset JASPAR vertebrate consensus motif collection.
+</figcaption>
+</figure>
+</div>
+<p><br></p>
+<p><strong>Batf</strong> motif is part of the JUN / FOS points cluster at the top left arm of the volcano. The results for one of its motifs are:</p>
+<p><br></p>
+<p>You can inspect the results of TF footprinting using the non-subset JASPAR vertebrate consensus motif collection at <code>results/Batf_KO_vs_WT_allTFs</code>.</p>
+<p><br></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>output_prefix name  motif_id  cluster total_tfbs  A_Batf_KO_footprints_mean_score A_Batf_KO_footprints_bound  B_WT_footprints_mean_score  B_WT_footprints_bound A_Batf_KO_footprints_B_WT_footprints_change A_Batf_KO_footprints_B_WT_footprints_pvalue A_Batf_KO_footprints_B_WT_footprints_highlighted</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>BATF_MA1634<span class="fl">.2</span> BATF  MA1634<span class="fl">.2</span>  C_FOS<span class="sc">::</span>JUND <span class="dv">17254</span> <span class="fl">0.33875</span> <span class="dv">2304</span>  <span class="fl">0.38674</span> <span class="dv">2747</span>  <span class="sc">-</span><span class="fl">0.39584</span>  <span class="fl">1.07531E-169</span>  True</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br></p>
+<p>How do you interpret the TF footprinting result (the observed change in Batf motif occupancy)?</p>
 
 
 
-
+</section>
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-Buenrostro2015" class="csl-entry" role="listitem">
-Buenrostro, Jason D., Beijing Wu, Howard Y. Chang, and William J. Greenleaf. 2015. <span>“ATAC-Seq: A Method for Assaying Chromatin Accessibility Genome-Wide.”</span> <em>Current Protocols in Molecular Biology</em> 109 (January): 21.29.1–9. <a href="https://doi.org/10.1002/0471142727.mb2129s109">https://doi.org/10.1002/0471142727.mb2129s109</a>.
+<div id="ref-Bentsen2020" class="csl-entry" role="listitem">
+Bentsen, Mette, Philipp Goymann, Hendrik Schultheis, et al. 2020. <span>“ATAC-Seq Footprinting Unravels Kinetics of Transcription Factor Binding During Zygotic Genome Activation.”</span> <em>Nature Communications</em> 11 (1). <a href="https://doi.org/10.1038/s41467-020-18035-1">https://doi.org/10.1038/s41467-020-18035-1</a>.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
