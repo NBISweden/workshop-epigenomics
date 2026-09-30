@@ -35,7 +35,7 @@ Regardless of the approach, the rationale behind bisulfite sequencing is fairly 
 ![Fig 1. Bisulfite sequencing overview.](images/biseq.png)
 
 
-Being able to do this quantification reliably depends on rigorous quality control before alignment, the choice of alignment method and post-alignment quality control. Other issues to consider are the reduced complexity and the increased degradation that occurs during bisulfite treatment.  A best-practices pipeline for the mapping and quantification of bisulfite converted reads has been developed by nf-core (see [methylseq](https://nf-co.re/methylseq)  using either `Bismark` or `bwa-meth` as aligners for BS-seq data.  You can follow this tutorial :doc:`../nextflow` to run nf-core workflows.  For today, we will focus on the downstream analysis, i.e. the part of the analysis after running for example nf-core methylseq. 
+Being able to do this quantification reliably depends on rigorous quality control before alignment, the choice of alignment method and post-alignment quality control. Other issues to consider are the reduced complexity and the increased degradation that occurs during bisulfite treatment.  A best-practices pipeline for the mapping and quantification of bisulfite converted reads has been developed by nf-core (see [methylseq](https://nf-co.re/methylseq)  using either `Bismark` or `bwa-meth` as aligners for BS-seq data.  For today, we will focus on the downstream analysis, i.e. the part of the analysis after running for example nf-core methylseq. 
 
 
 # Datasets
@@ -57,7 +57,7 @@ In this tutorial we will be focusing on the downstream analysis of bisulfite seq
 # Set Up R environment
 
 
-If your UPPMAX session from the Array tutorial is still open, you can continue this exercise in that one. Otherwise set up the environment as you did this morning.
+If you are already working in UPPMAX and your interactive session from the Array tutorial is still open then you can continue this exercise in that one. Otherwise connect to Pelle, start an interactive session and set up the R environment as you did this morning.
 
 
 There are three options for you to select. This exercise can be set up
@@ -82,9 +82,7 @@ this option first, especially for novice programmers.
 <summary>Show steps</summary>
 ```
 
-First, connect to the server as described in
-[Setting-up](../setup/lab-setup).
-Follow the instruction to start an interactive session in Pelle.
+
 Follow the instruction in @nte-uppaxsetwd to set your working directory.
 
 On UPPMAX, most packages are already installed, and can be loaded into R
@@ -92,9 +90,9 @@ after the R and R packages modules have been loaded. If
 you are running on UPPMAX, start by loading the following modules:
 
 ```{bash}
-module load R/4.4.2-gfbf-2024a
-module load R-bundle-CRAN/2024.11-foss-2024a
-
+module load R/4.6.1-gfbf-2026.1
+module load R-bundle-CRAN/2026.07-foss-2026.1
+module load R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1
 
 module load RStudio
 ```
@@ -146,11 +144,7 @@ steps are necessary.
 ```
 
 
-First, connect to the server as described in
-[Setting-up](../setup/lab-setup).
-Follow the instruction to start an interactive session in Pelle.
 Follow the instruction in @nte-uppaxsetwd to set your working directory.
-
 Execute the following commands from a terminal in Pelle.
 
 ```{bash}
@@ -254,10 +248,14 @@ For Option A only:
 # Do NOT do this if setting up the environment with option B, only option A
 # If you accidentally run the following line with option B, you can do *Session -> Restart R*
 # and run again without this line.
-.libPaths("/gorilla/proj/epi2026/DNAM/R.4.4.2/packages")
+.libPaths("/gorilla/proj/epi2026/library/Rpackages/4.6.1")
 
 # make sure the library paths are correct (should be pointing to the folder above)
 .libPaths()
+#"/gorilla/proj/epi2026/library/Rpackages/4.6.1"                      
+#"/sw/arch/eb/software/R-bundle-CRAN/2026.07-foss-2026.1"             
+#"/sw/arch/eb/software/R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1"
+#"/sw/arch/eb/software/R/4.6.1-gfbf-2026.1/lib64/R/library"    
 
 ```
 
@@ -297,17 +295,17 @@ The datasets have been uploaded to UPPMAX prior to the workshop, so you just nee
 ```{r}
 # Define the list containing the bismark coverage files.
 file.list <- list(
-   "/sw/courses/epigenomics/DNAmethylation/biseq_data/P6_1.bismark.cov.gz",
-   "/sw/courses/epigenomics/DNAmethylation/biseq_data/P6_4.bismark.cov.gz",
-   "/sw/courses/epigenomics/DNAmethylation/biseq_data/P8_3.bismark.cov.gz",
-   "/sw/courses/epigenomics/DNAmethylation/biseq_data/P8_6.bismark.cov.gz"
+   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P6_1.bismark.cov.gz",
+   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P6_4.bismark.cov.gz",
+   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P8_3.bismark.cov.gz",
+   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P8_6.bismark.cov.gz"
 )
 
 ```
 
 
 ::: callout-warning
-   If you prefer to run this tutorial locally, you can also download these data files to your personal computer. To do this, navigate to the folder on your own conputer where you want to deposit the data and execute `scp -r <username>@pelle.uppmax.uu.se:/sw/courses/epigenomics/DNAmethylation/biseq_data .`. Of course, you will also have to install the analysis packages locally.
+   If you prefer to run this tutorial locally, you can also download these data files to your personal computer. To do this, navigate to the folder on your own computer where you want to deposit the data and execute `scp -r <username>@pelle.uppmax.uu.se:/gorilla/proj/epi2026/DNAM/WGBS/biseq_data .`. Then you can point the variable `file.list` to your local copy of coverage files.  Of course, you will also have to install the analysis packages locally.
 :::
 
 
@@ -575,12 +573,13 @@ To help with the biological interpretation of the data, we will annotate the dif
 ```{r}
 
 # First load the annotation data; i.e the coordinates of promoters, TSS, intron and exons
-refseq_anot <- readTranscriptFeatures("/sw/courses/epigenomics/DNAmethylation/biseq_data//mm10.refseq.genes.bed")
+
+# !!! change the file path if you are working in your local machine with a local copy of this BED file
+refseq_anot <- readTranscriptFeatures("/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/mm10.refseq.genes.bed")
 
 # Annotate hypermethylated CpGs ("target") with promoter/exon/intron
 # information ("feature"). This function operates on GRanges objects, so we # first coerce the methylKit object to GRanges.
-myDiff25p.hyper.anot <- annotateWithGeneParts(target = as(myDiff25p.hyper, "GRanges"),
-                                              feature = refseq_anot)
+myDiff25p.hyper.anot <- annotateWithGeneParts(target = as(myDiff25p.hyper, "GRanges"),feature = refseq_anot)
 
 # Summary of target set annotation
 myDiff25p.hyper.anot
@@ -610,8 +609,10 @@ Similarly, it is possible to annotate the differentially methylated CpGs with Cp
 
 ```{r}
 # Load the CpG info
+
+# !!! change the file path if you are working in your local machine with a local copy of this BED file
 cpg_anot <- readFeatureFlank(
-   "/sw/courses/epigenomics/DNAmethylation/biseq_data/mm10.cpg.bed",
+   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/mm10.cpg.bed",
    feature.flank.name = c("CpGi", "shores"),
    flank = 2000
 )
@@ -640,7 +641,7 @@ In general, this workflow can be used to annotate a CpG list with any set of fea
 ## Differentially Methylated Regions
 
 
-Since we are often more interested in the different methylation of multiple CpGs across samples instead of a single site, we can also summarize methylation information over a set of defined functional regions such as promoters or CpG islands. The function below summarizes the methylation information over a given set of CpG Islands and outputs a `methylRaw` or `methylRawList` object depending on the input. We are using the output of `genomation functions used above to provide the locations of the Islands. For these regional summary functions, we need to provide regions of interest as GRanges object.
+Since we are often more interested in the different methylation of multiple CpGs across samples instead of a single site, we can also summarize methylation information over a set of defined functional regions such as promoters or CpG islands. The function below summarizes the methylation information over a given set of CpG Islands and outputs a `methylRaw` or `methylRawList` object depending on the input. We are using the output of `genomation` functions used above to provide the locations of the Islands. For these regional summary functions, we need to provide regions of interest as GRanges object.
 
 
 ```{r}
