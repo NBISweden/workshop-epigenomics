@@ -331,7 +331,7 @@ window.Quarto = {
 <figcaption>Fig 1. Bisulfite sequencing overview.</figcaption>
 </figure>
 </div>
-<p>Being able to do this quantification reliably depends on rigorous quality control before alignment, the choice of alignment method and post-alignment quality control. Other issues to consider are the reduced complexity and the increased degradation that occurs during bisulfite treatment. A best-practices pipeline for the mapping and quantification of bisulfite converted reads has been developed by nf-core (see <a href="https://nf-co.re/methylseq">methylseq</a> using either <code>Bismark</code> or <code>bwa-meth</code> as aligners for BS-seq data. You can follow this tutorial :doc:<code>../nextflow</code> to run nf-core workflows. For today, we will focus on the downstream analysis, i.e.&nbsp;the part of the analysis after running for example nf-core methylseq.</p>
+<p>Being able to do this quantification reliably depends on rigorous quality control before alignment, the choice of alignment method and post-alignment quality control. Other issues to consider are the reduced complexity and the increased degradation that occurs during bisulfite treatment. A best-practices pipeline for the mapping and quantification of bisulfite converted reads has been developed by nf-core (see <a href="https://nf-co.re/methylseq">methylseq</a> using either <code>Bismark</code> or <code>bwa-meth</code> as aligners for BS-seq data. For today, we will focus on the downstream analysis, i.e.&nbsp;the part of the analysis after running for example nf-core methylseq.</p>
 </section>
 <section id="datasets" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Datasets</h1>
@@ -359,7 +359,7 @@ Note
 </section>
 <section id="set-up-r-environment" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Set Up R environment</h1>
-<p>If your UPPMAX session from the Array tutorial is still open, you can continue this exercise in that one. Otherwise set up the environment as you did this morning.</p>
+<p>If you are already working in UPPMAX and your interactive session from the Array tutorial is still open then you can continue this exercise in that one. Otherwise connect to Pelle, start an interactive session and set up the R environment as you did this morning.</p>
 <p>There are three options for you to select. This exercise can be set up to run on UPPMAX, and so we provide two ways to set up the R environment within UPPMAX. Alternatively, if you prefer to work locally in your laptop then you can follow Option C. These options are described in detail below.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -374,12 +374,12 @@ Note
 <p>This easy option makes use of the module system in UPPMAX. This option avoids problem with dependencies between packages and avoids the issue of missing system libraries. Sometimes, this option suffers from slow response times when using Rstudio or has issues rendering figures. Because of the easy setup it might still be worth trying out this option first, especially for novice programmers.</p>
 <details>
 <summary>Show steps</summary>
-<p>First, connect to the server as described in <a href="../setup/lab-setup">Setting-up</a>. Follow the instruction to start an interactive session in Pelle. Follow the instruction in <a href="#nte-uppaxsetwd" class="quarto-xref">Note&nbsp;1</a> to set your working directory.</p>
+<p>Follow the instruction in <a href="#nte-uppaxsetwd" class="quarto-xref">Note&nbsp;1</a> to set your working directory.</p>
 <p>On UPPMAX, most packages are already installed, and can be loaded into R after the R and R packages modules have been loaded. If you are running on UPPMAX, start by loading the following modules:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R/4.4.2-gfbf-2024a</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R-bundle-CRAN/2024.11-foss-2024a</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R/4.6.1-gfbf-2026.1</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R-bundle-CRAN/2026.07-foss-2026.1</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load RStudio</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -411,8 +411,7 @@ Note
 <p>We have provided a containerized environment consisting of R, Rstudio and the necessary packages for this session. This means the software can easily run within the container on almost any computer or server, greatly simplifying software installation and management. A benefit of using it here is that Rstudio runs a whole lot faster using the container approach. However, to access it from UPPMAX, a few more steps are necessary.</p>
 <details>
 <summary>Show steps</summary>
-<p>First, connect to the server as described in <a href="../setup/lab-setup">Setting-up</a>. Follow the instruction to start an interactive session in Pelle. Follow the instruction in <a href="#nte-uppaxsetwd" class="quarto-xref">Note&nbsp;1</a> to set your working directory.</p>
-<p>Execute the following commands from a terminal in Pelle.</p>
+<p>Follow the instruction in <a href="#nte-uppaxsetwd" class="quarto-xref">Note&nbsp;1</a> to set your working directory. Execute the following commands from a terminal in Pelle.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the startup script; this will start the container and run Rstudio</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sh</span> /sw/courses/epigenomics/DNAmethylation/startup_script.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -499,10 +498,14 @@ Note&nbsp;1: Set up your working directory
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Do NOT do this if setting up the environment with option B, only option A</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If you accidentally run the following line with option B, you can do *Session -&gt; Restart R*</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># and run again without this line.</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>(<span class="st">"/gorilla/proj/epi2026/DNAM/R.4.4.2/packages"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>(<span class="st">"/gorilla/proj/epi2026/library/Rpackages/4.6.1"</span>)</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure the library paths are correct (should be pointing to the folder above)</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>()</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#"/gorilla/proj/epi2026/library/Rpackages/4.6.1"                      </span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#"/sw/arch/eb/software/R-bundle-CRAN/2026.07-foss-2026.1"             </span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#"/sw/arch/eb/software/R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1"</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#"/sw/arch/eb/software/R/4.6.1-gfbf-2026.1/lib64/R/library"    </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>For Option C only:</p>
 <div class="cell">
@@ -529,10 +532,10 @@ Note&nbsp;1: Set up your working directory
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the list containing the bismark coverage files.</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>file.list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/sw/courses/epigenomics/DNAmethylation/biseq_data/P6_1.bismark.cov.gz"</span>,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/sw/courses/epigenomics/DNAmethylation/biseq_data/P6_4.bismark.cov.gz"</span>,</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/sw/courses/epigenomics/DNAmethylation/biseq_data/P8_3.bismark.cov.gz"</span>,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/sw/courses/epigenomics/DNAmethylation/biseq_data/P8_6.bismark.cov.gz"</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P6_1.bismark.cov.gz"</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P6_4.bismark.cov.gz"</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P8_3.bismark.cov.gz"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P8_6.bismark.cov.gz"</span></span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -545,7 +548,7 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If you prefer to run this tutorial locally, you can also download these data files to your personal computer. To do this, navigate to the folder on your own conputer where you want to deposit the data and execute <code>scp -r &lt;username&gt;@pelle.uppmax.uu.se:/sw/courses/epigenomics/DNAmethylation/biseq_data .</code>. Of course, you will also have to install the analysis packages locally.</p>
+<p>If you prefer to run this tutorial locally, you can also download these data files to your personal computer. To do this, navigate to the folder on your own computer where you want to deposit the data and execute <code>scp -r &lt;username&gt;@pelle.uppmax.uu.se:/gorilla/proj/epi2026/DNAM/WGBS/biseq_data .</code>. Then you can point the variable <code>file.list</code> to your local copy of coverage files. Of course, you will also have to install the analysis packages locally.</p>
 </div>
 </div>
 <p>Read the listed files into a methylRawList object making sure the other parameters are filled in correctly. Don’t forget to check <code>?methRead</code> for more info about parameter options.</p>
@@ -789,15 +792,16 @@ Note
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First load the annotation data; i.e the coordinates of promoters, TSS, intron and exons</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>refseq_anot <span class="ot">&lt;-</span> <span class="fu">readTranscriptFeatures</span>(<span class="st">"/sw/courses/epigenomics/DNAmethylation/biseq_data//mm10.refseq.genes.bed"</span>)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotate hypermethylated CpGs ("target") with promoter/exon/intron</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># information ("feature"). This function operates on GRanges objects, so we # first coerce the methylKit object to GRanges.</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper.anot <span class="ot">&lt;-</span> <span class="fu">annotateWithGeneParts</span>(<span class="at">target =</span> <span class="fu">as</span>(myDiff25p.hyper, <span class="st">"GRanges"</span>),</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">feature =</span> refseq_anot)</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of target set annotation</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper.anot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># !!! change the file path if you are working in your local machine with a local copy of this BED file</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>refseq_anot <span class="ot">&lt;-</span> <span class="fu">readTranscriptFeatures</span>(<span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/mm10.refseq.genes.bed"</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotate hypermethylated CpGs ("target") with promoter/exon/intron</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co"># information ("feature"). This function operates on GRanges objects, so we # first coerce the methylKit object to GRanges.</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper.anot <span class="ot">&lt;-</span> <span class="fu">annotateWithGeneParts</span>(<span class="at">target =</span> <span class="fu">as</span>(myDiff25p.hyper, <span class="st">"GRanges"</span>),<span class="at">feature =</span> refseq_anot)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of target set annotation</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper.anot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -827,30 +831,32 @@ Note
 <p>Similarly, it is possible to annotate the differentially methylated CpGs with CpG Island membership using <code>readFeatureFlank</code> and <code>annotateWithFeatureflank</code>. Using these functions you read from a BED file with feature info (here the location of the CpG Islands) and with the flank parameter you can define a region around these features (here the “shores” are defined as 2000 bases around the Islands).</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the CpG info</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>cpg_anot <span class="ot">&lt;-</span> <span class="fu">readFeatureFlank</span>(</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/sw/courses/epigenomics/DNAmethylation/biseq_data/mm10.cpg.bed"</span>,</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature.flank.name =</span> <span class="fu">c</span>(<span class="st">"CpGi"</span>, <span class="st">"shores"</span>),</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank =</span> <span class="dv">2000</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>diffCpGann <span class="ot">&lt;-</span> <span class="fu">annotateWithFeatureFlank</span>(</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>   <span class="fu">as</span>(myDiff25p, <span class="st">"GRanges"</span>),</span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature =</span> cpg_anot<span class="sc">$</span>CpGi,</span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank =</span> cpg_anot<span class="sc">$</span>shores,</span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature.name =</span> <span class="st">"CpGi"</span>,</span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank.name =</span> <span class="st">"shores"</span></span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="co"># See whether the CpG in myDiff25p belong to a CpG Island or Shore</span></span>
-<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">getMembers</span>(diffCpGann))</span>
-<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="co"># This can also be summarized for all differentially methylated CpGs</span></span>
-<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a><span class="fu">plotTargetAnnotation</span>(diffCpGann, <span class="at">main =</span> <span class="st">"Differential Methylation Annotation"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># !!! change the file path if you are working in your local machine with a local copy of this BED file</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>cpg_anot <span class="ot">&lt;-</span> <span class="fu">readFeatureFlank</span>(</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/mm10.cpg.bed"</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature.flank.name =</span> <span class="fu">c</span>(<span class="st">"CpGi"</span>, <span class="st">"shores"</span>),</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank =</span> <span class="dv">2000</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>diffCpGann <span class="ot">&lt;-</span> <span class="fu">annotateWithFeatureFlank</span>(</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>   <span class="fu">as</span>(myDiff25p, <span class="st">"GRanges"</span>),</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature =</span> cpg_anot<span class="sc">$</span>CpGi,</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank =</span> cpg_anot<span class="sc">$</span>shores,</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature.name =</span> <span class="st">"CpGi"</span>,</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank.name =</span> <span class="st">"shores"</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co"># See whether the CpG in myDiff25p belong to a CpG Island or Shore</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">getMembers</span>(diffCpGann))</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="co"># This can also be summarized for all differentially methylated CpGs</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="fu">plotTargetAnnotation</span>(diffCpGann, <span class="at">main =</span> <span class="st">"Differential Methylation Annotation"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In general, this workflow can be used to annotate a CpG list with any set of features contained in a BED file.</p>
 </section>
 <section id="differentially-methylated-regions" class="level2" data-number="12.3">
 <h2 data-number="12.3" class="anchored" data-anchor-id="differentially-methylated-regions"><span class="header-section-number">12.3</span> Differentially Methylated Regions</h2>
-<p>Since we are often more interested in the different methylation of multiple CpGs across samples instead of a single site, we can also summarize methylation information over a set of defined functional regions such as promoters or CpG islands. The function below summarizes the methylation information over a given set of CpG Islands and outputs a <code>methylRaw</code> or <code>methylRawList</code> object depending on the input. We are using the output of `genomation functions used above to provide the locations of the Islands. For these regional summary functions, we need to provide regions of interest as GRanges object.</p>
+<p>Since we are often more interested in the different methylation of multiple CpGs across samples instead of a single site, we can also summarize methylation information over a set of defined functional regions such as promoters or CpG islands. The function below summarizes the methylation information over a given set of CpG Islands and outputs a <code>methylRaw</code> or <code>methylRawList</code> object depending on the input. We are using the output of <code>genomation</code> functions used above to provide the locations of the Islands. For these regional summary functions, we need to provide regions of interest as GRanges object.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize the original object counts over a certain region, here the CpG Islands</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># You can ignore the warnings here...</span></span>
