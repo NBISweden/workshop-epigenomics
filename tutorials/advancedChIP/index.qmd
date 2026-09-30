@@ -340,8 +340,8 @@ Let's plot the t-SNE coloring by all the chromatin marks, to dry and make sense 
 
 
 ```{r}
-#| fig-width: 18
-#| fig-height: 6
+#| fig-width: 10
+#| fig-height: 15
 
 ## Prepare to plot
 tsneMat <- as.data.frame(tsne$Y)
@@ -352,7 +352,7 @@ df <- cbind(tsneMat, combinedLog2RPKM) %>%
   mutate(timePt = limma::strsplit2(rowName, "_")[, 2])
 
 ## Plot
-marks <- colnames(df)[grep("^ATAC|H3", colnames(df))]
+marks <- sort(colnames(df)[grep("^ATAC|H3", colnames(df))])
 plotList <- lapply(marks, function(mark){
   
   # get P and GB log2 RPKMs for the mark and set a lower and upper limit
@@ -372,7 +372,7 @@ plotList <- lapply(marks, function(mark){
     theme_classic() 
   
 })
-wrap_plots(plotList, ncol = 4)
+wrap_plots(plotList, ncol = 2)
 ```
 
 
@@ -381,13 +381,41 @@ We can see certain patterns emerging here. The right-hand side seems to depict g
 
 ::: {.callout-tip}
 ## Exercise
-Pick a mark of your choosing, for example `ATAC_P`, and plot the t-SNE coloring by this mark. Do this with and without setting any value limits in the coloring the way we have done above, and compare the two plots. Do you notice a difference in contrast? Which do you prefer and why?
+Pick a mark of your choosing, for example `ATAC_P`, and plot the t-SNE coloring by this mark. Do this with and without setting any value limits in the coloring the way we have done above, and compare the two plots. Do you notice a difference in contrast? Which do you prefer and why? It is generally nice to try both variations to understand the full range of your values, and also how to best visualize the data depending on what you want to emphasize, so long as you are transparent with reporting this.
 :::
 
 ::: {.callout-tip}
 ## Exercise
 Have a look at the `df` object we made to generate the plots. You will notice that we have a column showing the time point. Plot the t-SNE coloring by the time point. Do you see an even mixing of the time points or is there a space in the t-SNE more dominated by one time point than another. What do each of those scenarios mean?
 :::
+
+Let's next color by the GC content to see if there are emerging patterns there or if this is more or less random. 
+```{r}
+#| fig-width: 10
+#| fig-height: 8
+
+## Get promoter and gene body GC content
+all(promoters$GENEID == geneBodies$GENEID)
+m <- match(df$geneID, promoters$GENEID)
+df$percGC_P <- promoters$percGC[m]
+df$percGC_GB <- geneBodies$percGC[m]
+df$oeCpG_P <- promoters$oeCpG[m]
+df$oeCpG_GB <- geneBodies$oeCpG[m]
+
+## Plot
+feature <- c("percGC_P", "percGC_GB", "oeCpG_P", "oeCpG_GB")
+plotL <- lapply(feature, function(f){
+  ggplot(df, aes(x = TSNE1, y = TSNE2)) + 
+    geom_point(aes(color = .data[[f]])) + 
+    scale_color_gradientn(colors = jet.colors(100)) + 
+    ggtitle(f) + 
+    theme_classic()
+})
+wrap_plots(plotL, ncol = 2)
+```
+
+We can notice some patterns, with promoter GC content and CpG occurrences being enriched in the right-hand side which is also the genes which were more accessible.
+
 
 ### t-SNE is stochastic
 
@@ -408,15 +436,42 @@ Please have a look at the arguments of the `Rtsne` function and its help page. Y
 
 
 
-
 ### Gene expression
 
-What about gene expression? This is not information that went into the t-SNE. If we color the genes by their expression here, does this fit our interpretation of the marks and the landscape we have seen so far?
+What about gene expression? This is not information that went into the t-SNE. If we color the genes by their expression here, does this fit our interpretation of the marks and the landscape we have seen so far? We have gene expression data on the same samples and we will be reading in the log2 RPKM values below.
+```{r}
+## Read in RNA data
+RNAlog2RPKM <- readRDS("dataObjects/RNAlog2RPKM.rds")
+head(RNAlog2RPKM)
+```
 
 
+```{r}
+#| fig-width: 7
+#| fig-height: 5
+
+## Add to df
+m <- match(df$rowName, names(RNAlog2RPKM))
+df$RNAlog2RPKM <- RNAlog2RPKM[m]
+
+## Plot
+ggplot(df, aes(x = TSNE1, y = TSNE2)) + 
+  geom_point(aes(color = RNAlog2RPKM)) + 
+  scale_color_gradientn(colors = jet.colors(100)) + 
+  theme_classic()
+```
+
+We can nicely see the gene expression pattern agreeing with what we know about the chromatin data so far. The highly expressed genes are also those with higher promoter H3K27Ac.
 
 
+## Global changes in chromatin over time
 
+Now that we have our so called chromatin landscape and some degree of understanding on which parts of the t-SNE represent more or less active genes purely based on the chromatin, the question we really want to ask is how does this change over time? If you have certain genes of interest, you could plot which chromatin space they move into over time. At the moment, we want to know which genes change the most out of all other genes, purely based on changes in chromatin, going through the different time points.
+
+How can we measure such changes quantitatively? One possibility is the Euclidean distance. 
+
+
+## Bipartite and bivalent genes
 
 
 
@@ -426,7 +481,7 @@ color by rna seq
 eucledian dist
 bip and biv genes
 
-
+comment on that this can be applied to any genomic regions, also enhancers, here we focuse don genes in hte bipartie story.
 
 ::: {.callout-tip}
 ## Exercise
