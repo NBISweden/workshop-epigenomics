@@ -803,7 +803,7 @@ Heatmap(cor, name = "Pears Corr")
 
 We can nicely see the samples grouping by condition.
 
-Let's also do a PCA (Principal Component Analysis) on the log2(CPM) count matrix. This will map our samples onto a new set of coordinates or principal components (PCs), ordered from highest to lowest by the variance explained in the data. 
+Let's also do a PCA (Principal Component Analysis) on the log2(CPM) count matrix. We would like to know how the samples group in the high dimensional peak space but there are too many peaks (dimensions) to be able to get a sense of this visually (we can at most have a plot of 2 or 3 dimensions or axes). The PCA will map our samples onto a new set of coordinates or principal components (PCs), ordered from highest to lowest by the variance explained in the data.  
 ```{r}
 ## PCA
 pca <- prcomp(x = t(assays(se)$log2cpm), center = TRUE, scale. = FALSE)
@@ -811,7 +811,7 @@ s <- summary(pca)
 s
 ```
 
-Notice that we have 8 PCs (because we have 8 samples or dimensions) and that the "Proportion of Variance" sums to 100% across all PCs.
+Notice that we have 8 PCs (because we have 8 samples) and that the "Proportion of Variance" sums to 100% across all PCs.
 
 
 ```{r}
