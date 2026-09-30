@@ -730,7 +730,7 @@ table(peaks$type)
 ## Prepare for SummarizedExperiment object
 rd <- as.data.frame(peaks) %>% 
   rename(chr = seqnames, chrStart = start, chrEnd = end, 
-         peakWidth = width, chrStarnd = strand)
+         peakWidth = width, chrStrand = strand)
 rd <- DataFrame(rd)
 cd <- DataFrame(sampleName = apply(X = limma::strsplit2(colnames(cntPeaks), "_")[, 5:6], 
                                    MARGIN = 1, 
