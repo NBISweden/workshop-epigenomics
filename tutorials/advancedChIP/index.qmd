@@ -9,6 +9,7 @@ date: "`r format(Sys.time(), '%B %d, %Y')`"
 editor: 
   markdown: 
     wrap: 72
+bibliography: references.bib
 ---
 
 
@@ -34,6 +35,8 @@ suppressPackageStartupMessages({
   library(tidyr)
   library(tibble)
   library(ggplot2)
+  library(patchwork)
+  library(Rtsne)
 })
 
 ```
@@ -257,6 +260,10 @@ colnames(geneBodylog2RPKM) <- paste0(colnames(geneBodylog2RPKM), "_GB")
 
 ## Combine
 combinedLog2RPKM <- cbind(promoterlog2RPKM, geneBodylog2RPKM)
+
+## Fix colnames
+g <- grep("^K", colnames(combinedLog2RPKM))
+colnames(combinedLog2RPKM)[g] <- paste0("H3", colnames(combinedLog2RPKM)[g])
 head(combinedLog2RPKM)
 ```
 
@@ -268,11 +275,152 @@ So how can we visualize this chromatin landscape? Since we have 8 columns or dim
 
 Let's try this.
 ```{r}
+## PCA
+pca <- prcomp(x = combinedLog2RPKM, scale. = FALSE)
+summary(pca)
+```
+
+```{r}
+#| fig-width: 15
+#| fig-height: 5
+
+s <- summary(pca)
+pc1var <- round(s$importance["Proportion of Variance", "PC1"]*100, digits = 2)
+pc2var <- round(s$importance["Proportion of Variance", "PC2"]*100, digits = 2)
+pc3var <- round(s$importance["Proportion of Variance", "PC3"]*100, digits = 2)
+
+
+jet.colors <- colorRampPalette(c(
+  "#00007F", "blue", "#007FFF", "cyan",
+  "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"
+))
+
+df <- cbind(data.frame(pca$x), combinedLog2RPKM) %>% 
+  rownames_to_column("rowName") %>% 
+  mutate(geneID = limma::strsplit2(rowName, "_")[, 1]) %>% 
+  mutate(timePt = limma::strsplit2(rowName, "_")[, 2])
+
+df %>% 
+  pivot_longer(cols = starts_with(c("ATAC", "H3")), 
+               names_to = "chromatinMark", values_to = "log2RPKM") %>% 
+  ggplot(aes(x = PC1, y = PC2)) + 
+  geom_point(aes(color = log2RPKM)) + 
+  scale_color_gradientn(colors = jet.colors(100)) + 
+  #coord_fixed(ratio = pc2var/pc1var) + 
+  labs(x = paste0("PC1 (", pc1var, "%)"), y = paste0("PC2 (", pc2var, "%)")) +
+  theme_classic() + 
+  facet_wrap(~chromatinMark, ncol = 4)
+
+
+
+
+
 
 ```
 
+PC1 seems to capture more accessible and active genes going to the right of the plot, where H3K27Ac gets higher. PC2 seems to capture the repressive H3K27me3 mark with more of this mark being present on genes grouped with increasing PC2. But can we get a bit of a more fine-tuned visualization of the chromatin landscape? We will next input our gene (per time point) vs PC matrix into the `Rtsne` function to produce a t-SNE plot.
+
 
 ## t-SNE
+
+Let's use the matrix from the PCA (PCs as columns) to apply the t-distributed stochastic neighbor embedding, or t-SNE for short, from @vanDerMaaten2008. In contrast to the PCA, this is a stochastic and non-linear dimensionality reduction technique. The method tries to produce a lower dimensional representation of the data, maintaining as much as possible the distances between the points from the higher dimensions. What this means is taht points that are close to each other in the original high dimensional space should remain close to each other in the lower dimensional representation (2 dimensions in our case). t-SNE is commonly used in single cell RNA-seq data analysis, and it is a great way to visualize the data especially in this case where we expect a rather continuous chromatin landscape and varying degrees of the mark depositions or accessibility.
+
+
+```{r}
+## t-SNE
+set.seed(6740)
+tsne <- Rtsne(X = pca$x, pca = FALSE)
+str(tsne)
+```
+
+
+Let's plot the t-SNE coloring by all the chromatin marks, to dry and make sense of the chromatin landscape we are seeing and if there's any structure and order to it. Note that each chromatin mark lives in its own space, meaning a count of 1 in the ATAC modality does not translate to or compare to a count of 1 in the H3K27me3 modality. They are different data types, and even amongst the ChIP-seq samples, different antibodies have different pull-down efficiencies or degrees of how well they capture the mark of interest. However with one mark, say H3K27Ac, we can indeed compare the promoter and gene body counts since we have log2 RPKM values. We will take this into account when plotting, so that the colors are directly comparable between promoter and gene body levels of a particular mark. We will also be setting lower and upper level limits so that the extreme values don't dominate the color space and we can appreciate the global differences in the marks in a more fine grained way.
+
+
+
+
+```{r}
+#| fig-width: 18
+#| fig-height: 6
+
+## Prepare to plot
+tsneMat <- as.data.frame(tsne$Y)
+colnames(tsneMat) <- c("TSNE1", "TSNE2")
+df <- cbind(tsneMat, combinedLog2RPKM) %>% 
+  rownames_to_column("rowName") %>% 
+  mutate(geneID = limma::strsplit2(rowName, "_")[, 1]) %>% 
+  mutate(timePt = limma::strsplit2(rowName, "_")[, 2])
+
+## Plot
+marks <- colnames(df)[grep("^ATAC|H3", colnames(df))]
+plotList <- lapply(marks, function(mark){
+  
+  # get P and GB log2 RPKMs for the mark and set a lower and upper limit
+  # ... limit for the colors corresponding to the bottom and top 5%
+  modality <- limma::strsplit2(mark, "_")[, 1]
+  values <- c(df[, paste0(modality, "_P")], df[, paste0(modality, "_GB")])
+  lowerLim <- quantile(values, 0.05)
+  upperLim <- quantile(values, 0.95)
+  
+  # plot
+  ggplot(df, aes(x = TSNE1, y = TSNE2)) +
+    geom_point(aes(color = .data[[mark]])) + 
+    scale_color_gradientn(colors = jet.colors(100), 
+                          limits = c(lowerLim, upperLim), 
+                          oob = scales::squish) + 
+    labs(title = mark) +
+    theme_classic() 
+  
+})
+wrap_plots(plotList, ncol = 4)
+```
+
+
+We can see certain patterns emerging here. The right-hand side seems to depict genes that are more active or expressed. They are high in accessibility as well as H3K27Ac. The genes on the left-hand side are almost completely inaccessible, lack the active H3K27Ac mark, and are also lacking the repressive H3K27Me3 mark. These are likely genes in the heterochromatin which is not actively used and so tightly packed that it's both inaccessible and lacking the repressive histone mark. The region in the middle, at the bottom of the t-SNE looks interesting. There is a more plastic world in between, where we see signs of both active and repressive marks co-existing to varying degrees. We will come to see later that this is where we find bipartite and bivalent genes.
+
+
+::: {.callout-tip}
+## Exercise
+Pick a mark of your choosing, for example `ATAC_P`, and plot the t-SNE coloring by this mark. Do this with and without setting any value limits in the coloring the way we have done above, and compare the two plots. Do you notice a difference in contrast? Which do you prefer and why?
+:::
+
+::: {.callout-tip}
+## Exercise
+Have a look at the `df` object we made to generate the plots. You will notice that we have a column showing the time point. Plot the t-SNE coloring by the time point. Do you see an even mixing of the time points or is there a space in the t-SNE more dominated by one time point than another. What do each of those scenarios mean?
+:::
+
+### t-SNE is stochastic
+
+Did you notice that we had to set the seed in order to obtain this exact plot. If you do not do this, you will generate a different t-SNE everytime. So it is important to set the seed in order to be able to reproduce the plot you want.
+
+::: {.callout-tip}
+## Exercise
+Play with different seed values (any random number of your choosing) and generate the t-SNE and plots from above. Do you have a new favorite?
+:::
+
+Please have a look at the arguments of the `Rtsne` function and its help page. You will notice that by default, the function will perform a PCA before a t-SNE. That is why we set `pca=FALSE`. You will also notice that there are additional arguments for the t-SNE that can affect the plto we get. This includes the `perplexity` argument which controls how many nearest neighbors are taken when constructing the embedding in the lower dimensional space. See more in the Details section.
+
+::: {.callout-tip}
+## Exercise
+1. Use the `Rtsne` function directly on the `combinedLog2RPKM` matrix. Do you get the same t-SNE as above? Keep in mind that you need to set the same seed. 
+2. Read a little more about the perplexity parameter and vary it. What do your plots look like?
+:::
+
+
+
+
+### Gene expression
+
+What about gene expression? This is not information that went into the t-SNE. If we color the genes by their expression here, does this fit our interpretation of the marks and the landscape we have seen so far?
+
+
+
+
+
+
+
+
+
 
 color by rna seq
 eucledian dist
