@@ -135,6 +135,30 @@ sample (individual VICS-72098-18-B) is included from another study
 to illustrate approaches for identifying and excluding poor quality
 samples.
 
+# Connect to Pelle
+
+If you want to run the tutorial on the HPC cluster Pelle then
+log in to `pelle.uppmax.uu.se` using a terminal app and `ssh`.
+
+```{bash}
+# The option -Y is invoked to enable x11 forwarding to your local machine.
+ssh -Y <username>@pelle.uppmax.uu.se
+```
+As a reminder, please see instruction [here](https://nbisweden.github.io/workshop-epigenomics/home_precourse.html#working-with-the-compute-resources-from-uppmax) 
+from the Precourse material regarding the different ways to connect to Pelle.
+
+
+Once inside Pelle, request for an interactive session.
+
+```{bash}
+interactive -A uppmax2026-1-197 -t 8:00:00 -c 5
+```
+
+This command will give you an allocation of 5 cores for eight hours or until 17:00, whichever comes first.
+Note that if you have disconnected from either the interactive session or Pelle, you will automatically lose your reserved cores.
+You will have to request again for an interactive session.
+
+
 # Set Up R environment
 
 There are three options for you to select. This exercise can be set up
@@ -159,9 +183,7 @@ this option first, especially for novice programmers.
 <summary>Show steps</summary>
 ```
 
-First, connect to the server as described in
-[Setting-up](../setup/lab-setup).
-Follow the instruction to start an interactive session in Pelle.
+
 Follow the instruction in @nte-uppaxsetwd to set your working directory.
 
 On UPPMAX, most packages are already installed, and can be loaded into R
@@ -169,9 +191,9 @@ after the R and R packages modules have been loaded. If
 you are running on UPPMAX, start by loading the following modules:
 
 ```{bash}
-module load R/4.4.2-gfbf-2024a
-module load R-bundle-CRAN/2024.11-foss-2024a
-
+module load R/4.6.1-gfbf-2026.1
+module load R-bundle-CRAN/2026.07-foss-2026.1
+module load R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1
 
 module load RStudio
 ```
@@ -222,12 +244,14 @@ steps are necessary.
 <summary>Show steps</summary>
 ```
 
-
+```{=html}
+<!-- 
 First, connect to the server as described in
 [Setting-up](../setup/lab-setup).
 Follow the instruction to start an interactive session in Pelle.
+-->
+```
 Follow the instruction in @nte-uppaxsetwd to set your working directory.
-
 Execute the following commands from a terminal in Pelle.
 
 ```{bash}
@@ -293,7 +317,7 @@ If you are working in UPPMAX, we recommend that you create your own project fold
 Change directory to the course directory 
 
 ```{bash}
-   cd /gorilla/proj/epi2026/students
+   cd /gorilla/proj/epi2026/students/
 ```
 
 , and create your personal folder with name `<your_name>`.
@@ -334,10 +358,14 @@ For Option A only:
 # Do NOT do this if setting up the environment with option B, only option A
 # If you accidentally run the following line with option B, you can do *Session -> Restart R*
 # and run again without this line.
-.libPaths("/gorilla/proj/epi2026/DNAM/R.4.4.2/packages")
+.libPaths("/gorilla/proj/epi2026/library/Rpackages/4.6.1")
 
-# make sure the library paths are correct (should be pointing to the folder above)
+# make sure the library paths are correct (should be pointing to the folders as listed below)
 .libPaths()
+#"/gorilla/proj/epi2026/library/Rpackages/4.6.1"                      
+#"/sw/arch/eb/software/R-bundle-CRAN/2026.07-foss-2026.1"             
+#"/sw/arch/eb/software/R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1"
+#"/sw/arch/eb/software/R/4.6.1-gfbf-2026.1/lib64/R/library"    
 
 ```
 
@@ -1216,7 +1244,7 @@ DMR.plot(ranges = results.ranges,
          dmr = 2, 
          CpGs = mSetSqFlt,
          phen.col = cols, 
-         genome = "hg19")
+         genome = "hg19",arraytype="450K")
 ```
 
 Interestingly, the hypomethylation of the second DMR, near TIGIT, in
