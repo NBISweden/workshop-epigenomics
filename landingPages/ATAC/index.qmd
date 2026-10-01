@@ -41,12 +41,7 @@ Overview of ATAC-seq
 :::
 
 <br />
-
 <br />
-<br />
-
-<br />
-
 
 ::: {#fig-2}
 
