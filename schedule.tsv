@@ -1,5 +1,5 @@
 start	end	title	attendees	calendarId
-2026-10-05T09:00:00	2026-10-05T09:30:00	Welcome + NBIS Talk		extra
+2026-10-05T09:00:00	2026-10-05T09:30:00	Welcome		extra
 2026-10-05T09:30:00	2026-10-05T10:10:00	Talk: Introduction to DNA methylation + Overview Array Exercises	Louella Vasquez	session
 2026-10-05T10:10:00	2026-10-05T10:30:00	Uppmax set up + Break		extra
 2026-10-05T10:30:00	2026-10-05T12:00:00	Lab: Array workflow	Louella Vasquez	session
@@ -47,5 +47,5 @@ start	end	title	attendees	calendarId
 2026-10-09T12:00:00	2026-10-09T13:00:00	Lunch (Offline)		free
 2026-10-09T13:00:00	2026-10-09T14:00:00	Lab: Single cell and data integration	Markus Ringnér	session
 2026-10-09T14:00:00	2026-10-09T14:30:00	Daily challenge, Break		free
-2026-10-09T14:30:00	2026-10-09T15:00:00	Feedback, Wrap-up		extra
+2026-10-09T14:30:00	2026-10-09T15:00:00	NBIS Talk, Feedback, Wrap-up		extra
 2026-10-09T15:00:00	2026-10-09T16:00:00	(Offline support)		extra
