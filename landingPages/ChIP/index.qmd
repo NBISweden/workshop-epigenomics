@@ -6,7 +6,8 @@ format:
     number-sections: false
     mermaid:
       theme: default
-date: "`r format(Sys.time(), '%B %d, %Y')`"
+date: today
+date-format: long
 editor: 
   markdown: 
     wrap: 72
