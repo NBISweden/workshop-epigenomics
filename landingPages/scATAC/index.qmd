@@ -26,6 +26,9 @@ About:          This qmd file is used to render the .html file. To modify or
 <br />
 <br />
 
+Mapping the accessible genome of individual cells by assay for transposase-accessible chromatin using sequencing (ATAC-seq) enables addressing cell-to-cell variation in chromatin states [@Buenrostro2015a].
+
+
 <br />
 <br />
 
