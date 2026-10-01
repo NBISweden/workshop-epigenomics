@@ -6,7 +6,8 @@ format:
     number-sections: false
     mermaid:
       theme: default
-date: "`r format(Sys.time(), '%B %d, %Y')`"
+date: today
+date-format: long
 editor: 
   markdown: 
     wrap: 72
@@ -37,5 +38,5 @@ About:          This qmd file is used to render the .html file. To modify or
 
 Tutorials in this module:
 
-* [TF motifs](../../tutorials/TFs/representingMotifs.html)
+* [scATAC-seq](../../tutorials/scATAC/index.html)
 
