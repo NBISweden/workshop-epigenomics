@@ -468,10 +468,52 @@ We can nicely see the gene expression pattern agreeing with what we know about t
 
 Now that we have our so called chromatin landscape and some degree of understanding on which parts of the t-SNE represent more or less active genes purely based on the chromatin, the question we really want to ask is how does this change over time? If you have certain genes of interest, you could plot which chromatin space they move into over time. At the moment, we want to know which genes change the most out of all other genes, purely based on changes in chromatin, going through the different time points.
 
-How can we measure such changes quantitatively? One possibility is the Euclidean distance. 
+How can we measure such changes quantitatively? We will use the Euclidean distance to do this, calculating it in the original high dimensional space. Let's calculate the distance between E14 and E18 for each gene.
+```{r}
+## Create time-specific matrices
+E14 <- combinedLog2RPKM[grep("E14", rownames(combinedLog2RPKM)), ]
+E18 <- combinedLog2RPKM[grep("E18", rownames(combinedLog2RPKM)), ]
+rownames(E14) <- limma::strsplit2(rownames(E14), "_")[, 1]
+rownames(E18) <- limma::strsplit2(rownames(E18), "_")[, 1]
+
+## Check gene IDs are ordered the same way
+all(rownames(E14) == rownames(E18))
+
+## Calculate Euclidean distance in the high dimensional space
+dist <- sqrt(rowSums((E18 - E14)^2))
+summary(dist)
+```
 
 
-## Bipartite and bivalent genes
+Let's next color the genes belonging to the E14 time point by the distance we calculated. Which genes are changing the most in chromatin by the E18 time point?
+```{r}
+## Color the E14 t-SNE by the distance
+distCols <- c("cornsilk", "violet", "firebrick4")
+df %>% 
+  filter(timePt == "E14") %>% 
+  mutate(euclDist = dist[geneID]) %>% 
+  ggplot(aes(x = TSNE1, y = TSNE2)) + 
+  geom_point(aes(color = euclDist)) + 
+  scale_color_gradientn(colors = distCols) + 
+  theme_classic()
+```
+
+We can notice certain regions of the t-SNE are changing the most in chromatin going from E14 to E18, and that these genes which change the most are not randomly spread out in the entire t-SNE. A closer inspection of genes in these areas actually reveals that bipartite genes live in this space and play key dynamic roles during development.
+
+::: {.callout-tip}
+## Exercise
+Choose another pair of time points to compare, and plot he Euclidean distance. Do you see something similar and is it in the same part of the t-SNE?
+:::
+
+
+
+
+## Genes over time
+
+Let's select a few genes and follow how they move over time in the chromain space using the t-SNE we have made. We will focus on the bipartite genes of which we have selected some example genes below from the study.
+```{r}
+
+```
 
 
 
@@ -481,7 +523,7 @@ color by rna seq
 eucledian dist
 bip and biv genes
 
-comment on that this can be applied to any genomic regions, also enhancers, here we focuse don genes in hte bipartie story.
+comment on that this can be applied to any genomic regions, also enhancers, here we focused on genes in hte bipartie story.
 
 ::: {.callout-tip}
 ## Exercise
