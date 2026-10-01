@@ -35,7 +35,7 @@ Regardless of the approach, the rationale behind bisulfite sequencing is fairly 
 ![Fig 1. Bisulfite sequencing overview.](images/biseq.png)
 
 
-Being able to do this quantification reliably depends on rigorous quality control before alignment, the choice of alignment method and post-alignment quality control. Other issues to consider are the reduced complexity and the increased degradation that occurs during bisulfite treatment.  A best-practices pipeline for the mapping and quantification of bisulfite converted reads has been developed by nf-core (see [methylseq](https://nf-co.re/methylseq)  using either `Bismark` or `bwa-meth` as aligners for BS-seq data.  You can follow this tutorial :doc:`../nextflow` to run nf-core workflows.  For today, we will focus on the downstream analysis, i.e. the part of the analysis after running for example nf-core methylseq. 
+Being able to do this quantification reliably depends on rigorous quality control before alignment, the choice of alignment method and post-alignment quality control. Other issues to consider are the reduced complexity and the increased degradation that occurs during bisulfite treatment.  A best-practices pipeline for the mapping and quantification of bisulfite converted reads has been developed by nf-core (see [methylseq](https://nf-co.re/methylseq)  using either `Bismark` or `bwa-meth` as aligners for BS-seq data.  For today, we will focus on the downstream analysis, i.e. the part of the analysis after running for example nf-core methylseq. 
 
 
 # Datasets
@@ -57,7 +57,7 @@ In this tutorial we will be focusing on the downstream analysis of bisulfite seq
 # Set Up R environment
 
 
-If your UPPMAX session from the Array tutorial is still open, you can continue this exercise in that one. Otherwise set up the environment as you did this morning.
+If you are already working in UPPMAX and your interactive session from the Array tutorial is still open then you can continue this exercise in that one. Otherwise connect to Pelle, start an interactive session and set up the R environment as you did this morning.
 
 
 There are three options for you to select. This exercise can be set up
@@ -82,9 +82,7 @@ this option first, especially for novice programmers.
 <summary>Show steps</summary>
 ```
 
-First, connect to the server as described in
-[Setting-up](../setup/lab-setup).
-Follow the instruction to start an interactive session in Pelle.
+
 Follow the instruction in @nte-uppaxsetwd to set your working directory.
 
 On UPPMAX, most packages are already installed, and can be loaded into R
@@ -92,9 +90,9 @@ after the R and R packages modules have been loaded. If
 you are running on UPPMAX, start by loading the following modules:
 
 ```{bash}
-module load R/4.4.2-gfbf-2024a
-module load R-bundle-CRAN/2024.11-foss-2024a
-
+module load R/4.6.1-gfbf-2026.1
+module load R-bundle-CRAN/2026.07-foss-2026.1
+module load R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1
 
 module load RStudio
 ```
@@ -146,11 +144,7 @@ steps are necessary.
 ```
 
 
-First, connect to the server as described in
-[Setting-up](../setup/lab-setup).
-Follow the instruction to start an interactive session in Pelle.
 Follow the instruction in @nte-uppaxsetwd to set your working directory.
-
 Execute the following commands from a terminal in Pelle.
 
 ```{bash}
@@ -254,10 +248,14 @@ For Option A only:
 # Do NOT do this if setting up the environment with option B, only option A
 # If you accidentally run the following line with option B, you can do *Session -> Restart R*
 # and run again without this line.
-.libPaths("/gorilla/proj/epi2026/DNAM/R.4.4.2/packages")
+.libPaths("/gorilla/proj/epi2026/library/Rpackages/4.6.1")
 
 # make sure the library paths are correct (should be pointing to the folder above)
 .libPaths()
+#"/gorilla/proj/epi2026/library/Rpackages/4.6.1"                      
+#"/sw/arch/eb/software/R-bundle-CRAN/2026.07-foss-2026.1"             
+#"/sw/arch/eb/software/R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1"
+#"/sw/arch/eb/software/R/4.6.1-gfbf-2026.1/lib64/R/library"    
 
 ```
 
@@ -297,17 +295,17 @@ The datasets have been uploaded to UPPMAX prior to the workshop, so you just nee
 ```{r}
 # Define the list containing the bismark coverage files.
 file.list <- list(
-   "/sw/courses/epigenomics/DNAmethylation/biseq_data/P6_1.bismark.cov.gz",
-   "/sw/courses/epigenomics/DNAmethylation/biseq_data/P6_4.bismark.cov.gz",
-   "/sw/courses/epigenomics/DNAmethylation/biseq_data/P8_3.bismark.cov.gz",
-   "/sw/courses/epigenomics/DNAmethylation/biseq_data/P8_6.bismark.cov.gz"
+   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P6_1.bismark.cov.gz",
+   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P6_4.bismark.cov.gz",
+   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P8_3.bismark.cov.gz",
+   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P8_6.bismark.cov.gz"
 )
 
 ```
 
 
 ::: callout-warning
-   If you prefer to run this tutorial locally, you can also download these data files to your personal computer. To do this, navigate to the folder on your own conputer where you want to deposit the data and execute `scp -r <username>@pelle.uppmax.uu.se:/sw/courses/epigenomics/DNAmethylation/biseq_data .`. Of course, you will also have to install the analysis packages locally.
+   If you prefer to run this tutorial locally, you can also download these data files to your personal computer. To do this, navigate to the folder on your own computer where you want to deposit the data and execute `scp -r <username>@pelle.uppmax.uu.se:/gorilla/proj/epi2026/DNAM/WGBS/biseq_data .`. Then you can point the variable `file.list` to your local copy of coverage files.  Of course, you will also have to install the analysis packages locally.
 :::
 
 
@@ -575,12 +573,13 @@ To help with the biological interpretation of the data, we will annotate the dif
 ```{r}
 
 # First load the annotation data; i.e the coordinates of promoters, TSS, intron and exons
-refseq_anot <- readTranscriptFeatures("/sw/courses/epigenomics/DNAmethylation/biseq_data//mm10.refseq.genes.bed")
+
+# !!! change the file path if you are working in your local machine with a local copy of this BED file
+refseq_anot <- readTranscriptFeatures("/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/mm10.refseq.genes.bed")
 
 # Annotate hypermethylated CpGs ("target") with promoter/exon/intron
 # information ("feature"). This function operates on GRanges objects, so we # first coerce the methylKit object to GRanges.
-myDiff25p.hyper.anot <- annotateWithGeneParts(target = as(myDiff25p.hyper, "GRanges"),
-                                              feature = refseq_anot)
+myDiff25p.hyper.anot <- annotateWithGeneParts(target = as(myDiff25p.hyper, "GRanges"),feature = refseq_anot)
 
 # Summary of target set annotation
 myDiff25p.hyper.anot
@@ -610,8 +609,10 @@ Similarly, it is possible to annotate the differentially methylated CpGs with Cp
 
 ```{r}
 # Load the CpG info
+
+# !!! change the file path if you are working in your local machine with a local copy of this BED file
 cpg_anot <- readFeatureFlank(
-   "/sw/courses/epigenomics/DNAmethylation/biseq_data/mm10.cpg.bed",
+   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/mm10.cpg.bed",
    feature.flank.name = c("CpGi", "shores"),
    flank = 2000
 )
@@ -640,7 +641,7 @@ In general, this workflow can be used to annotate a CpG list with any set of fea
 ## Differentially Methylated Regions
 
 
-Since we are often more interested in the different methylation of multiple CpGs across samples instead of a single site, we can also summarize methylation information over a set of defined functional regions such as promoters or CpG islands. The function below summarizes the methylation information over a given set of CpG Islands and outputs a `methylRaw` or `methylRawList` object depending on the input. We are using the output of `genomation functions used above to provide the locations of the Islands. For these regional summary functions, we need to provide regions of interest as GRanges object.
+Since we are often more interested in the different methylation of multiple CpGs across samples instead of a single site, we can also summarize methylation information over a set of defined functional regions such as promoters or CpG islands. The function below summarizes the methylation information over a given set of CpG Islands and outputs a `methylRaw` or `methylRawList` object depending on the input. We are using the output of `genomation` functions used above to provide the locations of the Islands. For these regional summary functions, we need to provide regions of interest as GRanges object.
 
 
 ```{r}
@@ -751,15 +752,15 @@ Besides `methylKit`, there are several other R packages available for the analys
 
 
 
-`nf-core/methylseq` is a bioinformatics analysis pipeline used for BS-seq data. It pre-processes raw data from fastq inputs, aligns the reads and performs extensive quality-control.
+`nf-core/methylseq` is a bioinformatics analysis pipeline used for BS-seq data. 
+It pre-processes raw data from fastq inputs, aligns the reads and performs extensive quality-control.
+
+The pipeline is built using Nextflow and uses containers making installation trivial and results highly reproducible.
 For the full documentation, please see [here](https://nf-co.re/methylseq/4.2.0).
-For a tutorial about the basics of Nextflows and launching of nf-core pipelines in HPC, please see [here](https://ngi-nbis-epigenomics-hands-on.readthedocs.io/en/latest/content/tutorials/nextflow/nextflow.html).
 
-
-If you have not done so then please connect to the server as described in
-[Setting-up](../setup/lab-setup).
-Follow the instruction to start an interactive session in Pelle.
-Copy each of the commands below into the command line to execute a process.
+If you are already working in UPPMAX and have an open interactive session in Pelle then you can continue this exercise in that one. 
+Otherwise connect to Pelle and start an interactive session.
+Copy each of the commands below into the terminal to execute a process.
 
 Change directory to your personal folder. 
 
@@ -770,8 +771,6 @@ cd /gorilla/proj/epi2026/students/<your_name>
 
 Create a folder that will store all output files generated by a `methylseq` run.
 
-
-
 ```{bash}
 mkdir -p output/TEST_METHYLSEQ
 ```
@@ -781,26 +780,23 @@ mkdir -p output/TEST_METHYLSEQ
 Copy the samplesheet to your personal folder.  The samplesheet contains information about an example data in gzipped ``fastq`` files that has been subsampled to make them small and quick to run.
 
 ```{bash}
-cp /proj/uppmax2025-2-309/nobackup/ngi-epigenomics/data/wgbs/samplesheet.csv .
+cp /gorilla/proj/epi2026/DNAM/WGBS/pipeline_bsseq_data/samplesheet.csv .
 ```
 
 Have a look at the provided sample sheet by using this command.
-
+There is only one sample with two fastq files corresponding to read 1 and read 2 sequencing.
 ```{bash}
 less -S samplesheet.csv
 ```
 
-Start a tmux session.
+Load the Nextflow module.
 
 ```{bash}
-module load tmux
-tmux new -s nf_methylseq 
-tmux set mouse on 
+module load Nextflow/25.10.2
 ```
 
 
-
-Launch the nextflow process.
+Launch the Nextflow process using default parameters.
 Note that the default `Bismark` workflow will be used.
 The reference genome is set to be mm10.
 
@@ -809,10 +805,17 @@ The reference genome is set to be mm10.
 nextflow run nf-core/methylseq -profile uppmax \
    --input samplesheet.csv \
    --outdir output/TEST_METHYLSEQ \
-   --project uppmax2025-2-309 \
+   --project  uppmax2026-1-197 \
    --genome mm10
 ```
 
+::: callout-tip
+
+If you have canceled the process in the middle of its execution or the workflow has failed unexpectedly,
+you can rerun the Nextflow process using the command as above but now with an additional argument `-resume`.  
+By specifying `-resume` when restarting a pipeline, Nextflow will use cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously.
+
+:::
 
 The example run of nf-core `methyseq` will generate a large number of files stored in the output directory `output/TEST_METHYLSEQ`.
 One very useful output of this run is a [MultiQC](https://docs.seqera.io/multiqc) report.  It is an interactive HTML report that summarizes QC data and useful statistics from multiple bioinformatics tools across all samples.
@@ -821,7 +824,7 @@ One very useful output of this run is a [MultiQC](https://docs.seqera.io/multiqc
 Download the html report to your laptop. Open a terminal in your laptop and change to the desired directory, i.e., ``cd /path/to/myfolder``, then use the ``scp`` command to transfer files.
 
 ```{bash}
-scp <your_uppmax_username>@pelle.uppmax.uu.se:/gorilla/proj/epi2026/students/<your_name>/output/TEST_METHYLSEQ/multiqc/bismark/multiqc_report.html .
+scp <username>@pelle.uppmax.uu.se:/gorilla/proj/epi2026/students/<your_name>/output/TEST_METHYLSEQ/multiqc/bismark/multiqc_report.html .
 ```
 
 
