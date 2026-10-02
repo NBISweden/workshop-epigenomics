@@ -43,3 +43,7 @@ Tutorials in this module:
 
 * [scATAC-seq](../../tutorials/scATAC/index.html)
 
+* [scATAC-seq & RNA-seq integration](../../tutorials/scATAC_scRNA/index.html)
+
+* [multiome](../../tutorials/scMultiome/index.html)
+
