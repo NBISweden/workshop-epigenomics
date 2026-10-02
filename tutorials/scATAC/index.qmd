@@ -52,7 +52,64 @@ Using R
 <br />
 <br />
 
+## Before we start
 
+Today we are going to work on [Pelle](https://docs.uppmax.uu.se/cluster_guides/pelle/),
+an HPC cluster hosted by [Uppmax](https://www.uu.se/centrum/uppmax/).
+
+<br />
+
+Please follow the setup procedure to book a node and log in to it. The following gives you access to part of a node prebooked for this workshop (5 cores per person) for 3 hours (change the time in the command below according to your plan for working).
+
+```{bash}
+#| eval: false
+#| echo: true
+
+ssh -Y <USERNAME>@pelle.uppmax.uu.se
+
+interactive -A uppmax2026-1-197 -t 3:00:00 -c 5
+```
+
+### Setting Up
+
+::: {.callout-note}
+  
+   We take advantage of the module system on Pelle in this tutorial. The code was tested under `R 4.6.1`.
+
+:::
+
+<br />
+<br />
+
+
+We access the R environment via:
+
+```{bash}
+#| eval: FALSE
+#| echo: TRUE
+
+module load R/4.6.1-gfbf-2026.1
+module load R-bundle-CRAN/2026.07-foss-2026.1
+module load R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1
+```
+
+We activate R console upon typing `R` in the terminal.
+
+To be able to load all necessary libraries that are not available in modules, we need to update the paths to a custom library location:
+
+
+```{r}
+#| eval: FALSE
+#| echo: TRUE
+
+.libPaths(c(.libPaths(),"/proj/epi2026/library/Rpackages/4.6.1"))
+```
+
+Alternatively you can work on this tutorial locally if you have all the R packages loaded below installed on your computer.
+
+
+<br />
+<br />
 
 We begin by loading necessary libraries:
 
@@ -96,11 +153,14 @@ set.seed(1234)
 #| eval: FALSE
 #| echo: true
 
-counts <- Read10X_h5(filename = "data/atac_v1_pbmc_10k_filtered_peak_bc_matrix.h5")
-counts <- counts[, sample(ncol(counts), 2000)] # Only use 2000 cells, to make commands run faster.
+lab.dir="/proj/epi2026/single_cell/scATAC/"
+
+counts <- Read10X_h5(filename = paste0(lab.dir,"data/atac_v1_pbmc_10k_filtered_peak_bc_matrix.h5"))
+# Only use 2000 cells, to make commands run faster.
+counts <- counts[, sample(ncol(counts), 2000)] 
 
 metadata <- read.csv(
-    file = "data/atac_v1_pbmc_10k_singlecell.csv",
+    file = paste0(lab.dir,"data/atac_v1_pbmc_10k_singlecell.csv"),
     header = TRUE,
     row.names = 1
 )
@@ -108,8 +168,7 @@ metadata <- read.csv(
 chrom_assay <- CreateChromatinAssay(
     counts = counts,
     sep = c(":", "-"),
-    genome = 'hg19',
-    fragments = 'data/atac_v1_pbmc_10k_fragments.tsv.gz',
+    genome = 'hg19', fragments = paste0(lab.dir,'data/atac_v1_pbmc_10k_fragments.tsv.gz'),
     min.cells = 10,
     min.features = 200
 )
@@ -189,13 +248,13 @@ VlnPlot(
     features = c('pct_reads_in_peaks', 'peak_region_fragments',
                  'TSS.enrichment', 'blacklist_ratio', 'nucleosome_signal'),
     pt.size = 0.01,
-    ncol = 3,
+    ncol = 3
 ) & FontSize(main = 8) & theme(axis.text.x = element_blank())  & theme(axis.title.x = element_blank()) & theme(axis.text.y = element_text(size = 6))
 ```
 
 ![QC plots](qc.png)
 
-After calculating the qualtiy statistics, we apply (some rather arbitrary) cutoffs, to remove outlier cells. *How many cells do we have left after quality filtering in this example?*
+After calculating the quality statistics, we apply (some rather arbitrary) cutoffs, to remove outlier cells. *How many cells do we have left after quality filtering in this example?*
 
 
 ```{r}

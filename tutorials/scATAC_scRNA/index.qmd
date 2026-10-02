@@ -51,6 +51,13 @@ Using R
 <br />
 <br />
 
+::: {.callout-note collapse="false"}
+
+### Note on this workflow
+
+  This tutorial is a continuation of [scATAC](../scATAC/index.html). To run this on Pelle, setup and initialize R as you did in that exercise.
+
+:::
 
 
 We begin by loading necessary libraries:
@@ -72,13 +79,27 @@ set.seed(1234)
 <br />
 <br />
 
+::: {.callout-important collapse="false"}
+
+  We assume that pbmc.Rda file you load was generated in the same file structure as you are running on now. That is the file structure you used in[scATAC](../scATAC/index.html) when you saved the file. Otherwise things will not work since Seurat Objects with fragments from ATAC-seq are not self contained, they contain paths to files with fragments and their indexes.
+
+:::
+
+<br />
+<br />
+
+
 ### Load the data generated in the scATAC-seq exercise
+
+The code here use a pre-calculated version. If you already have your pbmc object loaded, coming from the previous tutorial, you should skip running this code chunk.
 
 ```{r}
 #| eval: FALSE
 #| echo: true
 
-load(file="data/pbmc.Rda")
+lab.dir="/proj/epi2026/single_cell/scATAC_scRNA/"
+
+load(file=paste0(lab.dir, "data/pbmc.Rda"))
 ```
 
 ## Integrate with scRNA-seq data
@@ -142,7 +163,7 @@ These anchors can then be used to project the ATAC-seq data onto the RNA-seq dat
 #| echo: true
 
 # Load the pre-processed scRNA-seq data for PBMCs
-pbmc_rna_v3 <- readRDS("data/pbmc_10k_v3.rds")
+pbmc_rna_v3 <- readRDS(paste0(lab.dir,"data/pbmc_10k_v3.rds"))
 pbmc_rna <- UpdateSeuratObject(pbmc_rna_v3)
 
 # Find anchors
@@ -231,7 +252,7 @@ head(da_peaks)
 #| eval: FALSE
 #| echo: true
 
-# Plot the signal for the most differentially acessable region.
+# Plot the signal for the most differentially accessible regions.
 plot1 <- VlnPlot(
     object = pbmc,
     features = rownames(da_peaks)[1],
