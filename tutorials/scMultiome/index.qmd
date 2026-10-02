@@ -236,6 +236,9 @@ DimPlot(seurat_multi, reduction = "umap.atac", label = T, label.size = 4, repel 
 # Which clusters from RNA- and ATAC-seq overlap?
 
 ```{r}
+#| eval: FALSE
+#| echo: true
+
 table(seurat_multi$RNA_snn_res.0.5, seurat_multi$ATAC_snn_res.0.5)
 pheatmap(table(seurat_multi$RNA_snn_res.0.5, seurat_multi$ATAC_snn_res.0.5))
 ```
