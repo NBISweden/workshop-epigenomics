@@ -949,11 +949,11 @@ txdb = TxDb.Hsapiens.UCSC.mm39.knownGene</code></pre>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>tagMatrix<span class="ot">=</span><span class="fu">getTagMatrix</span>(peaks_gr, <span class="at">windows=</span>promoter)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing start_site regions by gene... 2026-10-02 09:30:33</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing tag matrix...  2026-10-02 09:30:33</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing start_site regions by gene... 2026-10-02 10:06:15</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing tag matrix...  2026-10-02 10:06:15</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>TSS_profile<span class="ot">=</span><span class="fu">plotAvgProf</span>(tagMatrix, <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">3000</span>, <span class="dv">3000</span>), <span class="at">xlab=</span><span class="st">"Genomic Region (5'-&gt;3')"</span>, <span class="at">ylab =</span> <span class="st">"Read Count in Peaks"</span>)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; plotting figure...             2026-10-02 09:30:55</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; plotting figure...             2026-10-02 10:06:38</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="fig-tss-profile" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1377,7 +1377,7 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] txdbmaker_1.8.0        GenomicFeatures_1.64.0 AnnotationDbi_1.74.0  </span></span>
 <span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] Biobase_2.72.0         biomaRt_2.68.0         ggimage_0.3.5         </span></span>
 <span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] ggupset_0.4.1          ChIPseeker_1.48.0      GenomicRanges_1.64.0  </span></span>
-<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] Seqinfo_1.2.0          IRanges_2.46.0         S4Vectors_0.50.3      </span></span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] Seqinfo_1.2.0          IRanges_2.46.0         S4Vectors_0.50.1      </span></span>
 <span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] BiocGenerics_0.58.1    generics_0.1.4         kableExtra_1.4.1      </span></span>
 <span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] lubridate_1.9.5        forcats_1.0.1          stringr_1.6.0         </span></span>
 <span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a><span class="do">## [22] dplyr_1.2.1            purrr_1.2.2            readr_2.2.0           </span></span>
@@ -1471,7 +1471,7 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <span id="cb36-119"><a href="#cb36-119" aria-hidden="true" tabindex="-1"></a><span class="do">##  [84] prettyunits_1.2.0                       </span></span>
 <span id="cb36-120"><a href="#cb36-120" aria-hidden="true" tabindex="-1"></a><span class="do">##  [85] httr_1.4.8                              </span></span>
 <span id="cb36-121"><a href="#cb36-121" aria-hidden="true" tabindex="-1"></a><span class="do">##  [86] htmlwidgets_1.6.4                       </span></span>
-<span id="cb36-122"><a href="#cb36-122" aria-hidden="true" tabindex="-1"></a><span class="do">##  [87] S4Arrays_1.12.1                         </span></span>
+<span id="cb36-122"><a href="#cb36-122" aria-hidden="true" tabindex="-1"></a><span class="do">##  [87] S4Arrays_1.12.0                         </span></span>
 <span id="cb36-123"><a href="#cb36-123" aria-hidden="true" tabindex="-1"></a><span class="do">##  [88] scatterpie_0.2.6                        </span></span>
 <span id="cb36-124"><a href="#cb36-124" aria-hidden="true" tabindex="-1"></a><span class="do">##  [89] graphite_1.58.0                         </span></span>
 <span id="cb36-125"><a href="#cb36-125" aria-hidden="true" tabindex="-1"></a><span class="do">##  [90] pkgconfig_2.0.3                         </span></span>
