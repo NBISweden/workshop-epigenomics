@@ -466,7 +466,9 @@ We can nicely see the gene expression pattern agreeing with what we know about t
 
 Now that we have our so called chromatin landscape and some degree of understanding on which parts of the t-SNE represent more or less active genes purely based on the chromatin, the question we really want to ask is how does this change over time? If you have certain genes of interest, you could plot which chromatin space they move into over time. At the moment, we want to know which genes change the most out of all other genes, purely based on changes in chromatin, going through the different time points.
 
-How can we measure such changes quantitatively? We will use the Euclidean distance to do this, calculating it in the original high dimensional space. Let's calculate the distance between E14 and E18 for each gene.
+How can we measure such changes quantitatively? We will use the Euclidean distance to do this, calculating it in the original high dimensional space. 
+
+Let's calculate the distance between E14 and E18 for each gene.
 ```{r}
 ## Create time-specific matrices
 E14 <- combinedLog2RPKM[grep("E14", rownames(combinedLog2RPKM)), ]
@@ -489,7 +491,7 @@ Let's next color the genes belonging to the E14 time point by the distance we ca
 #| fig-height: 6
 
 ## Color the E14 t-SNE by the distance
-distCols <- c("cornsilk", "violet", "firebrick4")
+distCols <- c("cornsilk", "darkmagenta", "firebrick4")
 df %>% 
   filter(timePt == "E14") %>% 
   mutate(euclDist = dist[geneID]) %>% 
