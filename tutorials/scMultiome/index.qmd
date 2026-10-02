@@ -51,7 +51,44 @@ Using R
 <br />
 <br />
 
+::: {.callout-note}
+  
+   We take advantage of the module system on Pelle in this tutorial. The code was tested under `R 4.6.1`.
 
+:::
+
+<br />
+<br />
+
+
+We access the R environment via:
+
+```{bash}
+#| eval: FALSE
+#| echo: TRUE
+
+module load R/4.6.1-gfbf-2026.1
+module load R-bundle-CRAN/2026.07-foss-2026.1
+module load R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1
+```
+
+We activate R console upon typing `R` in the terminal.
+
+To be able to load all necessary libraries that are not available in modules, we need to update the paths to a custom library location:
+
+
+```{r}
+#| eval: FALSE
+#| echo: TRUE
+
+.libPaths(c(.libPaths(),"/proj/epi2026/library/Rpackages/4.6.1"))
+```
+
+Alternatively you can work on this tutorial locally if you have all the R packages loaded below installed on your computer.
+
+
+<br />
+<br />
 
 We begin by loading necessary libraries:
 
@@ -61,6 +98,7 @@ We begin by loading necessary libraries:
 #| echo: true
 
 library(dplyr)
+library(ggplot2)
 
 library(Signac)
 library(Seurat)
@@ -85,7 +123,9 @@ Now, read the count tables for the mouse brain data into R. Both tables are in t
 #| eval: FALSE
 #| echo: true
 
-inputdata_10x <- Read10X_h5("data/e18_mouse_brain_fresh_5k_filtered_feature_bc_matrix.h5")
+lab.dir="/proj/epi2026/single_cell/scMultiome/"
+
+inputdata_10x <- Read10X_h5(paste0(lab.dir, "data/e18_mouse_brain_fresh_5k_filtered_feature_bc_matrix.h5"))
 rna_counts <- inputdata_10x$`Gene Expression`
 mt_index <- grepl("^mt-", rownames(rna_counts))
 atac_counts <- inputdata_10x$Peaks
@@ -97,7 +137,7 @@ atac_counts <- atac_counts[, cell_sample]
 rna_counts <- rna_counts[, cell_sample]
 
 metadata <- read.csv(
-    file = "data/e18_mouse_brain_fresh_5k_per_barcode_metrics.csv",
+    file = paste0(lab.dir, "data/e18_mouse_brain_fresh_5k_per_barcode_metrics.csv"),
     header = TRUE,
     row.names = 1
 )
@@ -128,16 +168,13 @@ genome(annotations) <- "mm10"
 #| eval: FALSE
 #| echo: true
 
-# Load RNA data
-seurat_multi <- CreateSeuratObject(counts = rna_counts, meta.data = metadata)
-
 
 # Load ATAC-seq data
 chrom_assay <- CreateChromatinAssay(
     counts = atac_counts,
     sep = c(":", "-"),
     genome = 'mm10',
-    fragments = 'data/e18_mouse_brain_fresh_5k_atac_fragments.tsv.gz',
+    fragments = paste0(lab.dir, 'data/e18_mouse_brain_fresh_5k_atac_fragments.tsv.gz'),
     min.cells = 10,
     min.features = 1
 )
@@ -175,9 +212,9 @@ VlnPlot(
     features = c('gex_mapped_reads', 'nFeature_RNA', 'nCount_ATAC', 
                  'nFeature_ATAC', 'pct_reads_in_peaks', 'atac_peak_region_fragments',
                  'TSS.enrichment', 'nucleosome_signal'),
-    pt.size = 0.1,
+    pt.size = 0.01,
     ncol = 4
-)
+) & FontSize(main = 8) & theme(axis.text.x = element_blank())  & theme(axis.title.x = element_blank()) & theme(axis.text.y = element_text(size = 6))
 
 seurat_multi <- subset(
     x = seurat_multi,
@@ -233,7 +270,7 @@ seurat_multi <- RunUMAP(seurat_multi, , reduction.name = "umap.atac", dims = 2:3
 DimPlot(seurat_multi, reduction = "umap.atac", label = T, label.size = 4, repel = TRUE)
 ```
 
-# Which clusters from RNA- and ATAC-seq overlap?
+## Which clusters from RNA- and ATAC-seq overlap?
 
 ```{r}
 #| eval: FALSE
@@ -291,7 +328,7 @@ For annotating the cells, we will use an annotated data set on mouse brains from
 #| echo: true
 
 # Load and normalize Zeisel et al. (2015) dataset
-seurat_zeisel_ <- load("data/zeisel_seurat.rds")
+seurat_zeisel_ <- load(paste0(lab.dir, "data/zeisel_seurat.rds"))
 seurat_zeisel <- NormalizeData(seurat_zeisel, normalization.method = "LogNormalize")
 seurat_zeisel <- FindVariableFeatures(seurat_zeisel, selection.method = "vst", nfeatures = 2000)
 seurat_zeisel <- ScaleData(seurat_zeisel)
@@ -305,7 +342,7 @@ Then, we are ready to run the actual cell annotation. This method produces a sco
 #| echo: true
 
 # Cell type annotation with singleR
-zeisel_labels=as.vector(read.csv("data/zeisel_labels.txt", header=FALSE))$V1
+zeisel_labels=as.vector(read.csv(paste0(lab.dir, "data/zeisel_labels.txt"), header=FALSE))$V1
 cell_type_pred <- SingleR(test=as.matrix(GetAssayData(object = seurat_multi, layer = "data")), 
                           ref=as.matrix(GetAssayData(object = seurat_zeisel, layer = "data")), 
                           labels=zeisel_labels,
