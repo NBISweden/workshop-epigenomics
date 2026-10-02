@@ -14,14 +14,14 @@ format: html
 |Topic                                                          |Instructor	                                      | Links 												                     |
 |---------------------------------------------------------------|-------------------------------------------------|----------------------------------------------------|
 |[05-Oct-2026 (Mon)]{.badge .badge-primary}                                                                                                                          |||
-| DNA methylation                                               | Louella Vasquez                                 |[Presentation](presentations/TFs/TFslides.pdf), [Tutorials](landingPages/DNAme/index.html)|
+| DNA methylation                                               | Louella Vasquez                                 |[Presentation](presentations/DNAme/DNAMEslides.pdf), [Tutorials](landingPages/DNAme/index.html)|
 | Methylation methods & technologies (NGI)                      | Amanda Raine                                    |                                                    |
 |[06-Oct-2026 (Tue)]{.badge .badge-primary}                                                                                                                          |||
 | ATAC-seq                                                      | Agata Smialowska                                |[Presentation](presentations/ATAC/ATACslides.pdf), [Tutorials](landingPages/ATAC/index.html)|
 | Presentation and Q&A with NGI                                 | Orlando Contreras Lopez and Michelle Ljungmark  |                                                    |
 |[07-Oct-2026 (Wed)]{.badge .badge-primary}                                                                                                                          |||
 | ChIP-seq                                                      | Dania Machlab                                   |[Presentation](presentations/ChIP/ChIPslides.pdf), [Tutorials](landingPages/ChIP/index.html)|
-| Cut & Tag/Run                                                 | Prasoon Agarwal                                 |[Presentation](presentations/ATAC/ATACslides.pdf)                                                 |
+| Cut & Tag/Run                                                 | Prasoon Agarwal                                 |[Presentation](presentations/CUTandTag/CUTandTAGslides.pdf)                                                 |
 |[08-Oct-2026 (Thu)]{.badge .badge-primary}                                                                                                                          |||
 | Motifs                                                        | Dania Machlab                                   |[Presentation](presentations/TFs/TFslides.pdf), [Tutorials](landingPages/TF/index.html)|
 | BiG Talk (keynote)                                            | Mattias Mannervik                               |                                                    |
