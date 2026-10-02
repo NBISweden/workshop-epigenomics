@@ -104,8 +104,6 @@ jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan",
                                  "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
 pairs(log2cpm, panel = function(...){smoothScatter(..., nrpoints = 0, colramp = jet.colors, add=TRUE);
   abline(a=0,b=1,col="white")}, main = "Promoter log2(CPM+1)")
-
-
 ```
 
 
@@ -487,6 +485,9 @@ summary(dist)
 
 Let's next color the genes belonging to the E14 time point by the distance we calculated. Which genes are changing the most in chromatin by the E18 time point?
 ```{r}
+#| fig-width: 8
+#| fig-height: 6
+
 ## Color the E14 t-SNE by the distance
 distCols <- c("cornsilk", "violet", "firebrick4")
 df %>% 
