@@ -466,14 +466,12 @@ We can nicely see the gene expression pattern agreeing with what we know about t
 
 Now that we have our so called chromatin landscape and some degree of understanding on which parts of the t-SNE represent more or less active genes purely based on the chromatin, the question we really want to ask is how does this change over time? If you have certain genes of interest, you could plot which chromatin space they move into over time. At the moment, we want to know which genes change the most out of all other genes, purely based on changes in chromatin, going through the different time points.
 
-How can we measure such changes quantitatively? We will use the Euclidean distance to do this, calculating it in the original high dimensional space. The Euclidean distance between two points in space is the length of the line connecting them. In a two dimensional space, you can calculate this distance using the Pythagoras theorem as shown in @fig-euclDist.
+How can we measure such changes quantitatively? We will use the Euclidean distance to do this, calculating it in the original high dimensional space. The Euclidean distance between two points in space is the length of the line connecting them. In a two dimensional space, you can calculate this distance using the Pythagoras theorem as shown in @fig-euclDist for the two points $p$ and $q$, so $d(p,q)=\sqrt{(p_1-q_1)^2+(p_2-q_2)^2}$. This is generalizable for more than two dimensions. Taking vectors $p$ and $q$ with $n$ dimensions, $d(p,q)=\sqrt{(p-q)^2}$
 
-![Image from [Wikipedia](https://en.wikipedia.org/wiki/Euclidean_distance)](assets/EuclideanDistance2d.webp){#fig-euclDist height=300px}
+![Image from [Wikipedia](https://en.wikipedia.org/wiki/Euclidean_distance)](assets/EuclideanDistance2d.webp){#fig-euclDist width=60%}
 
 
-Image from [Wikipedia](https://en.wikipedia.org/wiki/Euclidean_distance)
-
-Let's calculate the distance between E14 and E18 for each gene.
+Let's calculate the Euclidean distance between E14 and E18 for each gene.
 ```{r}
 ## Create time-specific matrices
 E14 <- combinedLog2RPKM[grep("E14", rownames(combinedLog2RPKM)), ]
@@ -506,11 +504,11 @@ df %>%
   theme_classic()
 ```
 
-We can notice certain regions of the t-SNE are changing the most in chromatin going from E14 to E18, and that these genes which change the most are not randomly spread out in the entire t-SNE. A closer inspection of genes in these areas actually reveals that bipartite genes live in this space and play key dynamic roles during development.
+We can notice certain regions of the t-SNE are changing the most in chromatin going from E14 to E18, and that these genes which change the most are not randomly spread out in the entire t-SNE. The regions that are never used or which are highly expressed and constantly used, like housekeeping genes, change the least over time. A closer inspection of genes which changes the most in the t-SNE actually reveals that these are the bipartite genes and they play key dynamic roles during development. Their promoters are open and carry active marks, even H3K27Ac which is normally a mark expressed genes carry, but these genes are not expressed due to the presence of the repressive H3K27Me3 mark at the gene body. These genes can be quickly induced when the right stimulus comes during development and the H3K27Me3 mark is removed and the genes expressed.
 
 ::: {.callout-tip}
 ## Exercise
-Choose another pair of time points to compare, and plot he Euclidean distance. Do you see something similar and is it in the same part of the t-SNE?
+Choose another pair of time points to compare, and plot the Euclidean distance. Do you see something similar and is it in the same part of the t-SNE?
 :::
 
 
@@ -518,24 +516,94 @@ Choose another pair of time points to compare, and plot he Euclidean distance. D
 
 ## Genes over time
 
-Let's select a few genes and follow how they move over time in the chromain space using the t-SNE we have made. We will focus on the bipartite genes of which we have selected some example genes below from the study.
+Let's select a few genes and follow how they move over time in the chromatin space using the t-SNE we have made. We will focus on the bipartite genes of which we have selected some example genes below from the study. @Kitazawa2021Polycomb have calculated bivalent and bipartite scores for genes to identify which genes of either categories. Without going into the details of these score calculations, which are based on expected chromatin marks on these genes, we will be using these identified bivalent and bipartite genes here to define the regions in the t-SNE which are the bivalent and bipartite gene containing regions.
 ```{r}
+#| fig-width: 10
+#| fig-height: 4
 
+## Read in bipartite and bivalent genes
+bipGenes <- readRDS("dataObjects/bipartiteGenes.rds")
+m <- match(bipGenes, df$rowName)
+df$bipartite<- FALSE
+df$bipartite[m] <- TRUE
+bivGenes <- readRDS("dataObjects/bivalentGenes.rds")
+m <- match(bivGenes, df$rowName)
+df$bivalent<- FALSE
+df$bivalent[m] <- TRUE
+
+## Plot them on the t-SNE
+p1 <- ggplot(df, aes(x = TSNE1, y = TSNE2)) + 
+  geom_point(color = "grey", size = 0.5) + 
+  geom_point(data = subset(df, bivalent), aes(color = bivalent)) + 
+  theme_classic()
+p2 <- ggplot(df, aes(x = TSNE1, y = TSNE2)) + 
+  geom_point(color = "grey", size = 0.5) + 
+  geom_point(data = subset(df, bipartite), aes(color = bipartite)) + 
+  theme_classic()
+p1 + p2
 ```
 
 
+Let's mark visualize these regions as contours on the t-SNE.
+```{r}
+#| fig-width: 6
+#| fig-height: 5
+
+contourDf <- df %>% 
+  pivot_longer(cols = c(bivalent, bipartite), 
+               names_to = "regionType", 
+               values_to = "belong") %>% 
+  filter(belong)
+
+ggplot(df, aes(x = TSNE1, y = TSNE2)) + 
+  geom_point(color = "grey", size = 0.5) + 
+  geom_density_2d(data = contourDf, aes(color = regionType)) + 
+  theme_classic()
+```
+
+
+If you compare this plot to the plots where we colored the t-SNE by the different chromatin marks you will notice that the bipartite gene area has promoter H3K27Ac as well as gene body H3K27me3, whereas the bivalent regions has no H3K27Ac but has the H3K27Me3 and H3K4Me2 marks coexisting on the gene, as they should by definition.
+
+
+### Immediate early genes (IEGs)
+
+We will pick some IEGs mentioned by @Kitazawa2021Polycomb, which carry the bipartite gene signature and follow them over time going from E14 to E18 to P4. IEGs tend to some of the first responders to the stimulus they expect. They tend to be transcription factors and timing is key during development, that they are expressed at the right time. They in turn trigger the expression of other genes. I the context of the barrelette neurons which receive sensory input from the whiskers of the mice, the stimulus comes during birth at E18 when the mice start using their whiskers.
+
+Let's track some select IEGs.
+```{r}
+#| fig-width: 12
+#| fig-height: 4
+
+## IEGs
+iegs <- c("Fos", "Egr1", "Bcl6", "Nr3c1", "Plekhh3")
+
+## Add gene names to df
+m <- match(df$geneID, promoters$GENEID)
+df$geneName <- promoters$Gene_Symbol[m]
+
+## Add IEG column
+df$isIEG <- df$geneName %in% iegs
+
+## Plot IEGs over time
+ggplot(df, aes(x = TSNE1, y = TSNE2)) + 
+  geom_point(color = "grey", size = 0.5) + 
+  geom_density_2d(data = contourDf, aes(color = regionType)) + 
+  geom_point(data = subset(df, isIEG), aes(fill = geneName), 
+             shape = 21, size = 2) +
+  theme_classic() + 
+  facet_wrap(~timePt)
+```
+
+Notice how these genes start out as bipartite and gradually move up towards the part of the t-SNE where genes are more active (recall the plots coloring by all chromatin marks). The t-SNE helps us get a global picture and the genome browser tracks for the Egr1 gene below confirm what we are seeing above. We can appreciate a gradual decrease in H3K27Me3 accompanied by an increase in expression over time.
+
+![Figure from @Kitazawa2021Polycomb](assets/Egr1.webp)
 
 
 
-color by rna seq
-eucledian dist
-bip and biv genes
 
-comment on that this can be applied to any genomic regions, also enhancers, here we focused on genes in hte bipartie story.
+## Final thoughts
 
-::: {.callout-tip}
-## Exercise
-:::
+The chromatin landscapes we visualized here were done on the gene level in the context of the bipartite gene story. However one can do this on any regions of interest, like enhancers for example, and understand how the different chromatin regions group, and even visualize how they change between conditions by tracking how they move in this chromatin space.
 
 
 ## Session
