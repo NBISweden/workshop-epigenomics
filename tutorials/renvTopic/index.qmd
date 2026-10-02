@@ -9,7 +9,6 @@ date: "`r format(Sys.time(), '%B %d, %Y')`"
 editor: 
   markdown: 
     wrap: 72
-bibliography: references.bib
 ---
 
 
