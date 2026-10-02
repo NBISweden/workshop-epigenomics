@@ -466,7 +466,12 @@ We can nicely see the gene expression pattern agreeing with what we know about t
 
 Now that we have our so called chromatin landscape and some degree of understanding on which parts of the t-SNE represent more or less active genes purely based on the chromatin, the question we really want to ask is how does this change over time? If you have certain genes of interest, you could plot which chromatin space they move into over time. At the moment, we want to know which genes change the most out of all other genes, purely based on changes in chromatin, going through the different time points.
 
-How can we measure such changes quantitatively? We will use the Euclidean distance to do this, calculating it in the original high dimensional space. 
+How can we measure such changes quantitatively? We will use the Euclidean distance to do this, calculating it in the original high dimensional space. The Euclidean distance between two points in space is the length of the line connecting them. In a two dimensional space, you can calculate this distance using the Pythagoras theorem as shown in @fig-euclDist.
+
+![Image from [Wikipedia](https://en.wikipedia.org/wiki/Euclidean_distance)](assets/EuclideanDistance2d.webp){#fig-euclDist height=300px}
+
+
+Image from [Wikipedia](https://en.wikipedia.org/wiki/Euclidean_distance)
 
 Let's calculate the distance between E14 and E18 for each gene.
 ```{r}
