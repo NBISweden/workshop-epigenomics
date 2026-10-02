@@ -949,11 +949,11 @@ txdb = TxDb.Hsapiens.UCSC.mm39.knownGene</code></pre>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>tagMatrix<span class="ot">=</span><span class="fu">getTagMatrix</span>(peaks_gr, <span class="at">windows=</span>promoter)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing start_site regions by gene... 2026-10-02 08:35:32</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing tag matrix...  2026-10-02 08:35:32</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing start_site regions by gene... 2026-10-02 09:30:33</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing tag matrix...  2026-10-02 09:30:33</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>TSS_profile<span class="ot">=</span><span class="fu">plotAvgProf</span>(tagMatrix, <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">3000</span>, <span class="dv">3000</span>), <span class="at">xlab=</span><span class="st">"Genomic Region (5'-&gt;3')"</span>, <span class="at">ylab =</span> <span class="st">"Read Count in Peaks"</span>)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; plotting figure...             2026-10-02 08:35:57</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; plotting figure...             2026-10-02 09:30:55</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="fig-tss-profile" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1377,7 +1377,7 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] txdbmaker_1.8.0        GenomicFeatures_1.64.0 AnnotationDbi_1.74.0  </span></span>
 <span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] Biobase_2.72.0         biomaRt_2.68.0         ggimage_0.3.5         </span></span>
 <span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] ggupset_0.4.1          ChIPseeker_1.48.0      GenomicRanges_1.64.0  </span></span>
-<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] Seqinfo_1.2.0          IRanges_2.46.0         S4Vectors_0.50.2      </span></span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] Seqinfo_1.2.0          IRanges_2.46.0         S4Vectors_0.50.3      </span></span>
 <span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] BiocGenerics_0.58.1    generics_0.1.4         kableExtra_1.4.1      </span></span>
 <span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] lubridate_1.9.5        forcats_1.0.1          stringr_1.6.0         </span></span>
 <span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a><span class="do">## [22] dplyr_1.2.1            purrr_1.2.2            readr_2.2.0           </span></span>
@@ -1387,7 +1387,7 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a><span class="do">## loaded via a namespace (and not attached):</span></span>
 <span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a><span class="do">##   [1] splines_4.6.1                           </span></span>
 <span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a><span class="do">##   [2] BiocIO_1.22.0                           </span></span>
-<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a><span class="do">##   [3] bitops_1.0-9                            </span></span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a><span class="do">##   [3] bitops_1.1-0                            </span></span>
 <span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a><span class="do">##   [4] ggplotify_0.1.3                         </span></span>
 <span id="cb36-40"><a href="#cb36-40" aria-hidden="true" tabindex="-1"></a><span class="do">##   [5] filelock_1.0.3                          </span></span>
 <span id="cb36-41"><a href="#cb36-41" aria-hidden="true" tabindex="-1"></a><span class="do">##   [6] polyclip_1.10-7                         </span></span>
@@ -1395,7 +1395,7 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a><span class="do">##   [8] enrichit_0.2.4                          </span></span>
 <span id="cb36-44"><a href="#cb36-44" aria-hidden="true" tabindex="-1"></a><span class="do">##   [9] XML_3.99-0.23                           </span></span>
 <span id="cb36-45"><a href="#cb36-45" aria-hidden="true" tabindex="-1"></a><span class="do">##  [10] lifecycle_1.0.5                         </span></span>
-<span id="cb36-46"><a href="#cb36-46" aria-hidden="true" tabindex="-1"></a><span class="do">##  [11] httr2_1.2.2                             </span></span>
+<span id="cb36-46"><a href="#cb36-46" aria-hidden="true" tabindex="-1"></a><span class="do">##  [11] httr2_1.3.0                             </span></span>
 <span id="cb36-47"><a href="#cb36-47" aria-hidden="true" tabindex="-1"></a><span class="do">##  [12] lattice_0.22-9                          </span></span>
 <span id="cb36-48"><a href="#cb36-48" aria-hidden="true" tabindex="-1"></a><span class="do">##  [13] MASS_7.3-65                             </span></span>
 <span id="cb36-49"><a href="#cb36-49" aria-hidden="true" tabindex="-1"></a><span class="do">##  [14] magrittr_2.0.5                          </span></span>
@@ -1409,7 +1409,7 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <span id="cb36-57"><a href="#cb36-57" aria-hidden="true" tabindex="-1"></a><span class="do">##  [22] RColorBrewer_1.1-3                      </span></span>
 <span id="cb36-58"><a href="#cb36-58" aria-hidden="true" tabindex="-1"></a><span class="do">##  [23] abind_1.4-8                             </span></span>
 <span id="cb36-59"><a href="#cb36-59" aria-hidden="true" tabindex="-1"></a><span class="do">##  [24] ggraph_2.2.2                            </span></span>
-<span id="cb36-60"><a href="#cb36-60" aria-hidden="true" tabindex="-1"></a><span class="do">##  [25] RCurl_1.98-1.18                         </span></span>
+<span id="cb36-60"><a href="#cb36-60" aria-hidden="true" tabindex="-1"></a><span class="do">##  [25] RCurl_1.98-1.19                         </span></span>
 <span id="cb36-61"><a href="#cb36-61" aria-hidden="true" tabindex="-1"></a><span class="do">##  [26] yulab.utils_0.2.5                       </span></span>
 <span id="cb36-62"><a href="#cb36-62" aria-hidden="true" tabindex="-1"></a><span class="do">##  [27] tweenr_2.0.3                            </span></span>
 <span id="cb36-63"><a href="#cb36-63" aria-hidden="true" tabindex="-1"></a><span class="do">##  [28] rappdirs_0.3.4                          </span></span>
@@ -1420,7 +1420,7 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <span id="cb36-68"><a href="#cb36-68" aria-hidden="true" tabindex="-1"></a><span class="do">##  [33] reactome.db_1.96.0                      </span></span>
 <span id="cb36-69"><a href="#cb36-69" aria-hidden="true" tabindex="-1"></a><span class="do">##  [34] svglite_2.2.2                           </span></span>
 <span id="cb36-70"><a href="#cb36-70" aria-hidden="true" tabindex="-1"></a><span class="do">##  [35] codetools_0.2-20                        </span></span>
-<span id="cb36-71"><a href="#cb36-71" aria-hidden="true" tabindex="-1"></a><span class="do">##  [36] DelayedArray_0.38.1                     </span></span>
+<span id="cb36-71"><a href="#cb36-71" aria-hidden="true" tabindex="-1"></a><span class="do">##  [36] DelayedArray_0.38.2                     </span></span>
 <span id="cb36-72"><a href="#cb36-72" aria-hidden="true" tabindex="-1"></a><span class="do">##  [37] DOSE_4.6.0                              </span></span>
 <span id="cb36-73"><a href="#cb36-73" aria-hidden="true" tabindex="-1"></a><span class="do">##  [38] xml2_1.6.0                              </span></span>
 <span id="cb36-74"><a href="#cb36-74" aria-hidden="true" tabindex="-1"></a><span class="do">##  [39] ggforce_0.5.0                           </span></span>
@@ -1440,19 +1440,19 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <span id="cb36-88"><a href="#cb36-88" aria-hidden="true" tabindex="-1"></a><span class="do">##  [53] progress_1.2.3                          </span></span>
 <span id="cb36-89"><a href="#cb36-89" aria-hidden="true" tabindex="-1"></a><span class="do">##  [54] treeio_1.36.1                           </span></span>
 <span id="cb36-90"><a href="#cb36-90" aria-hidden="true" tabindex="-1"></a><span class="do">##  [55] TxDb.Hsapiens.UCSC.hg19.knownGene_3.22.1</span></span>
-<span id="cb36-91"><a href="#cb36-91" aria-hidden="true" tabindex="-1"></a><span class="do">##  [56] Rcpp_1.1.1-1.1                          </span></span>
+<span id="cb36-91"><a href="#cb36-91" aria-hidden="true" tabindex="-1"></a><span class="do">##  [56] Rcpp_1.1.2                              </span></span>
 <span id="cb36-92"><a href="#cb36-92" aria-hidden="true" tabindex="-1"></a><span class="do">##  [57] glue_1.8.1                              </span></span>
 <span id="cb36-93"><a href="#cb36-93" aria-hidden="true" tabindex="-1"></a><span class="do">##  [58] gridExtra_2.3.1                         </span></span>
 <span id="cb36-94"><a href="#cb36-94" aria-hidden="true" tabindex="-1"></a><span class="do">##  [59] SparseArray_1.12.2                      </span></span>
-<span id="cb36-95"><a href="#cb36-95" aria-hidden="true" tabindex="-1"></a><span class="do">##  [60] xfun_0.57                               </span></span>
+<span id="cb36-95"><a href="#cb36-95" aria-hidden="true" tabindex="-1"></a><span class="do">##  [60] xfun_0.60                               </span></span>
 <span id="cb36-96"><a href="#cb36-96" aria-hidden="true" tabindex="-1"></a><span class="do">##  [61] qvalue_2.44.0                           </span></span>
 <span id="cb36-97"><a href="#cb36-97" aria-hidden="true" tabindex="-1"></a><span class="do">##  [62] MatrixGenerics_1.24.0                   </span></span>
 <span id="cb36-98"><a href="#cb36-98" aria-hidden="true" tabindex="-1"></a><span class="do">##  [63] GenomeInfoDb_1.48.0                     </span></span>
-<span id="cb36-99"><a href="#cb36-99" aria-hidden="true" tabindex="-1"></a><span class="do">##  [64] withr_3.0.2                             </span></span>
+<span id="cb36-99"><a href="#cb36-99" aria-hidden="true" tabindex="-1"></a><span class="do">##  [64] withr_3.0.3                             </span></span>
 <span id="cb36-100"><a href="#cb36-100" aria-hidden="true" tabindex="-1"></a><span class="do">##  [65] BiocManager_1.30.27                     </span></span>
 <span id="cb36-101"><a href="#cb36-101" aria-hidden="true" tabindex="-1"></a><span class="do">##  [66] fastmap_1.2.0                           </span></span>
 <span id="cb36-102"><a href="#cb36-102" aria-hidden="true" tabindex="-1"></a><span class="do">##  [67] boot_1.3-32                             </span></span>
-<span id="cb36-103"><a href="#cb36-103" aria-hidden="true" tabindex="-1"></a><span class="do">##  [68] caTools_1.18.3                          </span></span>
+<span id="cb36-103"><a href="#cb36-103" aria-hidden="true" tabindex="-1"></a><span class="do">##  [68] caTools_1.18.4                          </span></span>
 <span id="cb36-104"><a href="#cb36-104" aria-hidden="true" tabindex="-1"></a><span class="do">##  [69] digest_0.6.39                           </span></span>
 <span id="cb36-105"><a href="#cb36-105" aria-hidden="true" tabindex="-1"></a><span class="do">##  [70] timechange_0.4.0                        </span></span>
 <span id="cb36-106"><a href="#cb36-106" aria-hidden="true" tabindex="-1"></a><span class="do">##  [71] R6_2.6.1                                </span></span>
@@ -1461,11 +1461,11 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <span id="cb36-109"><a href="#cb36-109" aria-hidden="true" tabindex="-1"></a><span class="do">##  [74] GO.db_3.23.1                            </span></span>
 <span id="cb36-110"><a href="#cb36-110" aria-hidden="true" tabindex="-1"></a><span class="do">##  [75] gtools_3.9.5                            </span></span>
 <span id="cb36-111"><a href="#cb36-111" aria-hidden="true" tabindex="-1"></a><span class="do">##  [76] dichromat_2.0-1                         </span></span>
-<span id="cb36-112"><a href="#cb36-112" aria-hidden="true" tabindex="-1"></a><span class="do">##  [77] RSQLite_3.53.1                          </span></span>
-<span id="cb36-113"><a href="#cb36-113" aria-hidden="true" tabindex="-1"></a><span class="do">##  [78] cigarillo_1.2.0                         </span></span>
-<span id="cb36-114"><a href="#cb36-114" aria-hidden="true" tabindex="-1"></a><span class="do">##  [79] data.table_1.18.6.1                     </span></span>
+<span id="cb36-112"><a href="#cb36-112" aria-hidden="true" tabindex="-1"></a><span class="do">##  [77] RSQLite_3.53.3                          </span></span>
+<span id="cb36-113"><a href="#cb36-113" aria-hidden="true" tabindex="-1"></a><span class="do">##  [78] cigarillo_1.2.1                         </span></span>
+<span id="cb36-114"><a href="#cb36-114" aria-hidden="true" tabindex="-1"></a><span class="do">##  [79] data.table_1.18.4                       </span></span>
 <span id="cb36-115"><a href="#cb36-115" aria-hidden="true" tabindex="-1"></a><span class="do">##  [80] fontLiberation_0.1.0                    </span></span>
-<span id="cb36-116"><a href="#cb36-116" aria-hidden="true" tabindex="-1"></a><span class="do">##  [81] renv_1.2.3                              </span></span>
+<span id="cb36-116"><a href="#cb36-116" aria-hidden="true" tabindex="-1"></a><span class="do">##  [81] renv_1.2.4                              </span></span>
 <span id="cb36-117"><a href="#cb36-117" aria-hidden="true" tabindex="-1"></a><span class="do">##  [82] rtracklayer_1.72.0                      </span></span>
 <span id="cb36-118"><a href="#cb36-118" aria-hidden="true" tabindex="-1"></a><span class="do">##  [83] graphlayouts_1.2.5                      </span></span>
 <span id="cb36-119"><a href="#cb36-119" aria-hidden="true" tabindex="-1"></a><span class="do">##  [84] prettyunits_1.2.0                       </span></span>
@@ -1493,13 +1493,13 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <span id="cb36-141"><a href="#cb36-141" aria-hidden="true" tabindex="-1"></a><span class="do">## [106] cachem_1.1.0                            </span></span>
 <span id="cb36-142"><a href="#cb36-142" aria-hidden="true" tabindex="-1"></a><span class="do">## [107] KernSmooth_2.23-26                      </span></span>
 <span id="cb36-143"><a href="#cb36-143" aria-hidden="true" tabindex="-1"></a><span class="do">## [108] parallel_4.6.1                          </span></span>
-<span id="cb36-144"><a href="#cb36-144" aria-hidden="true" tabindex="-1"></a><span class="do">## [109] restfulr_0.0.16                         </span></span>
+<span id="cb36-144"><a href="#cb36-144" aria-hidden="true" tabindex="-1"></a><span class="do">## [109] restfulr_0.0.17                         </span></span>
 <span id="cb36-145"><a href="#cb36-145" aria-hidden="true" tabindex="-1"></a><span class="do">## [110] pillar_1.11.1                           </span></span>
 <span id="cb36-146"><a href="#cb36-146" aria-hidden="true" tabindex="-1"></a><span class="do">## [111] grid_4.6.1                              </span></span>
 <span id="cb36-147"><a href="#cb36-147" aria-hidden="true" tabindex="-1"></a><span class="do">## [112] vctrs_0.7.3                             </span></span>
 <span id="cb36-148"><a href="#cb36-148" aria-hidden="true" tabindex="-1"></a><span class="do">## [113] gplots_3.3.0                            </span></span>
 <span id="cb36-149"><a href="#cb36-149" aria-hidden="true" tabindex="-1"></a><span class="do">## [114] tidydr_0.0.6                            </span></span>
-<span id="cb36-150"><a href="#cb36-150" aria-hidden="true" tabindex="-1"></a><span class="do">## [115] dbplyr_2.5.2                            </span></span>
+<span id="cb36-150"><a href="#cb36-150" aria-hidden="true" tabindex="-1"></a><span class="do">## [115] dbplyr_2.6.0                            </span></span>
 <span id="cb36-151"><a href="#cb36-151" aria-hidden="true" tabindex="-1"></a><span class="do">## [116] cluster_2.1.8.2                         </span></span>
 <span id="cb36-152"><a href="#cb36-152" aria-hidden="true" tabindex="-1"></a><span class="do">## [117] evaluate_1.0.5                          </span></span>
 <span id="cb36-153"><a href="#cb36-153" aria-hidden="true" tabindex="-1"></a><span class="do">## [118] magick_2.9.1                            </span></span>
@@ -1512,18 +1512,18 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <span id="cb36-160"><a href="#cb36-160" aria-hidden="true" tabindex="-1"></a><span class="do">## [125] plyr_1.8.9                              </span></span>
 <span id="cb36-161"><a href="#cb36-161" aria-hidden="true" tabindex="-1"></a><span class="do">## [126] fs_2.1.0                                </span></span>
 <span id="cb36-162"><a href="#cb36-162" aria-hidden="true" tabindex="-1"></a><span class="do">## [127] ggiraph_0.9.6                           </span></span>
-<span id="cb36-163"><a href="#cb36-163" aria-hidden="true" tabindex="-1"></a><span class="do">## [128] stringi_1.8.7                           </span></span>
+<span id="cb36-163"><a href="#cb36-163" aria-hidden="true" tabindex="-1"></a><span class="do">## [128] stringi_1.8.9                           </span></span>
 <span id="cb36-164"><a href="#cb36-164" aria-hidden="true" tabindex="-1"></a><span class="do">## [129] viridisLite_0.4.3                       </span></span>
 <span id="cb36-165"><a href="#cb36-165" aria-hidden="true" tabindex="-1"></a><span class="do">## [130] BiocParallel_1.46.0                     </span></span>
-<span id="cb36-166"><a href="#cb36-166" aria-hidden="true" tabindex="-1"></a><span class="do">## [131] Biostrings_2.80.0                       </span></span>
+<span id="cb36-166"><a href="#cb36-166" aria-hidden="true" tabindex="-1"></a><span class="do">## [131] Biostrings_2.80.1                       </span></span>
 <span id="cb36-167"><a href="#cb36-167" aria-hidden="true" tabindex="-1"></a><span class="do">## [132] lazyeval_0.2.3                          </span></span>
 <span id="cb36-168"><a href="#cb36-168" aria-hidden="true" tabindex="-1"></a><span class="do">## [133] GOSemSim_2.38.3                         </span></span>
 <span id="cb36-169"><a href="#cb36-169" aria-hidden="true" tabindex="-1"></a><span class="do">## [134] fontquiver_0.2.1                        </span></span>
-<span id="cb36-170"><a href="#cb36-170" aria-hidden="true" tabindex="-1"></a><span class="do">## [135] Matrix_1.7-5                            </span></span>
+<span id="cb36-170"><a href="#cb36-170" aria-hidden="true" tabindex="-1"></a><span class="do">## [135] Matrix_1.7-6                            </span></span>
 <span id="cb36-171"><a href="#cb36-171" aria-hidden="true" tabindex="-1"></a><span class="do">## [136] hms_1.1.4                               </span></span>
 <span id="cb36-172"><a href="#cb36-172" aria-hidden="true" tabindex="-1"></a><span class="do">## [137] patchwork_1.3.2                         </span></span>
 <span id="cb36-173"><a href="#cb36-173" aria-hidden="true" tabindex="-1"></a><span class="do">## [138] bit64_4.8.2                             </span></span>
-<span id="cb36-174"><a href="#cb36-174" aria-hidden="true" tabindex="-1"></a><span class="do">## [139] KEGGREST_1.52.0                         </span></span>
+<span id="cb36-174"><a href="#cb36-174" aria-hidden="true" tabindex="-1"></a><span class="do">## [139] KEGGREST_1.52.2                         </span></span>
 <span id="cb36-175"><a href="#cb36-175" aria-hidden="true" tabindex="-1"></a><span class="do">## [140] SummarizedExperiment_1.42.0             </span></span>
 <span id="cb36-176"><a href="#cb36-176" aria-hidden="true" tabindex="-1"></a><span class="do">## [141] igraph_2.3.3                            </span></span>
 <span id="cb36-177"><a href="#cb36-177" aria-hidden="true" tabindex="-1"></a><span class="do">## [142] memoise_2.0.1                           </span></span>

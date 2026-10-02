@@ -8,7 +8,7 @@
 
 <meta name="author" content="Dania Machlab">
 
-<title>Advanced ChIP-seq</title>
+<title>Temp placeholder to update renv</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -124,7 +124,7 @@ background-size: cover;
   
 
 
-<meta property="og:title" content="Advanced ChIP-seq">
+<meta property="og:title" content="Temp placeholder to update renv">
 <meta property="og:description" content="NBIS Workshop">
 <meta property="og:image" content="https://nbisweden.github.io/workshop-epigenomics/assets/images/featured.webp">
 </head>
@@ -221,7 +221,7 @@ background-size: cover;
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Advanced ChIP-seq</h1>
+      <h1 class="title">Temp placeholder to update renv</h1>
             <p class="subtitle lead">NBIS Workshop</p>
                       </div>
   </div>
@@ -250,20 +250,8 @@ background-size: cover;
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">1</span> Overview</a>
-  <ul>
-  <li><a href="#the-data-set" id="toc-the-data-set" class="nav-link" data-scroll-target="#the-data-set"><span class="header-section-number">1.1</span> The data set</a></li>
-  </ul></li>
-  <li><a href="#read-in-the-data" id="toc-read-in-the-data" class="nav-link" data-scroll-target="#read-in-the-data"><span class="header-section-number">2</span> Read in the data</a></li>
-  <li><a href="#explore-the-count-matrices" id="toc-explore-the-count-matrices" class="nav-link" data-scroll-target="#explore-the-count-matrices"><span class="header-section-number">3</span> Explore the count matrices</a></li>
-  <li><a href="#session-information" id="toc-session-information" class="nav-link" data-scroll-target="#session-information"><span class="header-section-number">4</span> Session information</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -273,192 +261,33 @@ background-size: cover;
 
 
 
-<section id="overview" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="overview"><span class="header-section-number">1</span> Overview</h2>
-<p>This tutorial covers more advanced analyses pertaining to ChIP-seq data. We will examine histone modifications over time and look into how we can jointly visualize the epigenome and changes in chromatin that occur on a global level.</p>
-<section id="the-data-set" class="level3" data-number="1.1">
-<h3 data-number="1.1" class="anchored" data-anchor-id="the-data-set"><span class="header-section-number">1.1</span> The data set</h3>
-<p>As mentioned, we will be looking at histone marks over time. For this we will be using the data generated in <a href="https://www.nature.com/articles/s41588-021-00789-z">this study</a>. The authors describe a new epigenetic signature on genes characterized by open and H3K27-acetylated promoters (active marks) and H3K27-methylated gene bodies (repressive mark), called bipartite genes. These genes are not expressed but can be within minutes as soon as the repressive H3K27me3 mark is removed from the gene body upon exposure to the right stimulus. They tend to be transcription factors (TFs) and play key developmental roles.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>(<span class="fu">c</span>(<span class="st">"/Users/daniamachlab/Library/R/arm64/4.6-Bioc-3.23/library/"</span>, <span class="fu">.libPaths</span>()))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Librararies for Markus</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(GenomicRanges)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#library(QuasR)</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>jet.colors <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">"#00007F"</span>, <span class="st">"blue"</span>, <span class="st">"#007FFF"</span>, <span class="st">"cyan"</span>, <span class="st">"#7FFF7F"</span>, <span class="st">"yellow"</span>, <span class="st">"#FF7F00"</span>, <span class="st">"red"</span>, <span class="st">"#7F0000"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-</section>
-<section id="read-in-the-data" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="read-in-the-data"><span class="header-section-number">2</span> Read in the data</h2>
-<p>Our starting point for this tutorial is two raw count matrices: one on promoters and another on gene bodies. Promoters were defined as 1kb upstream and 500 bases downstream the transcription start site (TSS) and gene bodies as regions from 1kb to 3 kb downstream the TSS. The rows in these count matrices correspond to genes and the columns correspond to the different modalities quantified on the promoter and gene body level and at three different developmental time points, namely E14, E18 and P4, where E14 means day 14 at the embryonic stage and P4 means 4 days post natally or after birth. The marks that were quantified are ATAC-seq, H3K27me3, H3K27Ac and H3K4me2.</p>
-<p>todo: make pairs plot for P and GB, what do you see and where could this be coming from?</p>
-<p>Let’s begin by reading in the data.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## promoters</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>promoters <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"dataObjects/promotersGRanges.rds"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>pCnt <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"dataObjects/promotersCnt.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Examine the <code>promoters</code> object and what it contains. Notice that it is of class <a href="https://bioconductor.org/packages/GenomicRanges/">GRanges</a> which is a useful way to represent genomic ranges in <code>R</code> and do efficient operations on them. What information do you see?</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(promoters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(Signac) </span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(Seurat)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(EnsDb.Hsapiens.v75)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(hdf5r)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(EnsDb.Mmusculus.v79)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(motifmatchr) </span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(JASPAR2020)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(GenomeInfoDb)</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(EnsDb.Mmusculus.v79)</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(BSgenome.Hsapiens.UCSC.hg19)</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(BSgenome.Mmusculus.UCSC.mm10)</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(EnsDb.Mmusculus.v79)</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(patchwork)</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(TFBSTools)</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(tidyverse)</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(pheatmap)</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># library(SingleR)</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>GRanges object with 6 ranges and 5 metadata columns:
-            seqnames              ranges strand |      GENEID      TXNAME
-               &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;character&gt;
-  100009664    chr11   45807083-45808583      + |   100009664  uc007inp.2
-  100033459     chr1 173672680-173674180      + |   100033459  uc007drs.1
-  100037258    chr14 118936932-118938432      + |   100037258  uc007uzd.2
-  100037278     chr8   71601099-71602599      + |   100037278  uc009med.2
-  100038347     chr7   73739307-73740807      + |   100038347  uc009hrf.2
-  100038358     chr2     6131869-6133369      + |   100038358  uc008igh.2
-               percGC     oeCpG   Gene_Symbol
-            &lt;numeric&gt; &lt;numeric&gt;   &lt;character&gt;
-  100009664  0.467022  0.331664 F630206G17Rik
-  100033459  0.437042  0.231901        Ifi208
-  100037258  0.642905  0.841210        Dnajc3
-  100037278  0.555630  0.612880       Fam129c
-  100038347  0.558961  0.718914       Fam174b
-  100038358  0.522318  0.315631       Gm10857
-  -------
-  seqinfo: 66 sequences (1 circular) from mm10 genome</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pCnt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>          width P4_vPrV_K27Ac_1 P4_vPrV_K27Ac_2 E18_vPrV_K27Ac_1
-100009664  1501              56              71               25
-100033459  1501              26              26                5
-100037258  1501             150             240              156
-100037278  1501              27              17               22
-100038347  1501              58              73              105
-100038358  1501              25              25               25
-          E18_vPrV_K27Ac_2 E14_vPrV_K27Ac_1 E14_vPrV_K27Ac_2 P4_vPrV_K27Me3_1
-100009664               37               31               34               25
-100033459               24               22               25               19
-100037258              138              110              148                9
-100037278               18               32               35              277
-100038347               49              134              157              228
-100038358               15               24               36               87
-          P4_vPrV_K27Me3_2 E18_vPrV_K27Me3_1 E18_vPrV_K27Me3_2
-100009664               27                31                27
-100033459               13                35                22
-100037258                5                23                22
-100037278              169               689               555
-100038347              121               164               142
-100038358               56               107                80
-          E14_vPrV_K27Me3_1 E14_vPrV_K27Me3_2 P4_vPrV_K4Me2_1 P4_vPrV_K4Me2_2
-100009664                30                36             236              34
-100033459                20                43              39              22
-100037258                17                16             697             340
-100037278               379               207             125             131
-100038347                50                37             655             378
-100038358                46                44              15              29
-          E18_vPrV_K4Me2_1 E18_vPrV_K4Me2_2 E14_vPrV_K4Me2_1 E14_vPrV_K4Me2_2
-100009664               29               38                7               30
-100033459                8               10               16               27
-100037258              428              224              179              215
-100037278              107               69               56               83
-100038347              571              295              257              380
-100038358               10               17               12               28
-          P4_vPrV_ATAC_1 P4_vPrV_ATAC_2 E18_vPrV_ATAC_1 E18_vPrV_ATAC_2
-100009664            131            131              89              94
-100033459            152            134              62              55
-100037258           2443           2351            2066            3623
-100037278            267            230              80              73
-100038347            446            484             364             604
-100038358            166            163              57              41
-          E14_vPrV_ATAC_1 E14_vPrV_ATAC_2
-100009664              72              44
-100033459              78              56
-100037258             918            1251
-100037278             138              66
-100038347             231             235
-100038358              93              62</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## gene bodies</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>geneBodies <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"dataObjects/geneBodiesGRanges.rds"</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>gbCnt <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"dataObjects/geneBodiesCnt.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Exercise
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li>Examine the gene body regions and counts.</li>
-<li>Pick either on of the two count matrices (promoter or gene body level) and summarize how many time points there are, how many marks are measured, and how many replicates each mark has per time point. You can make use of the <code>table</code> function to do this.</li>
-</ol>
-</div>
-</div>
-</section>
-<section id="explore-the-count-matrices" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="explore-the-count-matrices"><span class="header-section-number">3</span> Explore the count matrices</h2>
-<p>We will now get a global picture of our data. We want to know if there is any global non-linearitites or problems with the counts. Do we expect global shifts across time?</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cnt &lt;- pCnt[, grep("K4Me2", colnames(pCnt))]</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pairs(cnt, panel = function(...){smoothScatter(..., nrpoints = 0, colramp = jet.colors, add=TRUE);abline(a=0,b=1,col="white")}, </span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#       main = paste0("Original log2(RPKM) - ", conditions[i]))</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="session-information" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="session-information"><span class="header-section-number">4</span> Session information</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Fri Oct  2 09:29:33 2026"</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>R version 4.6.1 (2026-06-24)
-Platform: x86_64-pc-linux-gnu
-Running under: Ubuntu 24.04.5 LTS
-
-Matrix products: default
-BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
-LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0
-
-locale:
- [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
- [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   
- [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          
-[10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   
-
-time zone: UTC
-tzcode source: system (glibc)
-
-attached base packages:
-[1] stats4    stats     graphics  grDevices datasets  utils     methods  
-[8] base     
-
-other attached packages:
-[1] GenomicRanges_1.64.0 Seqinfo_1.2.0        IRanges_2.46.0      
-[4] S4Vectors_0.50.3     BiocGenerics_0.58.1  generics_0.1.4      
-
-loaded via a namespace (and not attached):
- [1] digest_0.6.39       fastmap_1.2.0       xfun_0.60          
- [4] knitr_1.51          htmltools_0.5.9     rmarkdown_2.31     
- [7] cli_3.6.6           renv_1.2.4          compiler_4.6.1     
-[10] tools_4.6.1         evaluate_1.0.5      yaml_2.3.12        
-[13] otel_0.2.0          BiocManager_1.30.27 rlang_1.3.0        
-[16] jsonlite_2.0.0      htmlwidgets_1.6.4  </code></pre>
+<pre><code>NULL</code></pre>
 </div>
 </div>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
