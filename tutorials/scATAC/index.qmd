@@ -1,0 +1,452 @@
+---
+title: "Single cell ATAC-seq"
+format: 
+  html:
+    toc: true
+    toc-depth: 2
+    fig-format: png
+    mermaid:
+      theme: default
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+editor: 
+  markdown: 
+    wrap: 72
+bibliography: references.bib
+---
+
+
+```{r echo=FALSE,include=FALSE,cache=FALSE}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE, 
+                      collapse = TRUE, 
+                      warning = FALSE, 
+                      message = FALSE,
+                      include=TRUE,
+                      cache=FALSE,
+                      out.width = "99%")
+
+options(knitr.duplicate.label = "allow")
+
+```
+
+```{=html}
+<!-- 
+Author:         Markus Ringnér and Jakub Orzechowski Westholm
+About:          This qmd file is used to render the .html file. To modify or 
+                update the .html file, please do so in the .qmd file here and 
+                render it.
+-->
+```
+
+
+<br />
+
+## Learning outcomes
+
+Using R
+
+* to run the basic steps for quality control, normalization, dimensionality reduction, clustering and visualization of single cell ATAC-seq data.
+
+
+<br />
+<br />
+
+
+
+We begin by loading necessary libraries:
+
+```{r}
+#| label: libraries
+#| eval: FALSE
+#| echo: true
+
+library(tidyverse)
+library(hdf5r)
+library(patchwork)
+
+library(Signac)
+library(Seurat)
+
+library(GenomeInfoDb)
+library(EnsDb.Hsapiens.v75)
+library(BSgenome.Hsapiens.UCSC.hg19)
+
+library(JASPAR2020)
+library(TFBSTools)
+library(motifmatchr)
+library(ggseqlogo)
+library(betterChromVAR)
+library(SummarizedExperiment)
+
+set.seed(1234)
+
+```
+
+<br />
+<br />
+
+
+
+## Analysis of single cell ATAC-seq data
+
+### Loading scATAC-seq data
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+counts <- Read10X_h5(filename = "data/atac_v1_pbmc_10k_filtered_peak_bc_matrix.h5")
+counts <- counts[, sample(ncol(counts), 2000)] # Only use 2000 cells, to make commands run faster.
+
+metadata <- read.csv(
+    file = "data/atac_v1_pbmc_10k_singlecell.csv",
+    header = TRUE,
+    row.names = 1
+)
+
+chrom_assay <- CreateChromatinAssay(
+    counts = counts,
+    sep = c(":", "-"),
+    genome = 'hg19',
+    fragments = 'data/atac_v1_pbmc_10k_fragments.tsv.gz',
+    min.cells = 10,
+    min.features = 200
+)
+
+pbmc <- CreateSeuratObject(
+    counts = chrom_assay,
+    assay = "peaks",
+    meta.data = metadata
+)
+
+# Extract gene annotations from EnsDb
+annotations <- GetGRangesFromEnsDb(ensdb = EnsDb.Hsapiens.v75)
+
+# Change to UCSC style since the data was mapped to hg19
+seqlevelsStyle(annotations) <- 'UCSC'
+genome(annotations) <- "hg19"
+
+# Add the gene information to the object
+Annotation(pbmc) <- annotations
+
+# Inspect the objects we have created
+pbmc
+pbmc[['peaks']]
+granges(pbmc)
+```
+
+### Quality control
+
+The next step is to do some quality control (QC) on the ATAC-seq data. There are several quality measures to consider:
+
+- **Fragment sizes**, determined from paired-end sequencing data. For each cell we can quantify the fragment sizes by calculating the ratio of nucleosome size fragments (147-294 nucleotides) to nucleosome-free fragments (<147 nucleotides). Open chromatin corresponds to short DNA fragments, so we want to remove cells with too few short DNA fragments, coming from open chromatin.
+
+- **Enrichment at transcription start sites (TSS).** Since chromatin is often open around TSS, we expect there to be an enrichment of fragments around these sites. This is quantified by collecting all fragments mapping around TSS to form an aggregate distribution, and comparing the highest level of fragments to the level of fragments 1000bp up and downstream of the TSS.
+
+- **Number of fragments in peaks**. This represents the complexity and sequencing depth for each cell. Too many reads might indicate artefacts, such as several cells sharing a barcode.
+
+- **Fraction of reads in peaks**. This represents how well that ATAC protocol has worked, and we typically reqiure at least 15% of all fragments to be in peaks.
+
+- **Reads in blacklist regions.** The [ENCODE](https://www.encodeproject.org) project has defined lists of [blacklist regions](https://github.com/Boyle-Lab/Blacklist). These are problematic regions (typically repeats) that often have high signals in next-generation sequencing experiments regardless of cell line or experiment. Cells with a realtively high ratio of reads mapping to blacklist regions, compared to peaks, often represent technical artifacts and should be removed.
+
+This may take a while to run (up to 10 minutes).
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Compute nucleosome signal score per cell
+pbmc <- NucleosomeSignal(object = pbmc)
+
+# Compute TSS enrichment score per cell
+pbmc <- TSSEnrichment(object = pbmc, fast = FALSE)
+
+# Add blacklist ratio and fraction of reads in peaks
+pbmc$pct_reads_in_peaks <- pbmc$peak_region_fragments / pbmc$passed_filters * 100
+pbmc$blacklist_ratio <- pbmc$blacklist_region_fragments / pbmc$peak_region_fragments
+
+gc()
+
+pbmc$high.tss <- ifelse(pbmc$TSS.enrichment > 2, 'High', 'Low')
+TSSPlot(pbmc, group.by = 'high.tss') + NoLegend()
+```
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+pbmc$nucleosome_group <- ifelse(pbmc$nucleosome_signal > 4, 'NS > 4', 'NS < 4')
+FragmentHistogram(object = pbmc, group.by = 'nucleosome_group')
+```
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+VlnPlot(
+    object = pbmc,
+    features = c('pct_reads_in_peaks', 'peak_region_fragments',
+                 'TSS.enrichment', 'blacklist_ratio', 'nucleosome_signal'),
+    pt.size = 0.01,
+    ncol = 3,
+) & FontSize(main = 8) & theme(axis.text.x = element_blank())  & theme(axis.title.x = element_blank()) & theme(axis.text.y = element_text(size = 6))
+```
+
+![QC plots](qc.png)
+
+After calculating the qualtiy statistics, we apply (some rather arbitrary) cutoffs, to remove outlier cells. *How many cells do we have left after quality filtering in this example?*
+
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+pbmc <- subset(
+    x = pbmc,
+    subset = peak_region_fragments > 3000 &
+             peak_region_fragments < 20000 &
+             pct_reads_in_peaks > 15 &
+             blacklist_ratio < 0.05 &
+             nucleosome_signal < 4 &
+             TSS.enrichment > 2
+)
+pbmc
+```
+### Normalization and initial dimensionality reduction
+
+**Normalization:** `Signac` performs term frequency-inverse document frequency (TF-IDF) normalization. This is a two-step normalization procedure, often used in natural language processing, that both normalizes across cells to correct for differences in sequencing depth, and across peaks to give higher values to more rare peaks.
+
+**Feature selection:** To reduce noise, we sometimes only use some features (*i.e.* peaks) when we cluster cells. Often this is the peaks with the strongest signal, *i.e.* most reads, or the ones present in most cells. Here, we will use all peaks, but you can play around with this yourself. Try setting `min.cutoff = 'q75'` to use the top 25% peaks).
+
+**Dimension reduction:** We next run singular value decomposition (SVD) on the normalized data matrix, using the features (peaks) selected above. This returns a reduced dimension representation of the matrix, similar to the output of PCA.
+
+From the singular value decomposition, we get a set of components. The first of these components often correlates with sequencing depth, rather than any biologically meaningful signal. We can therefore remove this component in the following analysis.
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+pbmc <- RunTFIDF(pbmc)
+pbmc <- FindTopFeatures(pbmc, min.cutoff = 'q0')
+pbmc <- RunSVD(pbmc)
+
+DepthCor(pbmc)
+```
+
+### Clustering and further dimensionality reduction
+
+Now, we can cluster the cells to find groups that belong to the same cell types. It is possible to plot the results from the SVD, but these often are not informative. Instead, we use the UMAP algorithm, which shows a better separation between the cell types. If you are interested, the paper describing UMAP can be found [here](https://arxiv.org/abs/1802.03426).
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+pbmc <- RunUMAP(object = pbmc, reduction = 'lsi', dims = 2:34)
+pbmc <- FindNeighbors(object = pbmc, reduction = 'lsi', dims = 2:34, k.param=13)
+pbmc <- FindClusters(object = pbmc, verbose = FALSE)
+
+p1 <- DimPlot(object = pbmc, label = TRUE, dims = c(2, 3), reduction = "lsi") +
+    NoLegend()  +
+    ggtitle('SVD')
+
+p2 <- DimPlot(object = pbmc, label = TRUE) +
+    NoLegend() +
+    ggtitle('UMAP')
+
+p1 | p2
+```
+
+![Dimension reduction](umap.png)
+
+
+### Motif analysis
+
+We can also analyze motif occurrence in the peaks, to see how this varies between the different cell types.
+
+#### Identifying enriched motifs
+
+First, we will look at motifs that are enriched in a set of peaks, *e.g.* in peaks that show differential accessibility between two cell types. *Do you notice anything particular about these motifs?*
+
+
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Get a list of motif position frequency matrices from the JASPAR database
+pfm <- getMatrixSet(
+    x = JASPAR2020,
+    opts = list(species = "Homo sapiens", all_versions = FALSE)
+)
+
+# Scan the DNA sequence of each peak for the presence of each motif
+motif.matrix <- CreateMotifMatrix(
+    features = granges(pbmc$peaks),
+    pwm = pfm,
+    genome = 'hg19',
+    use.counts = FALSE
+)
+dim(motif.matrix)
+as.matrix(motif.matrix[1:10,1:10])
+```
+
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Create a new Motif object to store the results
+motif <- CreateMotifObject(
+    data = motif.matrix,
+    pwm = pfm
+)
+
+# Add the Motif object to the assay
+pbmc[["peaks"]]@motifs <- motif
+
+pbmc$peaks@motifs
+
+# Calculate statistics for each peak: GC content, length, dinucleotide frequencies etc.
+# These are used in the test of motif enrichment
+pbmc$peaks <- RegionStats(object = pbmc$peaks, genome = BSgenome.Hsapiens.UCSC.hg19)
+
+# Find differentially accessible peaks in cluster 0 compared to cluster 1
+da_peaks <- FindMarkers(
+    object = pbmc,
+    ident.1 = "0",
+    ident.2 = "1",
+    only.pos = TRUE,
+    min.pct = 0.2,
+    test.use = 'LR',
+    latent.vars = 'peak_region_fragments'
+)
+
+
+# Get the top differentially accessible peaks, with lowest p-values
+top.da.peak <- rownames(da_peaks[da_peaks$p_val < 1e-20, ])
+
+# Find motifs enriched in these top differentially accessible peaks
+enriched.motifs <- FindMotifs(
+    object = pbmc,
+    features = top.da.peak
+)
+head(enriched.motifs)
+```
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Have a look at the most enriched motifs. Do you anything particular about these motifs?
+MotifPlot(
+    object = pbmc,
+    motifs = head(rownames(enriched.motifs))
+)
+```
+
+#### Motif activity scores
+
+We can also compute a per-cell motif activity score by running (better)ChromVAR. The motif activity score for a motif M is based on the number of reads mapping to peaks with motif M, after normalization correction for various biases: GC content, average number of reads mapping across all cells etc. You can read more about chromVar [here](https://www.nature.com/articles/nmeth.4401). Motif activity scores allow us to visualize motif activities per cell.
+
+It is also possible to directly test for differential activity scores between cell types, without looking at peaks with differential binding. This tends to give similar results as performing an enrichment test on differentially accessible peaks between the cell types (shown above).
+
+
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Use betterChromVAR to calculate the motif activities of all motifs in all cells.
+
+# A SummarizedExperiment is required by betterChromVAR
+
+DefaultAssay(pbmc) <- "peaks"
+counts_mat <- GetAssayData(pbmc, layer = "counts")
+seurat_obj <- RegionStats(pbmc, genome = BSgenome.Hsapiens.UCSC.hg19) 
+region_stats <- GetAssayData(seurat_obj, layer = "meta.features")
+
+# Extract peak x motif binary sparse matrix from Seurat's motif object
+motif_mat <- GetMotifData(seurat_obj, layer = "motif.matrix")
+
+# Build SummarizedExperiment
+se_object <- SummarizedExperiment(
+  assays = list(counts = counts_mat),
+  rowData = region_stats
+)
+
+# Ensure the bias column exists (Signac stores 'pct_GC' or similar)
+# betterChromVAR looks for a 'bias' column
+rowData(se_object)$bias <- rowData(se_object)$GC.percent
+
+bcv_results <- betterChromVAR(
+  object = se_object,
+  annotations = motif_mat,
+  verbose = TRUE
+)
+deviation_scores <- assays(bcv_results)$deviations
+
+
+# Create a new Seurat Assay structure for the deviations
+chromvar_assay <- CreateAssayObject(counts = deviation_scores)
+# Add the assay to your original object
+pbmc[["better_chromvar"]] <- chromvar_assay
+
+
+# Look at results
+pbmc$better_chromvar
+GetAssayData(pbmc$better_chromvar)[1:10,1:3]
+
+# Have a look at the activitiy of the FOS motif, which has id MA0476.1
+DefaultAssay(pbmc) <- 'better_chromvar'
+FeaturePlot(
+    object = pbmc,
+    features = "MA0476.1",
+    min.cutoff = 'q10',
+    max.cutoff = 'q90',
+    pt.size = 0.1
+)
+```
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Look for motifs that have differential activity between clusters 0 and 1.
+differential.activity <- FindMarkers(
+    object = pbmc,
+    ident.1 = '0',
+    ident.2 = '1',
+    only.pos = TRUE,
+    test.use = 'LR',
+    min.pct = 0.2,
+    latent.vars = 'nCount_peaks'
+)
+
+MotifPlot(
+    object = pbmc,
+    motifs = head(rownames(differential.activity)),
+    assay = 'peaks'
+)
+```
+
+![Motif activity](motif_plot.png)
+
+Finally you can save your data, so you don't have to re-run all your analysis To load the data later, type `load(file="pbmc.Rda")`.
+
+```{r}
+#| eval: FALSE
+#| echo: TRUE
+
+save(pbmc, file="pbmc.Rda")
+```
+
+
+<br />
+<br />
+
+
+## References
+
+
+
