@@ -19,9 +19,9 @@ This tutorial covers more advanced analyses pertaining to ChIP-seq data. We will
 
 ### The data set
 
-As mentioned, we will be looking at histone marks from several time points across development. For this we will be using the data generated in this study by @Kitazawa2021Polycomb. The authors describe a new epigenetic signature on genes characterized by open and H3K27-acetylated promoters (active marks) and H3K27-methylated gene bodies (repressive mark), called bipartite genes. These genes are not expressed but can be within minutes as soon as the repressive H3K27me3 mark is removed from the gene body upon exposure to the right stimulus. They tend to be transcription factors (TFs) and play key developmental roles. @fig-BipBivGene below depicts how the chromatin marks present themselves on bipartite and the previously described bivalent genes.
+As mentioned, we will be looking at histone marks as well as accessibility from several time points across development. For this we will be using the data generated in this study by @Kitazawa2021Polycomb where the authors look at barrelette neurons in mice, which receive sensory input from the whiskers on the face of the mouse. The authors describe genes with a new epigenetic signature characterized by open and H3K27-acetylated promoters (active mark) and H3K27-methylated gene bodies (repressive mark), called bipartite genes. These genes are not expressed but can be within minutes as soon as the repressive H3K27me3 mark is removed from the gene body upon exposure to the right stimulus. They tend to be transcription factors (TFs) and play key developmental roles. @fig-BipBivGene below depicts how the chromatin marks present themselves on bipartite and the previously described bivalent genes. 
 
-![ATAC-seq (purple), H3K27Ac (red), H3K27Me3 (blue) and H3K4Me3 (yellow) distribution around the promoters (green box) and gene bodies (grey box) of bipartite and bivalent genes](assets/BipBivGene.webp){#fig-BipBivGene}
+![ATAC-seq (purple), H3K27Ac (red), H3K27Me3 (blue) and H3K4Me2 (yellow) distribution around the promoters (green box) and gene bodies (grey box) of bipartite and bivalent genes. Bivalent genes also have the active mark H3K4me2 co-existing with the repressive H3K37me3, but bipartite genes have a much more active promoter and the H3K27Ac mark there which is normally associated with expressed genes. Figure from @Kitazawa2021Polycomb.](assets/BipBivGene.webp){#fig-BipBivGene}
 
 
 
@@ -45,7 +45,7 @@ suppressPackageStartupMessages({
 
 ## Read in the data
 
-Our starting point for this tutorial is two raw count matrices: one on promoters and another on gene bodies. Promoters were defined as 1kb upstream and 500 bases downstream the transcription start site (TSS) and gene bodies as regions from 1kb to 3kb downstream the TSS. The rows in these count matrices correspond to genes and the columns correspond to the different modalities quantified on the promoter and gene body level and at three different developmental time points, namely E14, E18 and P4, where E14 means day 14 at the embryonic stage and P4 means 4 days post-natally or after birth. The marks that were quantified are ATAC-seq, H3K27me3, H3K27Ac and H3K4me2. 
+Our starting point for this tutorial is two raw count matrices: one on promoters and another on gene bodies. Promoters were defined as 1kb upstream and 500 bases downstream the transcription start site (TSS) and gene bodies as regions from 1kb to 3kb downstream the TSS. The rows in these count matrices correspond to genes and the columns correspond to the different modalities quantified on the promoter and gene body level and at three different developmental time points, namely E14, E18 and P4, where E14 means day 14 at the embryonic stage, E18 is embryonic stage at day 18 and this is actually when birth happens, and P4 means 4 days post-natally or after birth. The marks that were quantified are ATAC-seq, H3K27me3, H3K27Ac and H3K4me2. 
 
 Let's begin by reading in the data.
 
@@ -83,7 +83,7 @@ gbCnt <- readRDS("dataObjects/geneBodiesCnt.rds")
 
 ## Examining the promoter H3K4Me2 count matrix 
 
-We will focus on the promoter H3K4Me2 count matrix as an example, to illustrate how to get a global picture of our data. We want to know if there is any global non-linearitites or problems with the counts. Do we expect global shifts across time?
+We will focus on the promoter H3K4Me2 count matrix as an example, to illustrate how to get a global picture of our data. We want to know if there are any non-linearitites or problems with the counts. Do we expect global shifts across time? Do the replicates agree?
 
 ```{r}
 #| fig-width: 10
@@ -109,7 +109,7 @@ pairs(log2cpm, panel = function(...){smoothScatter(..., nrpoints = 0, colramp = 
 
 ::: {.callout-tip}
 ## Exercise
-Comment on the pairs scatter plot above. Do you notice the non-linearities between samples? Examine the count vs GC content trends per sample to see if they explain these differences. Use the `promoters` object to get the GC percent of promoters and plot the log2(cnt+1) vs percGC for each sample on the promoter level for the H3K4Me2 mark depicted above. You may refer to the previous tutorial if needed.
+Comment on the pairs scatter plot above. Do you notice the non-linearities between samples? Examine the count vs GC content trends per sample to see if they explain these differences. Use the `promoters` object to get the GC percent of promoters and plot the log2(cnt+1) vs percGC for each sample on the promoter level for the H3K4Me2 mark depicted above. You may refer to the other ChIP-seq tutorial if needed.
 :::
 
 ## Correcting for non-linearities
@@ -118,7 +118,7 @@ Before doing any normalization or correction it is important to understand why y
 
 We will continue with the promoter H3K4Me2 count matrix from above to illustrate the normalization procedure. We will use the `normalizeCyclicLoess` function from the `limma` package to do this. An important assumption we are making here is that we do not expect genome-wide difference between the samples we are comparing, the time points in our case, meaning that most promoters don't change over time.
 
-So what does the function do? Briefly, the mean count across samples is calculated for all promoters. Then, for each sample, the difference from this mean is caluclated and a loess fit is done for this difference vs the mean. The fitted values are used and subtracted from the original sample counts. This is done over a few iterations, hence the name cyclic loess. See the help page as well as the code in the function for more details. We can think of it as correcting the reads towards the same count vs GC trend since this is what's driving hte non-linearities in our counts. The linear relationship between count and GC content is not removed, but the counts are moved towards the same trend. This makes the samples comparable across the same region. This is a softer approach than completely removing the linear reltionship between count and GC content. 
+So what does the function do? Briefly, the mean count across samples is calculated for all promoters. Then, for each sample, the difference from this mean is calculated and a loess fit is done for this difference vs the mean. The fitted values are used and subtracted from the original sample counts. This is done over a few iterations, hence the name cyclic loess. See the help page as well as the code in the function for more details. We can think of it as correcting the reads towards the same count vs GC trend since this is what's driving the non-linearities in our counts. The linear relationship between count and GC content is not removed, but the counts are moved towards the same trend. This makes the samples comparable across the same region. This is a softer approach than completely removing the linear relationship between count and GC content. 
 
 Let's aply this on our count matirx.
 ```{r}
@@ -136,7 +136,7 @@ pairs(log2cpmNorm, panel = function(...){smoothScatter(..., nrpoints = 0, colram
 
 ::: {.callout-tip}
 ## Exercise
-Take these corrected counts, which are corrected log2 CPM counts, and plot them against the percent GC for promoters for each sample. Do you see a change in the trends? Are they more similar than before?
+Take these corrected counts, which are corrected log2 CPM counts, and plot them against the percent GC for promoters for each sample. Do you see a change in the trends? Are they more similar between samples than before?
 :::
 
 
@@ -148,9 +148,9 @@ Make an MA plot showing the log2 fold change vs log2 average expression for P4 v
 
 ## RPKMs on promoters and gene bodies
 
-Now that we have illustrated how to correct for non-linearities coming from differences in count vs GC content trends, let's create one matrix from the promoter and gene body counts. The purpose will be become apparent in the next section. The matrix we want to construct should have genes from the three developmental time points as rows, and the promoter and gene body ATAC, H3K27Me2, H3K27Ac and H3K27me3 as columns. In essence, we want to have genes as rows and the different chromatin measurements on promoter and gene body as columns for those genes, and we want to do this for each time point.
+Now that we have illustrated how to correct for non-linearities coming from differences in count vs GC content trends, let's create one matrix from the promoter and gene body counts. The purpose will be become apparent in the next section. The matrix we want to construct should have genes from the three developmental time points as rows, and the promoter and gene body ATAC, H3K27Me2, H3K27Ac and H3K27Me3 as columns. In essence, we want to have genes as rows and the different chromatin measurements on promoter and gene body as columns for those genes, and we want to do this for each time point.
 
-The promoters and gene bodies we defined here have different widths, so the counts will have to be corrected for both library size difference between samples, as well as width differences. We will calculate reads per kilobase per million reads (RPKM) to accomplish this.
+The promoters and gene bodies we defined here have different widths, so the counts will have to be corrected for both library size difference between samples, as well as width differences between promoters and gene bodies. We will calculate reads per kilobase per million reads (RPKM) to accomplish this.
 
 ```{r}
 ## Calculate RPKMs
@@ -321,7 +321,7 @@ PC1 seems to capture more accessible and active genes going to the right of the 
 
 ## t-SNE
 
-Let's use the matrix from the PCA (PCs as columns) to apply the t-distributed stochastic neighbor embedding, or t-SNE for short, from @vanDerMaaten2008. In contrast to the PCA, this is a stochastic and non-linear dimensionality reduction technique. The method tries to produce a lower dimensional representation of the data, maintaining as much as possible the distances between the points from the higher dimensions. What this means is taht points that are close to each other in the original high dimensional space should remain close to each other in the lower dimensional representation (2 dimensions in our case). t-SNE is commonly used in single cell RNA-seq data analysis, and it is a great way to visualize the data especially in this case where we expect a rather continuous chromatin landscape and varying degrees of the mark depositions or accessibility.
+Let's use the matrix from the PCA (PCs as columns) to apply the t-distributed stochastic neighbor embedding, or t-SNE for short, from @vanDerMaaten2008. In contrast to the PCA, this is a stochastic and non-linear dimensionality reduction technique. The method tries to produce a lower dimensional representation of the data, maintaining as much as possible the distances between the points from the higher dimensions. What this means is that points that are close to each other in the original high dimensional space should remain close to each other in the lower dimensional representation (2 dimensions in our case). t-SNE is commonly used in single cell RNA-seq data analysis, and it is a great way to visualize the data especially in this case where we expect a rather continuous chromatin landscape and varying degrees of the mark depositions or accessibility.
 
 
 ```{r}
@@ -332,7 +332,7 @@ str(tsne)
 ```
 
 
-Let's plot the t-SNE coloring by all the chromatin marks, to dry and make sense of the chromatin landscape we are seeing and if there's any structure and order to it. Note that each chromatin mark lives in its own space, meaning a count of 1 in the ATAC modality does not translate to or compare to a count of 1 in the H3K27me3 modality. They are different data types, and even amongst the ChIP-seq samples, different antibodies have different pull-down efficiencies or degrees of how well they capture the mark of interest. However with one mark, say H3K27Ac, we can indeed compare the promoter and gene body counts since we have log2 RPKM values. We will take this into account when plotting, so that the colors are directly comparable between promoter and gene body levels of a particular mark. We will also be setting lower and upper level limits so that the extreme values don't dominate the color space and we can appreciate the global differences in the marks in a more fine grained way.
+Let's plot the t-SNE coloring by all the chromatin marks, to try and make sense of the chromatin landscape we are seeing and if there's any structure and order to it. Note that each chromatin mark lives in its own space, meaning a count of 1 in the ATAC modality does not translate to or compare to a count of 1 in the H3K27me3 modality. They are different data types, and even amongst the ChIP-seq samples, different antibodies have different pull-down efficiencies or degrees of how well they capture the mark of interest. However within one mark, say H3K27Ac, we can indeed compare the promoter and gene body counts since we have log2 RPKM values. We will take this into account when plotting, so that the colors are directly comparable between promoter and gene body levels of a particular mark. We will also be setting lower and upper level limits so that the extreme values don't dominate the color space and we can appreciate the global differences in the marks in a more fine grained way.
 
 
 
@@ -374,7 +374,7 @@ wrap_plots(plotList, ncol = 2)
 ```
 
 
-We can see certain patterns emerging here. The right-hand side seems to depict genes that are more active or expressed. They are high in accessibility as well as H3K27Ac. The genes on the left-hand side are almost completely inaccessible, lack the active H3K27Ac mark, and are also lacking the repressive H3K27Me3 mark. These are likely genes in the heterochromatin which is not actively used and so tightly packed that it's both inaccessible and lacking the repressive histone mark. The region in the middle, at the bottom of the t-SNE looks interesting. There is a more plastic world in between, where we see signs of both active and repressive marks co-existing to varying degrees. We will come to see later that this is where we find bipartite and bivalent genes.
+We can see certain patterns emerging here. The right-hand side of the t-SNE plot seems to depict genes that are more active or expressed. They are high in accessibility as well as H3K27Ac. The genes on the left-hand side are almost completely inaccessible, lack the active H3K27Ac mark, and are also lacking the repressive H3K27Me3 mark. These are likely genes in the heterochromatin which is not actively used and so tightly packed that it's both inaccessible and lacking the repressive histone mark. The region in the middle, at the bottom of the t-SNE looks interesting. There is a more plastic world in between, where we see signs of both active and repressive marks co-existing to varying degrees. We will come to see later that this is where we find bipartite and bivalent genes.
 
 
 ::: {.callout-tip}
@@ -421,10 +421,10 @@ Did you notice that we had to set the seed in order to obtain this exact plot. I
 
 ::: {.callout-tip}
 ## Exercise
-Play with different seed values (any random number of your choosing) and generate the t-SNE and plots from above. Do you have a new favorite?
+Play with different seed values (any random number of your choosing) and generate the t-SNE and plots from above. Do you have a new favorite? Feel free to continue this tutorial with the t-SNE plot of your choice.
 :::
 
-Please have a look at the arguments of the `Rtsne` function and its help page. You will notice that by default, the function will perform a PCA before a t-SNE. That is why we set `pca=FALSE`. You will also notice that there are additional arguments for the t-SNE that can affect the plto we get. This includes the `perplexity` argument which controls how many nearest neighbors are taken when constructing the embedding in the lower dimensional space. See more in the Details section.
+Please have a look at the arguments of the `Rtsne` function and its help page. You will notice that by default, the function will perform a PCA before a t-SNE. That is why we set `pca=FALSE`. You will also notice that there are additional arguments for the t-SNE that can affect the plot we get. This includes the `perplexity` argument which controls how many nearest neighbors are taken when constructing the embedding in the lower dimensional space. See more in the Details section.
 
 ::: {.callout-tip}
 ## Exercise
@@ -468,7 +468,7 @@ Now that we have our so called chromatin landscape and some degree of understand
 
 How can we measure such changes quantitatively? We will use the Euclidean distance to do this, calculating it in the original high dimensional space. The Euclidean distance between two points in space is the length of the line connecting them. In a two dimensional space, you can calculate this distance using the Pythagoras theorem as shown in @fig-euclDist for the two points $p$ and $q$, so $d(p,q)=\sqrt{(p_1-q_1)^2+(p_2-q_2)^2}$. This is generalizable for more than two dimensions. Taking vectors $p$ and $q$ with $n$ dimensions, $d(p,q)=\sqrt{(p-q)^2}$
 
-![Image from [Wikipedia](https://en.wikipedia.org/wiki/Euclidean_distance)](assets/EuclideanDistance2d.webp){#fig-euclDist width=60%}
+![Image from [Wikipedia.](https://en.wikipedia.org/wiki/Euclidean_distance)](assets/EuclideanDistance2d.webp){#fig-euclDist width=60%}
 
 
 Let's calculate the Euclidean distance between E14 and E18 for each gene.
@@ -504,11 +504,11 @@ df %>%
   theme_classic()
 ```
 
-We can notice certain regions of the t-SNE are changing the most in chromatin going from E14 to E18, and that these genes which change the most are not randomly spread out in the entire t-SNE. The regions that are never used or which are highly expressed and constantly used, like housekeeping genes, change the least over time. A closer inspection of genes which changes the most in the t-SNE actually reveals that these are the bipartite genes and they play key dynamic roles during development. Their promoters are open and carry active marks, even H3K27Ac which is normally a mark expressed genes carry, but these genes are not expressed due to the presence of the repressive H3K27Me3 mark at the gene body. These genes can be quickly induced when the right stimulus comes during development and the H3K27Me3 mark is removed and the genes expressed.
+We can notice certain regions of the t-SNE are changing the most in chromatin going from E14 to E18, and that these genes which change the most are not randomly spread out in the entire t-SNE. The regions that are never used or which are highly expressed and constantly used, like housekeeping genes, change the least over time. A closer inspection of genes which change the most in the t-SNE actually reveals that these are the bipartite genes and they play key dynamic roles during development. Their promoters are open and carry active marks, even H3K27Ac which is normally a mark expressed genes carry, but these genes are not expressed due to the presence of the repressive H3K27Me3 mark at the gene body. These genes can be quickly induced when the right stimulus comes during development and the H3K27Me3 mark is removed thus causing these genes to be expressed.
 
 ::: {.callout-tip}
 ## Exercise
-Choose another pair of time points to compare, and plot the Euclidean distance. Do you see something similar and is it in the same part of the t-SNE?
+Choose another pair of time points to compare, and plot the the t-SNE coloring by the Euclidean distance. Do you see something similar and is it in the same part of the t-SNE?
 :::
 
 
@@ -516,7 +516,7 @@ Choose another pair of time points to compare, and plot the Euclidean distance. 
 
 ## Genes over time
 
-Let's select a few genes and follow how they move over time in the chromatin space using the t-SNE we have made. We will focus on the bipartite genes of which we have selected some example genes below from the study. @Kitazawa2021Polycomb have calculated bivalent and bipartite scores for genes to identify which genes of either categories. Without going into the details of these score calculations, which are based on expected chromatin marks on these genes, we will be using these identified bivalent and bipartite genes here to define the regions in the t-SNE which are the bivalent and bipartite gene containing regions.
+Let's select a few genes and follow how they move over time in the chromatin space using the t-SNE we have made. We will focus on the bipartite genes of which we have selected some example genes below from the study. @Kitazawa2021Polycomb have calculated bivalent and bipartite scores for genes to identify the genes of either categories. Without going into the details of these score calculations, which are based on expected chromatin marks on these genes, we will be using these identified genes here to define the regions in the t-SNE which are the bivalent and bipartite gene containing regions.
 ```{r}
 #| fig-width: 10
 #| fig-height: 4
@@ -544,7 +544,7 @@ p1 + p2
 ```
 
 
-Let's mark visualize these regions as contours on the t-SNE.
+Let's visualize these regions as contours on the t-SNE.
 ```{r}
 #| fig-width: 6
 #| fig-height: 5
@@ -562,12 +562,12 @@ ggplot(df, aes(x = TSNE1, y = TSNE2)) +
 ```
 
 
-If you compare this plot to the plots where we colored the t-SNE by the different chromatin marks you will notice that the bipartite gene area has promoter H3K27Ac as well as gene body H3K27me3, whereas the bivalent regions has no H3K27Ac but has the H3K27Me3 and H3K4Me2 marks coexisting on the gene, as they should by definition.
+If you compare this plot to the plots where we colored the t-SNE by the different chromatin marks you will notice that the bipartite gene area has promoter H3K27Ac as well as gene body H3K27me3, whereas the bivalent region has no H3K27Ac but has the H3K27Me3 and H3K4Me2 marks coexisting on the gene, as they should by definition.
 
 
 ### Immediate early genes (IEGs)
 
-We will pick some IEGs mentioned by @Kitazawa2021Polycomb, which carry the bipartite gene signature and follow them over time going from E14 to E18 to P4. IEGs tend to some of the first responders to the stimulus they expect. They tend to be transcription factors and timing is key during development, that they are expressed at the right time. They in turn trigger the expression of other genes. I the context of the barrelette neurons which receive sensory input from the whiskers of the mice, the stimulus comes during birth at E18 when the mice start using their whiskers.
+We will pick some IEGs mentioned by @Kitazawa2021Polycomb, which carry the bipartite gene signature and follow them over time going from E14 to E18 to P4. IEGs tend to be some of the first responders to the right stimulus. They tend to be transcription factors and timing is key during development, so that they are expressed at the right time when the stimulus comes. They in turn trigger the expression of other genes. In the context of the barrelette neurons which receive sensory input from the whiskers of the mice, the stimulus comes during birth at E18 when the mice start using their whiskers to sense their surroundings.
 
 Let's track some select IEGs.
 ```{r}
@@ -596,7 +596,7 @@ ggplot(df, aes(x = TSNE1, y = TSNE2)) +
 
 Notice how these genes start out as bipartite and gradually move up towards the part of the t-SNE where genes are more active (recall the plots coloring by all chromatin marks). The t-SNE helps us get a global picture and the genome browser tracks for the Egr1 gene below confirm what we are seeing above. We can appreciate a gradual decrease in H3K27Me3 accompanied by an increase in expression over time.
 
-![Figure from @Kitazawa2021Polycomb](assets/Egr1.webp)
+![Figure from @Kitazawa2021Polycomb.](assets/Egr1.webp)
 
 
 
