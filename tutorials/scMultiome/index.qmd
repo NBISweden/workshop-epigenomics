@@ -1,0 +1,374 @@
+---
+title: "Analysis of single cell multiome data"
+format: 
+  html:
+    toc: true
+    toc-depth: 2
+    fig-format: png
+    mermaid:
+      theme: default
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+editor: 
+  markdown: 
+    wrap: 72
+#bibliography: references.bib
+---
+
+
+```{r echo=FALSE,include=FALSE,cache=FALSE}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE, 
+                      collapse = TRUE, 
+                      warning = FALSE, 
+                      message = FALSE,
+                      include=TRUE,
+                      cache=FALSE,
+                      out.width = "99%")
+
+options(knitr.duplicate.label = "allow")
+
+```
+
+```{=html}
+<!-- 
+Author:         Markus Ringnér and Jakub Orzechowski Westholm
+About:          This qmd file is used to render the .html file. To modify or 
+                update the .html file, please do so in the .qmd file here and 
+                render it.
+-->
+```
+
+
+<br />
+
+## Learning outcomes
+
+Using R
+
+* To run the basic steps for quality control, normalization, dimensionality reduction, clustering and visualization of single cell multiome (RNA-seq + ATAC-seq) data
+
+<br />
+<br />
+
+::: {.callout-note}
+  
+   We take advantage of the module system on Pelle in this tutorial. The code was tested under `R 4.6.1`.
+
+:::
+
+<br />
+<br />
+
+
+We access the R environment via:
+
+```{bash}
+#| eval: FALSE
+#| echo: TRUE
+
+module load R/4.6.1-gfbf-2026.1
+module load R-bundle-CRAN/2026.07-foss-2026.1
+module load R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1
+```
+
+We activate R console upon typing `R` in the terminal.
+
+To be able to load all necessary libraries that are not available in modules, we need to update the paths to a custom library location:
+
+
+```{r}
+#| eval: FALSE
+#| echo: TRUE
+
+.libPaths(c(.libPaths(),"/proj/epi2026/library/Rpackages/4.6.1"))
+```
+
+Alternatively you can work on this tutorial locally if you have all the R packages loaded below installed on your computer.
+
+
+<br />
+<br />
+
+We begin by loading necessary libraries:
+
+```{r}
+#| label: libraries
+#| eval: FALSE
+#| echo: true
+
+library(dplyr)
+library(ggplot2)
+
+library(Signac)
+library(Seurat)
+
+library(EnsDb.Mmusculus.v79)
+library(BSgenome.Mmusculus.UCSC.mm10)
+
+library(pheatmap)
+
+library(SingleR)
+library(scrapper)
+
+set.seed(1234)
+
+```
+
+Recently, single cell multi-omics methods that run several assays on the same cells have become available. One such method is [Chromium Single Cell Multiome from 10X genomics](https://www.10xgenomics.com/products/single-cell-multiome-atac-plus-gene-expression), which simultaneously measures gene expression (RNA-seq) and chromatin accessibility (ATAC-seq) in the same nuclei. This makes it possible to identify cell types and states based on both gene expression and accessibility. It also makes it easy to use external gene expression data to annotate your cells, and at the same time study the chromatin accessibility in the cells. In this exercise, we will look at a public data set downloaded from 10X genomics, from [embyomic mouse brain](https://www.10xgenomics.com/resources/datasets/fresh-embryonic-e-18-mouse-brain-5-k-1-standard-2-0-0). You will load both the RNA-seq and ATAC-seq data into the same `Seurat` object and do some simple pre-processing as was done for the ATAC-seq data above. Then, you will run joint clustering and visuaization of the combined data set, and finally use the gene expression measurements together with a public data set to annotate the cells.
+
+Now, read the count tables for the mouse brain data into R. Both tables are in the same file, while the meta data is in a separate file.
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+lab.dir="/proj/epi2026/single_cell/scMultiome/"
+
+inputdata_10x <- Read10X_h5(paste0(lab.dir, "data/e18_mouse_brain_fresh_5k_filtered_feature_bc_matrix.h5"))
+rna_counts <- inputdata_10x$`Gene Expression`
+mt_index <- grepl("^mt-", rownames(rna_counts))
+atac_counts <- inputdata_10x$Peaks
+rm(inputdata_10x)
+
+# Only use 1000 cells, to make commands run faster, and use less memory
+cell_sample <- sample(ncol(rna_counts), 1000) 
+atac_counts <- atac_counts[, cell_sample] 
+rna_counts <- rna_counts[, cell_sample]
+
+metadata <- read.csv(
+    file = paste0(lab.dir, "data/e18_mouse_brain_fresh_5k_per_barcode_metrics.csv"),
+    header = TRUE,
+    row.names = 1
+)
+```
+
+We start by creating a `Seurat` object with the RNA-seq data.
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+seurat_multi <- CreateSeuratObject(counts = rna_counts, meta.data = metadata)
+```
+
+Then, we create a `ChromatinAssay` object from the ATAC-seq data, as we did for the ATAC-seq data above. We add the `ChromatinAssay` to the `Seurat` object with the RNA-seq data. Now, the same `Seurat` object holds two assays, one for each data type. *Can you see what these assays are called? Can you see how many peaks and expressed genes we have in our data?*
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Extract gene annotations from EnsDb
+annotations <- GetGRangesFromEnsDb(ensdb = EnsDb.Mmusculus.v79)
+seqlevelsStyle(annotations) <- 'UCSC'
+genome(annotations) <- "mm10"
+```
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+
+# Load ATAC-seq data
+chrom_assay <- CreateChromatinAssay(
+    counts = atac_counts,
+    sep = c(":", "-"),
+    genome = 'mm10',
+    fragments = paste0(lab.dir, 'data/e18_mouse_brain_fresh_5k_atac_fragments.tsv.gz'),
+    min.cells = 10,
+    min.features = 1
+)
+
+seurat_multi[["ATAC"]] <- chrom_assay
+
+DefaultAssay(seurat_multi) <- "ATAC"
+
+# Add the gene information to the object
+Annotation(seurat_multi) <- annotations
+
+# Inspect the object we have created
+seurat_multi
+granges(seurat_multi)
+```
+
+Next, we calculate quality measures to filter out low quality cells. This step takes around 10 minutes. It's similar to what was done for the ATAC-seq data above, but now we have quality measures from both RNA-seq and ATAC-seq. *How many cells are left after filtering?*
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Compute nucleosome signal score per cell
+seurat_multi <- NucleosomeSignal(object = seurat_multi)
+
+# Compute TSS enrichment score per cell
+seurat_multi <- TSSEnrichment(object = seurat_multi, fast = FALSE)
+
+# Add blacklist ratio and fraction of reads in peaks
+seurat_multi$pct_reads_in_peaks <- seurat_multi$atac_peak_region_fragments / seurat_multi$atac_fragments * 100
+
+# Plots
+VlnPlot(
+    object = seurat_multi,
+    features = c('gex_mapped_reads', 'nFeature_RNA', 'nCount_ATAC', 
+                 'nFeature_ATAC', 'pct_reads_in_peaks', 'atac_peak_region_fragments',
+                 'TSS.enrichment', 'nucleosome_signal'),
+    pt.size = 0.01,
+    ncol = 4
+) & FontSize(main = 8) & theme(axis.text.x = element_blank())  & theme(axis.title.x = element_blank()) & theme(axis.text.y = element_text(size = 6))
+
+seurat_multi <- subset(
+    x = seurat_multi,
+    subset = atac_peak_region_fragments > 2000 &
+             atac_peak_region_fragments < 20000 &
+             pct_reads_in_peaks > 15 &
+             nucleosome_signal < 4 &
+             TSS.enrichment > 2 &
+             nFeature_RNA > 1000 &
+             nFeature_RNA < 5000
+)
+seurat_multi
+```
+
+Normalization is done on the ATAC-seq and RNA-seq data separately. ATAC-seq data are normalized similar to the example above, while RNA-seq data are normalized using the default `Seurat` methods.
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Normalize ATAC-seq data
+seurat_multi <- RunTFIDF(seurat_multi)
+seurat_multi <- FindTopFeatures(seurat_multi, min.cutoff = 'q5')
+seurat_multi <- RunSVD(seurat_multi, reduction.name = "ATAC_lsi",)
+
+# Normalize RNA-seq data
+DefaultAssay(seurat_multi) <- "RNA"
+seurat_multi <- NormalizeData(seurat_multi, normalization.method = "LogNormalize")
+seurat_multi <- FindVariableFeatures(seurat_multi, selection.method = "vst", nfeatures = 2000)
+seurat_multi <- ScaleData(seurat_multi)
+seurat_multi <- RunPCA(seurat_multi)
+```
+
+Let's visualize the data. First, we look at RNA-seq and ATAC-seq data separately. *Do you think RNA-seq and ATAC-seq give similar clusterings of the cells?* 
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Cluster and visualize RNA-seq
+DefaultAssay(seurat_multi) <- "RNA"
+seurat_multi <- FindNeighbors(seurat_multi, reduction = "pca", dims = 1:30)
+seurat_multi <- FindClusters(seurat_multi, resolution = 0.5)
+seurat_multi <- RunUMAP(seurat_multi, dims = 1:30)
+DimPlot(seurat_multi, label = T, label.size = 4, repel = TRUE)
+
+
+# Cluster and visualize ATAC-seq
+DefaultAssay(seurat_multi) <- "ATAC"
+seurat_multi <- FindNeighbors(seurat_multi, reduction = "ATAC_lsi", dims = 2:30)
+seurat_multi <- FindClusters(seurat_multi, resolution = 0.5)
+seurat_multi <- RunUMAP(seurat_multi, , reduction.name = "umap.atac", dims = 2:30)
+DimPlot(seurat_multi, reduction = "umap.atac", label = T, label.size = 4, repel = TRUE)
+```
+
+## Which clusters from RNA- and ATAC-seq overlap?
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+table(seurat_multi$RNA_snn_res.0.5, seurat_multi$ATAC_snn_res.0.5)
+pheatmap(table(seurat_multi$RNA_snn_res.0.5, seurat_multi$ATAC_snn_res.0.5))
+```
+
+Then we analyze the combined data.
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Analyze combined data set, with Weighted Nearest Neighbor method
+seurat_multi <- FindMultiModalNeighbors(seurat_multi, reduction.list = list("pca", "ATAC_lsi"), 
+                                        dims.list = list(1:30, 2:30), k.nn = 30, snn.graph.name = "wsnn_cc",
+                                        knn.graph.name = "wknn_cc", weighted.nn.name = "weighted.nn_cc")
+seurat_multi <- RunUMAP(seurat_multi, nn.name = "weighted.nn_cc", reduction.name = "wnn_cc_umap",
+                        reduction.key = "wnnccUMAP_")
+seurat_multi <- FindClusters(seurat_multi, graph.name = "wsnn_cc", algorithm = 3,
+                             verbose = F) 
+DimPlot(seurat_multi, reduction = "wnn_cc_umap", label = T, label.size = 4, repel = TRUE)
+```
+
+![Umap multi-omics](umap_multi.png)
+
+Let's continue with the clusters based on both RNA- and ATAC-seq data. For each of these clusters, we can check if there are genes that are exclusively expressed in that cluster (or at least at much higher levels than in other clusters). These can be used as marker genes, to get an indication of what cell types the clusters contain. (Note that when we use multi-omics data we can use the RNA-seq directly to quantify gene expression, without having to approximate it with gene activity scores like we did in the ATAC-seq example.)  
+
+Using the code below, we find markers for each cluster and plot the most significant ones.
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Cell type markers
+DefaultAssay(seurat_multi) <- "RNA"
+cluster_markers <- FindAllMarkers(seurat_multi, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25)
+
+cluster_markers %>%
+  group_by(cluster) %>%
+  top_n(n = 10, wt = avg_log2FC) -> top10
+DoHeatmap(seurat_multi, features = top10$gene) + NoLegend()
+```
+
+![Marker gene expression](marker_genes.png)
+
+A more systematic approach than just looking at cluster-specific genes, is to compare the cells in our data set to a reference data set with cell type annotations. There are many methods available for this. In this exercise, we will use [SingleR](https://www.nature.com/articles/s41590-018-0276-y). `SingleR` correlates the cells in a data set to annotated cell types in a reference data set using only variable genes.
+
+For annotating the cells, we will use an annotated data set on mouse brains from [Zeisel et al. (2015)](https://www.science.org/doi/10.1126/science.aaa1934). We load and pre-process the data set, making sure to pre-process it in exactly the same way as our data. (Note that this data set is from postnatal mice, so it's not ideal for annotating cells from embryos like we have in our data. But here we just use it as an illustration.)
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Load and normalize Zeisel et al. (2015) dataset
+seurat_zeisel_ <- load(paste0(lab.dir, "data/zeisel_seurat.rds"))
+seurat_zeisel <- NormalizeData(seurat_zeisel, normalization.method = "LogNormalize")
+seurat_zeisel <- FindVariableFeatures(seurat_zeisel, selection.method = "vst", nfeatures = 2000)
+seurat_zeisel <- ScaleData(seurat_zeisel)
+seurat_zeisel <- RunPCA(seurat_zeisel)
+```
+
+Then, we are ready to run the actual cell annotation. This method produces a score for each cell in our data set and each cell type in the reference set, indicating how similar the cell is to the cell type in the reference data. *Which cell types seem to be represented in our data? Do different clusters of cells seem to contain different cell types?*
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Cell type annotation with singleR
+zeisel_labels=as.vector(read.csv(paste0(lab.dir, "data/zeisel_labels.txt"), header=FALSE))$V1
+cell_type_pred <- SingleR(test=as.matrix(GetAssayData(object = seurat_multi, layer = "data")), 
+                          ref=as.matrix(GetAssayData(object = seurat_zeisel, layer = "data")), 
+                          labels=zeisel_labels,
+                          sd.thresh = 0.5,
+                          de.method="wilcox")
+
+# See how many cell could be annotated, and how did not pass the confidence threshold
+table(Label=cell_type_pred$labels,
+      Lost=is.na(cell_type_pred$pruned.labels))
+
+# Plot scores for each cell and cell type
+plotScoreHeatmap(cell_type_pred)
+
+# Overlaps between clusters and cell types
+tab <- table(cluster=seurat_multi$seurat_clusters, label=cell_type_pred$labels) 
+pheatmap::pheatmap(log10(tab+10))
+
+# Plot the UMAP based on RNA and ATAC, labelled with the cell types
+seurat_multi$cell_annot <- cell_type_pred$labels
+DimPlot(seurat_multi, reduction = "wnn_cc_umap", group.by = "cell_annot", label = TRUE, label.size = 3, repel = TRUE)
+```
+After the cell types have been annotated, there is a lot of additional analysis that can be done on the multi-omics data. Some questions that can be investigated are:
+
+- Which promoters and enhancers become active in different cell types and conditions?
+- Can we see if any transcription factor binding sites are active in different cell types and conditions?
+- Are some genes primed for expression, *e.g.* the promoters show an open chromatin state, but the gene is not expressed yet?
+- ..
+
+Congratulations! You have now reached the end of this exercise, and hopefully you know more about how to analyze single cell ATAC-seq and multi-omics data.

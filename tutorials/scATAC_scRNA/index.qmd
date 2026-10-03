@@ -1,0 +1,318 @@
+---
+title: "Integrating scATAC-seq and scRNA-seq data"
+format: 
+  html:
+    toc: true
+    toc-depth: 2
+    fig-format: png
+    mermaid:
+      theme: default
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+editor: 
+  markdown: 
+    wrap: 72
+#bibliography: references.bib
+---
+
+
+```{r echo=FALSE,include=FALSE,cache=FALSE}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE, 
+                      collapse = TRUE, 
+                      warning = FALSE, 
+                      message = FALSE,
+                      include=TRUE,
+                      cache=FALSE,
+                      out.width = "99%")
+
+options(knitr.duplicate.label = "allow")
+
+```
+
+```{=html}
+<!-- 
+Author:         Markus Ringnér and Jakub Orzechowski Westholm
+About:          This qmd file is used to render the .html file. To modify or 
+                update the .html file, please do so in the .qmd file here and 
+                render it.
+-->
+```
+
+
+<br />
+
+## Learning outcomes
+
+Using R
+
+* to combine single cell ATAC-seq data with single cell RNA-seq data to better infer cell types.
+
+<br />
+<br />
+
+::: {.callout-note collapse="false"}
+
+### Note on this workflow
+
+  This tutorial is a continuation of [scATAC](../scATAC/index.html). To run this on Pelle, setup and initialize R as you did in that exercise.
+
+:::
+
+
+We begin by loading necessary libraries:
+
+```{r}
+#| label: libraries
+#| eval: FALSE
+#| echo: true
+
+library(ggplot2)
+
+library(Signac)
+library(Seurat)
+
+set.seed(1234)
+
+```
+
+<br />
+<br />
+
+::: {.callout-important collapse="false"}
+
+  We assume that pbmc.Rda file you load was generated in the same file structure as you are running on now. That is the file structure you used in[scATAC](../scATAC/index.html) when you saved the file. Otherwise things will not work since Seurat Objects with fragments from ATAC-seq are not self contained, they contain paths to files with fragments and their indexes.
+
+:::
+
+<br />
+<br />
+
+
+### Load the data generated in the scATAC-seq exercise
+
+The code here use a pre-calculated version. If you already have your pbmc object loaded, coming from the previous tutorial, you should skip running this code chunk.
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+lab.dir="/proj/epi2026/single_cell/scATAC_scRNA/"
+
+load(file=paste0(lab.dir, "data/pbmc.Rda"))
+```
+
+## Integrate with scRNA-seq data
+
+In this section, we will compare the scATAC-seq data to scRNA-seq data from a similar starting material (although not from exactly the same cells). Since it is easier to figure out which cell types clusters correspond to in scRNA-seq data, we will then use the scRNA-seq data to annotate the clusters in the scATAC-seq data. (Note that if you have multi-omics data, with RNA-seq and ATAC-seq from the same cells, you don't need to take the extra detour to gene activity scores, but can instead use your RNA-seq data directly to annotate cell types.)
+
+### Gene activity matrix
+
+Gene activity scores capture how much open chromatin there is in the promoter regions of each gene (by default 2000 bp upstream). The assumption here is that open chromatin is a proxy for gene expression. Gene activity scores are represented as a matrix, with one row per gene and one column per cell. This makes the gene activity scores directly compatible with single cell RNA-seq data.
+
+Calculating the gene activity scores can take around 10 minutes for 2000 cells and all genes.
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+DefaultAssay(pbmc) <- 'peaks'
+
+gene.activities <- GeneActivity(pbmc)
+
+# Add the gene activity matrix to the Seurat object as a new assay and normalize it
+pbmc[['RNA']] <- CreateAssayObject(counts = gene.activities)
+pbmc <- NormalizeData(
+    object = pbmc,
+    assay = 'RNA',
+    normalization.method = 'LogNormalize',
+    scale.factor = median(pbmc$nCount_RNA)
+)
+GetAssayData(pbmc$RNA)[1:10,1:3]
+```
+
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+DefaultAssay(pbmc) <- 'RNA'
+FeaturePlot(
+    object = pbmc,
+    features = c('MS4A1', 'CD3D', 'LEF1', 'NKG7', 'TREM1', 'LYZ'),
+    pt.size = 0.1,
+    max.cutoff = 'q95',
+    ncol = 3
+)
+```
+
+![Gene activity](gene_activity_scores.png)
+
+### Label transfer
+
+Having computed the gene activity scores, we are now ready to combine the ATAC-seq data with the RNA-seq data.
+
+We start by finding anchors, *i.e.* pairs of cells, one from ATAC-seq and one from RNA-seq. This is done by first projecting ATAC-seq and RNA-seq data into the same space, and then find pairs of cells one from ATAC-seq and the other from RNA-seq that are mutual nearest neighbors (MNNs). These are further filtered and the reliable pairs are then used as anchors.
+
+These anchors can then be used to project the ATAC-seq data onto the RNA-seq data and find the cell type annotation of the nearby cells. This way annotations from the RNA-seq data can be transferred to the ATAC-seq data. This is sometimes referred to as **label transfer**.
+
+*How well do you think this worked? Can you see if some cells types are missing or merged?*
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Load the pre-processed scRNA-seq data for PBMCs
+pbmc_rna_v3 <- readRDS(paste0(lab.dir,"data/pbmc_10k_v3.rds"))
+pbmc_rna <- UpdateSeuratObject(pbmc_rna_v3)
+
+# Find anchors
+transfer.anchors <- FindTransferAnchors(
+    reference = pbmc_rna,
+    query = pbmc,
+    reduction = 'cca'
+)
+
+predicted.labels <- TransferData(
+    anchorset = transfer.anchors,
+    refdata = pbmc_rna$celltype,
+    weight.reduction = pbmc[['lsi']],
+    dims = 2:30
+)
+
+pbmc <- AddMetaData(object = pbmc, metadata = predicted.labels)
+gc()
+```
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+plot1 <- DimPlot(
+    object = pbmc_rna,
+    group.by = 'celltype',
+    label = TRUE,
+    repel = TRUE) + NoLegend() + ggtitle('scRNA-seq')
+
+plot2 <- DimPlot(
+    object = pbmc,
+    group.by = 'predicted.id',
+    label = TRUE,
+    repel = TRUE) + NoLegend() + ggtitle('scATAC-seq')
+
+plot3 <- DimPlot(
+    object = pbmc,
+    label = TRUE,
+    repel = TRUE) + NoLegend() + ggtitle('scATAC-seq')
+
+plot1 | plot2 | plot3
+
+pbmc <- RenameIdents(
+    object = pbmc,
+    '0' = 'CD14 Mono',
+    '1' = 'CD4/8 Naive',
+    '2' = 'CD4 Memory (DN T)',
+    '3' = 'CD14 Mono',
+    '4' = 'CD8 Effector',
+    '5' = 'pre-B/pro-B',
+    '6' = 'NK dim/bright',
+    '7' = 'Double neg. T',
+    '8' = 'CD16 Mono',
+    '9' = 'DC',
+    '10' = 'pDC'
+)
+```
+
+
+### Differentially accessible regions, again
+
+Now, we will once again look at differentially accessible regions, this time between *CD4/8 Naive* cells and *CD14 Mono* cells (since we now can say what cell types these clusters represent.) We can plot the signal in this region in a couple of different ways. *Do you understand what these plots mean?*
+
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Change back to working with peaks instead of gene activities
+DefaultAssay(pbmc) <- 'peaks'
+
+# Find differentially accessible regions
+da_peaks <- FindMarkers(
+    object = pbmc,
+    ident.1 = "CD4/8 Naive",
+    ident.2 = "CD14 Mono",
+    min.pct = 0.2,
+    test.use = 'LR',
+    latent.vars = 'peak_region_fragments'
+)
+head(da_peaks)
+```
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# Plot the signal for the most differentially accessible regions.
+plot1 <- VlnPlot(
+    object = pbmc,
+    features = rownames(da_peaks)[1],
+    pt.size = 0.1,
+    idents = c("CD4/8 Naive","CD14 Mono")
+)
+
+plot2 <- FeaturePlot(
+    object = pbmc,
+    features = rownames(da_peaks)[1],
+    pt.size = 0.1
+)
+
+plot1 | plot2
+```
+
+### Annotating regions
+
+Genomic coordinates are difficult to interpret on their own, and often it is interesting to know which genes are near or at the genomic regions. Below, for each region, we find the nearest gene and the distance to it. This makes it easy to check for regions near genes of interest, and to analyze genes further, *e.g.* through a Gene Ontology analysis.
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+open_cd4naive <- rownames(da_peaks[da_peaks$avg_log2FC > 0.5, ])
+open_cd14mono <- rownames(da_peaks[da_peaks$avg_log2FC < -0.5, ])
+
+closest_genes_cd4naive <- ClosestFeature(pbmc, regions = open_cd4naive)
+closest_genes_cd14mono <- ClosestFeature(pbmc, regions = open_cd14mono)
+head(closest_genes_cd4naive)
+head(closest_genes_cd14mono)
+```
+
+### Visualization
+
+It is often informative to plot the ATAC-seq signal for a particular genomic region, and group this by cluster, cell type or some other meta data. We can either plot the aggregate signal for a group with `coveragePlot` or the signal for individual cells, with `tilePlot`. More info about plotting genomic region can be found [here](https://satijalab.org/signac/articles/visualization.html).
+
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+CoveragePlot(
+    object = pbmc,
+    region = rownames(da_peaks)[1],
+    extend.upstream = 40000,
+    extend.downstream = 40000,
+    peaks=TRUE
+)
+```
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+TilePlot(
+    object = pbmc,
+    region = rownames(da_peaks)[1],
+    idents = c('CD14 Mono', 'CD4/8 Naive'),
+    extend.upstream = 40000,
+    extend.downstream = 40000
+)
+```
