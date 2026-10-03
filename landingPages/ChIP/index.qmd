@@ -38,7 +38,8 @@ About:          This qmd file is used to render the .html file. To modify or
 Tutorials in this module:
 
 * [Introduction to ChIP-seq Analyses](../../tutorials/ChIP/index.html)
+* [Advanced ChIP-seq Analyses](../../tutorials/advancedChIP/index.html)
 
-Additionall applicable tutorials:
+Additional applicable tutorials:
 
 * [TF motifs](../../tutorials/TFs/representingMotifs.html)
