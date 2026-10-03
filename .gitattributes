@@ -1,3 +1,4 @@
 tutorials/ChIP/data/** filter=lfs diff=lfs merge=lfs -text
 tutorials/ChIP/peaks/** filter=lfs diff=lfs merge=lfs -text
 tutorials/ChIP/bigwigs/** filter=lfs diff=lfs merge=lfs -text
+tutorials/advancedChIP/dataObjects/** filter=lfs diff=lfs merge=lfs -text
