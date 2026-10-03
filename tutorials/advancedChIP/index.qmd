@@ -27,7 +27,6 @@ As mentioned, we will be looking at histone marks as well as accessibility from 
 
 
 ```{r}
-.libPaths(c("/Users/daniamachlab/Library/R/arm64/4.6-Bioc-3.23/library/", .libPaths()))
 suppressPackageStartupMessages({
   library(GenomicRanges)
   library(limma)
