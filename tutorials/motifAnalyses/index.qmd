@@ -29,10 +29,6 @@ Now we will make use of these functionalities and use additional tools to enrich
 ### Libraries
 
 We start by loading the needed packages. 
-```{r echo=FALSE}
-.libPaths(c("/Users/daniamachlab/Library/R/arm64/4.6-Bioc-3.23/library/", .libPaths()))
-```
-
 ```{r}
 suppressPackageStartupMessages({
   library(monaLisa)
