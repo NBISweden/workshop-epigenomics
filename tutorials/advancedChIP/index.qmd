@@ -601,7 +601,7 @@ Notice how these genes start out as bipartite and gradually move up towards the 
 
 
 
-## Final thoughts
+## Final remarks
 
 The chromatin landscapes we visualized here were done on the gene level in the context of the bipartite gene story. However one can do this on any regions of interest, like enhancers for example, and understand how the different chromatin regions group, and even visualize how they change between conditions by tracking how they move in this chromatin space.
 
