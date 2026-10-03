@@ -62,7 +62,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -83,6 +102,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-7d563484551c2eb5581e6552524d6514.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -123,6 +145,35 @@ background-size: cover;
 <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&amp;family=Nunito:ital,wght@0,200..700;1,200..700&amp;display=swap" rel="stylesheet">
   
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <meta property="og:title" content="Advanced ChIP-seq">
 <meta property="og:description" content="NBIS Workshop">
@@ -239,7 +290,7 @@ background-size: cover;
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">02-Oct-2026</p>
+        <p class="date">03-Oct-2026</p>
       </div>
     </div>
     
@@ -260,8 +311,25 @@ background-size: cover;
   <li><a href="#the-data-set" id="toc-the-data-set" class="nav-link" data-scroll-target="#the-data-set"><span class="header-section-number">1.1</span> The data set</a></li>
   </ul></li>
   <li><a href="#read-in-the-data" id="toc-read-in-the-data" class="nav-link" data-scroll-target="#read-in-the-data"><span class="header-section-number">2</span> Read in the data</a></li>
-  <li><a href="#explore-the-count-matrices" id="toc-explore-the-count-matrices" class="nav-link" data-scroll-target="#explore-the-count-matrices"><span class="header-section-number">3</span> Explore the count matrices</a></li>
-  <li><a href="#session-information" id="toc-session-information" class="nav-link" data-scroll-target="#session-information"><span class="header-section-number">4</span> Session information</a></li>
+  <li><a href="#examining-the-promoter-h3k4me2-count-matrix" id="toc-examining-the-promoter-h3k4me2-count-matrix" class="nav-link" data-scroll-target="#examining-the-promoter-h3k4me2-count-matrix"><span class="header-section-number">3</span> Examining the promoter H3K4Me2 count matrix</a></li>
+  <li><a href="#correcting-for-non-linearities" id="toc-correcting-for-non-linearities" class="nav-link" data-scroll-target="#correcting-for-non-linearities"><span class="header-section-number">4</span> Correcting for non-linearities</a></li>
+  <li><a href="#rpkms-on-promoters-and-gene-bodies" id="toc-rpkms-on-promoters-and-gene-bodies" class="nav-link" data-scroll-target="#rpkms-on-promoters-and-gene-bodies"><span class="header-section-number">5</span> RPKMs on promoters and gene bodies</a>
+  <ul>
+  <li><a href="#normalization" id="toc-normalization" class="nav-link" data-scroll-target="#normalization"><span class="header-section-number">5.1</span> Normalization</a></li>
+  </ul></li>
+  <li><a href="#pca" id="toc-pca" class="nav-link" data-scroll-target="#pca"><span class="header-section-number">6</span> PCA</a></li>
+  <li><a href="#t-sne" id="toc-t-sne" class="nav-link" data-scroll-target="#t-sne"><span class="header-section-number">7</span> t-SNE</a>
+  <ul>
+  <li><a href="#t-sne-is-stochastic" id="toc-t-sne-is-stochastic" class="nav-link" data-scroll-target="#t-sne-is-stochastic"><span class="header-section-number">7.1</span> t-SNE is stochastic</a></li>
+  <li><a href="#gene-expression" id="toc-gene-expression" class="nav-link" data-scroll-target="#gene-expression"><span class="header-section-number">7.2</span> Gene expression</a></li>
+  </ul></li>
+  <li><a href="#global-changes-in-chromatin-over-time" id="toc-global-changes-in-chromatin-over-time" class="nav-link" data-scroll-target="#global-changes-in-chromatin-over-time"><span class="header-section-number">8</span> Global changes in chromatin over time</a></li>
+  <li><a href="#genes-over-time" id="toc-genes-over-time" class="nav-link" data-scroll-target="#genes-over-time"><span class="header-section-number">9</span> Genes over time</a>
+  <ul>
+  <li><a href="#immediate-early-genes-iegs" id="toc-immediate-early-genes-iegs" class="nav-link" data-scroll-target="#immediate-early-genes-iegs"><span class="header-section-number">9.1</span> Immediate early genes (IEGs)</a></li>
+  </ul></li>
+  <li><a href="#final-remarks" id="toc-final-remarks" class="nav-link" data-scroll-target="#final-remarks"><span class="header-section-number">10</span> Final remarks</a></li>
+  <li><a href="#session" id="toc-session" class="nav-link" data-scroll-target="#session"><span class="header-section-number">11</span> Session</a></li>
   </ul>
 </nav>
     </div>
@@ -278,32 +346,43 @@ background-size: cover;
 <p>This tutorial covers more advanced analyses pertaining to ChIP-seq data. We will examine histone modifications over time and look into how we can jointly visualize the epigenome and changes in chromatin that occur on a global level.</p>
 <section id="the-data-set" class="level3" data-number="1.1">
 <h3 data-number="1.1" class="anchored" data-anchor-id="the-data-set"><span class="header-section-number">1.1</span> The data set</h3>
-<p>As mentioned, we will be looking at histone marks over time. For this we will be using the data generated in <a href="https://www.nature.com/articles/s41588-021-00789-z">this study</a>. The authors describe a new epigenetic signature on genes characterized by open and H3K27-acetylated promoters (active marks) and H3K27-methylated gene bodies (repressive mark), called bipartite genes. These genes are not expressed but can be within minutes as soon as the repressive H3K27me3 mark is removed from the gene body upon exposure to the right stimulus. They tend to be transcription factors (TFs) and play key developmental roles.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>(<span class="fu">c</span>(<span class="st">"/Users/daniamachlab/Library/R/arm64/4.6-Bioc-3.23/library/"</span>, <span class="fu">.libPaths</span>()))</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(GenomicRanges)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#library(QuasR)</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>As mentioned, we will be looking at histone marks as well as accessibility from several time points across development. For this we will be using the data generated in this study by <span class="citation" data-cites="Kitazawa2021Polycomb">Kitazawa et al. (<a href="#ref-Kitazawa2021Polycomb" role="doc-biblioref">2021</a>)</span> where the authors look at barrelette neurons in mice, which receive sensory input from the whiskers on the face of the mouse. The authors describe genes with a new epigenetic signature characterized by open and H3K27-acetylated promoters (active mark) and H3K27-methylated gene bodies (repressive mark), called bipartite genes. These genes are not expressed but can be within minutes as soon as the repressive H3K27me3 mark is removed from the gene body upon exposure to the right stimulus. They tend to be transcription factors (TFs) and play key developmental roles. <a href="#fig-BipBivGene" class="quarto-xref">Figure&nbsp;1</a> below depicts how the chromatin marks present themselves on bipartite and the previously described bivalent genes.</p>
+<div id="fig-BipBivGene" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-BipBivGene-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="assets/BipBivGene.webp" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: ATAC-seq (purple), H3K27Ac (red), H3K27Me3 (blue) and H3K4Me2 (yellow) distribution around the promoters (green box) and gene bodies (grey box) of bipartite and bivalent genes. Bivalent genes also have the active mark H3K4me2 co-existing with the repressive H3K37me3, but bipartite genes have a much more active promoter and the H3K27Ac mark there which is normally associated with expressed genes. Figure from @Kitazawa2021Polycomb."><img src="assets/BipBivGene.webp" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-BipBivGene-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: ATAC-seq (purple), H3K27Ac (red), H3K27Me3 (blue) and H3K4Me2 (yellow) distribution around the promoters (green box) and gene bodies (grey box) of bipartite and bivalent genes. Bivalent genes also have the active mark H3K4me2 co-existing with the repressive H3K37me3, but bipartite genes have a much more active promoter and the H3K27Ac mark there which is normally associated with expressed genes. Figure from <span class="citation" data-cites="Kitazawa2021Polycomb">Kitazawa et al. (<a href="#ref-Kitazawa2021Polycomb" role="doc-biblioref">2021</a>)</span>.
+</figcaption>
+</figure>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>jet.colors <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">"#00007F"</span>, <span class="st">"blue"</span>, <span class="st">"#007FFF"</span>, <span class="st">"cyan"</span>, <span class="st">"#7FFF7F"</span>, <span class="st">"yellow"</span>, <span class="st">"#FF7F00"</span>, <span class="st">"red"</span>, <span class="st">"#7F0000"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(GenomicRanges)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(limma)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(dplyr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(tidyr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(tibble)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(patchwork)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(Rtsne)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 </section>
 <section id="read-in-the-data" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="read-in-the-data"><span class="header-section-number">2</span> Read in the data</h2>
-<p>Our starting point for this tutorial is two raw count matrices: one on promoters and another on gene bodies. Promoters were defined as 1kb upstream and 500 bases downstream the transcription start site (TSS) and gene bodies as regions from 1kb to 3 kb downstream the TSS. The rows in these count matrices correspond to genes and the columns correspond to the different modalities quantified on the promoter and gene body level and at three different developmental time points, namely E14, E18 and P4, where E14 means day 14 at the embryonic stage and P4 means 4 days post natally or after birth. The marks that were quantified are ATAC-seq, H3K27me3, H3K27Ac and H3K4me2.</p>
-<p>todo: make pairs plot for P and GB, what do you see and where could this be coming from?</p>
+<p>Our starting point for this tutorial is two raw count matrices: one on promoters and another on gene bodies. Promoters were defined as 1kb upstream and 500 bases downstream the transcription start site (TSS) and gene bodies as regions from 1kb to 3kb downstream the TSS. The rows in these count matrices correspond to genes and the columns correspond to the different modalities quantified on the promoter and gene body level and at three different developmental time points, namely E14, E18 and P4, where E14 means day 14 at the embryonic stage, E18 is embryonic stage at day 18 and this is actually when birth happens, and P4 means 4 days post-natally or after birth. The marks that were quantified are ATAC-seq, H3K27me3, H3K27Ac and H3K4me2.</p>
 <p>Let’s begin by reading in the data.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## promoters</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>promoters <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"dataObjects/promotersGRanges.rds"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>pCnt <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"dataObjects/promotersCnt.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## promoters</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>promoters <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"dataObjects/promotersGRanges.rds"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>pCnt <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"dataObjects/promotersCnt.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Examine the <code>promoters</code> object and what it contains. Notice that it is of class <a href="https://bioconductor.org/packages/GenomicRanges/">GRanges</a> which is a useful way to represent genomic ranges in <code>R</code> and do efficient operations on them. What information do you see?</p>
+<p>Let’s have a look at the objects.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(promoters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(promoters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>GRanges object with 6 ranges and 5 metadata columns:
             seqnames              ranges strand |      GENEID      TXNAME
@@ -316,18 +395,18 @@ background-size: cover;
   100038358     chr2     6131869-6133369      + |   100038358  uc008igh.2
                percGC     oeCpG   Gene_Symbol
             &lt;numeric&gt; &lt;numeric&gt;   &lt;character&gt;
-  100009664  0.467022  0.331664 F630206G17Rik
-  100033459  0.437042  0.231901        Ifi208
-  100037258  0.642905  0.841210        Dnajc3
-  100037278  0.555630  0.612880       Fam129c
-  100038347  0.558961  0.718914       Fam174b
-  100038358  0.522318  0.315631       Gm10857
+  100009664   46.7022  0.331664 F630206G17Rik
+  100033459   43.7042  0.231901        Ifi208
+  100037258   64.2905  0.841210        Dnajc3
+  100037278   55.5630  0.612880       Fam129c
+  100038347   55.8961  0.718914       Fam174b
+  100038358   52.2318  0.315631       Gm10857
   -------
   seqinfo: 66 sequences (1 circular) from mm10 genome</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pCnt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pCnt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          width P4_vPrV_K27Ac_1 P4_vPrV_K27Ac_2 E18_vPrV_K27Ac_1
 100009664  1501              56              71               25
@@ -381,9 +460,9 @@ background-size: cover;
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## gene bodies</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>geneBodies <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"dataObjects/geneBodiesGRanges.rds"</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>gbCnt <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"dataObjects/geneBodiesCnt.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## gene bodies</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>geneBodies <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"dataObjects/geneBodiesGRanges.rds"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>gbCnt <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"dataObjects/geneBodiesCnt.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -397,30 +476,712 @@ background-size: cover;
 <div class="callout-body-container callout-body">
 <ol type="1">
 <li>Examine the gene body regions and counts.</li>
-<li>Pick either on of the two count matrices (promoter or gene body level) and summarize how many time points there are, how many marks are measured, and how many replicates each mark has per time point. You can make use of the <code>table</code> function to do this.</li>
+<li>Pick either one of the two count matrices (promoter or gene body level) and summarize how many time points there are, how many marks are measured, and how many replicates each mark has per time point. You can make use of the <code>table</code> function to do this.</li>
 </ol>
 </div>
 </div>
 </section>
-<section id="explore-the-count-matrices" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="explore-the-count-matrices"><span class="header-section-number">3</span> Explore the count matrices</h2>
-<p>We will now get a global picture of our data. We want to know if there is any global non-linearitites or problems with the counts. Do we expect global shifts across time?</p>
+<section id="examining-the-promoter-h3k4me2-count-matrix" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="examining-the-promoter-h3k4me2-count-matrix"><span class="header-section-number">3</span> Examining the promoter H3K4Me2 count matrix</h2>
+<p>We will focus on the promoter H3K4Me2 count matrix as an example, to illustrate how to get a global picture of our data. We want to know if there are any non-linearitites or problems with the counts. Do we expect global shifts across time? Do the replicates agree?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cnt &lt;- pCnt[, grep("K4Me2", colnames(pCnt))]</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pairs(cnt, panel = function(...){smoothScatter(..., nrpoints = 0, colramp = jet.colors, add=TRUE);abline(a=0,b=1,col="white")}, </span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#       main = paste0("Original log2(RPKM) - ", conditions[i]))</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cnt &lt;- pCnt[, grep("K4Me2", colnames(pCnt))]</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pairs(cnt, panel = function(...){smoothScatter(..., nrpoints = 0, colramp = jet.colors, add=TRUE);abline(a=0,b=1,col="white")}, </span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#       main = paste0("Original log2(RPKM) - ", conditions[i]))</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>cnt <span class="ot">&lt;-</span> pCnt[, <span class="fu">grep</span>(<span class="st">"K4Me2"</span>, <span class="fu">colnames</span>(pCnt))]</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>cpm <span class="ot">&lt;-</span> <span class="fu">sweep</span>(<span class="at">x =</span> cnt, <span class="at">MARGIN =</span> <span class="dv">2</span>, </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">STATS =</span> <span class="fu">colSums</span>(cnt), <span class="at">FUN =</span> <span class="st">"/"</span>)<span class="sc">*</span><span class="fl">1e6</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>log2cpm <span class="ot">&lt;-</span> <span class="fu">log2</span>(cpm <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>jet.colors <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">"#00007F"</span>, <span class="st">"blue"</span>, <span class="st">"#007FFF"</span>, <span class="st">"cyan"</span>, </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">"#7FFF7F"</span>, <span class="st">"yellow"</span>, <span class="st">"#FF7F00"</span>, <span class="st">"red"</span>, <span class="st">"#7F0000"</span>))</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(log2cpm, <span class="at">panel =</span> <span class="cf">function</span>(...){<span class="fu">smoothScatter</span>(..., <span class="at">nrpoints =</span> <span class="dv">0</span>, <span class="at">colramp =</span> jet.colors, <span class="at">add=</span><span class="cn">TRUE</span>);</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">a=</span><span class="dv">0</span>,<span class="at">b=</span><span class="dv">1</span>,<span class="at">col=</span><span class="st">"white"</span>)}, <span class="at">main =</span> <span class="st">"Promoter log2(CPM+1)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-6-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Comment on the pairs scatter plot above. Do you notice the non-linearities between samples? Examine the count vs GC content trends per sample to see if they explain these differences. Use the <code>promoters</code> object to get the GC percent of promoters and plot the log2(cnt+1) vs percGC for each sample on the promoter level for the H3K4Me2 mark depicted above. You may refer to the other ChIP-seq tutorial if needed.</p>
+</div>
 </div>
 </section>
-<section id="session-information" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="session-information"><span class="header-section-number">4</span> Session information</h2>
+<section id="correcting-for-non-linearities" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="correcting-for-non-linearities"><span class="header-section-number">4</span> Correcting for non-linearities</h2>
+<p>Before doing any normalization or correction it is important to understand why you are doing this, as well as how. In our case, we have discovered that the non-linearities in the scatter plots above can be explained by the differences in GC trends between samples. These technically-caused differences in counts will drive the differences we see if we don’t account for them in some way.</p>
+<p>We will continue with the promoter H3K4Me2 count matrix from above to illustrate the normalization procedure. We will use the <code>normalizeCyclicLoess</code> function from the <code>limma</code> package to do this. An important assumption we are making here is that we do not expect genome-wide difference between the samples we are comparing, the time points in our case, meaning that most promoters don’t change over time.</p>
+<p>So what does the function do? Briefly, the mean count across samples is calculated for all promoters. Then, for each sample, the difference from this mean is calculated and a loess fit is done for this difference vs the mean. The fitted values are used and subtracted from the original sample counts. This is done over a few iterations, hence the name cyclic loess. See the help page as well as the code in the function for more details. We can think of it as correcting the reads towards the same count vs GC trend since this is what’s driving the non-linearities in our counts. The linear relationship between count and GC content is not removed, but the counts are moved towards the same trend. This makes the samples comparable across the same region. This is a softer approach than completely removing the linear relationship between count and GC content.</p>
+<p>Let’s aply this on our count matirx.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Fri Oct  2 12:51:34 2026"</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalize with cyclic loess</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>log2cpmNorm <span class="ot">&lt;-</span> <span class="fu">normalizeCyclicLoess</span>(log2cpm)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot the corrected counts</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(log2cpmNorm, <span class="at">panel =</span> <span class="cf">function</span>(...){<span class="fu">smoothScatter</span>(..., <span class="at">nrpoints =</span> <span class="dv">0</span>, <span class="at">colramp =</span> jet.colors, <span class="at">add=</span><span class="cn">TRUE</span>);</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">a=</span><span class="dv">0</span>,<span class="at">b=</span><span class="dv">1</span>,<span class="at">col=</span><span class="st">"white"</span>)}, <span class="at">main =</span> <span class="st">"Promoter Norm log2(CPM+1)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-7-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img"></a></p>
+</figure>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Take these corrected counts, which are corrected log2 CPM counts, and plot them against the percent GC for promoters for each sample. Do you see a change in the trends? Are they more similar between samples than before?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Make an MA plot showing the log2 fold change vs log2 average expression for P4 vs E14. Do this using the log2cpm matrix, and using the log2cpmNorm matrix. Compare the two MA plots and what can you notice? You may refer to the first tutorial to see how we did MA plots.</p>
+</div>
+</div>
+</section>
+<section id="rpkms-on-promoters-and-gene-bodies" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="rpkms-on-promoters-and-gene-bodies"><span class="header-section-number">5</span> RPKMs on promoters and gene bodies</h2>
+<p>Now that we have illustrated how to correct for non-linearities coming from differences in count vs GC content trends, let’s create one matrix from the promoter and gene body counts. The purpose will be become apparent in the next section. The matrix we want to construct should have genes from the three developmental time points as rows, and the promoter and gene body ATAC, H3K27Me2, H3K27Ac and H3K27Me3 as columns. In essence, we want to have genes as rows and the different chromatin measurements on promoter and gene body as columns for those genes, and we want to do this for each time point.</p>
+<p>The promoters and gene bodies we defined here have different widths, so the counts will have to be corrected for both library size difference between samples, as well as width differences between promoters and gene bodies. We will calculate reads per kilobase per million reads (RPKM) to accomplish this.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate RPKMs</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(<span class="fu">colnames</span>(pCnt) <span class="sc">==</span> <span class="fu">colnames</span>(gbCnt))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(<span class="fu">rownames</span>(pCnt) <span class="sc">==</span> <span class="fu">rownames</span>(gbCnt))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>libSizes <span class="ot">&lt;-</span> <span class="fu">colSums</span>(pCnt[,<span class="sc">-</span><span class="dv">1</span>]) <span class="sc">+</span> <span class="fu">colSums</span>(gbCnt[,<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>pRPKM <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">t</span>(pCnt[,<span class="sc">-</span><span class="dv">1</span>] <span class="sc">/</span> pCnt[,<span class="dv">1</span>] <span class="sc">*</span> <span class="dv">1000</span>) <span class="sc">/</span> libSizes <span class="sc">*</span> <span class="fl">1e6</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>gbRPKM <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">t</span>(gbCnt[,<span class="sc">-</span><span class="dv">1</span>] <span class="sc">/</span> gbCnt[,<span class="dv">1</span>] <span class="sc">*</span> <span class="dv">1000</span>) <span class="sc">/</span> libSizes <span class="sc">*</span> <span class="fl">1e6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Let’s calculate the average RPKM per condition (average the replicates).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Group by condition and calculate average rpkm per condition for each time pt.</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>conditions <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">'.{2}$'</span>, <span class="st">''</span>, <span class="fu">colnames</span>(pRPKM))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>spl <span class="ot">&lt;-</span> <span class="fu">split</span>(<span class="fu">colnames</span>(pRPKM), conditions)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lengths</span>(spl)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  E14_vPrV_ATAC  E14_vPrV_K27Ac E14_vPrV_K27Me3  E14_vPrV_K4Me2   E18_vPrV_ATAC 
+              2               2               2               2               2 
+ E18_vPrV_K27Ac E18_vPrV_K27Me3  E18_vPrV_K4Me2    P4_vPrV_ATAC   P4_vPrV_K27Ac 
+              2               2               2               2               2 
+ P4_vPrV_K27Me3   P4_vPrV_K4Me2 
+              2               2 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Average replicates per sample</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>pRPKMavr <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, <span class="fu">lapply</span>(spl, <span class="cf">function</span>(i){<span class="fu">rowMeans</span>(pRPKM[, i])}))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>gbRPKMavr <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, <span class="fu">lapply</span>(spl, <span class="cf">function</span>(i){<span class="fu">rowMeans</span>(gbRPKM[, i])}))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="do">## log2(RPKM+0.1)</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>log2pRPKM <span class="ot">&lt;-</span> <span class="fu">log2</span>(pRPKMavr<span class="fl">+0.1</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>log2gbRPKM <span class="ot">&lt;-</span> <span class="fu">log2</span>(gbRPKMavr<span class="fl">+0.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="normalization" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="normalization"><span class="header-section-number">5.1</span> Normalization</h3>
+<p>Next we will use <code>normalizeCyclicLoess</code> per chromatin mark across the time points, separately for promoters and gene bodies.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Create groupings on which to use normalizeCyclicLoess</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(<span class="fu">colnames</span>(log2pRPKM) <span class="sc">==</span> <span class="fu">colnames</span>(log2gbRPKM))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>conditions <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">strsplit2</span>(<span class="fu">colnames</span>(log2pRPKM), <span class="st">"_"</span>)[, <span class="dv">3</span>]</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>spl <span class="ot">&lt;-</span> <span class="fu">split</span>(<span class="fu">colnames</span>(log2pRPKM), conditions)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lengths</span>(spl)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ATAC  K27Ac K27Me3  K4Me2 
+     3      3      3      3 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Apply normalization per chromatin mark across conditions per P and GB</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>pNormL <span class="ot">&lt;-</span> <span class="fu">lapply</span>(spl, <span class="cf">function</span>(timePts){</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">normalizeCyclicLoess</span>(log2pRPKM[, timePts])</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>gbNormL <span class="ot">&lt;-</span> <span class="fu">lapply</span>(spl, <span class="cf">function</span>(timePts){</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">normalizeCyclicLoess</span>(log2gbRPKM[, timePts])</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pNormL<span class="sc">$</span>K27Ac)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          E14_vPrV_K27Ac E18_vPrV_K27Ac P4_vPrV_K27Ac
+100009664       3.120708       3.251253      3.978973
+100033459       2.522338       2.333243      2.710857
+100037258       5.180954       5.273012      5.530245
+100037278       3.042171       2.559821      2.513233
+100038347       5.459113       4.235493      4.016066
+100038358       2.856345       2.509648      2.661333</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Take a few marks of your choice on either promoter or gene body level (after normalization), and look at the pairs scatter plots. Does everything seem in order?</p>
+</div>
+</div>
+<p>Next, we will construct a count matrix where the columns display normalized log2 RPKMs for each mark, and the rows the genes at a specific developmental time point. We do this again for P and GB separately.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## For each mark, haev the time points per gene as rows</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>pNormExpandedL <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">names</span>(pNormL), <span class="cf">function</span>(mark){</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  normMat <span class="ot">&lt;-</span> pNormL[[mark]]</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  normMat <span class="sc">%&gt;%</span> </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames_to_column</span>(<span class="st">"geneID"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>geneID, <span class="at">names_to =</span> <span class="st">"timePt"</span>, <span class="at">values_to =</span> <span class="st">"log2rpkm"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">geneIDtimePt =</span> <span class="fu">paste0</span>(geneID, <span class="st">"_"</span>, limma<span class="sc">::</span><span class="fu">strsplit2</span>(timePt, <span class="st">"_"</span>)[, <span class="dv">1</span>])) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(geneIDtimePt, log2rpkm) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column_to_rownames</span>(<span class="st">"geneIDtimePt"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="sc">!!</span><span class="at">mark :=</span> log2rpkm)  <span class="sc">%&gt;%</span> </span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.matrix</span>()</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>gbNormExpandedL <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">names</span>(gbNormL), <span class="cf">function</span>(mark){</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  normMat <span class="ot">&lt;-</span> gbNormL[[mark]]</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>  normMat <span class="sc">%&gt;%</span> </span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames_to_column</span>(<span class="st">"geneID"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>geneID, <span class="at">names_to =</span> <span class="st">"timePt"</span>, <span class="at">values_to =</span> <span class="st">"log2rpkm"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">geneIDtimePt =</span> <span class="fu">paste0</span>(geneID, <span class="st">"_"</span>, limma<span class="sc">::</span><span class="fu">strsplit2</span>(timePt, <span class="st">"_"</span>)[, <span class="dv">1</span>])) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(geneIDtimePt, log2rpkm) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column_to_rownames</span>(<span class="st">"geneIDtimePt"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="sc">!!</span><span class="at">mark :=</span> log2rpkm)  <span class="sc">%&gt;%</span> </span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.matrix</span>()</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Check the row names are identical</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(pNormExpandedL, <span class="cf">function</span>(mat){</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(<span class="fu">rownames</span>(mat)<span class="sc">==</span><span class="fu">rownames</span>(pNormExpandedL[[<span class="dv">1</span>]]))</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE TRUE TRUE TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(gbNormExpandedL, <span class="cf">function</span>(mat){</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">all</span>(<span class="fu">rownames</span>(mat)<span class="sc">==</span><span class="fu">rownames</span>(gbNormExpandedL[[<span class="dv">1</span>]]))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE TRUE TRUE TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Combine marks</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>promoterlog2RPKM <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, pNormExpandedL)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>geneBodylog2RPKM <span class="ot">&lt;-</span> <span class="fu">do.call</span>(cbind, gbNormExpandedL)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(promoterlog2RPKM)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  ATAC    K27Ac   K27Me3     K4Me2
+100009664_E14 2.589528 3.120708 3.405074 1.4614586
+100009664_E18 3.342408 3.251253 2.976335 2.1073839
+100009664_P4  2.414835 3.978973 3.045081 3.0751355
+100033459_E14 2.782488 2.522338 3.308939 1.2442062
+100033459_E18 2.757692 2.333243 2.984537 0.5933288
+100033459_P4  2.528426 2.710857 2.306148 1.3027107</code></pre>
+</div>
+</div>
+<p>Now we can combine the promoter and gene body matrices.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Prepare to combine</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(<span class="fu">rownames</span>(promoterlog2RPKM) <span class="sc">==</span> <span class="fu">rownames</span>(geneBodylog2RPKM))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(promoterlog2RPKM) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">colnames</span>(promoterlog2RPKM), <span class="st">"_P"</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(geneBodylog2RPKM) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">colnames</span>(geneBodylog2RPKM), <span class="st">"_GB"</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Combine</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>combinedLog2RPKM <span class="ot">&lt;-</span> <span class="fu">cbind</span>(promoterlog2RPKM, geneBodylog2RPKM)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Fix colnames</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"^K"</span>, <span class="fu">colnames</span>(combinedLog2RPKM))</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(combinedLog2RPKM)[g] <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"H3"</span>, <span class="fu">colnames</span>(combinedLog2RPKM)[g])</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(combinedLog2RPKM)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                ATAC_P H3K27Ac_P H3K27Me3_P H3K4Me2_P  ATAC_GB H3K27Ac_GB
+100009664_E14 2.589528  3.120708   3.405074 1.4614586 2.084640   2.947568
+100009664_E18 3.342408  3.251253   2.976335 2.1073839 2.569249   3.458712
+100009664_P4  2.414835  3.978973   3.045081 3.0751355 2.202145   3.356313
+100033459_E14 2.782488  2.522338   3.308939 1.2442062 2.175142   2.517316
+100033459_E18 2.757692  2.333243   2.984537 0.5933288 2.415524   2.819339
+100033459_P4  2.528426  2.710857   2.306148 1.3027107 2.051002   3.162050
+              H3K27Me3_GB H3K4Me2_GB
+100009664_E14    3.353498  1.6349220
+100009664_E18    3.092520  1.6182870
+100009664_P4     3.061138  2.3249161
+100033459_E14    2.451159  1.1627894
+100033459_E18    2.688176  0.7656530
+100033459_P4     1.943775  0.7645045</code></pre>
+</div>
+</div>
+<p>Why did we do all this? Now we have the chromatin marks of interest on the gene level, capturing quantitatively comparable promoter and gene body levels per mark over all genes. In a way we are already thinking of these different columns as dimensions in the chromatin landscape of these genes. Furthermore, the rows are showing these values for each of the three time points. This will make it possible to see how the chromatin landscape changes over time, when we compare the different time points.</p>
+</section>
+</section>
+<section id="pca" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="pca"><span class="header-section-number">6</span> PCA</h2>
+<p>So how can we visualize this chromatin landscape? Since we have 8 columns or dimensions which together represent the chromatin landscape we are interested in, we need to reduce this to 2 (or 3) dimensions to visualize this space. Principle component analysis (PCA) which we have already seen in the previous tutorial could be used to look at the top principle components and see if they capture most of this landscape.</p>
+<p>Let’s try this.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">## PCA</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(<span class="at">x =</span> combinedLog2RPKM, <span class="at">scale. =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pca)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                          PC1    PC2   PC3     PC4     PC5     PC6     PC7
+Standard deviation     3.1285 2.0429 1.121 0.63775 0.54606 0.53411 0.44583
+Proportion of Variance 0.5924 0.2526 0.076 0.02462 0.01805 0.01727 0.01203
+Cumulative Proportion  0.5924 0.8450 0.921 0.94558 0.96363 0.98090 0.99293
+                           PC8
+Standard deviation     0.34183
+Proportion of Variance 0.00707
+Cumulative Proportion  1.00000</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">summary</span>(pca)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>pc1var <span class="ot">&lt;-</span> <span class="fu">round</span>(s<span class="sc">$</span>importance[<span class="st">"Proportion of Variance"</span>, <span class="st">"PC1"</span>]<span class="sc">*</span><span class="dv">100</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>pc2var <span class="ot">&lt;-</span> <span class="fu">round</span>(s<span class="sc">$</span>importance[<span class="st">"Proportion of Variance"</span>, <span class="st">"PC2"</span>]<span class="sc">*</span><span class="dv">100</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>pc3var <span class="ot">&lt;-</span> <span class="fu">round</span>(s<span class="sc">$</span>importance[<span class="st">"Proportion of Variance"</span>, <span class="st">"PC3"</span>]<span class="sc">*</span><span class="dv">100</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>jet.colors <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"#00007F"</span>, <span class="st">"blue"</span>, <span class="st">"#007FFF"</span>, <span class="st">"cyan"</span>,</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"#7FFF7F"</span>, <span class="st">"yellow"</span>, <span class="st">"#FF7F00"</span>, <span class="st">"red"</span>, <span class="st">"#7F0000"</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">data.frame</span>(pca<span class="sc">$</span>x), combinedLog2RPKM) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">"rowName"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">geneID =</span> limma<span class="sc">::</span><span class="fu">strsplit2</span>(rowName, <span class="st">"_"</span>)[, <span class="dv">1</span>]) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">timePt =</span> limma<span class="sc">::</span><span class="fu">strsplit2</span>(rowName, <span class="st">"_"</span>)[, <span class="dv">2</span>])</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="fu">c</span>(<span class="st">"ATAC"</span>, <span class="st">"H3"</span>)), </span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"chromatinMark"</span>, <span class="at">values_to =</span> <span class="st">"log2RPKM"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2)) <span class="sc">+</span> </span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> log2RPKM)) <span class="sc">+</span> </span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">jet.colors</span>(<span class="dv">100</span>)) <span class="sc">+</span> </span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">#coord_fixed(ratio = pc2var/pc1var) + </span></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">paste0</span>(<span class="st">"PC1 ("</span>, pc1var, <span class="st">"%)"</span>), <span class="at">y =</span> <span class="fu">paste0</span>(<span class="st">"PC2 ("</span>, pc2var, <span class="st">"%)"</span>)) <span class="sc">+</span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>chromatinMark, <span class="at">ncol =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-16-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>PC1 seems to capture more accessible and active genes going to the right of the plot, where H3K27Ac gets higher. PC2 seems to capture the repressive H3K27me3 mark with more of this mark being present on genes grouped with increasing PC2. But can we get a bit of a more fine-tuned visualization of the chromatin landscape? We will next input our gene (per time point) vs PC matrix into the <code>Rtsne</code> function to produce a t-SNE plot.</p>
+</section>
+<section id="t-sne" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="t-sne"><span class="header-section-number">7</span> t-SNE</h2>
+<p>Let’s use the matrix from the PCA (PCs as columns) to apply the t-distributed stochastic neighbor embedding, or t-SNE for short, from <span class="citation" data-cites="vanDerMaaten2008">Maaten and Hinton (<a href="#ref-vanDerMaaten2008" role="doc-biblioref">2008</a>)</span>. In contrast to the PCA, this is a stochastic and non-linear dimensionality reduction technique. The method tries to produce a lower dimensional representation of the data, maintaining as much as possible the distances between the points from the higher dimensions. What this means is that points that are close to each other in the original high dimensional space should remain close to each other in the lower dimensional representation (2 dimensions in our case). t-SNE is commonly used in single cell RNA-seq data analysis, and it is a great way to visualize the data especially in this case where we expect a rather continuous chromatin landscape and varying degrees of the mark depositions or accessibility.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="do">## t-SNE</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">6740</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>tsne <span class="ot">&lt;-</span> <span class="fu">Rtsne</span>(<span class="at">X =</span> pca<span class="sc">$</span>x, <span class="at">pca =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(tsne)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 14
+ $ N                  : int 39834
+ $ Y                  : num [1:39834, 1:2] -26.32 -14.91 -9.19 -19.27 -22.02 ...
+ $ costs              : num [1:39834] 9.39e-05 8.57e-05 1.03e-04 7.31e-05 7.65e-05 ...
+ $ itercosts          : num [1:20] 114.1 114.1 106.9 98.8 96.5 ...
+ $ origD              : int 8
+ $ perplexity         : num 30
+ $ theta              : num 0.5
+ $ max_iter           : num 1000
+ $ stop_lying_iter    : int 250
+ $ mom_switch_iter    : int 250
+ $ momentum           : num 0.5
+ $ final_momentum     : num 0.8
+ $ eta                : num 200
+ $ exaggeration_factor: num 12
+ - attr(*, "class")= chr [1:2] "Rtsne" "list"</code></pre>
+</div>
+</div>
+<p>Let’s plot the t-SNE coloring by all the chromatin marks, to try and make sense of the chromatin landscape we are seeing and if there’s any structure and order to it. Note that each chromatin mark lives in its own space, meaning a count of 1 in the ATAC modality does not translate to or compare to a count of 1 in the H3K27me3 modality. They are different data types, and even amongst the ChIP-seq samples, different antibodies have different pull-down efficiencies or degrees of how well they capture the mark of interest. However within one mark, say H3K27Ac, we can indeed compare the promoter and gene body counts since we have log2 RPKM values. We will take this into account when plotting, so that the colors are directly comparable between promoter and gene body levels of a particular mark. We will also be setting lower and upper level limits so that the extreme values don’t dominate the color space and we can appreciate the global differences in the marks in a more fine grained way.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Prepare to plot</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>tsneMat <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(tsne<span class="sc">$</span>Y)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(tsneMat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"TSNE1"</span>, <span class="st">"TSNE2"</span>)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">cbind</span>(tsneMat, combinedLog2RPKM) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">"rowName"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">geneID =</span> limma<span class="sc">::</span><span class="fu">strsplit2</span>(rowName, <span class="st">"_"</span>)[, <span class="dv">1</span>]) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">timePt =</span> limma<span class="sc">::</span><span class="fu">strsplit2</span>(rowName, <span class="st">"_"</span>)[, <span class="dv">2</span>])</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>marks <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">colnames</span>(df)[<span class="fu">grep</span>(<span class="st">"^ATAC|H3"</span>, <span class="fu">colnames</span>(df))])</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>plotList <span class="ot">&lt;-</span> <span class="fu">lapply</span>(marks, <span class="cf">function</span>(mark){</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get P and GB log2 RPKMs for the mark and set a lower and upper limit</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... limit for the colors corresponding to the bottom and top 5%</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>  modality <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">strsplit2</span>(mark, <span class="st">"_"</span>)[, <span class="dv">1</span>]</span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>  values <span class="ot">&lt;-</span> <span class="fu">c</span>(df[, <span class="fu">paste0</span>(modality, <span class="st">"_P"</span>)], df[, <span class="fu">paste0</span>(modality, <span class="st">"_GB"</span>)])</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>  lowerLim <span class="ot">&lt;-</span> <span class="fu">quantile</span>(values, <span class="fl">0.05</span>)</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>  upperLim <span class="ot">&lt;-</span> <span class="fu">quantile</span>(values, <span class="fl">0.95</span>)</span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># plot</span></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> TSNE1, <span class="at">y =</span> TSNE2)) <span class="sc">+</span></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> .data[[mark]])) <span class="sc">+</span> </span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">jet.colors</span>(<span class="dv">100</span>), </span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>                          <span class="at">limits =</span> <span class="fu">c</span>(lowerLim, upperLim), </span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>                          <span class="at">oob =</span> scales<span class="sc">::</span>squish) <span class="sc">+</span> </span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> mark) <span class="sc">+</span></span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() </span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(plotList, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-18-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see certain patterns emerging here. The right-hand side of the t-SNE plot seems to depict genes that are more active or expressed. They are high in accessibility as well as H3K27Ac. The genes on the left-hand side are almost completely inaccessible, lack the active H3K27Ac mark, and are also lacking the repressive H3K27Me3 mark. These are likely genes in the heterochromatin which is not actively used and so tightly packed that it’s both inaccessible and lacking the repressive histone mark. The region in the middle, at the bottom of the t-SNE looks interesting. There is a more plastic world in between, where we see signs of both active and repressive marks co-existing to varying degrees. We will come to see later that this is where we find bipartite and bivalent genes.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Pick a mark of your choosing, for example <code>ATAC_P</code>, and plot the t-SNE coloring by this mark. Do this with and without setting any value limits in the coloring the way we have done above, and compare the two plots. Do you notice a difference in contrast? Which do you prefer and why? It is generally nice to try both variations to understand the full range of your values, and also how to best visualize the data depending on what you want to emphasize, so long as you are transparent with reporting this.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Have a look at the <code>df</code> object we made to generate the plots. You will notice that we have a column showing the time point. Plot the t-SNE coloring by the time point. Do you see an even mixing of the time points or is there a space in the t-SNE more dominated by one time point than another. What do each of those scenarios mean?</p>
+</div>
+</div>
+<p>Let’s next color by the GC content to see if there are emerging patterns there or if this is more or less random.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get promoter and gene body GC content</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(promoters<span class="sc">$</span>GENEID <span class="sc">==</span> geneBodies<span class="sc">$</span>GENEID)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">match</span>(df<span class="sc">$</span>geneID, promoters<span class="sc">$</span>GENEID)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>percGC_P <span class="ot">&lt;-</span> promoters<span class="sc">$</span>percGC[m]</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>percGC_GB <span class="ot">&lt;-</span> geneBodies<span class="sc">$</span>percGC[m]</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>oeCpG_P <span class="ot">&lt;-</span> promoters<span class="sc">$</span>oeCpG[m]</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>oeCpG_GB <span class="ot">&lt;-</span> geneBodies<span class="sc">$</span>oeCpG[m]</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>feature <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"percGC_P"</span>, <span class="st">"percGC_GB"</span>, <span class="st">"oeCpG_P"</span>, <span class="st">"oeCpG_GB"</span>)</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>plotL <span class="ot">&lt;-</span> <span class="fu">lapply</span>(feature, <span class="cf">function</span>(f){</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> TSNE1, <span class="at">y =</span> TSNE2)) <span class="sc">+</span> </span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> .data[[f]])) <span class="sc">+</span> </span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">jet.colors</span>(<span class="dv">100</span>)) <span class="sc">+</span> </span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(f) <span class="sc">+</span> </span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>()</span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(plotL, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-19-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can notice some patterns, with promoter GC content and CpG occurrences being enriched in the right-hand side which is also the genes which were more accessible.</p>
+<section id="t-sne-is-stochastic" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="t-sne-is-stochastic"><span class="header-section-number">7.1</span> t-SNE is stochastic</h3>
+<p>Did you notice that we had to set the seed in order to obtain this exact plot. If you do not do this, you will generate a different t-SNE everytime. So it is important to set the seed in order to be able to reproduce the plot you want.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Play with different seed values (any random number of your choosing) and generate the t-SNE and plots from above. Do you have a new favorite? Feel free to continue this tutorial with the t-SNE plot of your choice.</p>
+</div>
+</div>
+<p>Please have a look at the arguments of the <code>Rtsne</code> function and its help page. You will notice that by default, the function will perform a PCA before a t-SNE. That is why we set <code>pca=FALSE</code>. You will also notice that there are additional arguments for the t-SNE that can affect the plot we get. This includes the <code>perplexity</code> argument which controls how many nearest neighbors are taken when constructing the embedding in the lower dimensional space. See more in the Details section.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Use the <code>Rtsne</code> function directly on the <code>combinedLog2RPKM</code> matrix. Do you get the same t-SNE as above? Keep in mind that you need to set the same seed.</li>
+<li>Read a little more about the perplexity parameter and vary it. What do your plots look like?</li>
+</ol>
+</div>
+</div>
+</section>
+<section id="gene-expression" class="level3" data-number="7.2">
+<h3 data-number="7.2" class="anchored" data-anchor-id="gene-expression"><span class="header-section-number">7.2</span> Gene expression</h3>
+<p>What about gene expression? This is not information that went into the t-SNE. If we color the genes by their expression here, does this fit our interpretation of the marks and the landscape we have seen so far? We have gene expression data on the same samples and we will be reading in the log2 RPKM values below.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Read in RNA data</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>RNAlog2RPKM <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"dataObjects/RNAlog2RPKM.rds"</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(RNAlog2RPKM)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>100009664_E14 100033459_E14 100037258_E14 100037278_E14 100038347_E14 
+    -3.215057     -3.321928      3.624810      2.132474      5.238235 
+100038358_E14 
+    -1.697797 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add to df</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">match</span>(df<span class="sc">$</span>rowName, <span class="fu">names</span>(RNAlog2RPKM))</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>RNAlog2RPKM <span class="ot">&lt;-</span> RNAlog2RPKM[m]</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> TSNE1, <span class="at">y =</span> TSNE2)) <span class="sc">+</span> </span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> RNAlog2RPKM)) <span class="sc">+</span> </span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">jet.colors</span>(<span class="dv">100</span>)) <span class="sc">+</span> </span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-21-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="index_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can nicely see the gene expression pattern agreeing with what we know about the chromatin data so far. The highly expressed genes are also those with higher promoter H3K27Ac.</p>
+</section>
+</section>
+<section id="global-changes-in-chromatin-over-time" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="global-changes-in-chromatin-over-time"><span class="header-section-number">8</span> Global changes in chromatin over time</h2>
+<p>Now that we have our so called chromatin landscape and some degree of understanding on which parts of the t-SNE represent more or less active genes purely based on the chromatin, the question we really want to ask is how does this change over time? If you have certain genes of interest, you could plot which chromatin space they move into over time. At the moment, we want to know which genes change the most out of all other genes, purely based on changes in chromatin, going through the different time points.</p>
+<p>How can we measure such changes quantitatively? We will use the Euclidean distance to do this, calculating it in the original high dimensional space. The Euclidean distance between two points in space is the length of the line connecting them. In a two dimensional space, you can calculate this distance using the Pythagoras theorem as shown in <a href="#fig-euclDist" class="quarto-xref">Figure&nbsp;2</a> for the two points <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>, so <span class="math inline">\(d(p,q)=\sqrt{(p_1-q_1)^2+(p_2-q_2)^2}\)</span>. This is generalizable for more than two dimensions. Taking vectors <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> with <span class="math inline">\(n\)</span> dimensions, <span class="math inline">\(d(p,q)=\sqrt{(p-q)^2}\)</span></p>
+<div id="fig-euclDist" class="quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-euclDist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="assets/EuclideanDistance2d.webp" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figure&nbsp;2: Image from Wikipedia."><img src="assets/EuclideanDistance2d.webp" class="img-fluid figure-img" style="width:60.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-euclDist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Image from <a href="https://en.wikipedia.org/wiki/Euclidean_distance">Wikipedia.</a>
+</figcaption>
+</figure>
+</div>
+<p>Let’s calculate the Euclidean distance between E14 and E18 for each gene.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Create time-specific matrices</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>E14 <span class="ot">&lt;-</span> combinedLog2RPKM[<span class="fu">grep</span>(<span class="st">"E14"</span>, <span class="fu">rownames</span>(combinedLog2RPKM)), ]</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>E18 <span class="ot">&lt;-</span> combinedLog2RPKM[<span class="fu">grep</span>(<span class="st">"E18"</span>, <span class="fu">rownames</span>(combinedLog2RPKM)), ]</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(E14) <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">strsplit2</span>(<span class="fu">rownames</span>(E14), <span class="st">"_"</span>)[, <span class="dv">1</span>]</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(E18) <span class="ot">&lt;-</span> limma<span class="sc">::</span><span class="fu">strsplit2</span>(<span class="fu">rownames</span>(E18), <span class="st">"_"</span>)[, <span class="dv">1</span>]</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Check gene IDs are ordered the same way</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(<span class="fu">rownames</span>(E14) <span class="sc">==</span> <span class="fu">rownames</span>(E18))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate Euclidean distance in the high dimensional space</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>dist <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">rowSums</span>((E18 <span class="sc">-</span> E14)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dist)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.2923  0.9312  1.2018  1.3471  1.5707  6.1828 </code></pre>
+</div>
+</div>
+<p>Let’s next color the genes belonging to the E14 time point by the distance we calculated. Which genes are changing the most in chromatin by the E18 time point?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Color the E14 t-SNE by the distance</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>distCols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"cornsilk"</span>, <span class="st">"darkmagenta"</span>, <span class="st">"firebrick4"</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(timePt <span class="sc">==</span> <span class="st">"E14"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">euclDist =</span> dist[geneID]) <span class="sc">%&gt;%</span> </span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> TSNE1, <span class="at">y =</span> TSNE2)) <span class="sc">+</span> </span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> euclDist)) <span class="sc">+</span> </span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> distCols) <span class="sc">+</span> </span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-23-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can notice certain regions of the t-SNE are changing the most in chromatin going from E14 to E18, and that these genes which change the most are not randomly spread out in the entire t-SNE. The regions that are never used or which are highly expressed and constantly used, like housekeeping genes, change the least over time. A closer inspection of genes which change the most in the t-SNE actually reveals that these are the bipartite genes and they play key dynamic roles during development. Their promoters are open and carry active marks, even H3K27Ac which is normally a mark expressed genes carry, but these genes are not expressed due to the presence of the repressive H3K27Me3 mark at the gene body. These genes can be quickly induced when the right stimulus comes during development and the H3K27Me3 mark is removed thus causing these genes to be expressed.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Choose another pair of time points to compare, and plot the the t-SNE coloring by the Euclidean distance. Do you see something similar and is it in the same part of the t-SNE?</p>
+</div>
+</div>
+</section>
+<section id="genes-over-time" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="genes-over-time"><span class="header-section-number">9</span> Genes over time</h2>
+<p>Let’s select a few genes and follow how they move over time in the chromatin space using the t-SNE we have made. We will focus on the bipartite genes of which we have selected some example genes below from the study. <span class="citation" data-cites="Kitazawa2021Polycomb">Kitazawa et al. (<a href="#ref-Kitazawa2021Polycomb" role="doc-biblioref">2021</a>)</span> have calculated bivalent and bipartite scores for genes to identify the genes of either categories. Without going into the details of these score calculations, which are based on expected chromatin marks on these genes, we will be using these identified genes here to define the regions in the t-SNE which are the bivalent and bipartite gene containing regions.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Read in bipartite and bivalent genes</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>bipGenes <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"dataObjects/bipartiteGenes.rds"</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">match</span>(bipGenes, df<span class="sc">$</span>rowName)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>bipartite<span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>bipartite[m] <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>bivGenes <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"dataObjects/bivalentGenes.rds"</span>)</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">match</span>(bivGenes, df<span class="sc">$</span>rowName)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>bivalent<span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>bivalent[m] <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot them on the t-SNE</span></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> TSNE1, <span class="at">y =</span> TSNE2)) <span class="sc">+</span> </span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="fu">subset</span>(df, bivalent), <span class="fu">aes</span>(<span class="at">color =</span> bivalent)) <span class="sc">+</span> </span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> TSNE1, <span class="at">y =</span> TSNE2)) <span class="sc">+</span> </span>
+<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb51-18"><a href="#cb51-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="fu">subset</span>(df, bipartite), <span class="fu">aes</span>(<span class="at">color =</span> bipartite)) <span class="sc">+</span> </span>
+<span id="cb51-19"><a href="#cb51-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span>
+<span id="cb51-20"><a href="#cb51-20" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-24-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="index_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s visualize these regions as contours on the t-SNE.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>contourDf <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(bivalent, bipartite), </span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"regionType"</span>, </span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"belong"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(belong)</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> TSNE1, <span class="at">y =</span> TSNE2)) <span class="sc">+</span> </span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_2d</span>(<span class="at">data =</span> contourDf, <span class="fu">aes</span>(<span class="at">color =</span> regionType)) <span class="sc">+</span> </span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-25-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img src="index_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>If you compare this plot to the plots where we colored the t-SNE by the different chromatin marks you will notice that the bipartite gene area has promoter H3K27Ac as well as gene body H3K27me3, whereas the bivalent region has no H3K27Ac but has the H3K27Me3 and H3K4Me2 marks coexisting on the gene, as they should by definition.</p>
+<section id="immediate-early-genes-iegs" class="level3" data-number="9.1">
+<h3 data-number="9.1" class="anchored" data-anchor-id="immediate-early-genes-iegs"><span class="header-section-number">9.1</span> Immediate early genes (IEGs)</h3>
+<p>We will pick some IEGs mentioned by <span class="citation" data-cites="Kitazawa2021Polycomb">Kitazawa et al. (<a href="#ref-Kitazawa2021Polycomb" role="doc-biblioref">2021</a>)</span>, which carry the bipartite gene signature and follow them over time going from E14 to E18 to P4. IEGs tend to be some of the first responders to the right stimulus. They tend to be transcription factors and timing is key during development, so that they are expressed at the right time when the stimulus comes. They in turn trigger the expression of other genes. In the context of the barrelette neurons which receive sensory input from the whiskers of the mice, the stimulus comes during birth at E18 when the mice start using their whiskers to sense their surroundings.</p>
+<p>Let’s track some select IEGs.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="do">## IEGs</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>iegs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Fos"</span>, <span class="st">"Egr1"</span>, <span class="st">"Bcl6"</span>, <span class="st">"Nr3c1"</span>, <span class="st">"Plekhh3"</span>)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Add gene names to df</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">match</span>(df<span class="sc">$</span>geneID, promoters<span class="sc">$</span>GENEID)</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>geneName <span class="ot">&lt;-</span> promoters<span class="sc">$</span>Gene_Symbol[m]</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Add IEG column</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>isIEG <span class="ot">&lt;-</span> df<span class="sc">$</span>geneName <span class="sc">%in%</span> iegs</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot IEGs over time</span></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> TSNE1, <span class="at">y =</span> TSNE2)) <span class="sc">+</span> </span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_2d</span>(<span class="at">data =</span> contourDf, <span class="fu">aes</span>(<span class="at">color =</span> regionType)) <span class="sc">+</span> </span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="fu">subset</span>(df, isIEG), <span class="fu">aes</span>(<span class="at">fill =</span> geneName), </span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>timePt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-26-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img src="index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Notice how these genes start out as bipartite and gradually move up towards the part of the t-SNE where genes are more active (recall the plots coloring by all chromatin marks). The t-SNE helps us get a global picture and the genome browser tracks for the Egr1 gene below confirm what we are seeing above. We can appreciate a gradual decrease in H3K27Me3 accompanied by an increase in expression over time.</p>
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><a href="assets/Egr1.webp" class="lightbox" data-gallery="quarto-lightbox-gallery-13" title="Figure from @Kitazawa2021Polycomb."><img src="assets/Egr1.webp" class="img-fluid figure-img" alt="Figure from Kitazawa et al. (2021)."></a></p>
+<figcaption>Figure from <span class="citation" data-cites="Kitazawa2021Polycomb">Kitazawa et al. (<a href="#ref-Kitazawa2021Polycomb" role="doc-biblioref">2021</a>)</span>.</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="final-remarks" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="final-remarks"><span class="header-section-number">10</span> Final remarks</h2>
+<p>The chromatin landscapes we visualized here were done on the gene level in the context of the bipartite gene story. However one can do this on any regions of interest, like enhancers for example, and understand how the different chromatin regions group, and even visualize how they change between conditions by tracking how they move in this chromatin space.</p>
+</section>
+<section id="session" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="session"><span class="header-section-number">11</span> Session</h2>
+<div class="cell" data-output-fold="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details><summary>Code Output</summary>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Sat Oct  3 11:29:03 2026"</code></pre>
+</div>
+</details>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details><summary>Code Output</summary>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.6.1 (2026-06-24)
 Platform: x86_64-pc-linux-gnu
@@ -444,23 +1205,43 @@ attached base packages:
 [8] base     
 
 other attached packages:
-[1] GenomicRanges_1.64.0 Seqinfo_1.2.0        IRanges_2.46.0      
-[4] S4Vectors_0.50.1     BiocGenerics_0.58.1  generics_0.1.4      
+ [1] Rtsne_0.17           patchwork_1.3.2      ggplot2_4.0.3       
+ [4] tibble_3.3.1         tidyr_1.3.2          dplyr_1.2.1         
+ [7] limma_3.68.5         GenomicRanges_1.64.0 Seqinfo_1.2.0       
+[10] IRanges_2.46.0       S4Vectors_0.50.2     BiocGenerics_0.58.1 
+[13] generics_0.1.4      
 
 loaded via a namespace (and not attached):
- [1] digest_0.6.39       fastmap_1.2.0       xfun_0.60          
- [4] knitr_1.51          htmltools_0.5.9     rmarkdown_2.31     
- [7] cli_3.6.6           renv_1.2.4          compiler_4.6.1     
-[10] tools_4.6.1         evaluate_1.0.5      yaml_2.3.12        
-[13] otel_0.2.0          BiocManager_1.30.27 rlang_1.3.0        
-[16] jsonlite_2.0.0      htmlwidgets_1.6.4  </code></pre>
+ [1] gtable_0.3.6        jsonlite_2.0.0      compiler_4.6.1     
+ [4] BiocManager_1.30.27 renv_1.2.3          Rcpp_1.1.1-1.1     
+ [7] tidyselect_1.2.1    dichromat_2.0-1     scales_1.4.0       
+[10] yaml_2.3.12         fastmap_1.2.0       statmod_1.5.2      
+[13] R6_2.6.1            labeling_0.4.3      isoband_0.3.0      
+[16] knitr_1.51          MASS_7.3-65         htmlwidgets_1.6.4  
+[19] RColorBrewer_1.1-3  pillar_1.11.1       rlang_1.3.0        
+[22] xfun_0.57           S7_0.2.2            otel_0.2.0         
+[25] cli_3.6.6           withr_3.0.2         magrittr_2.0.5     
+[28] digest_0.6.39       grid_4.6.1          lifecycle_1.0.5    
+[31] vctrs_0.7.3         KernSmooth_2.23-26  evaluate_1.0.5     
+[34] glue_1.8.1          farver_2.1.2        rmarkdown_2.31     
+[37] purrr_1.2.2         tools_4.6.1         pkgconfig_2.0.3    
+[40] htmltools_0.5.9    </code></pre>
 </div>
+</details>
 </div>
+
 
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-Kitazawa2021Polycomb" class="csl-entry" role="listitem">
+Kitazawa, Taro, Dania Machlab, Onkar Joshi, et al. 2021. <span>“A Unique Bipartite Polycomb Signature Regulates Stimulus-Response Transcription During Development.”</span> <em>Nature Genetics</em> 53: 379–91. <a href="https://doi.org/10.1038/s41588-021-00789-z">https://doi.org/10.1038/s41588-021-00789-z</a>.
+</div>
+<div id="ref-vanDerMaaten2008" class="csl-entry" role="listitem">
+Maaten, Laurens van der, and Geoffrey Hinton. 2008. <span>“Visualizing Data Using t-SNE.”</span> <em>Journal of Machine Learning Research</em> 9: 2579–605. <a href="https://www.cs.toronto.edu/~hinton/absps/tsne.pdf">https://www.cs.toronto.edu/~hinton/absps/tsne.pdf</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -875,6 +1656,38 @@ loaded via a namespace (and not attached):
 </div>
   </div>
 </footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

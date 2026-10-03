@@ -290,7 +290,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">02-Oct-2026</p>
+        <p class="date">03-Oct-2026</p>
       </div>
     </div>
     
@@ -666,9 +666,9 @@ colData names(1): condition</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">assays</span>(se)<span class="sc">$</span>counts</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       sample_1 sample_2 sample_3
-gene_1        8        1        0
-gene_2        9        6        5
-gene_3        2        4       10</code></pre>
+gene_1        8        3        0
+gene_2        5        1        4
+gene_3        2       10        6</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -1541,7 +1541,7 @@ Figure&nbsp;4: Example of a good cross correlation plot. The y-axis shows the cr
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Prepare for SummarizedExperiment object</span></span>
 <span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>rd <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(peaks) <span class="sc">%&gt;%</span> </span>
 <span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">chr =</span> seqnames, <span class="at">chrStart =</span> start, <span class="at">chrEnd =</span> end, </span>
-<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">peakWidth =</span> width, <span class="at">chrStarnd =</span> strand)</span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">peakWidth =</span> width, <span class="at">chrStrand =</span> strand)</span>
 <span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>rd <span class="ot">&lt;-</span> <span class="fu">DataFrame</span>(rd)</span>
 <span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>cd <span class="ot">&lt;-</span> <span class="fu">DataFrame</span>(<span class="at">sampleName =</span> <span class="fu">apply</span>(<span class="at">X =</span> limma<span class="sc">::</span><span class="fu">strsplit2</span>(<span class="fu">colnames</span>(cntPeaks), <span class="st">"_"</span>)[, <span class="dv">5</span><span class="sc">:</span><span class="dv">6</span>], </span>
 <span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">MARGIN =</span> <span class="dv">1</span>, </span>
@@ -1570,7 +1570,7 @@ colData names(2): sampleName genotype</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rowData</span>(se)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>DataFrame with 1752 rows and 9 columns
-               chr  chrStart    chrEnd peakWidth chrStarnd    fracGC     oeCpG
+               chr  chrStart    chrEnd peakWidth chrStrand    fracGC     oeCpG
           &lt;factor&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt;  &lt;factor&gt; &lt;numeric&gt; &lt;numeric&gt;
 peak_1       chr19   3059528   3059881       354         *  0.403955  0.531515
 peak_2       chr19   3254545   3255056       512         *  0.472656  0.277827
@@ -1685,7 +1685,7 @@ colData names(2): sampleName genotype</code></pre>
 </div>
 </div>
 <p>We can nicely see the samples grouping by condition.</p>
-<p>Let’s also do a PCA (Principal Component Analysis) on the log2(CPM) count matrix. This will map our samples onto a new set of coordinates or principal components (PCs), ordered from highest to lowest by the variance explained in the data.</p>
+<p>Let’s also do a PCA (Principal Component Analysis) on the log2(CPM) count matrix. We would like to know how the samples group in the high dimensional peak space but there are too many peaks (dimensions) to be able to get a sense of this visually (we can at most have a plot of 2 or 3 dimensions or axes). The PCA will map our samples onto a new set of coordinates or principal components (PCs), ordered from highest to lowest by the variance explained in the data.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="do">## PCA</span></span>
 <span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(<span class="at">x =</span> <span class="fu">t</span>(<span class="fu">assays</span>(se)<span class="sc">$</span>log2cpm), <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale. =</span> <span class="cn">FALSE</span>)</span>
@@ -1698,12 +1698,12 @@ Standard deviation     17.3522 12.2342 10.4536 9.9774 8.69491 8.28178 6.93668
 Proportion of Variance  0.3534  0.1757  0.1283 0.1168 0.08874 0.08051 0.05648
 Cumulative Proportion   0.3534  0.5291  0.6574 0.7743 0.86301 0.94352 1.00000
                              PC8
-Standard deviation     1.949e-14
+Standard deviation     1.948e-14
 Proportion of Variance 0.000e+00
 Cumulative Proportion  1.000e+00</code></pre>
 </div>
 </div>
-<p>Notice that we have 8 PCs (because we have 8 samples or dimensions) and that the “Proportion of Variance” sums to 100% across all PCs.</p>
+<p>Notice that we have 8 PCs (because we have 8 samples) and that the “Proportion of Variance” sums to 100% across all PCs.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Prepare to plot</span></span>
 <span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>pc1var <span class="ot">&lt;-</span> <span class="fu">round</span>(s<span class="sc">$</span>importance[<span class="st">"Proportion of Variance"</span>, <span class="st">"PC1"</span>]<span class="sc">*</span><span class="dv">100</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span>
@@ -2315,7 +2315,7 @@ attr(,"contrasts")$condition
 <th style="text-align: right;">chrStart</th>
 <th style="text-align: right;">chrEnd</th>
 <th style="text-align: right;">peakWidth</th>
-<th style="text-align: left;">chrStarnd</th>
+<th style="text-align: left;">chrStrand</th>
 <th style="text-align: right;">fracGC</th>
 <th style="text-align: right;">oeCpG</th>
 <th style="text-align: left;">overlappingCpG</th>
@@ -2589,7 +2589,7 @@ attr(,"contrasts")$condition
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <details><summary>Code Output</summary>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Fri Oct  2 12:49:10 2026"</code></pre>
+<pre><code>[1] "Sat Oct  3 11:23:25 2026"</code></pre>
 </div>
 </details>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2643,7 +2643,7 @@ other attached packages:
 [24] BSgenome_1.80.0                          
 [25] rtracklayer_1.72.0                       
 [26] BiocIO_1.22.0                            
-[27] Biostrings_2.80.1                        
+[27] Biostrings_2.80.0                        
 [28] XVector_0.52.0                           
 [29] limma_3.68.5                             
 [30] QuasR_1.52.0                             
@@ -2651,51 +2651,51 @@ other attached packages:
 [32] GenomicRanges_1.64.0                     
 [33] Seqinfo_1.2.0                            
 [34] IRanges_2.46.0                           
-[35] S4Vectors_0.50.1                         
+[35] S4Vectors_0.50.2                         
 [36] BiocGenerics_0.58.1                      
 [37] generics_0.1.4                           
 
 loaded via a namespace (and not attached):
-  [1] splines_4.6.1            bitops_1.1-0             filelock_1.0.3          
+  [1] splines_4.6.1            bitops_1.0-9             filelock_1.0.3          
   [4] XML_3.99-0.23            rpart_4.1.27             lifecycle_1.0.5         
-  [7] httr2_1.3.0              pwalign_1.8.0            doParallel_1.0.17       
+  [7] httr2_1.2.2              pwalign_1.8.0            doParallel_1.0.17       
  [10] lattice_0.22-9           ensembldb_2.36.1         GenomicFiles_1.48.0     
  [13] backports_1.5.1          magrittr_2.0.5           Hmisc_5.3-0             
  [16] rmarkdown_2.31           yaml_2.3.12              metapod_1.20.0          
  [19] otel_0.2.0               DBI_1.3.0                RColorBrewer_1.1-3      
  [22] abind_1.4-8              ShortRead_1.70.0         purrr_1.2.2             
- [25] AnnotationFilter_1.36.0  biovizBase_1.60.0        RCurl_1.98-1.19         
- [28] nnet_7.3-20              VariantAnnotation_1.58.0 ggrepel_0.9.8           
- [31] codetools_0.2-20         DelayedArray_0.38.2      tidyselect_1.2.1        
- [34] shape_1.4.6.1            UCSC.utils_1.8.0         farver_2.1.2            
- [37] BiocFileCache_3.2.0      base64enc_0.1-6          GenomicAlignments_1.48.0
- [40] jsonlite_2.0.0           GetoptLong_1.1.1         Formula_1.2-6           
- [43] iterators_1.0.14         foreach_1.5.2            tools_4.6.1             
- [46] progress_1.2.3           Rcpp_1.1.2               glue_1.8.1              
- [49] gridExtra_2.3.1          SparseArray_1.12.2       xfun_0.60               
- [52] GenomeInfoDb_1.48.0      withr_3.0.3              BiocManager_1.30.27     
- [55] fastmap_1.2.0            latticeExtra_0.6-31      digest_0.6.39           
- [58] R6_2.6.1                 colorspace_2.1-3         jpeg_0.1-11             
- [61] dichromat_2.0-1          biomaRt_2.68.0           RSQLite_3.53.3          
- [64] cigarillo_1.2.1          renv_1.2.4               data.table_1.18.4       
- [67] prettyunits_1.2.0        InteractionSet_1.40.0    httr_1.4.8              
- [70] htmlwidgets_1.6.4        S4Arrays_1.12.0          pkgconfig_2.0.3         
- [73] gtable_0.3.6             blob_1.3.0               S7_0.2.2                
- [76] hwriter_1.3.2.1          htmltools_0.5.9          ProtGenerics_1.44.0     
- [79] clue_0.3-68              scales_1.4.0             png_0.1-9               
- [82] knitr_1.51               rstudioapi_0.19.0        rjson_0.2.23            
- [85] checkmate_2.3.4          curl_7.1.0               cachem_1.1.0            
- [88] GlobalOptions_0.1.4      stringr_1.6.0            KernSmooth_2.23-26      
- [91] foreign_0.8-91           restfulr_0.0.17          pillar_1.11.1           
- [94] vctrs_0.7.3              dbplyr_2.6.0             cluster_2.1.8.2         
- [97] htmlTable_2.5.0          evaluate_1.0.5           magick_2.9.1            
-[100] cli_3.6.6                locfit_1.5-9.12          compiler_4.6.1          
-[103] rlang_1.3.0              crayon_1.5.3             labeling_0.4.3          
-[106] interp_1.1-6             forcats_1.0.1            stringi_1.8.9           
-[109] viridisLite_0.4.3        deldir_2.0-4             txdbmaker_1.8.0         
-[112] lazyeval_0.2.3           Matrix_1.7-6             hms_1.1.4               
-[115] bit64_4.8.2              KEGGREST_1.52.2          statmod_1.5.2           
-[118] memoise_2.0.1            bit_4.6.0               </code></pre>
+ [25] AnnotationFilter_1.36.0  biovizBase_1.60.0        RCurl_1.98-1.18         
+ [28] nnet_7.3-20              VariantAnnotation_1.58.0 rappdirs_0.3.4          
+ [31] ggrepel_0.9.8            codetools_0.2-20         DelayedArray_0.38.1     
+ [34] tidyselect_1.2.1         shape_1.4.6.1            UCSC.utils_1.8.0        
+ [37] farver_2.1.2             BiocFileCache_3.2.0      base64enc_0.1-6         
+ [40] GenomicAlignments_1.48.0 jsonlite_2.0.0           GetoptLong_1.1.1        
+ [43] Formula_1.2-6            iterators_1.0.14         foreach_1.5.2           
+ [46] tools_4.6.1              progress_1.2.3           Rcpp_1.1.1-1.1          
+ [49] glue_1.8.1               gridExtra_2.3.1          SparseArray_1.12.2      
+ [52] xfun_0.57                GenomeInfoDb_1.48.0      withr_3.0.2             
+ [55] BiocManager_1.30.27      fastmap_1.2.0            latticeExtra_0.6-31     
+ [58] digest_0.6.39            R6_2.6.1                 colorspace_2.1-2        
+ [61] jpeg_0.1-11              dichromat_2.0-1          biomaRt_2.68.0          
+ [64] RSQLite_3.53.1           cigarillo_1.2.0          renv_1.2.3              
+ [67] data.table_1.18.6.1      prettyunits_1.2.0        InteractionSet_1.40.0   
+ [70] httr_1.4.8               htmlwidgets_1.6.4        S4Arrays_1.12.1         
+ [73] pkgconfig_2.0.3          gtable_0.3.6             blob_1.3.0              
+ [76] S7_0.2.2                 hwriter_1.3.2.1          htmltools_0.5.9         
+ [79] ProtGenerics_1.44.0      clue_0.3-68              scales_1.4.0            
+ [82] png_0.1-9                knitr_1.51               rstudioapi_0.19.0       
+ [85] rjson_0.2.23             checkmate_2.3.4          curl_7.1.0              
+ [88] cachem_1.1.0             GlobalOptions_0.1.4      stringr_1.6.0           
+ [91] KernSmooth_2.23-26       foreign_0.8-91           restfulr_0.0.16         
+ [94] pillar_1.11.1            vctrs_0.7.3              dbplyr_2.5.2            
+ [97] cluster_2.1.8.2          htmlTable_2.5.0          evaluate_1.0.5          
+[100] magick_2.9.1             cli_3.6.6                locfit_1.5-9.12         
+[103] compiler_4.6.1           rlang_1.3.0              crayon_1.5.3            
+[106] labeling_0.4.3           interp_1.1-6             forcats_1.0.1           
+[109] stringi_1.8.7            viridisLite_0.4.3        deldir_2.0-4            
+[112] txdbmaker_1.8.0          lazyeval_0.2.3           Matrix_1.7-5            
+[115] hms_1.1.4                bit64_4.8.2              KEGGREST_1.52.0         
+[118] statmod_1.5.2            memoise_2.0.1            bit_4.6.0               </code></pre>
 </div>
 </details>
 </div>

@@ -235,7 +235,7 @@ background-size: cover;
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">02-Oct-2026</p>
+        <p class="date">03-Oct-2026</p>
       </div>
     </div>
     
@@ -278,6 +278,22 @@ About:          This qmd file is used to render the .html file. To modify or
 <li>to combine single cell ATAC-seq data with single cell RNA-seq data to better infer cell types.</li>
 </ul>
 <p><br> <br></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Note on this workflow
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>This tutorial is a continuation of <a href="../scATAC/index.html">scATAC</a>. To run this on Pelle, setup and initialize R as you did in that exercise.</p>
+</div>
+</div>
+</div>
 <p>We begin by loading necessary libraries:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
@@ -288,10 +304,30 @@ About:          This qmd file is used to render the .html file. To modify or
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br> <br></p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>We assume that pbmc.Rda file you load was generated in the same file structure as you are running on now. That is the file structure you used in<a href="../scATAC/index.html">scATAC</a> when you saved the file. Otherwise things will not work since Seurat Objects with fragments from ATAC-seq are not self contained, they contain paths to files with fragments and their indexes.</p>
+</div>
+</div>
+</div>
+<p><br> <br></p>
 <section id="load-the-data-generated-in-the-scatac-seq-exercise" class="level3" data-number="1.1">
 <h3 data-number="1.1" class="anchored" data-anchor-id="load-the-data-generated-in-the-scatac-seq-exercise"><span class="header-section-number">1.1</span> Load the data generated in the scATAC-seq exercise</h3>
+<p>The code here use a pre-calculated version. If you already have your pbmc object loaded, coming from the previous tutorial, you should skip running this code chunk.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="at">file=</span><span class="st">"data/pbmc.Rda"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>lab.dir<span class="ot">=</span><span class="st">"/proj/epi2026/single_cell/scATAC_scRNA/"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="at">file=</span><span class="fu">paste0</span>(lab.dir, <span class="st">"data/pbmc.Rda"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 </section>
@@ -342,7 +378,7 @@ About:          This qmd file is used to render the .html file. To modify or
 <p><em>How well do you think this worked? Can you see if some cells types are missing or merged?</em></p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the pre-processed scRNA-seq data for PBMCs</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>pbmc_rna_v3 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/pbmc_10k_v3.rds"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>pbmc_rna_v3 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">paste0</span>(lab.dir,<span class="st">"data/pbmc_10k_v3.rds"</span>))</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>pbmc_rna <span class="ot">&lt;-</span> <span class="fu">UpdateSeuratObject</span>(pbmc_rna_v3)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Find anchors</span></span>
@@ -417,7 +453,7 @@ About:          This qmd file is used to render the .html file. To modify or
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(da_peaks)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the signal for the most differentially acessable region.</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the signal for the most differentially accessible regions.</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> <span class="fu">VlnPlot</span>(</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">object =</span> pbmc,</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">features =</span> <span class="fu">rownames</span>(da_peaks)[<span class="dv">1</span>],</span>
