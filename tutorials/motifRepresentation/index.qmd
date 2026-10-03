@@ -189,7 +189,7 @@ matchPWM(pwm, subject = refDNA, min.score = 10)
 
 ## Information content matrix
 
-The information content matrix (ICM) can additionally reflect which positions along the motif are more or less conserved. To have a better understanding of this, we need to first introduce some key concepts in information theory, a field established by Claude Shannon with his influential publication in 1948, entitled ["A Mathematical Theory of Communication"](https://doi.org/10.1002/j.1538-7305.1948.tb01338.x). We will largely borrow explanations from David McKay's book "Information Theory, Inference, and Learning Algorithms", which offers great explanations and deeper dives into the topic for those interested.
+The information content matrix (ICM) can additionally reflect which positions along the motif are more or less conserved. To have a better understanding of this, we need to first introduce some key concepts in information theory, a field established by Claude Shannon with his influential publication in 1948, entitled "A Mathematical Theory of Communication" [@Shannon1948Mathematical]. We will largely borrow explanations from David McKay's book "Information Theory, Inference, and Learning Algorithms", which offers great explanations and deeper dives into the topic for those interested.
 
 Let us consider a random variable $X$ with an outcome $x$. The **Shannon information content** of $x$ is defined as $h(x)=log_2\frac{1}{p(x)}$, where $p(x)$ is the probability of outcome $x$. It is measured in bits since we are using $log_2$, and reflects a measure of surprise from an outcome. For example, an outcome with probability of 1 is not very surprising and thus provides no information if observed: $log_2(1)=0$. Whereas an outcome with a very low probability is more surprising and provides more information were it to happen. For example, assume the following probabilities of observing the outcome of a random variable $X$: $p(x=0)=0.4$ and $p(x=1)=0.6$. You could imagine a bent coin with binary outcomes. The Shannon information content for outcome $x=0$ is $h(x=0)=log_2\frac{1}{p(x=0)}=log_2\frac{1}{0.4}\approx1.322$.
 
@@ -236,20 +236,19 @@ $$
 
 When $U=0$ (when one nucleotide has a probability of 1), $IC_{final}=2-0=2$ and you know the nucleotide with no uncertainty. This reflects a highly conserved nucleotide.
 
-Following our example motif, let us calculate $IC_{final}$ for each ßposition.
-
+Following our example motif, let us calculate $IC_{final}$ for each position.
 ```{r}
-# total information content (maximum uncertainty)
+## Total information content (maximum uncertainty)
 IC_total <- log2(4)
 IC_total
 
-# actual uncertainty per position
+## Actual uncertainty per position
 U <- -colSums(apply(X = ppm, MARGIN = 2, FUN = function(x){
   x*log2(x)
 }))
 U  
 
-# final information content per position
+## Final information content per position
 IC_final <- IC_total - U
 IC_final
 ```
@@ -257,17 +256,17 @@ IC_final
 Finally, to get the ICM where the height of each nulceotide (letter) shows the bits each nucleotide contributes, we will multiply the probability of each nucleotide by $IC_{final}$ per position.
 
 ```{r}
-# ICM
+## ICM
 icm <- sweep(x = ppm, MARGIN = 2, STATS = IC_final, FUN = "*")
 icm
 
-# create ICMatrix object to use the seqLogo function from TFBSTools
+## Create ICMatrix object to use the seqLogo function from TFBSTools
 icmatrix <- ICMatrix(ID = "MA1102.3", 
                      name = "CTCFL", 
                      profileMatrix = icm)
 icmatrix
 
-# draw motif sequence logo 
+## Draw motif sequence logo 
 seqLogo(icmatrix)
 
 ```
@@ -279,7 +278,7 @@ This is a useful way to visualize motifs, and get a sense of how conserved the s
 Now that we have a good understanding of the PWM and the other matrices, let us see how we can load a list of PWMs from Jaspar and what useful functions are at our disposal. We will extract the list of all vertebrate TFs.
 
 ```{r}
-# extract PFMs of vertebrate TFs from JASPAR2024
+## Extract PFMs of vertebrate TFs from JASPAR2024
 JASPAR2024 <- JASPAR2024()
 JASPARConnect <- RSQLite::dbConnect(RSQLite::SQLite(), db(JASPAR2024))
 pfmList <- TFBSTools::getMatrixSet(JASPARConnect, 
@@ -290,11 +289,11 @@ pfmList <- TFBSTools::getMatrixSet(JASPARConnect,
 pfmList
 pfmList[[1]]
 
-# we can convert the PFMs to PWMs
+## We can convert the PFMs to PWMs
 pwmList <- toPWM(pfmList)
 pwmList[[1]]@profileMatrix
 
-# Alternatively, we can directly load the PWMs
+## Alternatively, we can directly load the PWMs
 pwmList <- TFBSTools::getMatrixSet(JASPARConnect, 
                                    opts = list(tax_group = "vertebrates", 
                                                collection="CORE", 
@@ -302,42 +301,43 @@ pwmList <- TFBSTools::getMatrixSet(JASPARConnect,
 )
 pwmList[[1]]@profileMatrix
 
-# pwmList is a PWMatrixList object
-# we can look at the structure and information available for the first motif
+## pwmList is a PWMatrixList object
+## ... We can look at the structure and information available for the 
+## ... first motif.
 str(pwmList[[1]])
 
-# we can access some entries with the functions shown below on an example
-# PWMatrix, but they can also be used on the PWMatrixList
+## we can access some entries with the functions shown below on an example
+## ... PWMatrix, but they can also be used on the PWMatrixList
 motif <- pwmList[[1]]
-# ... motif name
+## ... motif name
 name(motif)
-# ... motif ID
+## ... motif ID
 ID(motif)
-# ... used background probabilities
+## ... used background probabilities
 bg(motif)
-# ... motif tags
+## ... motif tags
 tags(motif)
 
-# disconnect Db
+## Disconnect Db
 dbDisconnect(JASPARConnect)
 ```
 
 As we have seen, PWMs can be used to scan for potential TFBSs against a reference sequence. To illustrate this, let us use some of the PWMs we have loaded from Jaspar above, to scan against hits at the gene promoters from the UCSC mouse reference genome. We will use the `findMotifHits` function from the `monaLisa` package to scan for motif hits. This function uses `Biostrings::matchPWM` internally to scan for matches, but additionally allows for the `subject` argument to accept `DNAStringSet` or `GRanges` objects. It also allows for parallelization across PWMs with the `BPPARAM` argument.
 
 ```{r}
-# get promoters as GRanges object
+## Get promoters as GRanges object
 promoters <- trim(promoters(TxDb.Mmusculus.UCSC.mm39.knownGene,
                        upstream = 1000, downstream = 500))
 
-# extract promoter sequences
+## Extract promoter sequences
 promoterSeqs <- getSeq(BSgenome.Mmusculus.UCSC.mm39, promoters)
 promoterSeqs
 
-# choose first 5 PWM as an example
+## Choose first 5 PWM as an example
 pwms <- pwmList[1:5]
 name(pwms)
 
-# scan for motif hits with 4 cores
+## Scan for motif hits with 4 cores
 hits <- findMotifHits(query = pwms,
                       subject = promoterSeqs,
                       min.score = 10.0,
@@ -345,11 +345,10 @@ hits <- findMotifHits(query = pwms,
                       BPPARAM = BiocParallel::MulticoreParam(4))
 hits
 
-# we can summarize the number of predicted hits per promoter in matrix format
+## We can summarize the number of predicted hits per promoter in matrix format
 hitsMatrix <- table(factor(seqnames(hits), levels = names(promoterSeqs)),
                     factor(hits$pwmname, levels = name(pwms)))
 head(hitsMatrix)
-
 ```
 
 It is good to remember that these are predicted TF binding sites. By making use of additionally available information, like ATAC-seq data, and focusing on accessible regions of the DNA, one could reduce the number of false hits. Ultimately, to find true binding sites for a particular TF, experiments such as ChIP-seq are necessary. Still, as we will see in the section to come, predicted binding sites can be useful to look for TFs that are consistently and robustly enriched. These are TFs that could be playing key roles in our biological system of interest and could be followed up with functional experiments to confirm our findings.
@@ -364,15 +363,13 @@ material:
     Algorithms" is a great resource with introductions to key concepts
     in information theory, as well as deeper dives.
 
--   The `universalmotif` [Bioconductor
-    package](https://bioconductor.org/packages/universalmotif/) contains
+-   The [universalmotif package](https://bioconductor.org/packages/universalmotif/) contains
     additional vignettes, including
     [explanations](%3Chttps://bioconductor.org/packages/release/bioc/vignettes/universalmotif/inst/doc/IntroductionToSequenceMotifs.pdf)
     on the discussed motif matrices and how to derive them, as well as
     additional material.
 
--   The `TFBSTools` [Bioconductor
-    package](https://bioconductor.org/packages/TFBSTools/) vignette
+-   The [TFBSTools package](https://bioconductor.org/packages/TFBSTools/) vignette
     found
     [here](https://bioconductor.org/packages/release/bioc/vignettes/TFBSTools/inst/doc/TFBSTools.html).
 
