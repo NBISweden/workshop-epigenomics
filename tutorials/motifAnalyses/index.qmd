@@ -210,8 +210,6 @@ The p-value for the enrichment test is calculated using Fisher's exact test. We 
 | **background** | c           | d              |
 
 ```{r}
-#| label: problem
-
 ## Motif enrichment using 4 cores
 se <- calcBinnedMotifEnrR(seqs = seqs, 
                           bins = bins, 
@@ -239,7 +237,6 @@ Let's visualize the results of the enrichment analysis. We can use the plot func
 ```{r}
 #| fig-width: 8
 #| fig-height: 8
-#| label: problem1
 
 ## Select strongly enriched motifs
 sel <- apply(assay(se, "negLog10Padj"), 1, 
@@ -277,27 +274,46 @@ Sometimes one may want to perform the binned enrichment analysis in a more unbia
 
 ## Binned kmer enrichment (with 4 cores)
 seKmer <-  calcBinnedKmerEnr(seqs = seqs, bins = bins, kmerLen = 6, 
-                          includeRevComp = TRUE, BPPARAM = MulticoreParam(4))
+                          includeRevComp = TRUE, BPPARAM = MulticoreParam(2))
 
+# ## Enriched kmers
+# selKmer <- apply(assay(seKmer, "negLog10Padj"), 1, 
+#                function(x) max(abs(x), 0, na.rm = TRUE)) > 4
+# sum(selKmer)
+# seKmerSel <- seKmer[selKmer, ]
+# 
+# ## Calculate similarity between enriched kmers and enriched motifs
+# pfmSel <- rowData(seSel)$motif.pfm
+# sims <- motifKmerSimilarity(x = pfmSel,
+#                             kmers = rownames(seKmerSel),
+#                             includeRevComp = TRUE)
+# dim(sims)
+
+```
+
+```{r}
 ## Enriched kmers
 selKmer <- apply(assay(seKmer, "negLog10Padj"), 1, 
                function(x) max(abs(x), 0, na.rm = TRUE)) > 4
 sum(selKmer)
 seKmerSel <- seKmer[selKmer, ]
 
+```
+
+```{r}
 ## Calculate similarity between enriched kmers and enriched motifs
 pfmSel <- rowData(seSel)$motif.pfm
 sims <- motifKmerSimilarity(x = pfmSel,
                             kmers = rownames(seKmerSel),
                             includeRevComp = TRUE)
 dim(sims)
+
 ```
 
 
 ```{r}
 #| fig-width: 10
 #| fig-height: 8
-#| label: problem3
 
 ## Plot kmers and motif similarity
 maxwidth <- max(sapply(TFBSTools::Matrix(pfmSel), ncol))
