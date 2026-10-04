@@ -60,10 +60,10 @@ In this tutorial we will be focusing on the downstream analysis of bisulfite seq
 If you are already working in UPPMAX and your interactive session from the Array tutorial is still open then you can continue this exercise in that one. Otherwise connect to Pelle, start an interactive session and set up the R environment as you did this morning.
 
 
-There are three options for you to select. This exercise can be set up
-to run on UPPMAX, and so we provide two ways to set up the R environment within
+This exercise can be set up
+to run on UPPMAX, and so we provide Option A to set up the R environment within
 UPPMAX. Alternatively, if you prefer to work locally in your laptop then
-you can follow Option C. These options are described in detail
+you can follow Option B. These options are described in detail
 below.
 
 
@@ -128,64 +128,9 @@ into the Rstudio terminal or R terminal and pressing Enter.
 
 \
 
-::: callout-tip
-## Option B - UPPMAX Rserver container
-
-We have provided a containerized environment consisting of R, Rstudio
-and the necessary packages for this session. This means the software can
-easily run within the container on almost any computer or server,
-greatly simplifying software installation and management.  A benefit of using it here is that Rstudio runs a whole lot faster using
-the container approach. However, to access it from UPPMAX, a few more
-steps are necessary. 
-
-```{=html}
-<details>
-<summary>Show steps</summary>
-```
-
-
-Follow the instruction in @nte-uppaxsetwd to set your working directory.
-Execute the following commands from a terminal in Pelle.
-
-```{bash}
-# Run the startup script; this will start the container and run Rstudio
-sh /sw/courses/epigenomics/DNAmethylation/startup_script.sh
-
-```
-
-You should see something like this:
-
-```{bash}
-
-1. SSH tunnel from your workstation using the following command:
-
-      ssh -N -L 8787::pelle1.uppmax.uu.se:41535 louella@pelle.uppmax.uu.se
-      
-      and point your web browser to http://localhost:8787
-
-2. log in to RStudio Server using the following credentials:
-
-      user: louella
-      password: epi2021
-
-
-```
-
-Now, open a second terminal in your laptop and run your ssh command from 1. Then
-open your web browser (Safari, Chrome, ...) and go to
-http://localhost:8787. Here, fill in your user and password as in 2.
-and Rstudio will start.
-
-Next, run the R commands by copying them from this website
-into the Rstudio terminal and pressing Enter.
-
-</details>
-:::
-
-\
 
 ::: callout-tip
-## Option C - Local Renv Setup
+## Option B - Local Renv Setup
 
 ```{=html}
 <details>
@@ -259,7 +204,7 @@ For Option A only:
 
 ```
 
-For Option C only:
+For Option B only:
 ```{bash}
 
 # make sure the library paths are correct (should be pointing to the local renv folder)
@@ -295,10 +240,10 @@ The datasets have been uploaded to UPPMAX prior to the workshop, so you just nee
 ```{r}
 # Define the list containing the bismark coverage files.
 file.list <- list(
-   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P6_1.bismark.cov.gz",
-   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P6_4.bismark.cov.gz",
-   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P8_3.bismark.cov.gz",
-   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P8_6.bismark.cov.gz"
+   "/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P6_1.bismark.cov.gz",
+   "/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P6_4.bismark.cov.gz",
+   "/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P8_3.bismark.cov.gz",
+   "/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P8_6.bismark.cov.gz"
 )
 
 ```
@@ -324,10 +269,33 @@ myobj <- methRead(
 )
 
 # check number of samples
-myobj
+#myobj
+
+#methylRawList object with 4 methylRaw objects
+
+#methylRaw object with 1967671 rows
+#--------------
+#   chr   start     end strand coverage numCs numTs
+#1 chr6 3052415 3052415      *       57    57     0
+#2 chr6 3052434 3052434      *       57    54     3
+#3 chr6 3052466 3052466      *      128   110    18
+#4 chr6 3052510 3052510      *      129   129     0
+#5 chr6 3052521 3052521      *      127   124     3
+#6 chr6 3058831 3058831      *       18    18     0
+--------------
+#sample.id: Luminal_1 
+#assembly: mm10 
+#context: CpG 
+#resolution: base 
+
 
 # What type of data is stored here?
+#head(myobj[[1]])
+
+```
+```{r}
 head(myobj[[1]])
+
 
 ```
 
@@ -575,7 +543,7 @@ To help with the biological interpretation of the data, we will annotate the dif
 # First load the annotation data; i.e the coordinates of promoters, TSS, intron and exons
 
 # !!! change the file path if you are working in your local machine with a local copy of this BED file
-refseq_anot <- readTranscriptFeatures("/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/mm10.refseq.genes.bed")
+refseq_anot <- readTranscriptFeatures("/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/mm10.refseq.genes.bed")
 
 # Annotate hypermethylated CpGs ("target") with promoter/exon/intron
 # information ("feature"). This function operates on GRanges objects, so we # first coerce the methylKit object to GRanges.
@@ -612,7 +580,7 @@ Similarly, it is possible to annotate the differentially methylated CpGs with Cp
 
 # !!! change the file path if you are working in your local machine with a local copy of this BED file
 cpg_anot <- readFeatureFlank(
-   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/mm10.cpg.bed",
+   "/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/mm10.cpg.bed",
    feature.flank.name = c("CpGi", "shores"),
    flank = 2000
 )
