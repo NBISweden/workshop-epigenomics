@@ -10,8 +10,116 @@ format: html
 
 Please make sure that you have followed the pre-course instructions before continuing with the instructions here.
 
+## Structuring your folders and working directories
+
+Regardless of what machine you are working on it is good practice to have a structured way of working. We have several different topics covered (e.g. ATAC-seq, ChIP-seq etc) with several labs or tutorials per topic. When working on a specific tutorial, decide on a working directory or place where all your files for that tutorial will go. This way each lives in its own folder, there is never any mix-up with files or sub-folder (sometimes of the same name as in another tutorial) and you can always refer back to a tutorial without replacing any content. For example, if you are following the "Introduction to ChIP-seq Analyses" tutorial, choose your working directory and work in that folder.
+
+```{r}
+#| eval: false
+
+## Decide on a working directory and create it if it doesn't exist
+## .. with dir.create()
+dir <- "/Users/yourUsername/epigenomicsTutorials/introToChIP"
+
+## Set the working directory (for this tutorial)
+setwd(dir)
+
+## Make sure the qmd file for this tutorial is copied there and follow the lab
+```
+
+
+If you are working on your local machine and have cloned the GitHub repository of the course, you can use the folder structures present in the cloned repo, and navigate to the folder of interest and work from there. For example, to work on the "Introduction to ChIP-seq Analyses" tutorial, you would set the working directory to "tutorials/ChIP" where the `qmd` file is already present. 
+
+When it comes to what machine you wish to work on, you have two options: on the HPC from UPPMAX, Pelle, or on your own computer. Note that some tutorials or parts of them may only be possible to run on Pelle, so follow the teachers' instructions each day and ask if anything is unclear. 
+
+## Working on your local machine
+
+If you are working from your local machine or computer, you can clone the GitHub repository of the workshop to have access all the tutorials at their current state. Alternatively, you can follow the rendered tutorials on the course website and copy the code as you work interactively.
+
+To clone the repository, go to the terminal, navigate to the directory where you want the workshop to live and do:
+```{bash}
+#| eval: false
+
+git clone https://github.com/NBISweden/workshop-epigenomics.git
+```
+
+All the `qmd` files from the tutorials live in the `tutorials` folder, and the presentations inside the `presentations` folder. You can ignore the other files and folder as you won't be needing them.
+
+::: {.callout-note}
+## R version
+Please make sure you have `R-4.6.1` and RStudio installed.
+:::
+
+
+### Option A: Installing R packages with `renv`
+
+::: {.callout-note}
+## Time consuming
+Note that this way of setting up can take ~40 min to install all R packages. If you need to immediately start a tutorial and want to install the packages for that tutorial go to the next section (option B). 
+:::
+
+
+The workshop has been set up with `renv`. This means that all used R packages are inside the `renv.lock` file in the root of the cloned repository. This file can be used to install the same R packages used in the tutorials. 
+
+1. From RStudio, create a "project" for the workshop repo you just cloned. Go to `File > New Project > Existing > Directory` and add the workshop path to your installed repository called workshop-epigenomics and click 'Create Project'. `renv` should recognize that there is a lock file and activate. If you need to install `renv` please do so with `install.packages("renv")`.
+
+2. From your project, check that `renv` is active:
+```{r}
+#| eval: false
+
+## Make sure you are in the workshop-epigenomics folder
+getwd()
+
+## Check status
+renv::status()
+
+## make sure the library paths are correct (should be pointing to the local 
+## ... renv folder in your cloned workshop-epigenomics folder)
+.libPaths()
+```
+
+3. Download the R packages specified in the lock file. Note that this takes ~40 min so bear this in mind when setting up with the `renv` option. 
+
+```{r}
+#| eval: false
+
+## Download the R packages specified in the lock file
+renv::restore()
+```
+
+
+### Option B: Installing R packages with `BiocManager`
+
+If you need to immediately start a tutorial it may be faster to install the packages needed for the tutorial yourself. They are always listed at the top of each tutorial. You can still set up with `renv` later. It is important to use the right bioconductor release here (3.23).
+
+For example, to install the packages needed for the `motifRepresentation` tutorial, do as follows:
+```{r}
+#| eval: false
+
+## Packages
+pkgs <- c("TFBSTools", 
+          "Biostrings", 
+          "JASPAR2024", 
+          "RSQLite", 
+          "BSgenome.Mmusculus.UCSC.mm39", 
+          "TxDb.Mmusculus.UCSC.mm39.knownGene", 
+          "GenomicRanges", 
+          "monaLisa")
+
+## Install packages
+BiocManager::install(pkgs, version = "3.23")
+```
+
+
+::: {.callout-note}
+## Bioconductor release
+It is important that you make sure you are using bioconductor release 3.23 to install the packages. That is why we install all packages with `BiocManager::install()` where we can specify the release with `version = "3.23"`.
+:::
+
 
 ## Working on Pelle (UPPMAX HPC)
+
+### Booking an interactive session
 
 We have booked 5 cores on Pelle per course participant. To run the tutorial in the interactive mode log on to Pelle and run interactive command:
 
@@ -24,7 +132,7 @@ ssh -Y <username>@pelle.uppmax.uu.se
 While logged to Pelle, book the interactive session:
 ```{r}
 #| eval: false
-interactive -A uppmax2025-2-309 -p core -n 5 -t 08:00:00
+interactive -A uppmax2026-1-197 -p pelle -n 5 -t 08:00:00
 ```
 
 This command gives you access to 5 cores for eight hours or until 17:00, whichever comes first. Please make sure you do it only ONCE per day, as by repeating this command you will use up resources reserved for others.
@@ -45,12 +153,25 @@ ssh -Y <nodename>
 
 If you lose connection to the server during a tutorial, please connect again to Pelle and do `ssh -Y <nodename>` again. You will reconnect to your set of cores.
 
+### Working with R/Rstudio
 
-## Working on your local machine
+As mentioned, we are using `R-4.6.1`. Once you have booked your interactive session, you can load the needed modules as follows:
+```{r}
+#| eval: false
 
-Instructions to follow.
+## Load the needed modules
+module load R/4.6.1-gfbf-2026.1 GSL/2.8-GCC-15.2.0 HDF5/2.1.1-gompi-2026.1 ImageMagick/7.1.2-26-GCCcore-15.2.0 GLPK/5.0-GCCcore-15.2.0 RStudio
 
-## Structuring your folders and working directories
+## Start RStudio
+rstudio &
+```
 
-Instructions and recommendations to follow here.
+
+From RStudio, you can add the path mentioned below to your library path. It contains all the R packages from the course's `renv` setup. The R packages have been installed there for you. Be mindful of additional paths for R packages that the teachers may mention for their tutorials. They can be added in the same way.
+```{r}
+#| eval: false
+
+## Add installed R packages (via renv) to your library path
+.libPaths(c("/proj/uppmax2026-1-197/renvLibs/renv/library/linux-rocky-9.8/R-4.6/x86_64-pc-linux-gnu/", .libPaths()))
+```
 
