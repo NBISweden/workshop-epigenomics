@@ -44,7 +44,16 @@ Other SSH clients and X-servers for MacOS and Windows are described [here](https
 
 ### GUI desktop using ThinLinc locally
 
-You can also connect to Pelle via a graphical remote desktop using a local ThinLinc client on your laptop. Thinlinc is useful if you need to view images or documents in GUI programs without having to first download the image/document to your own computer first. Since it is using graphics, it will require you to have an internet connection that is good and stable. Please install [ThinLinc](https://www.cendio.com/thinlinc/download/) to be able to access UPPMAX in this manner.
+You can also connect to Pelle via a graphical remote desktop using a local ThinLinc client on your laptop. ThinLinc is useful if you need to view images or documents in GUI programs without having to first download the image/document to your own computer first. Since it is using graphics, it will require you to have an internet connection that is good and stable. Please install [ThinLinc](https://www.cendio.com/thinlinc/download/) to be able to access UPPMAX in this manner.
+
+
+Start the ThinLinc app and put in the following required information:
+
+- set the Server name to `pelle-gui.uppmax.uu.se`
+- set the Username to your UPPMAX username
+- set the Password to your UPPMAX password
+
+
 
 ### GUI desktop using ThinLinc in a web browser
 
@@ -53,7 +62,8 @@ Lastly, you can connect to Pelle using a remote desktop environment via a web br
 
 ### Additional instructions/resources
 
-This [tutorial](https://docs.uppmax.uu.se/getting_started/login_pelle/) will guide you to connect to Pelle using the three methods as described above.  For Windows users with MobaXterm, please follow this [instruction](https://docs.uppmax.uu.se/software/ssh_client/#using-ssh-with-different-terminals-that-allow-for-graphics).
+This [tutorial](https://docs.uppmax.uu.se/getting_started/login_pelle/) will guide you to connect to Pelle using the three methods as described above.  
+For Windows users with MobaXterm, please follow this [instruction](https://docs.uppmax.uu.se/software/ssh_client/#using-ssh-with-different-terminals-that-allow-for-graphics).
 
 Some useful tutorials:
 
