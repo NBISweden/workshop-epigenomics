@@ -42,4 +42,5 @@ Tutorials in this module:
 
 Additional applicable tutorials:
 
-* [TF motifs](../../tutorials/TFs/representingMotifs.html)
+* [TF or motif representation](../../tutorials/motifRepresentation/index.html)
+* [TF analyses](../../tutorials/motifAnalyses/index.html)

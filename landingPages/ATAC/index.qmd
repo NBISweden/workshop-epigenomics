@@ -131,9 +131,9 @@ Tutorials in this module:
 
 Additional ATAC-seq related tutorials:
 
-* [TF motifs](../../tutorials/TFs/representingMotifs.html)
+* [TF or motif representation](../../tutorials/motifRepresentation/index.html)
 
-* [Identifying Relevant TFs](../../tutorials/TFs/representingMotifs.html)
+* [TF analyses](../../tutorials/motifAnalyses/index.html)
 
 * [TF footprinting](../../tutorials/TFftprnt/index.html)
 
