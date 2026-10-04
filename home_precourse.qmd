@@ -91,7 +91,7 @@ To be able to work from your local machine, please make sure you have the follow
 
 ### Cloning the repo and installing the needed `R` packages
 
-More instructions will follow here on how to clone the GitHub repo of the workshop and install all needed R packages using `renv`.
+More instructions on setting up for the tutorials can be found in the [Tutorial Setup](home_tutorialsetup.html) tab.
 
 
 ## Additional (optional) reading material to help you prepare
