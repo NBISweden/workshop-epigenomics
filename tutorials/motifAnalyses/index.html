@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dania Machlab">
+
+<title>Motif Analyses with monaLisa</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../assets/favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-1d7419975391f8d34029e70c3403f21d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-7d563484551c2eb5581e6552524d6514.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background-image: url(../../assets/images/banner.webp);
+background-size: cover;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&amp;family=Nunito:ital,wght@0,200..700;1,200..700&amp;display=swap" rel="stylesheet">
+  
+
+
+<meta property="og:title" content="Motif Analyses with monaLisa">
+<meta property="og:description" content="NBIS Workshop">
+<meta property="og:image" content="https://nbisweden.github.io/workshop-epigenomics/assets/images/featured.webp">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <div id="quarto-announcement" data-announcement-id="121998c1b8fb2434c8da5f4373f30083" class="alert alert-primary hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>This website is still under construction. Workshop materials will be available during the workshop. Last year’s materials can be found <a href="https://nbis-workshop-epigenomics.readthedocs.io/en/latest/">here</a>.</p>
+</div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../assets/logos/nbis-scilifelab.webp" alt="nbis scilifelab logo" class="navbar-logo light-content">
+    <img src="../../assets/logos/nbis-scilifelab.webp" alt="nbis scilifelab logo" class="navbar-logo dark-content">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../home_schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../home_contents.html"> 
+<span class="menu-text">Contents</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../home_syllabus.html"> 
+<span class="menu-text">Syllabus</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../home_precourse.html"> 
+<span class="menu-text">Precourse</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutorials</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-tutorials">    
+        <li>
+    <a class="dropdown-item" href="../../landingPages/DNAme/index.html">
+ <span class="dropdown-text">DNA methylation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../landingPages/ATAC/index.html">
+ <span class="dropdown-text">ATACseq</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../landingPages/ChIP/index.html">
+ <span class="dropdown-text">ChIPseq</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../landingPages/TF/index.html">
+ <span class="dropdown-text">TFs</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../landingPages/scATAC/index.html">
+ <span class="dropdown-text">Single Cell ATACseq</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../home_faq.html"> 
+<span class="menu-text">FAQ</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../home_about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/NBISweden/workshop-epigenomics"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Motif Analyses with monaLisa</h1>
+            <p class="subtitle lead">NBIS Workshop</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Dania Machlab </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">04-Oct-2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">1</span> Overview</a>
+  <ul>
+  <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link" data-scroll-target="#learning-outcomes"><span class="header-section-number">1.1</span> Learning outcomes</a></li>
+  <li><a href="#libraries" id="toc-libraries" class="nav-link" data-scroll-target="#libraries"><span class="header-section-number">1.2</span> Libraries</a></li>
+  <li><a href="#the-dataset" id="toc-the-dataset" class="nav-link" data-scroll-target="#the-dataset"><span class="header-section-number">1.3</span> The Dataset</a></li>
+  </ul></li>
+  <li><a href="#binned-motif-enrichment-analysis" id="toc-binned-motif-enrichment-analysis" class="nav-link" data-scroll-target="#binned-motif-enrichment-analysis"><span class="header-section-number">2</span> Binned motif enrichment analysis</a>
+  <ul>
+  <li><a href="#bin-by-log-fold-changes-in-accessibility" id="toc-bin-by-log-fold-changes-in-accessibility" class="nav-link" data-scroll-target="#bin-by-log-fold-changes-in-accessibility"><span class="header-section-number">2.1</span> Bin by log-fold changes in accessibility</a></li>
+  <li><a href="#get-pwms-from-jaspar" id="toc-get-pwms-from-jaspar" class="nav-link" data-scroll-target="#get-pwms-from-jaspar"><span class="header-section-number">2.2</span> Get PWMs from Jaspar</a></li>
+  <li><a href="#run-binned-enrichment" id="toc-run-binned-enrichment" class="nav-link" data-scroll-target="#run-binned-enrichment"><span class="header-section-number">2.3</span> Run binned enrichment</a></li>
+  <li><a href="#binned-k-mer-enrichment-analysis" id="toc-binned-k-mer-enrichment-analysis" class="nav-link" data-scroll-target="#binned-k-mer-enrichment-analysis"><span class="header-section-number">2.4</span> Binned k-mer enrichment analysis</a></li>
+  </ul></li>
+  <li><a href="#regression-based-analysis" id="toc-regression-based-analysis" class="nav-link" data-scroll-target="#regression-based-analysis"><span class="header-section-number">3</span> Regression-based analysis</a></li>
+  <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources"><span class="header-section-number">4</span> Additional resources</a></li>
+  <li><a href="#session" id="toc-session" class="nav-link" data-scroll-target="#session"><span class="header-section-number">5</span> Session</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+
+<section id="overview" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="overview"><span class="header-section-number">1</span> Overview</h2>
+<p>In the previous lab we have seen how transcription factor binding sites (TFBSs) or motifs can be represented and visualized in matrix form, how the position weight matrix (PWM) can be used to scan for motif hits against a reference sequence, for example like the reference genome, and how these matrices can be retrieved from public databases like <a href="https://jaspar.elixir.no/download/data/2024/sites/MA1102.3.sites">Jaspar</a>.</p>
+<p>Now we will make use of these functionalities and use additional tools to enrich or select for TFs that are likely to be key players in experimental differences we observe between different conditions. As mentioned, the effect of TF binding can be indirectly observed via associated changes in transcription, chromatin accessibility, DNA methylation and histone modifications. Given such data types, one may for example pose the question: which TFs could be explaining the observed changes in accessibility we see? To address such questions, we will be using the Bioconductor package <a href="https://bioconductor.org/packages/monaLisa/">monaLisa</a>, short for <strong>mo</strong>tif a<strong>na</strong>lysis with <strong>Lisa</strong>, being inspired by her famous father <a href="http://homer.ucsd.edu/homer/motif/">Homer</a>.</p>
+<section id="learning-outcomes" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="learning-outcomes"><span class="header-section-number">1.1</span> Learning outcomes</h3>
+<ul>
+<li>Be aware of potential sequence composition biases before motif enrichment analysis.</li>
+<li>Perfrom binned motif enrichment analysis and be able to interpret the results.</li>
+<li>Select motifs via the regression framework.</li>
+<li>Understand the nuances and differences between both approaches.</li>
+</ul>
+</section>
+<section id="libraries" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="libraries"><span class="header-section-number">1.2</span> Libraries</h3>
+<p>We start by loading the needed packages.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(monaLisa)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(BiocParallel)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(ComplexHeatmap)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(circlize)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(GenomicRanges)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(BSgenome.Mmusculus.UCSC.mm39)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(JASPAR2024)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(TFBSTools)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(SummarizedExperiment)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(RSQLite)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(GenomeInfoDb)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="the-dataset" class="level3" data-number="1.3">
+<h3 data-number="1.3" class="anchored" data-anchor-id="the-dataset"><span class="header-section-number">1.3</span> The Dataset</h3>
+<p>We give a quick recap on the dataset we are dealing with and which was used in the ATAC-seq tutorials: When CD8+ T-cells encounter antigens they expand and differentiate into effector cells, undergoing marked changes on the chromatin and gene expression levels. <span class="citation" data-cites="Tsao2022Batf">Tsao et al. (<a href="#ref-Tsao2022Batf" role="doc-biblioref">2022</a>)</span> investigated how these changes depend on the basic leucine zipper ATF-like transcription factor Batf. To this end, they generated inducible Batf conditional knock out (cKO) CD8+ T-cells derived from the P14 T-cell receptor transgenic mouse. The Batf cKO P14 CD8+ T-cells were transferred to recipient mice, which were then infected with the lymphocytic choriomeningitis virus to drive the CD8+ T-cells into differentiation to effector cells. These cells were sorted and collected for ATAC-seq. Here we use this dataset to look at the differences in accessibility between <code>Batf-cKO</code> and <code>Wt</code> and ask the question, which TFs could explain these observed changes in accessibility?</p>
+<p>We start by loading in the <code>RDS</code> file called <code>FiltPeaks.DA.TMM.annot.rds</code> which was generated in the ATAC-seq tutorials. This is a <code>GRanges</code> object containing the annotated merged peak regions, as well as log-fold changes in accessibility for <code>Batf-cKO</code> vs <code>Wt</code>. We will subset the enhancer peaks which we define as being at least 1kb away from any TSS. We will rely on the annotations column to extract these regions. This includes the regions called “Promoter (1-2kb)”, “Promoter (2-3kb)” and “Distal Intergenic”.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Downloading the data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you have run the exercises and produced the <code>FiltPeaks.DA.TMM.annot.rds</code> object, you may read that file in. Alternatively, you can download the <code>RDS</code> file we need from <code>Pelle</code> as follows. Open a terminal and navigate to your working directory (this is important) and then type in:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Download the RDS file. Replace 'username' with your actual username</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> data</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> username@pelle.uppmax.uu.se:<span class="st">'/proj/uppmax2026-1-197/ATAC/atacseq_proc/results/DA/objects/FiltPeaks.DA.TMM.annot.rds'</span> data/ </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p>Let’s read in this file.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Read in the GRanges object </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>gr <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/FiltPeaks.DA.TMM.annot.rds"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Fix the chr sanmes to match UCSC style</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">seqlevels</span>(gr) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"chr"</span>, <span class="fu">seqlevels</span>(gr))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>gr</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>GRanges object with 64900 ranges and 13 metadata columns:
+        seqnames              ranges strand |             peakID        logFC
+           &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |        &lt;character&gt;    &lt;numeric&gt;
+      1    chr17   66268427-66269247      * | merged_peaks_28038     -1.61077
+      2     chr6 122504236-122505014      * | merged_peaks_51767     -1.50849
+      3     chr1 155076669-155077704      * |  merged_peaks_2997     -1.51788
+      4     chr1   95195320-95196614      * |  merged_peaks_1873     -1.15764
+      5     chr2 162944874-162945676      * | merged_peaks_36974     -1.14102
+    ...      ...                 ...    ... .                ...          ...
+  64896     chr5 108776489-108778144      * | merged_peaks_47263  4.47468e-06
+  64897    chr12 112545059-112545410      * | merged_peaks_15084 -3.28064e-05
+  64898     chrX 157942836-157943040      * | merged_peaks_64640 -1.50181e-05
+  64899     chr8 124532298-124532993      * | merged_peaks_59589 -5.77357e-06
+  64900     chr2 127180736-127181714      * | merged_peaks_35900  3.16729e-06
+                FDR        gc             annotation   geneChr geneStart
+          &lt;numeric&gt; &lt;numeric&gt;            &lt;character&gt; &lt;integer&gt; &lt;integer&gt;
+      1 1.11065e-85  0.436054      Distal Intergenic        17  66261129
+      2 1.08402e-82  0.480103 Intron (ENSMUST00000..         6 122499458
+      3 2.05814e-77  0.500965                 3' UTR         1 155070767
+      4 6.69054e-69  0.461776      Distal Intergenic         1  95183688
+      5 3.50249e-68  0.503113      Distal Intergenic         2 162934819
+    ...         ...       ...                    ...       ...       ...
+  64896     0.99997  0.589372       Promoter (&lt;=1kb)         5 108777636
+  64897     0.99997  0.542614      Distal Intergenic        12 112555218
+  64898     0.99997  0.487805      Distal Intergenic        20 157868216
+  64899     0.99997  0.652299       Promoter (&lt;=1kb)         8 124532724
+  64900     0.99997  0.526047       Promoter (&lt;=1kb)         2 127180559
+          geneEnd geneStrand             geneId       transcriptId
+        &lt;integer&gt;  &lt;integer&gt;        &lt;character&gt;        &lt;character&gt;
+      1  66265392          1 ENSMUSG00000139744 ENSMUST00000355127
+      2 122505594          1 ENSMUSG00000030116 ENSMUST00000126357
+      3 155077993          1 ENSMUSG00000026470 ENSMUST00000194158
+      4  95184535          2 ENSMUSG00000099592 ENSMUST00000190584
+      5 162934943          1 ENSMUSG00002076785 ENSMUST00020181897
+    ...       ...        ...                ...                ...
+  64896 108791896          1 ENSMUSG00000013495 ENSMUST00000146207
+  64897 112581391          1 ENSMUSG00000037679 ENSMUST00000101029
+  64898 157929646          2 ENSMUSG00000138115 ENSMUST00000345594
+  64899 124562026          1 ENSMUSG00000019478 ENSMUST00000118535
+  64900 127199571          1 ENSMUSG00000050468 ENSMUST00000059839
+        external_gene_name distanceToTSS
+               &lt;character&gt;     &lt;numeric&gt;
+      1            Gm65735          7298
+      2              Mfap5          4778
+      3               Stx6          5902
+      4             Gm5264        -10785
+      5            Gm56299         10055
+    ...                ...           ...
+  64896            Tmem175             0
+  64897               Inf2         -9808
+  64898            Gm61902        -13190
+  64899              Rab4a             0
+  64900               Astl           177
+  -------
+  seqinfo: 21 sequences from an unspecified genome; no seqlengths</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Keep enhancers at least 1kb away from any TSS and not in any gene</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>keep <span class="ot">&lt;-</span> gr<span class="sc">$</span>annotation <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Distal Intergenic"</span>, <span class="st">"Promoter (1-2kb)"</span>, <span class="st">"Promoter (2-3kb)"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>gr <span class="ot">&lt;-</span> gr[keep]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(gr<span class="sc">$</span>annotation)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Distal Intergenic  Promoter (1-2kb)  Promoter (2-3kb) 
+             9701              5633              4469 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Subset autosomal enhancers</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>keep <span class="ot">&lt;-</span> <span class="fu">seqnames</span>(gr) <span class="sc">%in%</span> <span class="fu">paste0</span>(<span class="st">"chr"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">19</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>gr <span class="ot">&lt;-</span> gr[keep]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(gr<span class="sc">$</span>annotation)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Distal Intergenic  Promoter (1-2kb)  Promoter (2-3kb) 
+             9392              5550              4419 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Fix enhancer names</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(gr) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"e_"</span>, <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(gr))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>GRanges object with 6 ranges and 13 metadata columns:
+      seqnames              ranges strand |             peakID     logFC
+         &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |        &lt;character&gt; &lt;numeric&gt;
+  e_1    chr17   66268427-66269247      * | merged_peaks_28038  -1.61077
+  e_2     chr1   95195320-95196614      * |  merged_peaks_1873  -1.15764
+  e_3     chr2 162944874-162945676      * | merged_peaks_36974  -1.14102
+  e_4    chr19   17241967-17242651      * | merged_peaks_31308  -1.36160
+  e_5     chr6 122509800-122510274      * | merged_peaks_51769  -1.10413
+  e_6    chr17   87180093-87180462      * | merged_peaks_28593  -1.80282
+              FDR        gc        annotation   geneChr geneStart   geneEnd
+        &lt;numeric&gt; &lt;numeric&gt;       &lt;character&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt;
+  e_1 1.11065e-85  0.436054 Distal Intergenic        17  66261129  66265392
+  e_2 6.69054e-69  0.461776 Distal Intergenic         1  95183688  95184535
+  e_3 3.50249e-68  0.503113 Distal Intergenic         2 162934819 162934943
+  e_4 1.86157e-52  0.436496  Promoter (1-2kb)        19  17243348  17243702
+  e_5 2.66334e-43  0.475789 Distal Intergenic         6 122499458 122505594
+  e_6 2.51476e-42  0.443243 Distal Intergenic        17  87147458  87148144
+      geneStrand             geneId       transcriptId external_gene_name
+       &lt;integer&gt;        &lt;character&gt;        &lt;character&gt;        &lt;character&gt;
+  e_1          1 ENSMUSG00000139744 ENSMUST00000355127            Gm65735
+  e_2          2 ENSMUSG00000099592 ENSMUST00000190584             Gm5264
+  e_3          1 ENSMUSG00002076785 ENSMUST00020181897            Gm56299
+  e_4          2 ENSMUSG00000117946 ENSMUST00000237419            Gm50280
+  e_5          1 ENSMUSG00000030116 ENSMUST00000126357              Mfap5
+  e_6          1 ENSMUSG00000099798 ENSMUST00000189953            Gm29168
+      distanceToTSS
+          &lt;numeric&gt;
+  e_1          7298
+  e_2        -10785
+  e_3         10055
+  e_4          1051
+  e_5         10342
+  e_6         32635
+  -------
+  seqinfo: 21 sequences from an unspecified genome; no seqlengths</code></pre>
+</div>
+</div>
+<p>Let us have a look at the enhancers we have and check if there is a relationship between logFC and GC content. Are there any sequence biases associated with the log-fold changes in accessibility?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## logFC vs GC content</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gr<span class="sc">$</span>gc, gr<span class="sc">$</span>logFC, <span class="at">pch =</span> <span class="st">"."</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lty =</span> <span class="dv">5</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">smoothScatter</span>(gr<span class="sc">$</span>gc, gr<span class="sc">$</span>logFC)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lty =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-7-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We see no dependence of the logFC in accessibility on the GC content. This is also what we have seen previously.</p>
+<p>As mentioned, we posed the question: which motifs could explain the changes in accessibility we see between <code>Batf-cKO</code> and <code>Wt</code>. To predict and select potential motifs or TFs, we will use the <code>monaLisa</code> package, which offers two main approaches:</p>
+<ol type="1">
+<li>Binned enrichment approach: the enhancer sequences are binned by their logFC, and motif enrichment is calculated in each bin vs the rest. This is done independently for each motif. Internally, this approach utilizes the sequence composition corrections between foreground and background sequences which <a href="http://homer.ucsd.edu/homer">Homer</a> does.</li>
+<li>Regression approach: here motifs compete against each other for selection and those that are more likely to explain the logFCs are selected.</li>
+</ol>
+<p>Both approaches are valid ways to answer the question we posed, but do so from a different angle. More details on both approaches will be described below as we explore and apply them to our dataset.</p>
+</section>
+</section>
+<section id="binned-motif-enrichment-analysis" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="binned-motif-enrichment-analysis"><span class="header-section-number">2</span> Binned motif enrichment analysis</h2>
+<p>For this approach we are closely following the <a href="https://bioconductor.org/packages/release/bioc/vignettes/monaLisa/inst/doc/monaLisa.html">main vignette</a> from <code>monaLisa</code>. Briefly, we will take the logFC vector across enhancer regions, draw a histogram of the logFCs, bin the histogram, test for motif enrichment per bin for each TF and finally visualize the results.</p>
+<section id="bin-by-log-fold-changes-in-accessibility" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="bin-by-log-fold-changes-in-accessibility"><span class="header-section-number">2.1</span> Bin by log-fold changes in accessibility</h3>
+<p>Before proceeding with the motif enrichment analysis, we want to make sure that the regions we are using have similar sizes, to avoid any length biases in the comparisons between the different bins. We will resize the regions to a fixed size around the midpoint of each region, corresponding to the median region size.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Region size distribution</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">width</span>(gr))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  112.0   325.0   445.0   511.8   618.0  8618.0 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Resize the regions and trim out-of bounds ranges</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>gr <span class="ot">&lt;-</span> <span class="fu">trim</span>(<span class="fu">resize</span>(gr, <span class="at">width =</span> <span class="fu">median</span>(<span class="fu">width</span>(gr)), <span class="at">fix =</span> <span class="st">"center"</span>))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">width</span>(gr))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    445     445     445     445     445     445 </code></pre>
+</div>
+</div>
+<p>Let us examine the histogram depicting the logFCs across the enhancers and create bins. In order to have robust calculations in enrichment, it is recommended to have at least a couple of hundred sequences per bin. Here, we will have 800 regions or sequences per bin, and additionally set a min absolute logFC above which to bin.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot logFC histogram</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">logFC =</span> gr<span class="sc">$</span>logFC)) <span class="sc">+</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> logFC), <span class="at">bins =</span> <span class="dv">100</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Batf cKO vs Wt logFC"</span>) <span class="sc">+</span> </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-10-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Bin the histogram</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>bins <span class="ot">&lt;-</span> <span class="fu">bin</span>(<span class="at">x =</span> gr<span class="sc">$</span>logFC, <span class="at">binmode =</span> <span class="st">"equalN"</span>, <span class="at">nElement =</span> <span class="dv">800</span>, </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">minAbsX =</span> <span class="fl">0.3</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(bins)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>bins
+ [-3.64,-0.768] (-0.768,-0.549] (-0.549,-0.416] (-0.416,-0.335] (-0.335,-0.272] 
+            800             800             800             800             800 
+ (-0.272,0.318]   (0.318,0.406]   (0.406,0.568]    (0.568,2.02] 
+          12961             800             800             800 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot binned histogram</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotBinDensity</span>(<span class="at">x =</span> gr<span class="sc">$</span>logFC, <span class="at">b =</span> bins) <span class="sc">+</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"logFC"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-12-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Before proceeding with the enrichment analysis, let’s check if there is any sequence bias associated with the bins. <code>monaLisa</code> offers some plotting functions for this purpose.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Extract DNA sequences of the enhancers</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>seqs <span class="ot">&lt;-</span> <span class="fu">getSeq</span>(BSgenome.Mmusculus.UCSC.mm39, gr)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="do">## By GC fraction</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plotBinDiagnostics</span>(<span class="at">seqs =</span> seqs, <span class="at">bins =</span> bins, <span class="at">aspect =</span> <span class="st">"GCfrac"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-13-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">## By dinucleotide frequency</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotBinDiagnostics</span>(<span class="at">seqs =</span> seqs, <span class="at">bins =</span> bins, <span class="at">aspect =</span> <span class="st">"dinucfreq"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-14-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We note a small tendency for the bin with the most negative logFC values to have lower GC content. This is also reflected in the heatmap with the dinucleotide frequencies, with that (first) bin being slightly more AT-rich. We will keep this in mind when we examine the enriched motifs. We will want to see if mostly GC-poor motifs are enriched in this bin. That could indicate that the built-in sequence composition corrections were not enough. For now we just make note of it.</p>
+</section>
+<section id="get-pwms-from-jaspar" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="get-pwms-from-jaspar"><span class="header-section-number">2.2</span> Get PWMs from Jaspar</h3>
+<p>We load the PWMs of vertebrate TFs from Jaspar.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Extract PWMs of vertebrate TFs from JASPAR2024</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>JASPAR2024 <span class="ot">&lt;-</span> <span class="fu">JASPAR2024</span>()</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>JASPARConnect <span class="ot">&lt;-</span> RSQLite<span class="sc">::</span><span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="fu">db</span>(JASPAR2024))</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>pwms <span class="ot">&lt;-</span> <span class="fu">getMatrixSet</span>(JASPARConnect,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">opts =</span> <span class="fu">list</span>(<span class="at">tax_group =</span> <span class="st">"vertebrates"</span>,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">collection=</span><span class="st">"CORE"</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">matrixtype =</span> <span class="st">"PWM"</span>))</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Disconnect Db</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>RSQLite<span class="sc">::</span><span class="fu">dbDisconnect</span>(JASPARConnect)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="run-binned-enrichment" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="run-binned-enrichment"><span class="header-section-number">2.3</span> Run binned enrichment</h3>
+<p>We can now run the motif enrichment analysis. We will do the enrichment per bin vs all other bins, which is the default option in <code>calcBinnedMotifEnrR</code>. To learn more about the other available options, which can be controlled via the <code>background</code> parameter, see the help page of the function.</p>
+<p>The p-value for the enrichment test is calculated using Fisher’s exact test. We illustrate the contingency table used for this test below. Given a specific bin, for each motif, we end up with a table of weighted counts as shown below. They are weighted to correct for sequence composition differences between the foreground and background sets, where foreground reflects the sequences belonging to the bin being tested, and background sequences from all other bins.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>with TF hit</th>
+<th>with no TF hit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>foreground</strong></td>
+<td>a</td>
+<td>b</td>
+</tr>
+<tr class="even">
+<td><strong>background</strong></td>
+<td>c</td>
+<td>d</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Motif enrichment using 4 cores</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">calcBinnedMotifEnrR</span>(<span class="at">seqs =</span> seqs, </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">bins =</span> bins, </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">pwmL =</span> pwms, </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">background =</span> <span class="st">"otherBins"</span>, </span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">BPPARAM =</span> <span class="fu">MulticoreParam</span>(<span class="dv">4</span>))</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>se</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>class: SummarizedExperiment 
+dim: 879 9 
+metadata(5): bins bins.binmode bins.breaks bins.bin0 param
+assays(7): negLog10P negLog10Padj ... sumForegroundWgtWithHits
+  sumBackgroundWgtWithHits
+rownames(879): MA0004.1 MA0069.1 ... MA1602.2 MA1722.2
+rowData names(5): motif.id motif.name motif.pfm motif.pwm
+  motif.percentGC
+colnames(9): [-3.64,-0.768] (-0.768,-0.549] ... (0.406,0.568]
+  (0.568,2.02]
+colData names(6): bin.names bin.lower ... totalWgtForeground
+  totalWgtBackground</code></pre>
+</div>
+</div>
+<p>The resulting object is a <code>SummarizedExperiment</code> object. Briefly, these classes are a convenient way to store matrices of the same dimensions as well as any row and column metadata. In our case, the rows correspond to the motifs and the columns to the bins. The figure below illustrates what this class of objects looks like and more details can be found <a href="https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html">here</a>.</p>
+<p><a href="assets/SE.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="assets/SE.png" class="img-fluid"></a></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Assays (matrices)</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">assays</span>(se)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of length 7
+names(7): negLog10P negLog10Padj ... sumBackgroundWgtWithHits</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">assays</span>(se)<span class="sc">$</span>log2enr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [-3.64,-0.768] (-0.768,-0.549] (-0.549,-0.416] (-0.416,-0.335]
+MA0004.1     0.05597966      0.04640559    -0.189753535     -0.06415103
+MA0069.1     0.17975718      0.25349055     0.150531770      0.13207467
+MA0071.1     0.16204117      0.07953121    -0.038933264      0.05030480
+MA0074.1    -0.28030942      0.04941143     0.016441742      0.09012599
+MA0101.1     0.04348448      0.15824544    -0.004039081      0.04565927
+MA0107.1     0.11901851      0.21733994    -0.124788897      0.10166630
+         (-0.335,-0.272] (-0.272,0.318] (0.318,0.406] (0.406,0.568]
+MA0004.1     -0.32381212     0.07752202    0.24423267    0.11737879
+MA0069.1      0.10083004    -0.11308572   -0.02621159   -0.19109729
+MA0071.1     -0.03616484    -0.02764498   -0.01907538   -0.03344962
+MA0074.1     -0.32978473     0.23169199   -0.17188287   -0.37803402
+MA0101.1     -0.28496525    -0.05683605    0.03327832    0.05179975
+MA0107.1     -0.10959571    -0.08295046   -0.19209122    0.17039864
+         (0.568,2.02]
+MA0004.1  -0.15042189
+MA0069.1  -0.01945742
+MA0071.1   0.01519093
+MA0074.1  -0.09446126
+MA0101.1   0.25093533
+MA0107.1   0.17052358</code></pre>
+</div>
+</div>
+<p>Let’s visualize the results of the enrichment analysis. We can use the plot function provided by <code>monaLisa</code> to do this.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Select strongly enriched motifs</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>sel <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="fu">assay</span>(se, <span class="st">"negLog10Padj"</span>), <span class="dv">1</span>, </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>             <span class="cf">function</span>(x) <span class="fu">max</span>(<span class="fu">abs</span>(x), <span class="dv">0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">&gt;</span> <span class="fl">4.0</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(sel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 41</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>seSel <span class="ot">&lt;-</span> se[sel, ]</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMotifHeatmaps</span>(<span class="at">x =</span> seSel, <span class="at">which.plots =</span> <span class="fu">c</span>(<span class="st">"log2enr"</span>, <span class="st">"negLog10Padj"</span>), </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">width =</span> <span class="fl">2.0</span>, <span class="at">cluster =</span> <span class="cn">TRUE</span>, <span class="at">maxEnr =</span> <span class="dv">2</span>, <span class="at">maxSig =</span> <span class="dv">10</span>, </span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">show_motif_GC =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-19-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">## plot with motif sequence logos</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>SimMatSel <span class="ot">&lt;-</span> <span class="fu">motifSimilarity</span>(<span class="fu">rowData</span>(seSel)<span class="sc">$</span>motif.pfm)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(SimMatSel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1332093 1.0000000</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">## create hclust object, similarity defined by 1 - Pearson correlation</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>hcl <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">as.dist</span>(<span class="dv">1</span> <span class="sc">-</span> SimMatSel), <span class="at">method =</span> <span class="st">"average"</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMotifHeatmaps</span>(<span class="at">x =</span> seSel, <span class="at">which.plots =</span> <span class="fu">c</span>(<span class="st">"log2enr"</span>, <span class="st">"negLog10Padj"</span>), </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">width =</span> <span class="fl">1.8</span>, <span class="at">cluster =</span> hcl, <span class="at">maxEnr =</span> <span class="dv">2</span>, <span class="at">maxSig =</span> <span class="dv">10</span>,</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">show_dendrogram =</span> <span class="cn">TRUE</span>, <span class="at">show_seqlogo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">width.seqlogo =</span> <span class="fl">1.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-19-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="index_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The Fos/Jun motif is particularly enriched in bins corresponding to negative logFC values, so regions which lost accessibility in the BatfKO. Coming back to our earlier note of a tendency to have GC-poor sequences in the first bin with the most negative logFCs, we don’t see purely AT-rich motifs enriched in this bin, hinting that the internal sequence bias corrections were good enough. Furthermore, the rest of the bins with negative logFCs also show enrichments of the Fos/Jun motif. Seeing a gradient of enrichment the more extreme the logFC values become further adds another layer of confidence in the enrichment results.</p>
+</section>
+<section id="binned-k-mer-enrichment-analysis" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="binned-k-mer-enrichment-analysis"><span class="header-section-number">2.4</span> Binned k-mer enrichment analysis</h3>
+<p>Sometimes one may want to perform the binned enrichment analysis in a more unbiased way, without using known motifs from a database. We perform this on our dataset and look at which kmers are enriched. We will set the kmer size to 6 base pairs.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Binned kmer enrichment (with 2 cores)</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ... this can take a minute, feel free to increase cores if possible</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span> <span class="fu">file.exists</span>(<span class="st">"data/seKmer.rds"</span>)) {</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  seKmer <span class="ot">&lt;-</span>  <span class="fu">calcBinnedKmerEnr</span>(<span class="at">seqs =</span> seqs, <span class="at">bins =</span> bins, <span class="at">kmerLen =</span> <span class="dv">6</span>, </span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">includeRevComp =</span> <span class="cn">TRUE</span>, <span class="at">BPPARAM =</span> <span class="fu">MulticoreParam</span>(<span class="dv">2</span>))</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  seKmer <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/seKmer.rds"</span>)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Enriched kmers</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>selKmer <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="fu">assay</span>(seKmer, <span class="st">"negLog10Padj"</span>), <span class="dv">1</span>,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>               <span class="cf">function</span>(x) <span class="fu">max</span>(<span class="fu">abs</span>(x), <span class="dv">0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">&gt;</span> <span class="dv">4</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(selKmer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 14</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>seKmerSel <span class="ot">&lt;-</span> seKmer[selKmer, ]</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate similarity between enriched kmers and enriched motifs</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>pfmSel <span class="ot">&lt;-</span> <span class="fu">rowData</span>(seSel)<span class="sc">$</span>motif.pfm</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>sims <span class="ot">&lt;-</span> <span class="fu">motifKmerSimilarity</span>(<span class="at">x =</span> pfmSel,</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">kmers =</span> <span class="fu">rownames</span>(seKmerSel),</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">includeRevComp =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(sims)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 41 14</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot kmers and motif similarity</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>maxwidth <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">sapply</span>(TFBSTools<span class="sc">::</span><span class="fu">Matrix</span>(pfmSel), ncol))</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>seqlogoGrobs <span class="ot">&lt;-</span> <span class="fu">lapply</span>(pfmSel, seqLogoGrob, <span class="at">xmax =</span> maxwidth)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>hmSeqlogo <span class="ot">&lt;-</span> <span class="fu">rowAnnotation</span>(<span class="at">logo =</span> <span class="fu">annoSeqlogo</span>(seqlogoGrobs, <span class="at">which =</span> <span class="st">"row"</span>),</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">annotation_width =</span> <span class="fu">unit</span>(<span class="fl">1.5</span>, <span class="st">"inch"</span>), </span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">show_annotation_name =</span> <span class="cn">FALSE</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="fu">Heatmap</span>(sims, </span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">show_row_names =</span> <span class="cn">TRUE</span>, <span class="at">row_names_gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">8</span>),</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">show_column_names =</span> <span class="cn">TRUE</span>, <span class="at">column_names_gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">8</span>),</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">"Similarity"</span>, <span class="at">column_title =</span> <span class="st">"Selected TFs and enriched k-mers"</span>,</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">colorRamp2</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">c</span>(<span class="st">"white"</span>, <span class="st">"red"</span>)), </span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">right_annotation =</span> hmSeqlogo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-22-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can appreciate the enriched k-mers corresponding to the enriched motifs from earlier.</p>
+</section>
+</section>
+<section id="regression-based-analysis" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="regression-based-analysis"><span class="header-section-number">3</span> Regression-based analysis</h2>
+<p>Another method to find relevant motifs is via a regression-based approach. As opposed to the binned approach, where each motif is tested independently for enrichment, the regression framework allows motifs to compete against each other for selection. Following our example, the aim is to select those which are more likely to explain the observed changes in accessibilty we see across the enhancers. In <code>monaLisa</code>, stability selection with randomized lasso is the implemented regression method of choice. For more details about the method, see the details section in the <code>randLassoStabSel</code> function, as well as the publication from <span class="citation" data-cites="Meinshausen2010Stability">Meinshausen and Bühlmann (<a href="#ref-Meinshausen2010Stability" role="doc-biblioref">2010</a>)</span>. Briefly, with lasso stability selection, the lasso regression is performed multiple times on subsets of the response vector and predictor matrix, and each predictor (TF) ends up with a selection probability which is simply the number of times it was selected divided by the total number of times a regression was done. With the randomized lasso, a <em>weakness</em> parameter is additionally used to vary the lasso penalty term&nbsp;λ&nbsp;to a randomly chosen value between [λ,&nbsp;λ/weakness] for each predictor. This type of regularization has advantages in cases where the number of predictors exceeds the number of observations, in selecting variables consistently, demonstrating better error control and not depending strongly on the penalization parameter <span class="citation" data-cites="Meinshausen2010Stability">(<a href="#ref-Meinshausen2010Stability" role="doc-biblioref">Meinshausen and Bühlmann 2010</a>)</span>.</p>
+<p>First, we will create the predictor matrix in our regression framework. This will consist of the predicted TF binding sites (TFBSs) across the enhancers. We use the PWMs from Jaspar to scan for motif hits across the enhancers, using a minimum score of 10 for a match.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Scan for motif hits across enhancer sequences</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ... (this step takes a few seconds)</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>hits <span class="ot">&lt;-</span> <span class="fu">findMotifHits</span>(<span class="at">query =</span> pwms, <span class="at">subject =</span> seqs, <span class="at">min.score =</span> <span class="fl">10.0</span>,</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">BPPARAM =</span> BiocParallel<span class="sc">::</span><span class="fu">MulticoreParam</span>(<span class="dv">4</span>))</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(hits)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>GRanges object with 6 ranges and 4 metadata columns:
+      seqnames    ranges strand |     matchedSeq    pwmid pwmname     score
+         &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;DNAStringSet&gt;    &lt;Rle&gt;   &lt;Rle&gt; &lt;numeric&gt;
+  [1]      e_1       1-8      + |       AAGTGTGA MA0801.1     MGA   11.3951
+  [2]      e_1       1-8      + |       AAGTGTGA MA0803.1   TBX15   10.8442
+  [3]      e_1       1-8      + |       AAGTGTGA MA0805.1    TBX1   12.1899
+  [4]      e_1       1-8      + |       AAGTGTGA MA0806.1    TBX4   11.1102
+  [5]      e_1       1-8      + |       AAGTGTGA MA0807.1    TBX5   10.0778
+  [6]      e_1       1-9      + |      AAGTGTGAG MA0800.2   EOMES   10.1016
+  -------
+  seqinfo: 19361 sequences from an unspecified genome</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add columns reflecting motif ID and name (for ease of interpretability later)</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>hits<span class="sc">$</span>pwmIdName <span class="ot">&lt;-</span> <span class="fu">paste0</span>(hits<span class="sc">$</span>pwmid, <span class="st">"_"</span>, hits<span class="sc">$</span>pwmname)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Create TFBS matrix (unique motif IDs are shown as columns rather than the names)</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>TFBSmatrix <span class="ot">&lt;-</span> <span class="fu">unclass</span>(<span class="fu">table</span>(<span class="fu">factor</span>(<span class="fu">seqnames</span>(hits), <span class="at">levels =</span> <span class="fu">seqlevels</span>(hits)),</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">factor</span>(hits<span class="sc">$</span>pwmIdName, <span class="at">levels =</span> <span class="fu">unique</span>(hits<span class="sc">$</span>pwmIdName))))</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>TFBSmatrix[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     
+      MA0801.1_MGA MA0803.1_TBX15 MA0805.1_TBX1 MA0806.1_TBX4 MA0807.1_TBX5
+  e_1            7              7             7             7             7
+  e_2            0              0             0             0             0
+  e_3            1              1             1             1             1
+  e_4            0              0             0             0             0
+  e_5            1              1             1             1             1
+  e_6            0              0             0             1             0
+     
+      MA0800.2_EOMES
+  e_1             10
+  e_2              0
+  e_3              1
+  e_4              0
+  e_5              1
+  e_6              0</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Remove TF motifs with 0 binding sites (if any) in all regions</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>zero_TF <span class="ot">&lt;-</span> <span class="fu">colSums</span>(TFBSmatrix) <span class="sc">==</span> <span class="dv">0</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(zero_TF)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>TFBSmatrix <span class="ot">&lt;-</span> TFBSmatrix[, <span class="sc">!</span>zero_TF]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We add the fraction of G+C and CpG observed/expected ratio as predictors to the matrix, to ensure that selected TF motifs are not just detecting a simple trend in GC or CpG composition.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate G+C and CpG obs/expected</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>fMono <span class="ot">&lt;-</span> <span class="fu">oligonucleotideFrequency</span>(seqs, <span class="at">width =</span> <span class="dv">1</span>L, <span class="at">as.prob =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>fDi <span class="ot">&lt;-</span> <span class="fu">oligonucleotideFrequency</span>(seqs, <span class="at">width =</span> <span class="dv">2</span>L, <span class="at">as.prob =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>fracGC <span class="ot">&lt;-</span> fMono[, <span class="st">"G"</span>] <span class="sc">+</span> fMono[, <span class="st">"C"</span>]</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>oeCpG <span class="ot">&lt;-</span> (fDi[, <span class="st">"CG"</span>] <span class="sc">+</span> <span class="fl">0.01</span>) <span class="sc">/</span> (fMono[, <span class="st">"G"</span>] <span class="sc">*</span> fMono[, <span class="st">"C"</span>] <span class="sc">+</span> <span class="fl">0.01</span>)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Add GC and oeCpG to predictor matrix</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>TFBSmatrix <span class="ot">&lt;-</span> <span class="fu">cbind</span>(fracGC, oeCpG, TFBSmatrix)</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>TFBSmatrix[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fracGC     oeCpG MA0801.1_MGA MA0803.1_TBX15 MA0805.1_TBX1 MA0806.1_TBX4
+e_1 0.4269663 0.2625459            7              7             7             7
+e_2 0.4876404 0.4251465            0              0             0             0
+e_3 0.4674157 0.4697612            1              1             1             1
+e_4 0.4471910 0.4351891            0              0             0             0
+e_5 0.4786517 0.3186635            1              1             1             1
+e_6 0.4539326 0.3939226            0              0             0             1</code></pre>
+</div>
+</div>
+<p>Next we run stability selection with randomized lasso. Since this is a stochastic process, we will need to set the seed to reproduce our results.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Run randomized lasso stability selection</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">randLassoStabSel</span>(<span class="at">x =</span> TFBSmatrix, <span class="at">y =</span> gr<span class="sc">$</span>logFC, <span class="at">cutoff =</span> <span class="fl">0.8</span>)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>se</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>class: SummarizedExperiment 
+dim: 19361 856 
+metadata(12): stabsel.params.cutoff stabsel.params.selected ...
+  stabsel.params.call randStabsel.params.weakness
+assays(1): x
+rownames(19361): e_1 e_2 ... e_19360 e_19361
+rowData names(1): y
+colnames(856): fracGC oeCpG ... MA2100.1_ZSCAN16 MA0735.2_GLIS1
+colData names(30): selProb selected ... regStep26 regStep27</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="do">## selected TFs</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>sel <span class="ot">&lt;-</span> <span class="fu">colnames</span>(se)[se<span class="sc">$</span>selected]</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>sel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "MA1142.2_FOSL1::JUND" "MA0835.3_BATF3"       "MA0002.3_Runx1"      
+[4] "MA0791.2_POU4F3"      "MA0645.2_ETV6"       </code></pre>
+</div>
+</div>
+<p>As mentioned, motifs are competing against each other for selection here. A known challenge with regression methods is colinearity between the predictors. This is worth keeping in mind for very highly correlated TFBSs. If we have two TFs with highly similar motifs explaining the logFC, only one of them may end up being selected. That is why it is worth focusing on interpreting the motifs rather than the particular TF name.</p>
+<p>Let’s have a look at the stability paths of the motifs. These paths show the selection probability as a function of the regularization step. The strength of the regularization decreases from left to right and the stronger the regularization, the less motifs are selected. The motifs above the minimum selection probability at the last step are the final selected ones. These paths can give an indication of how strongly a particular motif can explain the logFC in accessibility, by being selected fairly early and then consistently along the regulalrization steps. It can also show how well the selected motifs separate from the non-selected ones and how strong the signal is.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Stability paths</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotStabilityPaths</span>(se, <span class="at">labelPaths =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-29-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="index_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Based on these, BATF3 is the first motif to be selected which indicates that this motif quite strongly explains the logFC compared to the rest. This may be expected since this TF was knocked out.</p>
+<p>Let’s look at where the GC and CpG content predictors fall on these paths.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Stability paths with specific naming</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotStabilityPaths</span>(se, <span class="at">labelPaths =</span> <span class="cn">TRUE</span>, <span class="at">labelNudgeX =</span> <span class="dv">3</span>,</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"fracGC"</span>, <span class="st">"oeCpG"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-30-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img src="index_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>They have very low selection probabilities and were not contributing to explaining the logFC in accessibility. What if we want to get a sense of the direction in which the selected motifs explain accessibility changes: towards positive logFC values indicating more accessibility in KO, or toward negative logFC values indicating more accessibility in the Wt? To reflect that, we can plot the selection probabilities multiplied by the sign of the correlation to the logFC vector.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot selection probability</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSelectionProb</span>(se, <span class="at">directional =</span> <span class="cn">TRUE</span>, <span class="at">ylimext =</span> <span class="dv">1</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-31-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img src="index_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>BATF3, Runx1 and FOSL1::JUND explain negative changes in accessibility, so enhancers which were more accessible in Wt and lost that accessibility in the Batf-KO. The motifs for BATF3 and FOSL1::JUND were also enriched in the binned approach, in bins with lower logFC values. Interestingly Runx1 only shows up here. Let’s have a look at the motif seqlogo to see if that motif came up in the enrichment approach under another TF name.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get PFM</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>JASPAR2024 <span class="ot">&lt;-</span> <span class="fu">JASPAR2024</span>()</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>JASPARConnect <span class="ot">&lt;-</span> RSQLite<span class="sc">::</span><span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="fu">db</span>(JASPAR2024))</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>pfm <span class="ot">&lt;-</span> <span class="fu">getMatrixByID</span>(<span class="at">x =</span> JASPARConnect, <span class="at">ID =</span> <span class="st">"MA0002.3"</span>)</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>RSQLite<span class="sc">::</span><span class="fu">dbDisconnect</span>(JASPARConnect)</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span>(pfm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Runx1"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot seqlogo</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">seqLogo</span>(<span class="at">x =</span> <span class="fu">toICM</span>(pfm))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-33-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="index_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We did not see this motif in the binned approach. Perhaps this could only be selected in context with the rest of the motifs. We can also have a closer look at some of the enhancers which have predicted binding sites for a motif of interest, ordering by absolute logFC in accessibility as a means of ranking the most important ones. Let’s look at such top enhancers for the Runx1 motif.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="do">## TF on interest</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>TF <span class="ot">&lt;-</span> sel[<span class="dv">3</span>]</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>TF</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "MA0002.3_Runx1"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Identify enhancers which contain predicted TFBSs </span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">assay</span>(se, <span class="st">"x"</span>)[, TF] <span class="sc">&gt;</span> <span class="dv">0</span>) </span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Order by absolute logFC</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">abs</span>(gr<span class="sc">$</span>logFC[i]), <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>gr[i][o]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>GRanges object with 7865 ranges and 13 metadata columns:
+          seqnames              ranges strand |             peakID        logFC
+             &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |        &lt;character&gt;    &lt;numeric&gt;
+    e_946    chr17   32327657-32328101      * | merged_peaks_26931     -3.36110
+    e_586     chr3   21776693-21777137      * | merged_peaks_38008     -2.77391
+    e_940    chr10   76572614-76573058      * |  merged_peaks_6105     -2.28866
+    e_104     chr8   95554605-95555049      * | merged_peaks_58633     -2.20077
+    e_165     chr1   52458595-52459039      * |   merged_peaks_710     -2.11577
+      ...      ...                 ...    ... .                ...          ...
+  e_19350    chr15   97396226-97396670      * | merged_peaks_23110 -1.85648e-04
+  e_19354     chr5 148713152-148713596      * | merged_peaks_49032  1.61644e-04
+  e_19345     chr1 194914907-194915351      * |  merged_peaks_4361 -1.30662e-04
+  e_19357     chr1   66934978-66935422      * |  merged_peaks_1135 -4.34532e-05
+  e_19359    chr11   46321910-46322354      * |  merged_peaks_8973  4.34149e-05
+                  FDR        gc        annotation   geneChr geneStart   geneEnd
+            &lt;numeric&gt; &lt;numeric&gt;       &lt;character&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt;
+    e_946 1.10436e-02  0.464912  Promoter (1-2kb)        17  32297771  32326324
+    e_586 7.03546e-04  0.462500 Distal Intergenic         3  21765445  21766624
+    e_940 1.06377e-02  0.536680 Distal Intergenic        10  76562417  76566107
+    e_104 2.54669e-14  0.522727  Promoter (1-2kb)         8  95549649  95553342
+    e_165 4.66155e-10  0.511111 Distal Intergenic         1  52466578  52469655
+      ...         ...       ...               ...       ...       ...       ...
+  e_19350    0.999918  0.516393 Distal Intergenic        15  97366414  97367594
+  e_19354    0.999918  0.505714  Promoter (1-2kb)         5 148714721 148715615
+  e_19345    0.999906  0.444238 Distal Intergenic         1 194910586 194910706
+  e_19357    0.999918  0.424396  Promoter (1-2kb)         1  66935758  66936885
+  e_19359    0.999918  0.473822 Distal Intergenic        11  46327752  46331685
+          geneStrand             geneId       transcriptId external_gene_name
+           &lt;integer&gt;        &lt;character&gt;        &lt;character&gt;        &lt;character&gt;
+    e_946          2 ENSMUSG00000121449 ENSMUST00000183934            Pdxk-ps
+    e_586          1 ENSMUSG00000105440 ENSMUST00000365735            Gm31693
+    e_940          2 ENSMUSG00000112291 ENSMUST00000218963            Gm48276
+    e_104          2 ENSMUSG00000031781 ENSMUST00000162357            Ciapin1
+    e_165          1 ENSMUSG00000122096 ENSMUST00000250730            Gm69377
+      ...        ...                ...                ...                ...
+  e_19350          2 ENSMUSG00000143807 ENSMUST00000379400            Gm63280
+  e_19354          1 ENSMUSG00000085740 ENSMUST00000335092      4930505K14Rik
+  e_19345          1 ENSMUSG00002076810 ENSMUST00020183637            Gm56030
+  e_19357          2 ENSMUSG00000124891 ENSMUST00000266817            Gm69843
+  e_19359          1 ENSMUSG00000020397 ENSMUST00000152119               Med7
+          distanceToTSS
+              &lt;numeric&gt;
+    e_946         -1385
+    e_586         11271
+    e_940         -6600
+    e_104         -1244
+    e_165         -7671
+      ...           ...
+  e_19350        -28733
+  e_19354         -1172
+  e_19345          4275
+  e_19357          1292
+  e_19359         -5429
+  -------
+  seqinfo: 21 sequences from an unspecified genome; no seqlengths</code></pre>
+</div>
+</div>
+</section>
+<section id="additional-resources" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="additional-resources"><span class="header-section-number">4</span> Additional resources</h2>
+<p>This tutorial has closely followed the vignettes provided in the <code>monaLisa</code> package. They are listed below, as well additional reading material.</p>
+<ul>
+<li><p><code>monaLisa</code>’s binned motif enrichment vignette: <a href="https://bioconductor.org/packages/release/bioc/vignettes/monaLisa/inst/doc/monaLisa.html" class="uri">https://bioconductor.org/packages/release/bioc/vignettes/monaLisa/inst/doc/monaLisa.html</a></p></li>
+<li><p><code>monaLisa</code>’s regression vignette: <a href="https://bioconductor.org/packages/release/bioc/vignettes/monaLisa/inst/doc/selecting_motifs_with_randLassoStabSel.html" class="uri">https://bioconductor.org/packages/release/bioc/vignettes/monaLisa/inst/doc/selecting_motifs_with_randLassoStabSel.html</a></p></li>
+<li><p>Recent publications which have benchmarked several tools looking at TF selection or enrichment:</p>
+<ul>
+<li><p>Gerbaldo, F. E., Sonder, E., Fischer, V., Frei, S., Wang, J., Gapp, K., Robinson, M. D., &amp; Germain, P.-L. (2024). On the identification of differentially-active transcription factors from ATAC-seq data. <em>PLOS Computational Biology, 20</em>(10), e1011971. <a href="https://doi.org/10.1371/journal.pcbi.1011971" class="uri">https://doi.org/10.1371/journal.pcbi.1011971</a></p></li>
+<li><p>Santana, L. S., Reyes, A., Hoersch, S., Ferrero, E., Kolter, C., Gaulis, S., &amp; Steinhauser, S. (2024). Benchmarking tools for transcription factor prioritization. <em>Computational and Structural Biotechnology Journal, 23</em>, Article 1274-1287.&nbsp;<a href="https://doi.org/10.1016/j.csbj.2024.03.016" class="uri">https://doi.org/10.1016/j.csbj.2024.03.016</a></p></li>
+</ul></li>
+<li><p>Stability selection paper: Meinshausen, N., &amp; Bühlmann, P. (2010). Stability selection.&nbsp;<em>Journal of the Royal Statistical Society: Series B (Statistical Methodology), 72</em>(4), 417–473.&nbsp;<a href="https://doi.org/10.1111/j.1467-9868.2010.00740.x" class="uri">https://doi.org/10.1111/j.1467-9868.2010.00740.x</a></p></li>
+<li><p>Improved error bounds on stability selection: Shah, R. D., &amp; Samworth, R. J. (2013). Variable selection with error control: Another look at stability selection.&nbsp;<em>Journal of the Royal Statistical Society: Series B (Statistical Methodology), 75</em>(1), 55–80.&nbsp;<a href="https://doi.org/10.1111/j.1467-9868.2011.01034.x" class="uri">https://doi.org/10.1111/j.1467-9868.2011.01034.x</a></p></li>
+</ul>
+</section>
+<section id="session" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="session"><span class="header-section-number">5</span> Session</h2>
+<div class="cell" data-output-fold="true">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details><summary>Code Output</summary>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Sun Oct  4 10:51:23 2026"</code></pre>
+</div>
+</details>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details><summary>Code Output</summary>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.6.1 (2026-06-24)
+Platform: x86_64-pc-linux-gnu
+Running under: Ubuntu 24.04.5 LTS
+
+Matrix products: default
+BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
+LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0
+
+locale:
+ [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
+ [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   
+ [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          
+[10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   
+
+time zone: UTC
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats4    grid      stats     graphics  grDevices datasets  utils    
+[8] methods   base     
+
+other attached packages:
+ [1] GenomeInfoDb_1.48.0                RSQLite_3.53.1                    
+ [3] SummarizedExperiment_1.42.0        Biobase_2.72.0                    
+ [5] MatrixGenerics_1.24.0              matrixStats_1.5.0                 
+ [7] TFBSTools_1.50.0                   JASPAR2024_0.99.7                 
+ [9] BiocFileCache_3.2.0                dbplyr_2.5.2                      
+[11] BSgenome.Mmusculus.UCSC.mm39_1.4.3 BSgenome_1.80.0                   
+[13] rtracklayer_1.72.0                 BiocIO_1.22.0                     
+[15] Biostrings_2.80.0                  XVector_0.52.0                    
+[17] GenomicRanges_1.64.0               Seqinfo_1.2.0                     
+[19] IRanges_2.46.0                     S4Vectors_0.50.2                  
+[21] BiocGenerics_0.58.1                generics_0.1.4                    
+[23] circlize_0.4.18                    ComplexHeatmap_2.28.0             
+[25] ggplot2_4.0.3                      BiocParallel_1.46.0               
+[27] monaLisa_1.18.0                   
+
+loaded via a namespace (and not attached):
+ [1] DBI_1.3.0                   bitops_1.0-9               
+ [3] httr2_1.2.2                 stabs_0.7-1                
+ [5] rlang_1.3.0                 magrittr_2.0.5             
+ [7] clue_0.3-68                 GetoptLong_1.1.1           
+ [9] otel_0.2.0                  compiler_4.6.1             
+[11] png_0.1-9                   vctrs_0.7.3                
+[13] pwalign_1.8.0               pkgconfig_2.0.3            
+[15] shape_1.4.6.1               crayon_1.5.3               
+[17] fastmap_1.2.0               magick_2.9.1               
+[19] labeling_0.4.3              caTools_1.18.3             
+[21] Rsamtools_2.28.0            rmarkdown_2.31             
+[23] UCSC.utils_1.8.0            DirichletMultinomial_1.54.0
+[25] purrr_1.2.2                 bit_4.6.0                  
+[27] xfun_0.57                   glmnet_5.0                 
+[29] cachem_1.1.0                cigarillo_1.2.0            
+[31] jsonlite_2.0.0              blob_1.3.0                 
+[33] DelayedArray_0.38.1         parallel_4.6.1             
+[35] cluster_2.1.8.2             R6_2.6.1                   
+[37] RColorBrewer_1.1-3          Rcpp_1.1.1-1.1             
+[39] iterators_1.0.14            knitr_1.51                 
+[41] Matrix_1.7-5                splines_4.6.1              
+[43] tidyselect_1.2.1            dichromat_2.0-1            
+[45] abind_1.4-8                 yaml_2.3.12                
+[47] doParallel_1.0.17           codetools_0.2-20           
+[49] curl_7.1.0                  lattice_0.22-9             
+[51] tibble_3.3.1                withr_3.0.2                
+[53] S7_0.2.2                    evaluate_1.0.5             
+[55] survival_3.8-6              filelock_1.0.3             
+[57] pillar_1.11.1               BiocManager_1.30.27        
+[59] KernSmooth_2.23-26          renv_1.2.3                 
+[61] foreach_1.5.2               RCurl_1.98-1.18            
+[63] scales_1.4.0                gtools_3.9.5               
+[65] glue_1.8.1                  seqLogo_1.78.0             
+[67] tools_4.6.1                 TFMPvalue_1.0.0            
+[69] GenomicAlignments_1.48.0    XML_3.99-0.23              
+[71] tidyr_1.3.2                 colorspace_2.1-2           
+[73] restfulr_0.0.16             cli_3.6.6                  
+[75] rappdirs_0.3.4              S4Arrays_1.12.1            
+[77] dplyr_1.2.1                 gtable_0.3.6               
+[79] digest_0.6.39               ggrepel_0.9.8              
+[81] SparseArray_1.12.2          rjson_0.2.23               
+[83] htmlwidgets_1.6.4           farver_2.1.2               
+[85] memoise_2.0.1               htmltools_0.5.9            
+[87] lifecycle_1.0.5             httr_1.4.8                 
+[89] GlobalOptions_0.1.4         bit64_4.8.2                </code></pre>
+</div>
+</details>
+</div>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-Meinshausen2010Stability" class="csl-entry" role="listitem">
+Meinshausen, Nicolai, and Peter Bühlmann. 2010. <span>“Stability Selection.”</span> <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 72 (4): 417–73. <a href="https://doi.org/10.1111/j.1467-9868.2010.00740.x">https://doi.org/10.1111/j.1467-9868.2010.00740.x</a>.
+</div>
+<div id="ref-Tsao2022Batf" class="csl-entry" role="listitem">
+Tsao, Hsiao-Wei, James Kaminski, Makoto Kurachi, et al. 2022. <span>“Batf-Mediated Epigenetic Control of Effector CD8+ t Cell Differentiation.”</span> <em>Science Immunology</em> 7 (68): eabi4919. <a href="https://doi.org/10.1126/sciimmunol.abi4919">https://doi.org/10.1126/sciimmunol.abi4919</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/nbisweden\.github\.io\/workshop-epigenomics");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>2026 <a href="https://nbis.se">NBIS</a> • <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Published with <a href="https://quarto.org/">Quarto</a> v1.10.18</p>
+</div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
