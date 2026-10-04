@@ -292,6 +292,11 @@ dim(sims)
 ```{r}
 #| fig-width: 10
 #| fig-height: 8
+#| label: problem
+#| echo: true
+#| output: true
+#| warning: true
+#| error: true
 
 ## Plot kmers and motif similarity
 maxwidth <- max(sapply(TFBSTools::Matrix(pfmSel), ncol))
