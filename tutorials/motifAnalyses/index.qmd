@@ -269,17 +269,16 @@ The Fos/Jun motif is particularly enriched in bins corresponding to negative log
 
 Sometimes one may want to perform the binned enrichment analysis in a more unbiased way, without using known motifs from a database. We perform this on our dataset and look at which kmers are enriched. We will set the kmer size to 6 base pairs.
 
-```{r}
-## Clear some memory
-rm(list = c("se", "seSel"))
-gc()
-```
 
 ```{r}
 ## Binned kmer enrichment (with 2 cores)
 ## ... this can take a minute, feel free to increase cores if possible
-seKmer <-  calcBinnedKmerEnr(seqs = seqs, bins = bins, kmerLen = 6, 
-                          includeRevComp = TRUE, BPPARAM = MulticoreParam(2))
+if (! file.exists("data/seKmer.rds")) {
+  seKmer <-  calcBinnedKmerEnr(seqs = seqs, bins = bins, kmerLen = 6, 
+                               includeRevComp = TRUE, BPPARAM = MulticoreParam(2))
+} else {
+  seKmer <- readRDS("data/seKmer.rds")
+}
 ```
 
 
