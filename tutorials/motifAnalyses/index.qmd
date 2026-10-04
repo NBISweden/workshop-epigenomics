@@ -210,6 +210,8 @@ The p-value for the enrichment test is calculated using Fisher's exact test. We 
 | **background** | c           | d              |
 
 ```{r}
+#| label: problem
+
 ## Motif enrichment using 4 cores
 se <- calcBinnedMotifEnrR(seqs = seqs, 
                           bins = bins, 
@@ -237,6 +239,7 @@ Let's visualize the results of the enrichment analysis. We can use the plot func
 ```{r}
 #| fig-width: 8
 #| fig-height: 8
+#| label: problem1
 
 ## Select strongly enriched motifs
 sel <- apply(assay(se, "negLog10Padj"), 1, 
@@ -270,6 +273,8 @@ The Fos/Jun motif is particularly enriched in bins corresponding to negative log
 Sometimes one may want to perform the binned enrichment analysis in a more unbiased way, without using known motifs from a database. We perform this on our dataset and look at which kmers are enriched. We will set the kmer size to 6 base pairs.
 
 ```{r}
+#| label: problem2
+
 ## Binned kmer enrichment (with 4 cores)
 seKmer <-  calcBinnedKmerEnr(seqs = seqs, bins = bins, kmerLen = 6, 
                           includeRevComp = TRUE, BPPARAM = MulticoreParam(4))
@@ -292,11 +297,7 @@ dim(sims)
 ```{r}
 #| fig-width: 10
 #| fig-height: 8
-#| label: problem
-#| echo: true
-#| output: true
-#| warning: true
-#| error: true
+#| label: problem3
 
 ## Plot kmers and motif similarity
 maxwidth <- max(sapply(TFBSTools::Matrix(pfmSel), ncol))
