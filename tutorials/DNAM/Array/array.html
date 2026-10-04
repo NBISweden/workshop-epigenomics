@@ -382,7 +382,7 @@ About:          This qmd file is used to render the .rst file. To modify or
 </section>
 <section id="set-up-r-environment" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Set Up R environment</h1>
-<p>There are three options for you to select. This exercise can be set up to run on UPPMAX, and so we provide two ways to set up the R environment within UPPMAX. Alternatively, if you prefer to work locally in your laptop then you can follow Option C. These options are described in detail below.</p>
+<p>This exercise can be set up to run on UPPMAX, and so we provide Option A to set up the R environment within UPPMAX. Alternatively, if you prefer to work locally in your laptop then you can follow Option B. These options are described in detail below.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -426,51 +426,7 @@ About:          This qmd file is used to render the .rst file. To modify or
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Option B - UPPMAX Rserver container
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>We have provided a containerized environment consisting of R, Rstudio and the necessary packages for this session. This means the software can easily run within the container on almost any computer or server, greatly simplifying software installation and management. A benefit of using it here is that Rstudio runs a whole lot faster using the container approach. However, to access it from UPPMAX, a few more steps are necessary.</p>
-<details>
-<summary>Show steps</summary>
-<!-- 
-First, connect to the server as described in
-[Setting-up](../setup/lab-setup).
-Follow the instruction to start an interactive session in Pelle.
--->
-<p>Follow the instruction in <a href="#nte-uppaxsetwd" class="quarto-xref">Note&nbsp;1</a> to set your working directory. Execute the following commands from a terminal in Pelle.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the startup script; this will start the container and run Rstudio</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sh</span> /sw/courses/epigenomics/DNAmethylation/startup_script.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>You should see something like this:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">1.</span> SSH tunnel from your workstation using the following command:</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ssh</span> <span class="at">-N</span> <span class="at">-L</span> 8787::pelle1.uppmax.uu.se:41535 louella@pelle.uppmax.uu.se</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>      <span class="ex">and</span> point your web browser to http://localhost:8787</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ex">2.</span> log in to RStudio Server using the following credentials:</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      <span class="ex">user:</span> louella</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      <span class="ex">password:</span> epi2021</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Now, open a second terminal in your laptop and run your ssh command from 1. Then open your web browser (Safari, Chrome, …) and go to http://localhost:8787. Here, fill in your user and password as in 2. and Rstudio will start.</p>
-<p>Next, run the R commands by copying them from this website into the Rstudio terminal and pressing Enter.</p>
-</details>
-</div>
-</div>
-<p><br>
-</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Option C - Local Renv Setup
+<span class="screen-reader-only">Tip</span>Option B - Local Renv Setup
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -496,21 +452,21 @@ Note&nbsp;1: Set up your working directory
 <div class="callout-body-container callout-body">
 <p>Change directory to the course directory</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>   <span class="bu">cd</span> /gorilla/proj/epi2026/students/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>   <span class="bu">cd</span> /gorilla/proj/epi2026/students/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>, and create your personal folder with name <code>&lt;your_name&gt;</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> <span class="op">&lt;</span>your_name<span class="op">&gt;</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>   <span class="bu">cd</span> <span class="op">&lt;</span>your_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> <span class="op">&lt;</span>your_name<span class="op">&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>   <span class="bu">cd</span> <span class="op">&lt;</span>your_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Create sub folders to tidy files in your personal folder.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> scripts  <span class="co">#folder to store your codes</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> data     <span class="co">#folder to store data</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> output   <span class="co">#folder to store output files </span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>   </span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>   </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> scripts  <span class="co">#folder to store your codes</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> data     <span class="co">#folder to store data</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> output   <span class="co">#folder to store output files </span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>   </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -522,43 +478,43 @@ Note&nbsp;1: Set up your working directory
 <p>First, set the correct library path.</p>
 <p>For Option A only:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Do NOT do this if setting up the environment with option B, only option A</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If you accidentally run the following line with option B, you can do *Session -&gt; Restart R*</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># and run again without this line.</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>(<span class="st">"/gorilla/proj/epi2026/library/Rpackages/4.6.1"</span>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure the library paths are correct (should be pointing to the folders as listed below)</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>()</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#"/gorilla/proj/epi2026/library/Rpackages/4.6.1"                      </span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#"/sw/arch/eb/software/R-bundle-CRAN/2026.07-foss-2026.1"             </span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#"/sw/arch/eb/software/R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1"</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#"/sw/arch/eb/software/R/4.6.1-gfbf-2026.1/lib64/R/library"    </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Do NOT do this if setting up the environment with option B, only option A</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If you accidentally run the following line with option B, you can do *Session -&gt; Restart R*</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># and run again without this line.</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>(<span class="st">"/gorilla/proj/epi2026/library/Rpackages/4.6.1"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure the library paths are correct (should be pointing to the folders as listed below)</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>()</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#"/gorilla/proj/epi2026/library/Rpackages/4.6.1"                      </span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#"/sw/arch/eb/software/R-bundle-CRAN/2026.07-foss-2026.1"             </span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#"/sw/arch/eb/software/R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1"</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#"/sw/arch/eb/software/R/4.6.1-gfbf-2026.1/lib64/R/library"    </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>For Option C only:</p>
+<p>For Option B only:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure the library paths are correct (should be pointing to the local renv folder)</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure the library paths are correct (should be pointing to the local renv folder)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>After setting the library path, continue to load the R packages required for this tutorial.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages required for analysis</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"limma"</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"minfi"</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"RColorBrewer"</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"missMethyl"</span>) <span class="co"># Can take a short time...</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"minfiData"</span>)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"Gviz"</span>)</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"DMRcate"</span>)</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"DMRcatedata"</span>)</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"stringr"</span>)</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"mCSEA"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages required for analysis</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"limma"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"minfi"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"RColorBrewer"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"missMethyl"</span>) <span class="co"># Can take a short time...</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"minfiData"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"Gviz"</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"DMRcate"</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"DMRcatedata"</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"stringr"</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"mCSEA"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Included with <code>minfi</code> is the <code>IlluminaHumanMethylation450kanno.ilmn12.hg19</code> package; it contains all the annotation information for each of the CpG probes on the 450k array. This will be useful later to to determine where the differentially methylated probes (hereafter referred to as DMP) are located in a genomic context and to link the Red and Green raw data to methylated and unmethylated status.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ann450k <span class="ot">&lt;-</span> <span class="fu">getAnnotation</span>(IlluminaHumanMethylation450kanno.ilmn12.hg19)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the head command to get a quick overview of the data and see what types of annotations are available</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ann450k)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ann450k <span class="ot">&lt;-</span> <span class="fu">getAnnotation</span>(IlluminaHumanMethylation450kanno.ilmn12.hg19)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the head command to get a quick overview of the data and see what types of annotations are available</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ann450k)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>These packages are of course also available for the later array versions. The EPIC array annotation package is called <code>IlluminaHumanMethylationEPICanno.ilm10b2.hg19</code> and also included in minfi.</p>
 </section>
@@ -583,9 +539,9 @@ Soft links, or symbolic links, are special files that act as shortcuts to anothe
 Now you need to point R towards your data directory. 
 --> The <code>list.files</code> command will return the list of files in the specified directory.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>dataDirectory <span class="ot">&lt;-</span> <span class="st">"/gorilla/proj/epi2026/DNAM/ARRAY/array_data"</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># list the files</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(dataDirectory, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dataDirectory <span class="ot">&lt;-</span> <span class="st">"/gorilla/proj/epi2026/DNAM/ARRAY/array_data"</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># list the files</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(dataDirectory, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -602,28 +558,28 @@ Warning
 </div>
 <p>Illumina methylation data is usually obtained in the form of Intensity Data (IDAT) Files. This is a proprietary format that is output by the slide scanner and stores the intensities for each probe on the array. Typically, each IDAT file is approximately 8MB in size. The simplest way to import the raw methylation data into R is using the minfi function <code>read.metharray.sheet</code>, along with the path to the IDAT files and a sample sheet. The sample sheet is a CSV (comma-separated) file containing one line per sample, with a number of columns describing each sample. The format expected by the <code>read.metharray.sheet</code> function is based on the sample sheet file that usually accompanies Illumina methylation array data. It is also very similar to the targets file described by the limma package. Importing the sample sheet into R creates a dataframe with one row for each sample and several columns. The <code>read.metharray.sheet</code> function uses the specified path and other information from the sample sheet to create a column called Basename which specifies the location of each individual IDAT file in the experiment. Import the metadata and have a look at the different samples.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in the sample sheet for the experiment</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>targets <span class="ot">&lt;-</span> <span class="fu">read.metharray.sheet</span>(dataDirectory, <span class="at">pattern=</span><span class="st">"SampleSheet.csv"</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>targets</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in the sample sheet for the experiment</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>targets <span class="ot">&lt;-</span> <span class="fu">read.metharray.sheet</span>(dataDirectory, <span class="at">pattern=</span><span class="st">"SampleSheet.csv"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>targets</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now we know where the data is located and we have essential information on each samples identity, we can read in the raw intensity data into R using the <code>read.metharray.exp</code> function. This creates an <code>RGChannelSet</code> object that contains all the raw intensity data, from both the red and green colour channels, for each of the samples. This is the initial object of a minfi analysis that contains the raw intensities in the green and red channels. Note that this object contains the intensities of the internal control probes as well. Because we read the data from a data sheet experiment, the phenotype data is also stored in the <code>RGChannelSet</code> and can be accessed via the accessor command <code>pData</code>. Also the probed design can be summarized by querying this object. Before starting the actual analysis it is good practice to get a feel of the structure and content of the <code>RGChannelSet</code> object in this way.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in the raw data from the IDAT files; warnings can be ignored.</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>rgSet <span class="ot">&lt;-</span> <span class="fu">read.metharray.exp</span>(<span class="at">targets=</span>targets)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get an overview of the data</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>rgSet</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">pData</span>(rgSet)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">getManifest</span>(rgSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in the raw data from the IDAT files; warnings can be ignored.</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>rgSet <span class="ot">&lt;-</span> <span class="fu">read.metharray.exp</span>(<span class="at">targets=</span>targets)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get an overview of the data</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>rgSet</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">pData</span>(rgSet)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">getManifest</span>(rgSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>It might be useful to change the names of the samples into something a little more descriptive.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># give the samples descriptive names</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>targets<span class="sc">$</span>ID <span class="ot">&lt;-</span> <span class="fu">paste</span>(targets<span class="sc">$</span>Sample_Group,targets<span class="sc">$</span>Sample_Name,<span class="at">sep=</span><span class="st">"."</span>)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sampleNames</span>(rgSet) <span class="ot">&lt;-</span> targets<span class="sc">$</span>ID</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the names have been updated by looking at the rownames of the phenoData</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">pData</span>(rgSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># give the samples descriptive names</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>targets<span class="sc">$</span>ID <span class="ot">&lt;-</span> <span class="fu">paste</span>(targets<span class="sc">$</span>Sample_Group,targets<span class="sc">$</span>Sample_Name,<span class="at">sep=</span><span class="st">"."</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sampleNames</span>(rgSet) <span class="ot">&lt;-</span> targets<span class="sc">$</span>ID</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the names have been updated by looking at the rownames of the phenoData</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">pData</span>(rgSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -650,32 +606,32 @@ Warning
 </div>
 <p>As of now, our dataset is an <code>RGChannelSet</code> object containing the raw green and red intensity data. To proceed, this needs to be transformed into a <code>MethylSet</code> object containing the methylated and unmethylated signals. The most basic way to construct a <code>MethylSet</code> is to use the function <code>preprocessRaw</code> which uses the array design to match up the different probes and color channels to construct the methylated and unmethylated signals. This function does not do any normalization (in a later step we will add normalization, but this step is useful for initial quality control). Do this now for your object and have a look at the changes in the metadata. Notice that the red and green assays have been transformed in Meth and Unmeth signals.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>MSet <span class="ot">&lt;-</span> <span class="fu">preprocessRaw</span>(rgSet)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>MSet</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare to previous object</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>rgSet</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>MSet <span class="ot">&lt;-</span> <span class="fu">preprocessRaw</span>(rgSet)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>MSet</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare to previous object</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>rgSet</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The accessors <code>getMeth</code> and <code>getUnmeth</code> can now be used on the <code>MethylSet</code> to get the methylated and unmethylated intensities matrices, if necessary.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">getMeth</span>(MSet)[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">getUnmeth</span>(MSet)[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">getMeth</span>(MSet)[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">getUnmeth</span>(MSet)[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>A <code>RatioSet</code> object is class designed to store Beta and/or M-values instead of the (un)methylated signals. An optional copy number matrix, CN, the sum of the methylated and unmethylated signals, can be also stored. Mapping a <code>MethylSet</code> to a <code>RatioSet</code> is irreversible, i.e.&nbsp;one cannot technically retrieve the methylated and unmethylated signals from a <code>RatioSet</code>. A <code>RatioSet</code> can be created with the function ratioConvert. The function <code>mapToGenome</code> applied to a <code>RatioSet</code> object will add genomic coordinates to each probe together with some additional annotation information. The output object is a <code>GenomicRatioSet</code></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>ratioSet <span class="ot">&lt;-</span> <span class="fu">ratioConvert</span>(MSet, <span class="at">what =</span> <span class="st">"both"</span>, <span class="at">keepCN =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Observe the change of the assays</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>ratioSet</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>gset <span class="ot">&lt;-</span> <span class="fu">mapToGenome</span>(ratioSet)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>gset</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>ratioSet <span class="ot">&lt;-</span> <span class="fu">ratioConvert</span>(MSet, <span class="at">what =</span> <span class="st">"both"</span>, <span class="at">keepCN =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Observe the change of the assays</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>ratioSet</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>gset <span class="ot">&lt;-</span> <span class="fu">mapToGenome</span>(ratioSet)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>gset</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The functions <code>getBeta</code>, <code>getM</code> and <code>getCN</code> work on the <code>GenomicRatioSet</code> return respectively the Beta value matrix, M value matrix and a the Copy Number matrix.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">getBeta</span>(gset)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(beta)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">getM</span>(gset)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(m)</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>cn <span class="ot">&lt;-</span> <span class="fu">getCN</span>(gset)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cn)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">getBeta</span>(gset)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(beta)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">getM</span>(gset)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(m)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>cn <span class="ot">&lt;-</span> <span class="fu">getCN</span>(gset)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cn)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Much more annotation data can be extracted from this object (see the <code>minfi</code> <a href="http://bioconductor.org/packages/release/bioc/vignettes/minfi/inst/doc/minfi.html">documentation</a>. Now we have a analysis ready object, albeit unnormalized. As we will see in a later section, there are several normalization options that automatically take care of the preprocessing and conversion of a <code>RGChannelSet</code> to a <code>GenomicRatioSet</code>. But before doing this, an important step is Quality Control</p>
 </section>
@@ -683,8 +639,8 @@ Warning
 <h1 data-number="8"><span class="header-section-number">8</span> Quality control</h1>
 <p><code>minfi</code> provides a simple quality control plot that uses the log median intensity in both the methylated (M) and unmethylated (U) channels. When plotting these two medians against each other, good samples tend to cluster together, while failed samples tend to separate and have lower median intensities. In general, users should make the plot and make a judgement. The line separating ”bad” from ”good” samples represent a useful cutoff, which is not always very clear and may have to be adapted to a specific dataset. The functions <code>getQC</code> and <code>plotQC</code> are designed to extract and plot the quality control information from the <code>MethylSet</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>qc <span class="ot">&lt;-</span> <span class="fu">getQC</span>(MSet)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotQC</span>(qc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>qc <span class="ot">&lt;-</span> <span class="fu">getQC</span>(MSet)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotQC</span>(qc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Here, the cutoff line suggests 3 “bad” samples. Can you determine which samples these are?</p>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -703,38 +659,38 @@ Tip
 <p>In general, a decision of good versus bad quality should be based on multiple metrics, not just one. Therefore, we can additionally look at the detection p-values for every CpG in every sample, which is indicative of the quality of the signal. The method used by <code>minfi</code> to calculate detection p-values compares the total signal (M+U) for each probe to the background signal level, which is estimated from the negative control probes. Very small p-values are indicative of a reliable signal whilst large p-values, for example &gt;0.01, generally indicate a poor quality signal.</p>
 <p>Plotting the mean detection p-value for each sample allows us to gauge the general quality of the samples in terms of the overall signal reliability. Samples that have many failed probes will have relatively large mean detection p-values.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the detection p-values</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>detP <span class="ot">&lt;-</span> <span class="fu">detectionP</span>(rgSet)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(detP)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the detection p-values</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>detP <span class="ot">&lt;-</span> <span class="fu">detectionP</span>(rgSet)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(detP)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>These p-values can be summarized in a single plot to simplify the comparison between samples</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># examine mean detection p-values across all samples to identify any failed samples</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">colMeans</span>(detP), <span class="at">las=</span><span class="dv">2</span>, <span class="at">cex.names=</span><span class="fl">0.8</span>, <span class="at">ylab=</span><span class="st">"Mean detection p-values"</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="fl">0.05</span>,<span class="at">col=</span><span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># examine mean detection p-values across all samples to identify any failed samples</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">colMeans</span>(detP), <span class="at">las=</span><span class="dv">2</span>, <span class="at">cex.names=</span><span class="fl">0.8</span>, <span class="at">ylab=</span><span class="st">"Mean detection p-values"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="fl">0.05</span>,<span class="at">col=</span><span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Poor quality samples can be easily excluded from the analysis using a detection p-value cutoff, for example &gt;0.05. For this particular dataset, the birth sample shows a very high mean detection p-value.</p>
 <p>The overall density distribution of Beta values for each sample is another useful metric to determine sample quality. Usually, one would expect to see most Beta values to be either close to 0 or 1, indicating most of the CpG sites in the sample are unmethylated or methylated. The <code>densityPlot</code> function plots these distribution for each sample.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>phenoData <span class="ot">&lt;-</span> <span class="fu">pData</span>(MSet)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">densityPlot</span>(MSet, <span class="at">sampGroups =</span> phenoData<span class="sc">$</span>Sample_Group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>phenoData <span class="ot">&lt;-</span> <span class="fu">pData</span>(MSet)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">densityPlot</span>(MSet, <span class="at">sampGroups =</span> phenoData<span class="sc">$</span>Sample_Group)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The 450k array contains several internal control probes that can be used to assess the quality control of different sample preparation steps (bisulfite conversion, hybridization, etc.). The values of these control probes are stored in the initial <code>RGChannelSet</code> and can be plotted by using the function <code>controlStripPlot</code> and by specifying the control probe type. We will not go into the details of each control probe type, but these might be useful to determine the exact reason a sample failed QC.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">controlStripPlot</span>(rgSet, <span class="at">controls=</span><span class="st">"BISULFITE CONVERSION II"</span>)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The plots of the different control probes can be exported into a pdf file in one step using the function qcReport</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#qcReport(rgSet, pdf= "qcReport.pdf")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">controlStripPlot</span>(rgSet, <span class="at">controls=</span><span class="st">"BISULFITE CONVERSION II"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The plots of the different control probes can be exported into a pdf file in one step using the function qcReport</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co">#qcReport(rgSet, pdf= "qcReport.pdf")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Taking these different metrics into account, it seems clear that the birth sample is of lower quality than the other samples. Therefore, we can decide to exclude it from the initial <code>rgSet</code> prior to further analysis.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># select the samples to keep for further analysis</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>keep <span class="ot">&lt;-</span> <span class="sc">!</span><span class="fu">colnames</span>(rgSet) <span class="sc">==</span> <span class="st">"birth.11"</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># subset rgSet</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>rgSet <span class="ot">&lt;-</span> rgSet[,keep]</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the sample has been removed by looking at the number of colnames</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>rgSet</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co"># subset target as well</span></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>targets <span class="ot">&lt;-</span> targets[keep,]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># select the samples to keep for further analysis</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>keep <span class="ot">&lt;-</span> <span class="sc">!</span><span class="fu">colnames</span>(rgSet) <span class="sc">==</span> <span class="st">"birth.11"</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># subset rgSet</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>rgSet <span class="ot">&lt;-</span> rgSet[,keep]</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the sample has been removed by looking at the number of colnames</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>rgSet</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># subset target as well</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>targets <span class="ot">&lt;-</span> targets[keep,]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="normalization" class="level1" data-number="9">
@@ -808,34 +764,34 @@ Note
 </div>
 <p>Note that after normalisation, the data is housed in a GenomicRatioSet object; automatically running the steps we did manually to do an initial quality control.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># normalize the data; this results in a GenomicRatioSet object</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>mSetSq <span class="ot">&lt;-</span> <span class="fu">preprocessQuantile</span>(rgSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># normalize the data; this results in a GenomicRatioSet object</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>mSetSq <span class="ot">&lt;-</span> <span class="fu">preprocessQuantile</span>(rgSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Compare with the unnormalized data to visualize the effect of the normalization. First a comparison of the Beta distributions for the different probe designs. This will give an indication of the effectiveness of the within-array normalization.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot distributions prior to normalization for sample 1</span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plotBetasByType</span>(MSet[,<span class="dv">1</span>],<span class="at">main=</span><span class="st">"Raw"</span>)</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The normalized object is a GenomicRatioSet which does not contain</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># the necessary probe info, we need to extract this from the MethylSet first.</span></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>typeI <span class="ot">&lt;-</span> <span class="fu">getProbeInfo</span>(MSet, <span class="at">type =</span> <span class="st">"I"</span>)[, <span class="fu">c</span>(<span class="st">"Name"</span>,<span class="st">"nCpG"</span>)]</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>typeII <span class="ot">&lt;-</span> <span class="fu">getProbeInfo</span>(MSet, <span class="at">type =</span> <span class="st">"II"</span>)[, <span class="fu">c</span>(<span class="st">"Name"</span>,<span class="st">"nCpG"</span>)]</span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>probeTypes <span class="ot">&lt;-</span> <span class="fu">rbind</span>(typeI, typeII)</span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>probeTypes<span class="sc">$</span>Type <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">"I"</span>, <span class="st">"II"</span>), <span class="at">times =</span> <span class="fu">c</span>(<span class="fu">nrow</span>(typeI), <span class="fu">nrow</span>(typeII)))</span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Now plot the distributions of the normalized data for sample 1</span></span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plotBetasByType</span>(<span class="fu">getBeta</span>(mSetSq)[,<span class="dv">1</span>], <span class="at">probeTypes =</span> probeTypes, <span class="at">main=</span><span class="st">"Normalized"</span>,)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot distributions prior to normalization for sample 1</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plotBetasByType</span>(MSet[,<span class="dv">1</span>],<span class="at">main=</span><span class="st">"Raw"</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The normalized object is a GenomicRatioSet which does not contain</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="co"># the necessary probe info, we need to extract this from the MethylSet first.</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>typeI <span class="ot">&lt;-</span> <span class="fu">getProbeInfo</span>(MSet, <span class="at">type =</span> <span class="st">"I"</span>)[, <span class="fu">c</span>(<span class="st">"Name"</span>,<span class="st">"nCpG"</span>)]</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>typeII <span class="ot">&lt;-</span> <span class="fu">getProbeInfo</span>(MSet, <span class="at">type =</span> <span class="st">"II"</span>)[, <span class="fu">c</span>(<span class="st">"Name"</span>,<span class="st">"nCpG"</span>)]</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>probeTypes <span class="ot">&lt;-</span> <span class="fu">rbind</span>(typeI, typeII)</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>probeTypes<span class="sc">$</span>Type <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">"I"</span>, <span class="st">"II"</span>), <span class="at">times =</span> <span class="fu">c</span>(<span class="fu">nrow</span>(typeI), <span class="fu">nrow</span>(typeII)))</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Now plot the distributions of the normalized data for sample 1</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plotBetasByType</span>(<span class="fu">getBeta</span>(mSetSq)[,<span class="dv">1</span>], <span class="at">probeTypes =</span> probeTypes, <span class="at">main=</span><span class="st">"Normalized"</span>,)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Does it look like the normalization brought the distributions closer to each other? Now let’s see how the between-array normalization worked…</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualise what the data looks like before and after normalisation</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">densityPlot</span>(rgSet, <span class="at">sampGroups=</span>targets<span class="sc">$</span>Sample_Group,<span class="at">main=</span><span class="st">"Raw"</span>, <span class="at">legend=</span><span class="cn">FALSE</span>)</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="at">legend =</span> <span class="fu">levels</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group)), </span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">text.col=</span><span class="fu">brewer.pal</span>(<span class="dv">8</span>,<span class="st">"Dark2"</span>))</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="fu">densityPlot</span>(<span class="fu">getBeta</span>(mSetSq), <span class="at">sampGroups=</span>targets<span class="sc">$</span>Sample_Group,</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">main=</span><span class="st">"Normalized"</span>, <span class="at">legend=</span><span class="cn">FALSE</span>)</span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="at">legend =</span> <span class="fu">levels</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group)), </span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">text.col=</span><span class="fu">brewer.pal</span>(<span class="dv">8</span>,<span class="st">"Dark2"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualise what the data looks like before and after normalisation</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">densityPlot</span>(rgSet, <span class="at">sampGroups=</span>targets<span class="sc">$</span>Sample_Group,<span class="at">main=</span><span class="st">"Raw"</span>, <span class="at">legend=</span><span class="cn">FALSE</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="at">legend =</span> <span class="fu">levels</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group)), </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">text.col=</span><span class="fu">brewer.pal</span>(<span class="dv">8</span>,<span class="st">"Dark2"</span>))</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="fu">densityPlot</span>(<span class="fu">getBeta</span>(mSetSq), <span class="at">sampGroups=</span>targets<span class="sc">$</span>Sample_Group,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">main=</span><span class="st">"Normalized"</span>, <span class="at">legend=</span><span class="cn">FALSE</span>)</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="at">legend =</span> <span class="fu">levels</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group)), </span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">text.col=</span><span class="fu">brewer.pal</span>(<span class="dv">8</span>,<span class="st">"Dark2"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -856,20 +812,20 @@ Tip
 <h1 data-number="10"><span class="header-section-number">10</span> Data exploration</h1>
 <p>After normalization of your data is a good time to look at the similarities and differences between the various samples. One way to do this is by creating a MDS or Multi-Dimenional Scaling plot. This is a method to graphically represent relationships between objects (here the different samples) in multidimensional space onto 2 or 3 dimensional space. Dimension one (or principal component one) captures the greatest source of variation in the data, dimension two captures the second greatest source of variation in the data and so on. Colouring the data points or labels by known factors of interest can often highlight exactly what the greatest sources of variation are in the data. In a good quality dataset, one would hope that biological differences would show up as one of the greatest sources of variation. It is also possible to use MDS plots to decipher sample mix-ups. The following code creates the MDS plot twice but the samples in the left plot are colored according to celltype, while the plot on the right is colored according to “individual”. Before you proceed think a moment about what this figure tells you about the sources in variation in the data. Try changing the <code>dim=c(1,2)</code> parameter to for example <code>dim=c(1,3)</code> or other values to get an even deeper understanding of the variation in the data.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MDS plots to look at largest sources of variation</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create color panel</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">&lt;-</span> <span class="fu">brewer.pal</span>(<span class="dv">8</span>,<span class="st">"Dark2"</span>)</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot figures</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMDS</span>(<span class="fu">getM</span>(mSetSq), <span class="at">top=</span><span class="dv">1000</span>, <span class="at">gene.selection=</span><span class="st">"common"</span>, </span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">col=</span>pal[<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group)], <span class="at">dim=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="at">legend=</span><span class="fu">levels</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group)), <span class="at">text.col=</span>pal,</span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">bg=</span><span class="st">"white"</span>, <span class="at">cex=</span><span class="fl">0.7</span>)</span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMDS</span>(<span class="fu">getM</span>(mSetSq), <span class="at">top=</span><span class="dv">1000</span>, <span class="at">gene.selection=</span><span class="st">"common"</span>,  </span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">col=</span>pal[<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Source)], <span class="at">dim=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="at">legend=</span><span class="fu">levels</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Source)), <span class="at">text.col=</span>pal,</span>
-<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">bg=</span><span class="st">"white"</span>, <span class="at">cex=</span><span class="fl">0.7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MDS plots to look at largest sources of variation</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create color panel</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">&lt;-</span> <span class="fu">brewer.pal</span>(<span class="dv">8</span>,<span class="st">"Dark2"</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot figures</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMDS</span>(<span class="fu">getM</span>(mSetSq), <span class="at">top=</span><span class="dv">1000</span>, <span class="at">gene.selection=</span><span class="st">"common"</span>, </span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">col=</span>pal[<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group)], <span class="at">dim=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="at">legend=</span><span class="fu">levels</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group)), <span class="at">text.col=</span>pal,</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">bg=</span><span class="st">"white"</span>, <span class="at">cex=</span><span class="fl">0.7</span>)</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMDS</span>(<span class="fu">getM</span>(mSetSq), <span class="at">top=</span><span class="dv">1000</span>, <span class="at">gene.selection=</span><span class="st">"common"</span>,  </span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">col=</span>pal[<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Source)], <span class="at">dim=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="at">legend=</span><span class="fu">levels</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Source)), <span class="at">text.col=</span>pal,</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">bg=</span><span class="st">"white"</span>, <span class="at">cex=</span><span class="fl">0.7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Examining the MDS plots for this dataset demonstrates that the largest source of variation is the difference between individuals. The higher dimensions reveal that the differences between cell types are largely captured by the third and fourth principal components. This type of information is useful in that it can inform downstream analysis. If obvious sources of unwanted variation are revealed by the MDS plots, we can include them in our statistical model to account for them. In the case of this particular dataset, we will include individual to individual variation in our statistical model.</p>
 </section>
@@ -877,18 +833,18 @@ Tip
 <h1 data-number="11"><span class="header-section-number">11</span> Filtering</h1>
 <p>Poor performing probes can obscure the biological signals in the data and are generally filtered out prior to differential methylation analysis. As the signal from these probes is unreliable, by removing them we perform fewer statistical tests and thus lower the multiple testing penalty. We filter out probes that have failed in one or more samples based on detection p-value.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ensure probes are in the same order in the mSetSq and detP objects</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>detP <span class="ot">&lt;-</span> <span class="fu">detectionP</span>(rgSet)</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>detP <span class="ot">&lt;-</span> detP[<span class="fu">match</span>(<span class="fu">featureNames</span>(mSetSq),<span class="fu">rownames</span>(detP)),] </span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co"># remove any probes that have failed in one or more samples; this next line</span></span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="co"># checks for each row of detP whether the number of values &lt; 0.01 is equal </span></span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co"># to the number of samples (TRUE) or not (FALSE)</span></span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>keep <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(detP <span class="sc">&lt;</span> <span class="fl">0.01</span>) <span class="sc">==</span> <span class="fu">ncol</span>(mSetSq) </span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(keep)</span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the GenomicRatioSet</span></span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>mSetSqFlt <span class="ot">&lt;-</span> mSetSq[keep,]</span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>mSetSqFlt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ensure probes are in the same order in the mSetSq and detP objects</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>detP <span class="ot">&lt;-</span> <span class="fu">detectionP</span>(rgSet)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>detP <span class="ot">&lt;-</span> detP[<span class="fu">match</span>(<span class="fu">featureNames</span>(mSetSq),<span class="fu">rownames</span>(detP)),] </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co"># remove any probes that have failed in one or more samples; this next line</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co"># checks for each row of detP whether the number of values &lt; 0.01 is equal </span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co"># to the number of samples (TRUE) or not (FALSE)</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>keep <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(detP <span class="sc">&lt;</span> <span class="fl">0.01</span>) <span class="sc">==</span> <span class="fu">ncol</span>(mSetSq) </span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(keep)</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the GenomicRatioSet</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>mSetSqFlt <span class="ot">&lt;-</span> mSetSq[keep,]</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>mSetSqFlt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Because the presence of short nucleotide polymorphisms (or SNPs) inside the probe body or at the nucleotide extension can have important consequences on the downstream analysis, <code>minfi</code> offers the possibility to remove such probes.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -906,23 +862,23 @@ Note
 </div>
 <p>There is a function in <code>minfi</code> that provides a simple interface for the removal of probes where common SNPs may affect the CpG. You can either remove all probes affected by SNPs (default), or only those with minor allele frequencies greater than a specified value.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>mSetSqFlt <span class="ot">&lt;-</span> <span class="fu">dropLociWithSnps</span>(mSetSqFlt)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>mSetSqFlt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>mSetSqFlt <span class="ot">&lt;-</span> <span class="fu">dropLociWithSnps</span>(mSetSqFlt)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>mSetSqFlt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Once the data has been filtered and normalised, it is often useful to re-examine the MDS plots to see if the relationship between the samples has changed. From the new MDS plots it is apparent that much of the inter-individual variation has been removed as this is no longer the first principal component, likely due to the removal of the SNP-affected CpG probes. However, the samples do still cluster by individual in the second dimension and thus a factor for individual should still be included in the model.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMDS</span>(<span class="fu">getM</span>(mSetSqFlt), <span class="at">top=</span><span class="dv">1000</span>, <span class="at">gene.selection=</span><span class="st">"common"</span>, </span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">col=</span>pal[<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group)], <span class="at">cex=</span><span class="fl">0.8</span>)</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"right"</span>, <span class="at">legend=</span><span class="fu">levels</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group)), <span class="at">text.col=</span>pal,</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">cex=</span><span class="fl">0.65</span>, <span class="at">bg=</span><span class="st">"white"</span>)</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMDS</span>(<span class="fu">getM</span>(mSetSqFlt), <span class="at">top=</span><span class="dv">1000</span>, <span class="at">gene.selection=</span><span class="st">"common"</span>, </span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">col=</span>pal[<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Source)])</span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"right"</span>, <span class="at">legend=</span><span class="fu">levels</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Source)), <span class="at">text.col=</span>pal,</span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">cex=</span><span class="fl">0.7</span>, <span class="at">bg=</span><span class="st">"white"</span>)</span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Close double plotting window</span></span>
-<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMDS</span>(<span class="fu">getM</span>(mSetSqFlt), <span class="at">top=</span><span class="dv">1000</span>, <span class="at">gene.selection=</span><span class="st">"common"</span>, </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">col=</span>pal[<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group)], <span class="at">cex=</span><span class="fl">0.8</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"right"</span>, <span class="at">legend=</span><span class="fu">levels</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group)), <span class="at">text.col=</span>pal,</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">cex=</span><span class="fl">0.65</span>, <span class="at">bg=</span><span class="st">"white"</span>)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMDS</span>(<span class="fu">getM</span>(mSetSqFlt), <span class="at">top=</span><span class="dv">1000</span>, <span class="at">gene.selection=</span><span class="st">"common"</span>, </span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">col=</span>pal[<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Source)])</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"right"</span>, <span class="at">legend=</span><span class="fu">levels</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Source)), <span class="at">text.col=</span>pal,</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">cex=</span><span class="fl">0.7</span>, <span class="at">bg=</span><span class="st">"white"</span>)</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Close double plotting window</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="probe-wise-differential-methylation" class="level1" data-number="12">
@@ -943,64 +899,64 @@ Warning
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate M-values for statistical analysis: as previously mentioned, M-values have nicer statistical properties and are thus better for use in statistical analysis of methylation data </span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>mVals <span class="ot">&lt;-</span> <span class="fu">getM</span>(mSetSqFlt)</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up the design matrix for the Differential Methylation analysis</span></span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the factor of interest</span></span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>cellType <span class="ot">&lt;-</span> <span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group)</span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Define is the individual effect that we need to account for</span></span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>individual <span class="ot">&lt;-</span> <span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Source) </span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="co"># use the above to create a design matrix</span></span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>design <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span><span class="dv">0</span><span class="sc">+</span>cellType<span class="sc">+</span>individual, <span class="at">data=</span>targets)</span>
-<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(design) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">levels</span>(cellType),<span class="fu">levels</span>(individual)[<span class="sc">-</span><span class="dv">1</span>])</span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the actual linear model to the data</span></span>
-<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lmFit</span>(mVals, design)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate M-values for statistical analysis: as previously mentioned, M-values have nicer statistical properties and are thus better for use in statistical analysis of methylation data </span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>mVals <span class="ot">&lt;-</span> <span class="fu">getM</span>(mSetSqFlt)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up the design matrix for the Differential Methylation analysis</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the factor of interest</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>cellType <span class="ot">&lt;-</span> <span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group)</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Define is the individual effect that we need to account for</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>individual <span class="ot">&lt;-</span> <span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Source) </span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="co"># use the above to create a design matrix</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>design <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span><span class="dv">0</span><span class="sc">+</span>cellType<span class="sc">+</span>individual, <span class="at">data=</span>targets)</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(design) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">levels</span>(cellType),<span class="fu">levels</span>(individual)[<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the actual linear model to the data</span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lmFit</span>(mVals, design)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We are interested in pairwise comparisons between the four cell types, taking into account variation between individuals. We perform this analysis on the matrix of M-values in <code>limma</code>, obtaining t-statistics and associated p-values for each CpG site. A convenient way to set up the model when the user has many comparisons of interest that they would like to test is to use a contrasts matrix in conjunction with the design matrix. A contrasts matrix will take linear combinations of the columns of the design matrix corresponding to the comparisons of interest, essentially subsetting the data to these comparisons.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a contrast matrix for specific comparisons</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>contMatrix <span class="ot">&lt;-</span> <span class="fu">makeContrasts</span>(naive<span class="sc">-</span>rTreg,</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                            naive<span class="sc">-</span>act_naive,</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                            rTreg<span class="sc">-</span>act_rTreg,</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                            act_naive<span class="sc">-</span>act_rTreg,</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">levels=</span>design)</span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>contMatrix</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a contrast matrix for specific comparisons</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>contMatrix <span class="ot">&lt;-</span> <span class="fu">makeContrasts</span>(naive<span class="sc">-</span>rTreg,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                            naive<span class="sc">-</span>act_naive,</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>                            rTreg<span class="sc">-</span>act_rTreg,</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                            act_naive<span class="sc">-</span>act_rTreg,</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">levels=</span>design)</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>contMatrix</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Next, these contrasts are fitted to the model and the statistics and p-values of differential expression are calculated by the function <code>eBayes</code>. this function is used to rank genes in order of evidence for differential methylation. We will not delve too deep into the background of this statistical testing framework. <!--# if you are interested in this more info can be found [here]() <Linear models and empirical bayes methods for assessing differential expr --></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the contrasts</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">contrasts.fit</span>(fit, contMatrix)</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Rank genes</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">eBayes</span>(fit2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the contrasts</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">contrasts.fit</span>(fit, contMatrix)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Rank genes</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">eBayes</span>(fit2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Using the <code>topTable</code> function in <code>limma</code>, the differentially methylated genes per comparison/contrast can be extracted. To order these by p-value, the user can specify sort.by=“p”. The results of the analysis for the first comparison, naive vs.&nbsp;rTreg, can be saved as a data.frame by setting <code>coef=1</code>. The <code>coef</code> parameter explicitly refers to the column in the contrasts matrix which corresponds to the comparison of interest.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get the table of results for the first contrast (naive - rTreg)</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>DMPs <span class="ot">&lt;-</span> <span class="fu">topTable</span>(fit2, <span class="at">num=</span><span class="cn">Inf</span>, <span class="at">coef=</span><span class="dv">1</span>)</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(DMPs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get the table of results for the first contrast (naive - rTreg)</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>DMPs <span class="ot">&lt;-</span> <span class="fu">topTable</span>(fit2, <span class="at">num=</span><span class="cn">Inf</span>, <span class="at">coef=</span><span class="dv">1</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(DMPs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We can add a bit more annotation to this list of CpGs, by adding a <code>genelist</code> parameter to the <code>topTable</code> function. This can be useful to retrieve the location of the CpG, the nearest gene or CpG island and other information.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve data from the array annotation package; this is array-specific</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>ann450kSub <span class="ot">&lt;-</span> ann450k[<span class="fu">match</span>(<span class="fu">rownames</span>(mVals),ann450k<span class="sc">$</span>Name),</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,<span class="dv">12</span><span class="sc">:</span><span class="dv">19</span>,<span class="dv">24</span><span class="sc">:</span><span class="fu">ncol</span>(ann450k))]</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>DMPs <span class="ot">&lt;-</span> <span class="fu">topTable</span>(fit2, <span class="at">num=</span><span class="cn">Inf</span>, <span class="at">coef=</span><span class="dv">1</span>, <span class="at">genelist=</span>ann450kSub)</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(DMPs)</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="co"># The resulting data.frame can easily be written to a CSV file, which can be opened in Excel.</span></span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a><span class="co"># write.table(DMPs, file="DMPs.csv", sep=",", row.names=FALSE)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve data from the array annotation package; this is array-specific</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>ann450kSub <span class="ot">&lt;-</span> ann450k[<span class="fu">match</span>(<span class="fu">rownames</span>(mVals),ann450k<span class="sc">$</span>Name),</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,<span class="dv">12</span><span class="sc">:</span><span class="dv">19</span>,<span class="dv">24</span><span class="sc">:</span><span class="fu">ncol</span>(ann450k))]</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>DMPs <span class="ot">&lt;-</span> <span class="fu">topTable</span>(fit2, <span class="at">num=</span><span class="cn">Inf</span>, <span class="at">coef=</span><span class="dv">1</span>, <span class="at">genelist=</span>ann450kSub)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(DMPs)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="co"># The resulting data.frame can easily be written to a CSV file, which can be opened in Excel.</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="co"># write.table(DMPs, file="DMPs.csv", sep=",", row.names=FALSE)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>It is always a good idea to plot the most differentially methylated sites as a quick sanity check; if the plot does not make sense there might have been an issue with the model design or setup of the contrast matrix. To do this, we first extract the Beta-values (remember these are the preferential values to visualize).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># eXtract Beta-values</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>bVals <span class="ot">&lt;-</span> <span class="fu">getBeta</span>(mSetSqFlt)</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot most significant differentially methylated CpG</span></span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plotCpg</span>(bVals, <span class="at">cpg=</span><span class="st">"cg07499259"</span>, <span class="at">pheno=</span>targets<span class="sc">$</span>Sample_Group, <span class="at">ylab =</span> <span class="st">"Beta values"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># eXtract Beta-values</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>bVals <span class="ot">&lt;-</span> <span class="fu">getBeta</span>(mSetSqFlt)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot most significant differentially methylated CpG</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plotCpg</span>(bVals, <span class="at">cpg=</span><span class="st">"cg07499259"</span>, <span class="at">pheno=</span>targets<span class="sc">$</span>Sample_Group, <span class="at">ylab =</span> <span class="st">"Beta values"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><em>Does this plot makes sense? Are the differences in methylation percentage as expected?</em></p>
 </section>
@@ -1025,38 +981,38 @@ Tip
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>myAnnotation <span class="ot">&lt;-</span> <span class="fu">cpg.annotate</span>(<span class="at">object =</span> mVals, </span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">datatype =</span> <span class="st">"array"</span>, </span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">what =</span> <span class="st">"M"</span>, </span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">analysis.type =</span> <span class="st">"differential"</span>, </span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">design =</span> design, </span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">contrasts =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">cont.matrix =</span> contMatrix, </span>
-<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">coef =</span> <span class="st">"naive - rTreg"</span>, </span>
-<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">arraytype =</span> <span class="st">"450K"</span>)</span>
-<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>myAnnotation</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>myAnnotation <span class="ot">&lt;-</span> <span class="fu">cpg.annotate</span>(<span class="at">object =</span> mVals, </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">datatype =</span> <span class="st">"array"</span>, </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">what =</span> <span class="st">"M"</span>, </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">analysis.type =</span> <span class="st">"differential"</span>, </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">design =</span> design, </span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">contrasts =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">cont.matrix =</span> contMatrix, </span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">coef =</span> <span class="st">"naive - rTreg"</span>, </span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">arraytype =</span> <span class="st">"450K"</span>)</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>myAnnotation</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Once we have the relevant statistics for the individual CpGs, we can then use the <code>dmrcate</code> function to combine them to identify differentially methylated regions. Of particular interest here is the <code>lambda</code> parameter; this value is the number of nucleotides that is allowed between significant CpGs before splitting them up in different regions. So a smaller <code>lambda</code> will result in more but smaller regions. For array data, the authors of the <code>dmrcate</code> package currently recommend a lambda of 1000. The main output table DMRs contains all of the regions found, along with their genomic annotations and p-values. To inspect this object and further visualization, you can best use the <code>extractRanges</code> function to create a <code>GRanges</code> object.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>DMRs <span class="ot">&lt;-</span> <span class="fu">dmrcate</span>(myAnnotation, <span class="at">lambda=</span><span class="dv">1000</span>, <span class="at">C=</span><span class="dv">2</span>)</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>DMRs</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create GRanges object; create directory when prompted</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>results.ranges <span class="ot">&lt;-</span> <span class="fu">extractRanges</span>(DMRs)</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>results.ranges</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>DMRs <span class="ot">&lt;-</span> <span class="fu">dmrcate</span>(myAnnotation, <span class="at">lambda=</span><span class="dv">1000</span>, <span class="at">C=</span><span class="dv">2</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>DMRs</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create GRanges object; create directory when prompted</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>results.ranges <span class="ot">&lt;-</span> <span class="fu">extractRanges</span>(DMRs)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>results.ranges</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Just as for the single CpG analysis, it is a good idea to visually inspect the results to make sure they make sense. For this, use the <code>DMR.plot</code> function. By default, this plot draws the location of the DMR in the genome, the position of nearby genes, the positions of the CpG probes, the Beta value levels of each sample as a heatmap and the mean methylation levels for the various sample groups in the experiment.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set up the grouping variables and colours</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">&lt;-</span> <span class="fu">brewer.pal</span>(<span class="dv">8</span>,<span class="st">"Dark2"</span>)</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>groups <span class="ot">&lt;-</span> pal[<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">unique</span>(targets<span class="sc">$</span>Sample_Group))]</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(groups) <span class="ot">&lt;-</span> <span class="fu">levels</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group))</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> groups[<span class="fu">as.character</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group))]</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="co"># draw the plot for the second DMR - first gives error for some reason...</span></span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="fu">DMR.plot</span>(<span class="at">ranges =</span> results.ranges, </span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">dmr =</span> <span class="dv">2</span>, </span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">CpGs =</span> mSetSqFlt,</span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">phen.col =</span> cols, </span>
-<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">genome =</span> <span class="st">"hg19"</span>,<span class="at">arraytype=</span><span class="st">"450K"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set up the grouping variables and colours</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">&lt;-</span> <span class="fu">brewer.pal</span>(<span class="dv">8</span>,<span class="st">"Dark2"</span>)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>groups <span class="ot">&lt;-</span> pal[<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(<span class="fu">unique</span>(targets<span class="sc">$</span>Sample_Group))]</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(groups) <span class="ot">&lt;-</span> <span class="fu">levels</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group))</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> groups[<span class="fu">as.character</span>(<span class="fu">factor</span>(targets<span class="sc">$</span>Sample_Group))]</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="co"># draw the plot for the second DMR - first gives error for some reason...</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="fu">DMR.plot</span>(<span class="at">ranges =</span> results.ranges, </span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">dmr =</span> <span class="dv">2</span>, </span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">CpGs =</span> mSetSqFlt,</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">phen.col =</span> cols, </span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">genome =</span> <span class="st">"hg19"</span>,<span class="at">arraytype=</span><span class="st">"450K"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Interestingly, the hypomethylation of the second DMR, near TIGIT, in Treg was one of the main conclusions of the paper base don this dataset:</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -1091,29 +1047,29 @@ Note
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a named vector containing the rank metric (here: logFC)</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>myRank <span class="ot">&lt;-</span> DMPs<span class="sc">$</span>logFC</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(myRank) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(DMPs)</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the phenotype data to a format suitable for mCSEA</span></span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>pheno <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">pData</span>(mSetSqFlt))</span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>pheno <span class="ot">&lt;-</span> pheno[,<span class="st">"Sample_Group"</span>, drop<span class="ot">=</span><span class="cn">FALSE</span>]</span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the mCSEA </span></span>
-<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>myResults <span class="ot">&lt;-</span> <span class="fu">mCSEATest</span>(myRank, </span>
-<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>                       bVals, </span>
-<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>                       pheno,</span>
-<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>                       <span class="at">regionsTypes =</span> <span class="st">"promoters"</span>, </span>
-<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>                       <span class="at">platform =</span> <span class="st">"450k"</span>)</span>
-<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(myResults<span class="sc">$</span>promoters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a named vector containing the rank metric (here: logFC)</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>myRank <span class="ot">&lt;-</span> DMPs<span class="sc">$</span>logFC</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(myRank) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(DMPs)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the phenotype data to a format suitable for mCSEA</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>pheno <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">pData</span>(mSetSqFlt))</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>pheno <span class="ot">&lt;-</span> pheno[,<span class="st">"Sample_Group"</span>, drop<span class="ot">=</span><span class="cn">FALSE</span>]</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the mCSEA </span></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>myResults <span class="ot">&lt;-</span> <span class="fu">mCSEATest</span>(myRank, </span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>                       bVals, </span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>                       pheno,</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>                       <span class="at">regionsTypes =</span> <span class="st">"promoters"</span>, </span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>                       <span class="at">platform =</span> <span class="st">"450k"</span>)</span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(myResults<span class="sc">$</span>promoters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The main results are found in <code>myResults$promoters</code>. This data frame contains the (normalized) enrichment score, p-values, total number of associated CpGs and the leading edge CpGs. The leading edge CpGs are the real drivers of the ES; these can be considered the most important CpGs with the largest logFC. The results of selected results can be visualized using <code>mCSEAPlot</code>, by specifying the <code>regionType</code> and the <code>dmrName</code>. Here an example of the second hit of the DMRs based on location; the promoter of TIGIT. Note that the gene name indicates the promoter of said gene, since we specified we only consider promoter regions in this analysis. The result of this visualization are the chromosomal location, Beta levels per CpG per sample, leading edge status (green if in leading edge set) and gene annotation.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mCSEAPlot</span>(myResults, </span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">regionType =</span> <span class="st">"promoters"</span>, </span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">dmrName =</span> <span class="st">"TIGIT"</span>,</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">transcriptAnnotation =</span> <span class="st">"symbol"</span>, </span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">makePDF =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mCSEAPlot</span>(myResults, </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">regionType =</span> <span class="st">"promoters"</span>, </span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">dmrName =</span> <span class="st">"TIGIT"</span>,</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">transcriptAnnotation =</span> <span class="st">"symbol"</span>, </span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">makePDF =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 </section>
@@ -1122,16 +1078,16 @@ Note
 <p>After obtaining a - potentially long - list of significantly differentially methylated CpG sites, one might wonder whether there is a (or multiple) specific biological pathway(s) over-represented in this list. In some cases it is relatively straightforward to link the top differentially methylated CpGs to genes that make biological sense in terms of the cell types or samples being studied, but there may be many thousands of CpGs significantly differentially methylated. Gene-set analysis (GSA) is frequently used to discover meaningful biological patterns from lists of genes generated from high-throughput experiments, including genome-wide DNA methylation studies. The objective is typically to identify similarities between the genes, with respect to annotations available from sources such as the Gene Ontology (GO) or Kyoto Encyclopedia of Genes and Genomes (KEGG).</p>
 <p>We can perform this type of analysis using the <code>gometh</code> function in the <code>missMethyl</code> package. This function takes as input a character vector of the names (e.g.&nbsp;cg20832020) of the significant CpG sites, and optionally, a character vector of all CpGs tested. This is recommended particularly if extensive filtering of the CpGs has been performed prior to analysis as it constitutes the “background” out of which any significant CpG could be chosen. For gene ontology testing, the user can specify collection=“GO” (which is the default option). For testing KEGG pathways, specify collection=”KEGG”. In this tutorial, we will continue with the results from the single-probe “naive vs rTreg” comparison and select all CpG sites that have an adjusted p-value of less than 0.05.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the significant CpG sites at less than 5% FDR</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>sigCpGs <span class="ot">&lt;-</span> DMPs<span class="sc">$</span>Name[DMPs<span class="sc">$</span>adj.P.Val<span class="sc">&lt;</span><span class="fl">0.05</span>]</span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co"># First 10 significant CpGs</span></span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>sigCpGs[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Total number of significant CpGs at 5% FDR</span></span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(sigCpGs)</span>
-<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Get all the CpG sites used in the analysis to form the background</span></span>
-<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>all <span class="ot">&lt;-</span> DMPs<span class="sc">$</span>Name</span>
-<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Total number of CpG sites tested</span></span>
-<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(all)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the significant CpG sites at less than 5% FDR</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>sigCpGs <span class="ot">&lt;-</span> DMPs<span class="sc">$</span>Name[DMPs<span class="sc">$</span>adj.P.Val<span class="sc">&lt;</span><span class="fl">0.05</span>]</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co"># First 10 significant CpGs</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>sigCpGs[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Total number of significant CpGs at 5% FDR</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(sigCpGs)</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Get all the CpG sites used in the analysis to form the background</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>all <span class="ot">&lt;-</span> DMPs<span class="sc">$</span>Name</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Total number of CpG sites tested</span></span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(all)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1148,10 +1104,10 @@ Warning
 </div>
 <p>After having defined the significant and background sites, it is time to run the enrichment analysis itself.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run enrichment - Can take a bit of time...</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>gst <span class="ot">&lt;-</span> <span class="fu">gometh</span>(<span class="at">sig.cpg=</span>sigCpGs, <span class="at">all.cpg=</span>all)</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Top 10 GO categories</span></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="fu">topGSA</span>(gst, <span class="at">number=</span><span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run enrichment - Can take a bit of time...</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>gst <span class="ot">&lt;-</span> <span class="fu">gometh</span>(<span class="at">sig.cpg=</span>sigCpGs, <span class="at">all.cpg=</span>all)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Top 10 GO categories</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">topGSA</span>(gst, <span class="at">number=</span><span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Can you find the top 10 KEGG pathways? Do they make sense biologically?</p>
 <p>While gene set testing is useful for providing some biological insight in terms of what pathways might be affected by abberant methylation, care should be taken not to over-interpret the results. Gene set testing should be used for the purpose of providing some biological insight that ideally would be tested and validated in further laboratory experiments. It is important to keep in mind that we are not observing gene level activity such as in RNA-Seq experiments, and that we have had to take an extra step to associate CpGs with genes.</p>

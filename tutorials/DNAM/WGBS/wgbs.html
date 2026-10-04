@@ -360,7 +360,7 @@ Note
 <section id="set-up-r-environment" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Set Up R environment</h1>
 <p>If you are already working in UPPMAX and your interactive session from the Array tutorial is still open then you can continue this exercise in that one. Otherwise connect to Pelle, start an interactive session and set up the R environment as you did this morning.</p>
-<p>There are three options for you to select. This exercise can be set up to run on UPPMAX, and so we provide two ways to set up the R environment within UPPMAX. Alternatively, if you prefer to work locally in your laptop then you can follow Option C. These options are described in detail below.</p>
+<p>This exercise can be set up to run on UPPMAX, and so we provide Option A to set up the R environment within UPPMAX. Alternatively, if you prefer to work locally in your laptop then you can follow Option B. These options are described in detail below.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -404,46 +404,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Option B - UPPMAX Rserver container
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>We have provided a containerized environment consisting of R, Rstudio and the necessary packages for this session. This means the software can easily run within the container on almost any computer or server, greatly simplifying software installation and management. A benefit of using it here is that Rstudio runs a whole lot faster using the container approach. However, to access it from UPPMAX, a few more steps are necessary.</p>
-<details>
-<summary>Show steps</summary>
-<p>Follow the instruction in <a href="#nte-uppaxsetwd" class="quarto-xref">Note&nbsp;1</a> to set your working directory. Execute the following commands from a terminal in Pelle.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the startup script; this will start the container and run Rstudio</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sh</span> /sw/courses/epigenomics/DNAmethylation/startup_script.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>You should see something like this:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">1.</span> SSH tunnel from your workstation using the following command:</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ssh</span> <span class="at">-N</span> <span class="at">-L</span> 8787::pelle1.uppmax.uu.se:41535 louella@pelle.uppmax.uu.se</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>      <span class="ex">and</span> point your web browser to http://localhost:8787</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">2.</span> log in to RStudio Server using the following credentials:</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>      <span class="ex">user:</span> louella</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>      <span class="ex">password:</span> epi2021</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Now, open a second terminal in your laptop and run your ssh command from 1. Then open your web browser (Safari, Chrome, …) and go to http://localhost:8787. Here, fill in your user and password as in 2. and Rstudio will start.</p>
-<p>Next, run the R commands by copying them from this website into the Rstudio terminal and pressing Enter.</p>
-</details>
-</div>
-</div>
-<p><br>
-</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Option C - Local Renv Setup
+<span class="screen-reader-only">Tip</span>Option B - Local Renv Setup
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -469,21 +430,21 @@ Note&nbsp;1: Set up your working directory
 <div class="callout-body-container callout-body">
 <p>Change directory to the course directory</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>   <span class="bu">cd</span> /gorilla/proj/epi2026/students</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>   <span class="bu">cd</span> /gorilla/proj/epi2026/students</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>, and create your personal folder with name <code>&lt;your_name&gt;</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> <span class="op">&lt;</span>your_name<span class="op">&gt;</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>   <span class="bu">cd</span> <span class="op">&lt;</span>your_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> <span class="op">&lt;</span>your_name<span class="op">&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>   <span class="bu">cd</span> <span class="op">&lt;</span>your_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Create sub folders to tidy files in your personal folder.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> scripts  <span class="co">#folder to store your codes</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> data     <span class="co">#folder to store data</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> output   <span class="co">#folder to store output files </span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>   </span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>   </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> scripts  <span class="co">#folder to store your codes</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> data     <span class="co">#folder to store data</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mkdir</span> output   <span class="co">#folder to store output files </span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>   </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>   </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -495,33 +456,33 @@ Note&nbsp;1: Set up your working directory
 <p>First, set the correct library path.</p>
 <p>For Option A only:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Do NOT do this if setting up the environment with option B, only option A</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If you accidentally run the following line with option B, you can do *Session -&gt; Restart R*</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># and run again without this line.</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>(<span class="st">"/gorilla/proj/epi2026/library/Rpackages/4.6.1"</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure the library paths are correct (should be pointing to the folder above)</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>()</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#"/gorilla/proj/epi2026/library/Rpackages/4.6.1"                      </span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#"/sw/arch/eb/software/R-bundle-CRAN/2026.07-foss-2026.1"             </span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#"/sw/arch/eb/software/R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1"</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#"/sw/arch/eb/software/R/4.6.1-gfbf-2026.1/lib64/R/library"    </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Do NOT do this if setting up the environment with option B, only option A</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If you accidentally run the following line with option B, you can do *Session -&gt; Restart R*</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># and run again without this line.</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>(<span class="st">"/gorilla/proj/epi2026/library/Rpackages/4.6.1"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure the library paths are correct (should be pointing to the folder above)</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>()</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#"/gorilla/proj/epi2026/library/Rpackages/4.6.1"                      </span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#"/sw/arch/eb/software/R-bundle-CRAN/2026.07-foss-2026.1"             </span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#"/sw/arch/eb/software/R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1"</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#"/sw/arch/eb/software/R/4.6.1-gfbf-2026.1/lib64/R/library"    </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>For Option C only:</p>
+<p>For Option B only:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure the library paths are correct (should be pointing to the local renv folder)</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure the library paths are correct (should be pointing to the local renv folder)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>After setting the library path, continue to load the R packages required for this tutorial.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages required for analysis</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"methylKit"</span>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotation package</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"genomation"</span>)</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"GenomicRanges"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages required for analysis</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"methylKit"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotation package</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"genomation"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"GenomicRanges"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 </section>
@@ -530,13 +491,13 @@ Note&nbsp;1: Set up your working directory
 <p>As mentioned above, the samples we will be using as input files are Bismark coverage files, which need to be collected in a list R object prior to be loaded in <code>methylKit</code> using the <code>methRead</code> function. You have to supply the sample location, sample IDs and the genome assembly. Moreover, you should supply which pipeline was used to produce the input files and a <code>treatment</code> parameter indicating which sample is “control” or “0” and which is “test” or “1”. Additionally, you can define a minimum read coverage for CpG sites to be included in the object with <code>mincov</code>. Depending on the type of input data, additional parameters are available.</p>
 <p>The datasets have been uploaded to UPPMAX prior to the workshop, so you just need to point R towards the directory they are saved.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the list containing the bismark coverage files.</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>file.list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P6_1.bismark.cov.gz"</span>,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P6_4.bismark.cov.gz"</span>,</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P8_3.bismark.cov.gz"</span>,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P8_6.bismark.cov.gz"</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the list containing the bismark coverage files.</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>file.list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P6_1.bismark.cov.gz"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P6_4.bismark.cov.gz"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P8_3.bismark.cov.gz"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P8_6.bismark.cov.gz"</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -553,21 +514,42 @@ Warning
 </div>
 <p>Read the listed files into a methylRawList object making sure the other parameters are filled in correctly. Don’t forget to check <code>?methRead</code> for more info about parameter options.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>myobj <span class="ot">&lt;-</span> <span class="fu">methRead</span>(</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>   file.list,</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">sample.id =</span> <span class="fu">list</span>(<span class="st">"Luminal_1"</span>, <span class="st">"Luminal_2"</span>, <span class="st">"Basal_1"</span>, <span class="st">"Basal_2"</span>),</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">pipeline =</span> <span class="st">"bismarkCoverage"</span>,</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">assembly =</span> <span class="st">"mm10"</span>,</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">treatment =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">mincov =</span> <span class="dv">10</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co"># check number of samples</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>myobj</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co"># What type of data is stored here?</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(myobj[[<span class="dv">1</span>]])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>myobj <span class="ot">&lt;-</span> <span class="fu">methRead</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>   file.list,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">sample.id =</span> <span class="fu">list</span>(<span class="st">"Luminal_1"</span>, <span class="st">"Luminal_2"</span>, <span class="st">"Basal_1"</span>, <span class="st">"Basal_2"</span>),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">pipeline =</span> <span class="st">"bismarkCoverage"</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">assembly =</span> <span class="st">"mm10"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">treatment =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">mincov =</span> <span class="dv">10</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># check number of samples</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#myobj</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">#methylRawList object with 4 methylRaw objects</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#methylRaw object with 1967671 rows</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">#--------------</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#   chr   start     end strand coverage numCs numTs</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="co">#1 chr6 3052415 3052415      *       57    57     0</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co">#2 chr6 3052434 3052434      *       57    54     3</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co">#3 chr6 3052466 3052466      *      128   110    18</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co">#4 chr6 3052510 3052510      *      129   129     0</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="co">#5 chr6 3052521 3052521      *      127   124     3</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="co">#6 chr6 3058831 3058831      *       18    18     0</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="sc">--------------</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="co">#sample.id: Luminal_1 </span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="co">#assembly: mm10 </span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="co">#context: CpG </span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="co">#resolution: base </span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a><span class="co"># What type of data is stored here?</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a><span class="co">#head(myobj[[1]])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(myobj[[<span class="dv">1</span>]])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This will result in <code>methylRawList</code> object containing the data and metadata. What do the columns “numCs” and “numTs” in each sample correspond to? Can you see how many CpG sites are included in each sample?</p>
 </section>
@@ -575,16 +557,16 @@ Warning
 <h1 data-number="6"><span class="header-section-number">6</span> Descriptive Statistics</h1>
 <p>With all data collected in a single object, we can now have a look at some basic statistics per sample, such as the percentage methylation and coverage. For this, the functions <code>getMethylationStats</code> and <code>getCoverageStats</code> can be used. These stats can be plotted for each strand separately, but since Bismark coverage files do not include the strand origins of each CpG, the <code>both.strands</code> parameter has to be set to FALSE. <code>myobj</code> is basically a list object in R so by changing the number in the double brackets, you can specify a certain sample. Have a look at the stats for the 4 different different samples. Do they look as expected?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get a histogram of the methylation percentage per sample</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Here for sample 1</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">getMethylationStats</span>(myobj[[<span class="dv">1</span>]], <span class="at">plot =</span> <span class="cn">TRUE</span>, <span class="at">both.strands =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get a histogram of the methylation percentage per sample</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Here for sample 1</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">getMethylationStats</span>(myobj[[<span class="dv">1</span>]], <span class="at">plot =</span> <span class="cn">TRUE</span>, <span class="at">both.strands =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Typically, percentage methylation histograms should have peaks on both ends of the distribution. In any given cell, any given cytosine is either methylated or not. Therefore, looking at many cells should yield a similar pattern where we see lots of locations with high methylation and lots of locations with low methylation and a lower number of locations with intermediate methylation. Because bisulfite sequencing has a relatively high error rate, samples between 0% and 10% are usually classified as “unmethylated”, and samples between 90% and 100% are classified as “fully methylated”, although these thresholds are not fixed.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get a histogram of the read coverage per sample</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">getCoverageStats</span>(myobj[[<span class="dv">1</span>]], <span class="at">plot =</span> <span class="cn">TRUE</span>, <span class="at">both.strands =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Get percentile data by setting plot=FALSE</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">getCoverageStats</span>(myobj[[<span class="dv">1</span>]], <span class="at">plot =</span> <span class="cn">FALSE</span>, <span class="at">both.strands =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get a histogram of the read coverage per sample</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">getCoverageStats</span>(myobj[[<span class="dv">1</span>]], <span class="at">plot =</span> <span class="cn">TRUE</span>, <span class="at">both.strands =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Get percentile data by setting plot=FALSE</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">getCoverageStats</span>(myobj[[<span class="dv">1</span>]], <span class="at">plot =</span> <span class="cn">FALSE</span>, <span class="at">both.strands =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Experiments that are suffering from PCR duplication bias will have a secondary peak towards the right hand side of the coverage histogram.</p>
 </section>
@@ -592,28 +574,28 @@ Warning
 <h1 data-number="7"><span class="header-section-number">7</span> Filter Step</h1>
 <p>It might be useful to filter samples based on coverage. In particular, if samples are suffering from PCR bias or overamplification it could be useful to discard bases with very high read coverage. Furthermore, we would also like to discard bases that have very low read coverage, because these tend to produce unreliable and unstable statistics in the downstream analysis. The code below filters a <code>methylRawList</code> and discards bases that have coverage below 10 reads (in this case we already did this when reading in the files…) and also discards the bases that have more than 99.9th percentile of coverage in each sample.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>myobj.filt <span class="ot">&lt;-</span> <span class="fu">filterByCoverage</span>(</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>   myobj,</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">lo.count =</span> <span class="dv">10</span>,</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">lo.perc =</span> <span class="cn">NULL</span>,</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">hi.count =</span> <span class="cn">NULL</span>,</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">hi.perc =</span> <span class="fl">99.9</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>myobj.filt <span class="ot">&lt;-</span> <span class="fu">filterByCoverage</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>   myobj,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">lo.count =</span> <span class="dv">10</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">lo.perc =</span> <span class="cn">NULL</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">hi.count =</span> <span class="cn">NULL</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">hi.perc =</span> <span class="fl">99.9</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="normalization" class="level1" data-number="8">
 <h1 data-number="8"><span class="header-section-number">8</span> Normalization</h1>
 <p>Next, a basic normalization of the coverage values between samples is performed by using a scaling factor derived from differences between the median of the coverage distributions. In the dowstream differential analysis, we will be comparing methylation fractions between samples, so one could think that sequence depth would not matter all that much. After all, 40/80 (mC/C) reads is the same fraction as 400/800 (mC/C) reads. However, certain statistical tests (i.e.&nbsp;Fisher’s exact test) will result in different p-values depending on the total number of reads. Thus, if the coverage is quite similar across the samples, this step is not really essential, otherwise it might be a good idea to normalize the data.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>myobj.filt.norm <span class="ot">&lt;-</span> <span class="fu">normalizeCoverage</span>(myobj.filt, <span class="at">method =</span> <span class="st">"median"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>myobj.filt.norm <span class="ot">&lt;-</span> <span class="fu">normalizeCoverage</span>(myobj.filt, <span class="at">method =</span> <span class="st">"median"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="merge-data" class="level1" data-number="9">
 <h1 data-number="9"><span class="header-section-number">9</span> Merge Data</h1>
 <p>In order to do further analysis, we will need to extract the bases that are covered by reads in all our samples. The following function will merge all samples to one object with base-pair locations that are covered in all samples. Setting <code>destrand=TRUE</code> (the default is <code>FALSE</code>) will merge reads on both strands of a CpG dinucleotide. This provides better coverage, but only advised when looking at CpG methylation (for CpH methylation this will cause wrong results in subsequent analyses; can you figure out why?). In addition, setting <code>destrand=TRUE</code> will only work when operating on base-pair resolution, otherwise setting this option <code>TRUE</code> will have no effect. Our data contains no strand info, so the <code>destrand</code> option is not applicable. The <code>unite</code> function will return a <code>methylBase</code> object which will be our main object for all comparative analysis. The <code>methylBase</code> object contains methylation information for regions/bases that are covered in all samples.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>meth <span class="ot">&lt;-</span> <span class="fu">unite</span>(myobj.filt.norm, <span class="at">destrand =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>meth</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>meth <span class="ot">&lt;-</span> <span class="fu">unite</span>(myobj.filt.norm, <span class="at">destrand =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>meth</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>How many bases were kept for downstream analysis?</p>
 </section>
@@ -622,33 +604,33 @@ Warning
 <p>High-throughput methylation data contains a lot of CpG sites that have no or little variation among study subjects and are not all that informative for downstream analyses. Nonspecific CpG filtering (i.e., not considering phenotype) is a common dimension reduction procedure performed prior to cluster analysis and differential methylation. For exploratory analysis, it is of general interest to see how samples relate to each other and we might want to remove CpGs that are not variable before doing that. For differential methylation, removing non variable CpGs prior to the analysis will lower the number of tests that needs to be performed, thus reducing multiple correction penalties.</p>
 <p>The most commonly used and simple method of standard deviation filtering on methylation ratio values (equivalent to Beta values) has been shown to be robust and consistent to different real datasets and would suffice for most occasions.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get percent methylation matrix</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>pm <span class="ot">=</span> <span class="fu">percMethylation</span>(meth)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate standard deviation of CpGs</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>sds <span class="ot">=</span> matrixStats<span class="sc">::</span><span class="fu">rowSds</span>(pm)</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the distribution of the per-CpG standard deviation</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co"># to determine a suitable cutoff</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(sds, <span class="at">breaks =</span> <span class="dv">100</span>)</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co"># keep only CpG with standard deviations larger than 2%</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>meth <span class="ot">&lt;-</span> meth[sds <span class="sc">&gt;</span> <span class="dv">2</span>]</span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co"># This leaves us with this number of CpG sites</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(meth)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get percent methylation matrix</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>pm <span class="ot">=</span> <span class="fu">percMethylation</span>(meth)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate standard deviation of CpGs</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>sds <span class="ot">=</span> matrixStats<span class="sc">::</span><span class="fu">rowSds</span>(pm)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the distribution of the per-CpG standard deviation</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co"># to determine a suitable cutoff</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(sds, <span class="at">breaks =</span> <span class="dv">100</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co"># keep only CpG with standard deviations larger than 2%</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>meth <span class="ot">&lt;-</span> meth[sds <span class="sc">&gt;</span> <span class="dv">2</span>]</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># This leaves us with this number of CpG sites</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(meth)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We can further remove known C -&gt; T mutations. These locations should be removed from the analysis as they do not represent true bisulfite-treatment-associated conversions. Mutation locations can be stored in a GRanges object, and we can use that to remove the CpGs overlapping with the mutations. In order to do the overlap operation, we will convert the methylKit object to a GRanges object and do the filtering with the <code>%over%</code> function. The returned object will still be a methylKit object.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># give the locations of 2 example SNPs</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>mut <span class="ot">&lt;-</span> <span class="fu">GRanges</span>(<span class="at">seqnames =</span> <span class="fu">c</span>(<span class="st">"chr1"</span>, <span class="st">"chr18"</span>),</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">ranges =</span> <span class="fu">IRanges</span>(</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">3020690</span>, <span class="dv">9853326</span>),</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">3020690</span>, <span class="dv">9853326</span>)</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>               ))</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># select CpGs that do not overlap with mutations</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>meth <span class="ot">&lt;-</span> meth[<span class="sc">!</span><span class="fu">as</span>(meth, <span class="st">"GRanges"</span>) <span class="sc">%over%</span> mut, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># give the locations of 2 example SNPs</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>mut <span class="ot">&lt;-</span> <span class="fu">GRanges</span>(<span class="at">seqnames =</span> <span class="fu">c</span>(<span class="st">"chr1"</span>, <span class="st">"chr18"</span>),</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">ranges =</span> <span class="fu">IRanges</span>(</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">3020690</span>, <span class="dv">9853326</span>),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">3020690</span>, <span class="dv">9853326</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>               ))</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co"># select CpGs that do not overlap with mutations</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>meth <span class="ot">&lt;-</span> meth[<span class="sc">!</span><span class="fu">as</span>(meth, <span class="st">"GRanges"</span>) <span class="sc">%over%</span> mut, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -668,15 +650,15 @@ Tip
 <h1 data-number="11"><span class="header-section-number">11</span> Data Structure/Outlier Detection</h1>
 <p>We can check the correlation between samples using <code>getCorrelation</code>. This function will either plot scatter plot and Pearson correlation coefficients or just print a correlation matrix if <code>plot=FALSE</code>. What does this plot tell you about the structure in the data? Which samples resemble each other the most?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getCorrelation</span>(meth, <span class="at">plot =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getCorrelation</span>(meth, <span class="at">plot =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The data structure can additionally be visualized in a dendrogram using hierarchical clustering of distance measures derived from each samples’ percentage methylation. Clustering is used for grouping data points by their similarity. It is a general concept that can be achieved by many different algorithms. Check <code>?clusterSamples</code> to see which distance measures and clustering methods are available.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clusterSamples</span>(meth, <span class="at">dist=</span><span class="st">"correlation"</span>, <span class="at">method=</span><span class="st">"ward"</span>, <span class="at">plot=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clusterSamples</span>(meth, <span class="at">dist=</span><span class="st">"correlation"</span>, <span class="at">method=</span><span class="st">"ward"</span>, <span class="at">plot=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Another very useful visualization is obtained by plotting the samples in a principal component space. Using this kind of PCA plot we project multidimensional data (i.e.&nbsp;we have as many dimensions in this data as there are CpG loci in <code>meth</code>) into 2 or 3-dimensional space while at the same time maintaining as much variation in the data as possible. Samples that are more alike will be clustered together in PC space, so by looking at this plot we can see what is the largest source of variation in data and whether there are sample swaps and/or outlier samples. <code>PCASamples</code> is a function in <code>methylKit</code> that will perform PCA and plot the first two principal components. What does the PCA plot of our dataset tell you? What is the biggest source of variation on the data? Does it look samples are swapped? Do there seem to be outliers among the samples?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">PCASamples</span>(meth)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">PCASamples</span>(meth)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="differential-methylation" class="level1" data-number="12">
@@ -704,15 +686,15 @@ Note
 </p>
 <p>The following code tests for the differential methylation of our dataset; i.e comparing methylation levels between “treatment” (or Luminal samples) and “control” (Basal smaples). Since the example data has replicates, logistic regression will be used.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test for differential methylation... This might take a few minutes.</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>myDiff <span class="ot">&lt;-</span> <span class="fu">calculateDiffMeth</span>(meth, <span class="at">overdispersion =</span> <span class="st">"MN"</span>, <span class="at">adjust =</span> <span class="st">"BH"</span>)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>myDiff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test for differential methylation... This might take a few minutes.</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>myDiff <span class="ot">&lt;-</span> <span class="fu">calculateDiffMeth</span>(meth, <span class="at">overdispersion =</span> <span class="st">"MN"</span>, <span class="at">adjust =</span> <span class="st">"BH"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>myDiff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The output of <code>calculateDiffMeth</code> is a <code>methylDiff</code> object containing information about the difference in percentage methylation between treatment and control, and the p- and q-value of the model for all CpG sites. No reordering, filtering or sorting has happened here yet.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple volcano plot to get an overview of differential methylation</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(myDiff<span class="sc">$</span>meth.diff, <span class="sc">-</span><span class="fu">log10</span>(myDiff<span class="sc">$</span>qvalue))</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple volcano plot to get an overview of differential methylation</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(myDiff<span class="sc">$</span>meth.diff, <span class="sc">-</span><span class="fu">log10</span>(myDiff<span class="sc">$</span>qvalue))</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -732,28 +714,28 @@ Note
 </div>
 <p>Next, visualize the number of hyper- and hypomethylation events per chromosome, as a percent of the sites with minimum coverage and minimal differential methylation. By default this is a 25% change in methylation and all samples with 10X coverage.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Overview of percentage hyper and hypo CpGs per chromosome.</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">diffMethPerChr</span>(myDiff)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Overview of percentage hyper and hypo CpGs per chromosome.</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">diffMethPerChr</span>(myDiff)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>After q-value calculation, we can select the differentially methylated regions/bases based on q-value and percent methylation difference cutoffs of Treatment versus control. Following bits of code selects the bases that have q-value &lt; 0.01 and percent methylation difference larger than 25%. If you specify <code>type="hyper"</code> or <code>type="hypo"</code> options, you will extract the hyper-methylated or hypo-methylated regions/bases.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get hyper methylated bases and order by qvalue</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper <span class="ot">&lt;-</span> <span class="fu">getMethylDiff</span>(myDiff,</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">difference =</span> <span class="dv">25</span>,</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">qvalue =</span> <span class="fl">0.01</span>,</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">type =</span> <span class="st">"hyper"</span>)</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper <span class="ot">&lt;-</span> myDiff25p.hyper[<span class="fu">order</span>(myDiff25p.hyper<span class="sc">$</span>qvalue), ]</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># get hypo methylated bases and order by qvalue</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>myDiff25p.hypo <span class="ot">&lt;-</span> <span class="fu">getMethylDiff</span>(myDiff,</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>                                <span class="at">difference =</span> <span class="dv">25</span>,</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>                                <span class="at">qvalue =</span> <span class="fl">0.01</span>,</span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>                                <span class="at">type =</span> <span class="st">"hypo"</span>)</span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>myDiff25p.hypo <span class="ot">&lt;-</span> myDiff25p.hypo[<span class="fu">order</span>(myDiff25p.hypo<span class="sc">$</span>qvalue), ]</span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="co"># get all differentially methylated bases and order by qvalue</span></span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>myDiff25p <span class="ot">&lt;-</span> <span class="fu">getMethylDiff</span>(myDiff, <span class="at">difference =</span> <span class="dv">25</span>, <span class="at">qvalue =</span> <span class="fl">0.01</span>)</span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>myDiff25p <span class="ot">&lt;-</span> myDiff25p[<span class="fu">order</span>(myDiff25p<span class="sc">$</span>qvalue), ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get hyper methylated bases and order by qvalue</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper <span class="ot">&lt;-</span> <span class="fu">getMethylDiff</span>(myDiff,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">difference =</span> <span class="dv">25</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">qvalue =</span> <span class="fl">0.01</span>,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">type =</span> <span class="st">"hyper"</span>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper <span class="ot">&lt;-</span> myDiff25p.hyper[<span class="fu">order</span>(myDiff25p.hyper<span class="sc">$</span>qvalue), ]</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co"># get hypo methylated bases and order by qvalue</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>myDiff25p.hypo <span class="ot">&lt;-</span> <span class="fu">getMethylDiff</span>(myDiff,</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>                                <span class="at">difference =</span> <span class="dv">25</span>,</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>                                <span class="at">qvalue =</span> <span class="fl">0.01</span>,</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>                                <span class="at">type =</span> <span class="st">"hypo"</span>)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>myDiff25p.hypo <span class="ot">&lt;-</span> myDiff25p.hypo[<span class="fu">order</span>(myDiff25p.hypo<span class="sc">$</span>qvalue), ]</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co"># get all differentially methylated bases and order by qvalue</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>myDiff25p <span class="ot">&lt;-</span> <span class="fu">getMethylDiff</span>(myDiff, <span class="at">difference =</span> <span class="dv">25</span>, <span class="at">qvalue =</span> <span class="fl">0.01</span>)</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>myDiff25p <span class="ot">&lt;-</span> myDiff25p[<span class="fu">order</span>(myDiff25p<span class="sc">$</span>qvalue), ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -791,17 +773,17 @@ Note
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First load the annotation data; i.e the coordinates of promoters, TSS, intron and exons</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># !!! change the file path if you are working in your local machine with a local copy of this BED file</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>refseq_anot <span class="ot">&lt;-</span> <span class="fu">readTranscriptFeatures</span>(<span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/mm10.refseq.genes.bed"</span>)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotate hypermethylated CpGs ("target") with promoter/exon/intron</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co"># information ("feature"). This function operates on GRanges objects, so we # first coerce the methylKit object to GRanges.</span></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper.anot <span class="ot">&lt;-</span> <span class="fu">annotateWithGeneParts</span>(<span class="at">target =</span> <span class="fu">as</span>(myDiff25p.hyper, <span class="st">"GRanges"</span>),<span class="at">feature =</span> refseq_anot)</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of target set annotation</span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper.anot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First load the annotation data; i.e the coordinates of promoters, TSS, intron and exons</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># !!! change the file path if you are working in your local machine with a local copy of this BED file</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>refseq_anot <span class="ot">&lt;-</span> <span class="fu">readTranscriptFeatures</span>(<span class="st">"/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/mm10.refseq.genes.bed"</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotate hypermethylated CpGs ("target") with promoter/exon/intron</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># information ("feature"). This function operates on GRanges objects, so we # first coerce the methylKit object to GRanges.</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper.anot <span class="ot">&lt;-</span> <span class="fu">annotateWithGeneParts</span>(<span class="at">target =</span> <span class="fu">as</span>(myDiff25p.hyper, <span class="st">"GRanges"</span>),<span class="at">feature =</span> refseq_anot)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of target set annotation</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper.anot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -818,39 +800,39 @@ Note
 </div>
 <p>This function creates an <code>AnnotationByGeneParts</code> object, containing - for each target CpG - data such as the nearest transcription start site and the genomic structure it is located on. Several accessor functions from the <code>genomation</code> package allow for interaction with such an object.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the distance to the nearest Transcription Start Site; the target.row column in the output indicates the row number in the initial target set</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>dist_tss <span class="ot">&lt;-</span> <span class="fu">getAssociationWithTSS</span>(myDiff25p.hyper.anot)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dist_tss)</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co"># See whether the differentially methylated CpGs are within promoters,introns or exons; the order is the same as the target set</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="fu">getMembers</span>(myDiff25p.hyper.anot)</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co"># This can also be summarized for all differentially methylated CpGs</span></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plotTargetAnnotation</span>(myDiff25p.hyper.anot, <span class="at">main =</span> <span class="st">"Differential Methylation Annotation"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the distance to the nearest Transcription Start Site; the target.row column in the output indicates the row number in the initial target set</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>dist_tss <span class="ot">&lt;-</span> <span class="fu">getAssociationWithTSS</span>(myDiff25p.hyper.anot)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dist_tss)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># See whether the differentially methylated CpGs are within promoters,introns or exons; the order is the same as the target set</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">getMembers</span>(myDiff25p.hyper.anot)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co"># This can also be summarized for all differentially methylated CpGs</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plotTargetAnnotation</span>(myDiff25p.hyper.anot, <span class="at">main =</span> <span class="st">"Differential Methylation Annotation"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Similarly, it is possible to annotate the differentially methylated CpGs with CpG Island membership using <code>readFeatureFlank</code> and <code>annotateWithFeatureflank</code>. Using these functions you read from a BED file with feature info (here the location of the CpG Islands) and with the flank parameter you can define a region around these features (here the “shores” are defined as 2000 bases around the Islands).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the CpG info</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># !!! change the file path if you are working in your local machine with a local copy of this BED file</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>cpg_anot <span class="ot">&lt;-</span> <span class="fu">readFeatureFlank</span>(</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/mm10.cpg.bed"</span>,</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature.flank.name =</span> <span class="fu">c</span>(<span class="st">"CpGi"</span>, <span class="st">"shores"</span>),</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank =</span> <span class="dv">2000</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>diffCpGann <span class="ot">&lt;-</span> <span class="fu">annotateWithFeatureFlank</span>(</span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>   <span class="fu">as</span>(myDiff25p, <span class="st">"GRanges"</span>),</span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature =</span> cpg_anot<span class="sc">$</span>CpGi,</span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank =</span> cpg_anot<span class="sc">$</span>shores,</span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature.name =</span> <span class="st">"CpGi"</span>,</span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank.name =</span> <span class="st">"shores"</span></span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co"># See whether the CpG in myDiff25p belong to a CpG Island or Shore</span></span>
-<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">getMembers</span>(diffCpGann))</span>
-<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="co"># This can also be summarized for all differentially methylated CpGs</span></span>
-<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="fu">plotTargetAnnotation</span>(diffCpGann, <span class="at">main =</span> <span class="st">"Differential Methylation Annotation"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the CpG info</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># !!! change the file path if you are working in your local machine with a local copy of this BED file</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>cpg_anot <span class="ot">&lt;-</span> <span class="fu">readFeatureFlank</span>(</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/mm10.cpg.bed"</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature.flank.name =</span> <span class="fu">c</span>(<span class="st">"CpGi"</span>, <span class="st">"shores"</span>),</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank =</span> <span class="dv">2000</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>diffCpGann <span class="ot">&lt;-</span> <span class="fu">annotateWithFeatureFlank</span>(</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>   <span class="fu">as</span>(myDiff25p, <span class="st">"GRanges"</span>),</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature =</span> cpg_anot<span class="sc">$</span>CpGi,</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank =</span> cpg_anot<span class="sc">$</span>shores,</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature.name =</span> <span class="st">"CpGi"</span>,</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank.name =</span> <span class="st">"shores"</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="co"># See whether the CpG in myDiff25p belong to a CpG Island or Shore</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">getMembers</span>(diffCpGann))</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="co"># This can also be summarized for all differentially methylated CpGs</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a><span class="fu">plotTargetAnnotation</span>(diffCpGann, <span class="at">main =</span> <span class="st">"Differential Methylation Annotation"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In general, this workflow can be used to annotate a CpG list with any set of features contained in a BED file.</p>
 </section>
@@ -858,60 +840,60 @@ Note
 <h2 data-number="12.3" class="anchored" data-anchor-id="differentially-methylated-regions"><span class="header-section-number">12.3</span> Differentially Methylated Regions</h2>
 <p>Since we are often more interested in the different methylation of multiple CpGs across samples instead of a single site, we can also summarize methylation information over a set of defined functional regions such as promoters or CpG islands. The function below summarizes the methylation information over a given set of CpG Islands and outputs a <code>methylRaw</code> or <code>methylRawList</code> object depending on the input. We are using the output of <code>genomation</code> functions used above to provide the locations of the Islands. For these regional summary functions, we need to provide regions of interest as GRanges object.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize the original object counts over a certain region, here the CpG Islands</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># You can ignore the warnings here...</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>myobj_islands <span class="ot">&lt;-</span> <span class="fu">regionCounts</span>(myobj, cpg_anot<span class="sc">$</span>CpGi)</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the summarized counts by coverage</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>myobj_islands_filt <span class="ot">&lt;-</span> <span class="fu">filterByCoverage</span>(</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>   myobj_islands,</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">lo.count =</span> <span class="dv">10</span>,</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">lo.perc =</span> <span class="cn">NULL</span>,</span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>   <span class="at">hi.count =</span> <span class="cn">NULL</span>,</span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>   <span class="at">hi.perc =</span> <span class="fl">99.9</span></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform simple normalization</span></span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>myobj_islands_filt_norm <span class="ot">&lt;-</span> <span class="fu">normalizeCoverage</span>(myobj_islands_filt, <span class="at">method =</span> <span class="st">"median"</span>)</span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge the samples again</span></span>
-<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>meth_islands <span class="ot">&lt;-</span> <span class="fu">unite</span>(myobj_islands_filt_norm, <span class="at">destrand =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize the original object counts over a certain region, here the CpG Islands</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># You can ignore the warnings here...</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>myobj_islands <span class="ot">&lt;-</span> <span class="fu">regionCounts</span>(myobj, cpg_anot<span class="sc">$</span>CpGi)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the summarized counts by coverage</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>myobj_islands_filt <span class="ot">&lt;-</span> <span class="fu">filterByCoverage</span>(</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>   myobj_islands,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">lo.count =</span> <span class="dv">10</span>,</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">lo.perc =</span> <span class="cn">NULL</span>,</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>   <span class="at">hi.count =</span> <span class="cn">NULL</span>,</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>   <span class="at">hi.perc =</span> <span class="fl">99.9</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform simple normalization</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>myobj_islands_filt_norm <span class="ot">&lt;-</span> <span class="fu">normalizeCoverage</span>(myobj_islands_filt, <span class="at">method =</span> <span class="st">"median"</span>)</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge the samples again</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>meth_islands <span class="ot">&lt;-</span> <span class="fu">unite</span>(myobj_islands_filt_norm, <span class="at">destrand =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now, differential methylation is performed as for the single CpGs.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test for differential methylation... This might take a few minutes.</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>myDiff_islands <span class="ot">&lt;-</span> <span class="fu">calculateDiffMeth</span>(meth_islands)</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Rank by significance</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>myDiff_islands <span class="ot">&lt;-</span> myDiff_islands[<span class="fu">order</span>(myDiff_islands<span class="sc">$</span>qvalue), ]</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co"># get all differentially methylated CpG Islands</span></span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>myDiff_islands_25p <span class="ot">&lt;-</span> <span class="fu">getMethylDiff</span>(myDiff_islands, <span class="at">difference =</span> <span class="dv">25</span>, <span class="at">qvalue =</span></span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>                                       <span class="fl">0.01</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test for differential methylation... This might take a few minutes.</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>myDiff_islands <span class="ot">&lt;-</span> <span class="fu">calculateDiffMeth</span>(meth_islands)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Rank by significance</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>myDiff_islands <span class="ot">&lt;-</span> myDiff_islands[<span class="fu">order</span>(myDiff_islands<span class="sc">$</span>qvalue), ]</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co"># get all differentially methylated CpG Islands</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>myDiff_islands_25p <span class="ot">&lt;-</span> <span class="fu">getMethylDiff</span>(myDiff_islands, <span class="at">difference =</span> <span class="dv">25</span>, <span class="at">qvalue =</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>                                       <span class="fl">0.01</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>And just like for the single CpGs, annotation using the <code>genomation</code> functions is possible.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>myDiff_islands_25p_ann <span class="ot">&lt;-</span> <span class="fu">annotateWithGeneParts</span>(<span class="fu">as</span>((myDiff_islands_25p), <span class="st">"GRanges"</span>), refseq_anot)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># View the distance to the nearest Transcription Start Site; the target.row column indicates the row number in myDiff_islands_25p</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">getAssociationWithTSS</span>(myDiff_islands_25p_ann))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>myDiff_islands_25p_ann <span class="ot">&lt;-</span> <span class="fu">annotateWithGeneParts</span>(<span class="fu">as</span>((myDiff_islands_25p), <span class="st">"GRanges"</span>), refseq_anot)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># View the distance to the nearest Transcription Start Site; the target.row column indicates the row number in myDiff_islands_25p</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">getAssociationWithTSS</span>(myDiff_islands_25p_ann))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Besides grouping by functional regions, you can also group CpGs in a sliding window along the genome for a more unbiased approach. As for the functional regions, we would start again from the original object but this time group the CpGs in a certain predefined window. After this, the usual <code>filterByCoverage</code>, <code>normalizeCoverage</code> and <code>unite</code> functions are used before doing <code>calculatedDiffMeth</code>. Give it a go if you happen to have some spare time at the end of this tutorial!</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reconstruct original object, keeping a lower coverage this time</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>myobj_lowCov <span class="ot">&lt;-</span> <span class="fu">methRead</span>(</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>   file.list,</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">sample.id =</span> <span class="fu">list</span>(<span class="st">"Luminal_1"</span>, <span class="st">"Luminal_2"</span>, <span class="st">"Basal_1"</span>, <span class="st">"Basal_2"</span>),</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">pipeline =</span> <span class="st">"bismarkCoverage"</span>,</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">assembly =</span> <span class="st">"mm10"</span>,</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">treatment =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">mincov =</span> <span class="dv">3</span></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Group the counts</span></span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>tiles <span class="ot">&lt;-</span> <span class="fu">tileMethylCounts</span>(</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>   myobj_lowCov,</span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">win.size =</span> <span class="dv">1000</span>,</span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>   <span class="at">step.size =</span> <span class="dv">1000</span>,</span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>   <span class="at">cov.bases =</span> <span class="dv">10</span></span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect data</span></span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tiles[[<span class="dv">1</span>]])   </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reconstruct original object, keeping a lower coverage this time</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>myobj_lowCov <span class="ot">&lt;-</span> <span class="fu">methRead</span>(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>   file.list,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">sample.id =</span> <span class="fu">list</span>(<span class="st">"Luminal_1"</span>, <span class="st">"Luminal_2"</span>, <span class="st">"Basal_1"</span>, <span class="st">"Basal_2"</span>),</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">pipeline =</span> <span class="st">"bismarkCoverage"</span>,</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">assembly =</span> <span class="st">"mm10"</span>,</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">treatment =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">mincov =</span> <span class="dv">3</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Group the counts</span></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>tiles <span class="ot">&lt;-</span> <span class="fu">tileMethylCounts</span>(</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>   myobj_lowCov,</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">win.size =</span> <span class="dv">1000</span>,</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>   <span class="at">step.size =</span> <span class="dv">1000</span>,</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>   <span class="at">cov.bases =</span> <span class="dv">10</span></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect data</span></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tiles[[<span class="dv">1</span>]])   </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 </section>
@@ -919,7 +901,7 @@ Note
 <h1 data-number="13"><span class="header-section-number">13</span> Visualization</h1>
 <p>The results of a differential analysis can be exported as a bedGraph; a format that allows display of continuous-valued data in track format. This display type is useful for probability scores, percentages and transcriptome data. By uploading this BED file to a genome browser such as the <a href="https://genome.ucsc.edu/cgi-bin/hgTracks?db=mm10&amp;lastVirtModeType=default&amp;lastVirtModeExtraState=&amp;virtModeType=default&amp;virtMode=0&amp;nonVirtPosition=&amp;position=chr1%3A134369628%2D136772024&amp;hgsid=936224469_kTHLULnq2frGTQtwufy02ky7TjXA">UCSC Genome Browser</a>, you can create custom visualizations of the genome architecture surrounding CpGs or regions of interest. The <code>bedgraph</code> function produces a UCSC compatible file; by specifying the <code>col.name</code> the exact information to be plotted can be collected. For a <code>methylDiff</code> object this can be one of “pvalue”, “qvalue” or “meth.diff”.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bedgraph</span>(myDiff25p, <span class="at">col.name =</span> <span class="st">"meth.diff"</span>, <span class="at">file.name =</span> <span class="st">"diff_cpg_25p.bed"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bedgraph</span>(myDiff25p, <span class="at">col.name =</span> <span class="st">"meth.diff"</span>, <span class="at">file.name =</span> <span class="st">"diff_cpg_25p.bed"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>A tutorial of the Genome Browser is out of scope for this workshop; but a step-by-step approach for visualizing your own data tracks can be found <a href="https://genome.ucsc.edu/goldenPath/help/hgTracksHelp.html#CustomTracks">here</a>. An example of such a custom visualization of the methylation difference between treatment and control can be seen in Figure 2. Notice how differentially methylated CpGs tend to group together in similarly regulated regions.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -959,31 +941,31 @@ Tip
 <p>If you are already working in UPPMAX and have an open interactive session in Pelle then you can continue this exercise in that one. Otherwise connect to Pelle and start an interactive session. Copy each of the commands below into the terminal to execute a process.</p>
 <p>Change directory to your personal folder.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /gorilla/proj/epi2026/students/<span class="op">&lt;</span>your_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /gorilla/proj/epi2026/students/<span class="op">&lt;</span>your_name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Create a folder that will store all output files generated by a <code>methylseq</code> run.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> output/TEST_METHYLSEQ</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> output/TEST_METHYLSEQ</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Copy the samplesheet to your personal folder. The samplesheet contains information about an example data in gzipped <code>fastq</code> files that has been subsampled to make them small and quick to run.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> /gorilla/proj/epi2026/DNAM/WGBS/pipeline_bsseq_data/samplesheet.csv .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> /gorilla/proj/epi2026/DNAM/WGBS/pipeline_bsseq_data/samplesheet.csv .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Have a look at the provided sample sheet by using this command. There is only one sample with two fastq files corresponding to read 1 and read 2 sequencing.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">less</span> <span class="at">-S</span> samplesheet.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">less</span> <span class="at">-S</span> samplesheet.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Load the Nextflow module.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load Nextflow/25.10.2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load Nextflow/25.10.2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Launch the Nextflow process using default parameters. Note that the default <code>Bismark</code> workflow will be used. The reference genome is set to be mm10.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/methylseq <span class="at">-profile</span> uppmax <span class="dt">\</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">--input</span> samplesheet.csv <span class="dt">\</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">--outdir</span> output/TEST_METHYLSEQ <span class="dt">\</span></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">--project</span>  uppmax2026-1-197 <span class="dt">\</span></span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">--genome</span> mm10</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/methylseq <span class="at">-profile</span> uppmax <span class="dt">\</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">--input</span> samplesheet.csv <span class="dt">\</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">--outdir</span> output/TEST_METHYLSEQ <span class="dt">\</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>   <span class="at">--project</span>  uppmax2026-1-197 <span class="dt">\</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>   <span class="at">--genome</span> mm10</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1002,7 +984,7 @@ By specifying <code>-resume</code> when restarting a pipeline, Nextflow will use
 <p>The example run of nf-core <code>methyseq</code> will generate a large number of files stored in the output directory <code>output/TEST_METHYLSEQ</code>. One very useful output of this run is a <a href="https://docs.seqera.io/multiqc">MultiQC</a> report. It is an interactive HTML report that summarizes QC data and useful statistics from multiple bioinformatics tools across all samples.</p>
 <p>Download the html report to your laptop. Open a terminal in your laptop and change to the desired directory, i.e., <code>cd /path/to/myfolder</code>, then use the <code>scp</code> command to transfer files.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scp</span> <span class="op">&lt;</span>username<span class="op">&gt;</span>@pelle.uppmax.uu.se:/gorilla/proj/epi2026/students/<span class="op">&lt;</span>your_name<span class="op">&gt;</span>/output/TEST_METHYLSEQ/multiqc/bismark/multiqc_report.html .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scp</span> <span class="op">&lt;</span>username<span class="op">&gt;</span>@pelle.uppmax.uu.se:/gorilla/proj/epi2026/students/<span class="op">&lt;</span>your_name<span class="op">&gt;</span>/output/TEST_METHYLSEQ/multiqc/bismark/multiqc_report.html .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>View the html report with a web browser.</p>
 
