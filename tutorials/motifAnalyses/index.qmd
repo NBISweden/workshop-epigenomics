@@ -271,7 +271,7 @@ Sometimes one may want to perform the binned enrichment analysis in a more unbia
 
 ```{r}
 ## Clear some memory
-rm(list = list(se, seSel))
+rm(list = c("se", "seSel"))
 gc()
 ```
 
