@@ -667,9 +667,9 @@ colData names(1): condition</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">assays</span>(se)<span class="sc">$</span>counts</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       sample_1 sample_2 sample_3
-gene_1        9        7        3
-gene_2        5        8        6
-gene_3        4        0        1</code></pre>
+gene_1        4        9        8
+gene_2        0        7       10
+gene_3        5        1        2</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -1267,6 +1267,7 @@ Figure&nbsp;4: Example of a good cross correlation plot. The y-axis shows the cr
 <span id="cb61-16"><a href="#cb61-16" aria-hidden="true" tabindex="-1"></a><span class="va">$macs3</span> callpeak <span class="at">-t</span> <span class="va">$bamIP</span> <span class="at">-c</span> <span class="va">$bamInput</span> <span class="at">-f</span> BAM <span class="at">-g</span> <span class="va">$genomeSize</span> <span class="at">-q</span> 0.01 <span class="dt">\</span></span>
 <span id="cb61-17"><a href="#cb61-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">-n</span> <span class="va">$sampleName</span> <span class="at">--outdir</span> ChIPpeaks</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>This command has been run for the rest of the samples. We will now download the peaks bed files and then read them into <code>R</code>.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1280,11 +1281,23 @@ Figure&nbsp;4: Example of a good cross correlation plot. The y-axis shows the cr
 <p>Check the contents of the <code>ChIPpeaks</code> folder. You can have a look at the individual files using <code>less yourFileName</code>, and exit this with <code>q</code> (short for quit).</p>
 </div>
 </div>
-<p>This command has been run for the rest of the samples. We will now download the peaks bed files and then read them into <code>R</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Downloading the peak files
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Make sure you do this in the same working directory you are using. Open a terminal and navigate to your working directory (this is important) and follow these instructions:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Download the peak files. Replace 'username' with your Pelle username.</span></span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> peaks</span>
 <span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> username@pelle.uppmax.uu.se:<span class="st">'/proj/uppmax2026-1-197/ChIP/peaks/*_peaks.narrowPeak'</span> peaks/ </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
 </div>
 <section id="peak-overlap" class="level3" data-number="6.1">
 <h3 data-number="6.1" class="anchored" data-anchor-id="peak-overlap"><span class="header-section-number">6.1</span> Peak overlap</h3>
@@ -2602,7 +2615,7 @@ attr(,"contrasts")$condition
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <details><summary>Code Output</summary>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Tue Oct  6 10:38:34 2026"</code></pre>
+<pre><code>[1] "Tue Oct  6 11:57:09 2026"</code></pre>
 </div>
 </details>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
