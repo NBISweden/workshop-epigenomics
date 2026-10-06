@@ -18,7 +18,7 @@ format: html
 | Methylation methods & technologies (NGI)                      | Amanda Raine                                    |                                                    |
 |[06-Oct-2026 (Tue)]{.badge .badge-primary}                                                                                                                          |||
 | ATAC-seq                                                      | Agata Smialowska                                |[Presentation](presentations/ATAC/ATACslides.pdf), [Tutorials](landingPages/ATAC/index.html)|
-| Presentation and Q&A with NGI                                 | Orlando Contreras Lopez and Michelle Ljungmark  |                                                    |
+| Presentation and Q&A with NGI                                 | Orlando Contreras Lopez and Anja Metzger        |[Presentation Epigenomics](presentations/NGI/EpigenomicMethodsNGI2026.pdf)                                                   |
 |[07-Oct-2026 (Wed)]{.badge .badge-primary}                                                                                                                          |||
 | ChIP-seq                                                      | Dania Machlab                                   |[Presentation](presentations/ChIP/ChIPslides.pdf), [Tutorials](landingPages/ChIP/index.html)|
 | Cut & Tag/Run                                                 | Prasoon Agarwal                                 |[Presentation](presentations/CUTandTag/CUTandTAGslides.pdf)                                                 |
