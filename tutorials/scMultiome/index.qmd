@@ -27,7 +27,6 @@ options(knitr.duplicate.label = "allow")
 ```
 
 
-
 ## Learning outcomes
 
 * The basic steps for quality control, normalization, dimensionality reduction, clustering and visualization of single cell multiome (RNA-seq + ATAC-seq) data
