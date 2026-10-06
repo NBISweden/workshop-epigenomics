@@ -364,17 +364,25 @@ table(Label=cell_type_pred$labels,
 ```{r}
 #| eval: FALSE
 #| echo: true
+
 # Plot scores for each cell and cell type
 plotScoreHeatmap(cell_type_pred)
 ```
 
 ```{r}
+#| eval: FALSE
+#| echo: true
+
+
 # Overlaps between clusters and cell types
 tab <- table(cluster=seurat_multi$seurat_clusters, label=cell_type_pred$labels) 
 pheatmap::pheatmap(log10(tab+10))
 ```
 
 ```{r}
+#| eval: FALSE
+#| echo: true
+
 # Plot the UMAP based on RNA and ATAC, labelled with the cell types
 seurat_multi$cell_annot <- cell_type_pred$labels
 DimPlot(seurat_multi, reduction = "wnn_cc_umap", group.by = "cell_annot", label = TRUE, label.size = 3, repel = TRUE)
