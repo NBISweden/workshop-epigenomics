@@ -184,7 +184,7 @@ colData(se)
 
 ::: {.callout-note}
 ## Setting up and downloading the data
-Let's download the `bam` files we will be using in this tutorial from Pelle, the HPC from UPPMAX. Make sure you do this in the same working directory you are using.
+Let's download the `bam` files we will be using in this tutorial from Pelle, the HPC from UPPMAX. Make sure you do this in the same working directory you are using. Open a terminal and navigate to your working directory (this is important) and follow these instructions:
 ```{bash}
 #| eval: false
 
