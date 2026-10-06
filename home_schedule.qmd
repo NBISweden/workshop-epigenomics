@@ -26,7 +26,7 @@ toastui:
       eventView: ['time']
       hourStart: 9
       hourEnd: 18
-      showNowIndicator: true
+      showNowIndicator: false
     calendars:
       - id: "session"
         name: "Session"
