@@ -240,10 +240,10 @@ The datasets have been uploaded to UPPMAX prior to the workshop, so you just nee
 ```{r}
 # Define the list containing the bismark coverage files.
 file.list <- list(
-   "/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P6_1.bismark.cov.gz",
-   "/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P6_4.bismark.cov.gz",
-   "/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P8_3.bismark.cov.gz",
-   "/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P8_6.bismark.cov.gz"
+"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P6_1.bismark.cov.gz",
+"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P8_3.bismark.cov.gz",
+"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P6_4.bismark.cov.gz",
+"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P8_6.bismark.cov.gz"
 )
 
 ```
@@ -543,7 +543,8 @@ To help with the biological interpretation of the data, we will annotate the dif
 # First load the annotation data; i.e the coordinates of promoters, TSS, intron and exons
 
 # !!! change the file path if you are working in your local machine with a local copy of this BED file
-refseq_anot <- readTranscriptFeatures("/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/mm10.refseq.genes.bed")
+refseq_anot <- readTranscriptFeatures("/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/mm10.refseq.genes.bed")
+
 
 # Annotate hypermethylated CpGs ("target") with promoter/exon/intron
 # information ("feature"). This function operates on GRanges objects, so we # first coerce the methylKit object to GRanges.
@@ -580,10 +581,12 @@ Similarly, it is possible to annotate the differentially methylated CpGs with Cp
 
 # !!! change the file path if you are working in your local machine with a local copy of this BED file
 cpg_anot <- readFeatureFlank(
-   "/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/mm10.cpg.bed",
+   "/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/mm10.cpg.bed",
    feature.flank.name = c("CpGi", "shores"),
    flank = 2000
 )
+
+
 diffCpGann <- annotateWithFeatureFlank(
    as(myDiff25p, "GRanges"),
    feature = cpg_anot$CpGi,
