@@ -3,15 +3,11 @@ title: "Single cell ATAC-seq"
 format: 
   html:
     toc: true
-    toc-depth: 2
     fig-format: png
-    mermaid:
-      theme: default
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 editor: 
   markdown: 
     wrap: 72
-bibliography: references.bib
 ---
 
 
@@ -30,34 +26,18 @@ options(knitr.duplicate.label = "allow")
 
 ```
 
-```{=html}
-<!-- 
-Author:         Markus Ringnér and Jakub Orzechowski Westholm
-About:          This qmd file is used to render the .html file. To modify or 
-                update the .html file, please do so in the .qmd file here and 
-                render it.
--->
-```
-
-
-<br />
 
 ## Learning outcomes
 
-Using R
-
-* to run the basic steps for quality control, normalization, dimensionality reduction, clustering and visualization of single cell ATAC-seq data.
-
+* Apply basic steps for quality control, normalization, dimensionality reduction, clustering and visualization of single cell ATAC-seq data.
 
 <br />
 <br />
 
-## Before we start
+## Setting up
 
 Today we are going to work on [Pelle](https://docs.uppmax.uu.se/cluster_guides/pelle/),
 an HPC cluster hosted by [Uppmax](https://www.uu.se/centrum/uppmax/).
-
-<br />
 
 Please follow the setup procedure to book a node and log in to it. The following gives you access to part of a node prebooked for this workshop (5 cores per person) for 3 hours (change the time in the command below according to your plan for working).
 
@@ -70,17 +50,12 @@ ssh -Y <USERNAME>@pelle.uppmax.uu.se
 interactive -A uppmax2026-1-197 -t 3:00:00 -c 5
 ```
 
-### Setting Up
 
 ::: {.callout-note}
   
    We take advantage of the module system on Pelle in this tutorial. The code was tested under `R 4.6.1`.
 
 :::
-
-<br />
-<br />
-
 
 We access the R environment via:
 
@@ -105,11 +80,12 @@ To be able to load all necessary libraries that are not available in modules, we
 .libPaths(c(.libPaths(),"/proj/epi2026/library/Rpackages/4.6.1"))
 ```
 
+
+::: {.callout-note}
+
 Alternatively you can work on this tutorial locally if you have all the R packages loaded below installed on your computer.
 
-
-<br />
-<br />
+:::
 
 We begin by loading necessary libraries:
 
@@ -125,6 +101,7 @@ library(patchwork)
 library(Signac)
 library(Seurat)
 
+library(biovizBase)
 library(GenomeInfoDb)
 library(EnsDb.Hsapiens.v75)
 library(BSgenome.Hsapiens.UCSC.hg19)
@@ -143,32 +120,66 @@ set.seed(1234)
 <br />
 <br />
 
+## Introduction
 
+In this exercise we will use [Signac](https://satijalab.org/signac/index.html) to analyze scATAC/seq data. [Seurat](https://satijalab.org/seurat/) is a widely used tool to analyze scRNA-seq data. This tool has been extended to support chromatin data, *e.g.* scATAC-data, and the extension is called Signac.
 
-## Analysis of single cell ATAC-seq data
+We will use data from human peripheral blood mononuclear cells (PBMCs) provided by 10x Genomics. The data have already been pre-processed using CellRanger, all available through the 10x Genomics website. The starting point is a count matrix, with the number of reads in each peak in each cell along with some metadata.
 
-### Loading scATAC-seq data
+<br />
+<br />
+
+## Single cell ATAC-seq data
+
+All data for this tutorial is available on Pelle in the directory `/proj/epi2026/single_cell/scATAC/`. If you work on the tutorial locally, you need to download the data and modify the path below according to your directory structure.
 
 ```{r}
 #| eval: FALSE
 #| echo: true
 
-lab.dir="/proj/epi2026/single_cell/scATAC/"
+data.dir="/proj/epi2026/single_cell/scATAC/"
 
-counts <- Read10X_h5(filename = paste0(lab.dir,"data/atac_v1_pbmc_10k_filtered_peak_bc_matrix.h5"))
+```
+
+<br />
+
+### Loading scATAC-seq data
+
+The ATAC-seq data consist of four files that were created with CellRanger.
+
+- **A count file**. The rows are regions (peaks) and the columns are cells. Each entry *i,j* is the number of reads mapping to region *i* in cell *j*.
+
+- **A metadata file** with some overall statistics for each cell.
+
+- **A fragment file** with information on all sequenced fragments (where it maps to the genome, which cell barcode it is associated with, and how many PCR duplicates were found).
+
+- **An index file** connected to the fragment file. This is like an index file for a bam file, to make it possible to quickly find fragments for a certain genomic region, without having to search the entire file.
+
+The PBMC data set used here contains ATAC-seq data for 80234 regions in 9277 cells. To make the commands in this exercise run a bit faster, we will only analyze a set of 2000 (randomly selected) cells. If you have the time and interest, you can analyze the full data set by commenting out the corresponding line of code.
+
+Here, we create a `ChromatinAssay` object from the count matrix (and a link to the fragment file). This object stores the genomic regions, count data, and also possibly gene annotations and information on sequence motifs. There are many ways to interact with a `ChromatinAssay` object.
+
+We then create a `Seurat` object from the `ChromatinAssay`, together with metadata about cells and gene annotations.
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+counts <- Read10X_h5(filename = paste0(data.dir,"data/atac_v1_pbmc_10k_filtered_peak_bc_matrix.h5"))
 # Only use 2000 cells, to make commands run faster.
 counts <- counts[, sample(ncol(counts), 2000)] 
 
 metadata <- read.csv(
-    file = paste0(lab.dir,"data/atac_v1_pbmc_10k_singlecell.csv"),
+    file = paste0(data.dir,"data/atac_v1_pbmc_10k_singlecell.csv"),
     header = TRUE,
     row.names = 1
 )
 
+# Cells with less than 200 features and features detected in less than 10 cells are filtered out already here.
 chrom_assay <- CreateChromatinAssay(
     counts = counts,
     sep = c(":", "-"),
-    genome = 'hg19', fragments = paste0(lab.dir,'data/atac_v1_pbmc_10k_fragments.tsv.gz'),
+    genome = 'hg19', fragments = paste0(data.dir,'data/atac_v1_pbmc_10k_fragments.tsv.gz'),
     min.cells = 10,
     min.features = 200
 )
@@ -195,19 +206,23 @@ pbmc[['peaks']]
 granges(pbmc)
 ```
 
+How many ATAC-seq regions do you have now in your `Seurat` object?
+
+<br />
+
 ### Quality control
 
 The next step is to do some quality control (QC) on the ATAC-seq data. There are several quality measures to consider:
 
-- **Fragment sizes**, determined from paired-end sequencing data. For each cell we can quantify the fragment sizes by calculating the ratio of nucleosome size fragments (147-294 nucleotides) to nucleosome-free fragments (<147 nucleotides). Open chromatin corresponds to short DNA fragments, so we want to remove cells with too few short DNA fragments, coming from open chromatin.
+- **Nucleosome banding pattern**. The histogram of DNA fragment sizes (determined from the paired-end sequencing reads) should exhibit a strong nucleosome banding pattern corresponding to the length of DNA wrapped around a single nucleosome. We calculate this per single cell, and quantify the approximate ratio of mononucleosomal to nucleosome-free fragments (stored as nucleosome_signal)
 
-- **Enrichment at transcription start sites (TSS).** Since chromatin is often open around TSS, we expect there to be an enrichment of fragments around these sites. This is quantified by collecting all fragments mapping around TSS to form an aggregate distribution, and comparing the highest level of fragments to the level of fragments 1000bp up and downstream of the TSS.
+- **Transcriptional start site (TSS) enrichment score**. The [ENCODE project](https://www.encodeproject.org) has defined an ATAC-seq targeting score based on the ratio of fragments centered at the TSS to fragments in TSS-flanking regions (see https://www.encodeproject.org/data-standards/terms/). Poor ATAC-seq experiments typically will have a low TSS enrichment score. We can compute this metric for each cell with the TSSEnrichment() function, and the results are stored in metadata under the column name TSS.enrichment.
 
-- **Number of fragments in peaks**. This represents the complexity and sequencing depth for each cell. Too many reads might indicate artefacts, such as several cells sharing a barcode.
+- **Number of fragments in peaks**. A measure of cellular sequencing depth / complexity. Cells with very few reads may need to be excluded due to low sequencing depth. Cells with extremely high levels may represent doublets, nuclei clumps, or other artefacts
 
-- **Fraction of reads in peaks**. This represents how well that ATAC protocol has worked, and we typically reqiure at least 15% of all fragments to be in peaks.
+- **Fraction of reads in peaks**. Represents the fraction of all fragments that fall within ATAC-seq peaks. Cells with low values (i.e. <15-20%) often represent low-quality cells or technical artifacts that should be removed. Note that this value can be sensitive to the set of peaks used.
 
-- **Reads in blacklist regions.** The [ENCODE](https://www.encodeproject.org) project has defined lists of [blacklist regions](https://github.com/Boyle-Lab/Blacklist). These are problematic regions (typically repeats) that often have high signals in next-generation sequencing experiments regardless of cell line or experiment. Cells with a realtively high ratio of reads mapping to blacklist regions, compared to peaks, often represent technical artifacts and should be removed.
+- **Reads in blacklist regions.** The [ENCODE](https://www.encodeproject.org) project has defined lists of [blacklist regions](https://github.com/Boyle-Lab/Blacklist). These are problematic regions (typically repeats) that often have high signals in next-generation sequencing experiments regardless of cell line or experiment. Cells with a relatively high ratio of reads mapping to blacklist regions, compared to peaks, often represent technical artifacts and should be removed.
 
 This may take a while to run (up to 10 minutes).
 
@@ -225,11 +240,27 @@ pbmc <- TSSEnrichment(object = pbmc, fast = FALSE)
 pbmc$pct_reads_in_peaks <- pbmc$peak_region_fragments / pbmc$passed_filters * 100
 pbmc$blacklist_ratio <- pbmc$blacklist_region_fragments / pbmc$peak_region_fragments
 
-gc()
+```
 
+The relationship between variables stored in the object metadata can be visualized using the `DensityScatter()` function. This can also be used to quickly find suitable cutoff values for different QC metrics by setting `quantiles=TRUE`.
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+DensityScatter(pbmc, x = 'nCount_peaks', y = 'TSS.enrichment', log_x = TRUE, quantiles = TRUE)
+
+```
+
+
+```{r}
+#| eval: FALSE
+#| echo: true
 pbmc$high.tss <- ifelse(pbmc$TSS.enrichment > 2, 'High', 'Low')
 TSSPlot(pbmc, group.by = 'high.tss') + NoLegend()
 ```
+
+We can also look at the fragment length periodicity for all the cells, and group by cells with high or low nucleosomal signal strength. You can see that cells that are outliers for the mononucleosomal / nucleosome-free ratio have different nucleosomal banding patterns. The remaining cells exhibit a pattern that is typical for a successful ATAC-seq experiment.
 
 ```{r}
 #| eval: FALSE
@@ -238,6 +269,12 @@ TSSPlot(pbmc, group.by = 'high.tss') + NoLegend()
 pbmc$nucleosome_group <- ifelse(pbmc$nucleosome_signal > 4, 'NS > 4', 'NS < 4')
 FragmentHistogram(object = pbmc, group.by = 'nucleosome_group')
 ```
+
+Since the plot with only 2000 cells can be a bit sparse, here is a plot for the larger data set.
+![Figure: Fragment histogram](images/fragment_histogram.png)
+
+
+Violin plots can be used to plot the distribution of different QC metrics.
 
 ```{r}
 #| eval: FALSE
@@ -252,9 +289,8 @@ VlnPlot(
 ) & FontSize(main = 8) & theme(axis.text.x = element_blank())  & theme(axis.title.x = element_blank()) & theme(axis.text.y = element_text(size = 6))
 ```
 
-![QC plots](qc.png)
 
-After calculating the quality statistics, we apply (some rather arbitrary) cutoffs, to remove outlier cells. *How many cells do we have left after quality filtering in this example?*
+After calculating the quality statistics, we apply (some rather arbitrary) cutoffs, to remove outlier cells.
 
 
 ```{r}
@@ -272,11 +308,16 @@ pbmc <- subset(
 )
 pbmc
 ```
+
+*How many cells do we have left after quality filtering in this example?*
+
+<br />
+
 ### Normalization and initial dimensionality reduction
 
 **Normalization:** `Signac` performs term frequency-inverse document frequency (TF-IDF) normalization. This is a two-step normalization procedure, often used in natural language processing, that both normalizes across cells to correct for differences in sequencing depth, and across peaks to give higher values to more rare peaks.
 
-**Feature selection:** To reduce noise, we sometimes only use some features (*i.e.* peaks) when we cluster cells. Often this is the peaks with the strongest signal, *i.e.* most reads, or the ones present in most cells. Here, we will use all peaks, but you can play around with this yourself. Try setting `min.cutoff = 'q75'` to use the top 25% peaks).
+**Feature selection:** The low dynamic range of scATAC-seq data makes it challenging to perform variable feature selection, as we do for scRNA-seq. Instead, we can choose to use only the top n% of features (peaks) for dimensional reduction, or remove features present in less than n cells with the FindTopFeatures() function. Here we will use all feature (try setting min.cutoff to ‘q75’ if you only want to use the top 25% all peaks). Features used for dimensional reduction are automatically set as VariableFeatures() for the Seurat object by this function.
 
 **Dimension reduction:** We next run singular value decomposition (SVD) on the normalized data matrix, using the features (peaks) selected above. This returns a reduced dimension representation of the matrix, similar to the output of PCA.
 
@@ -293,7 +334,10 @@ pbmc <- RunSVD(pbmc)
 DepthCor(pbmc)
 ```
 
-### Clustering and further dimensionality reduction
+<br />
+<br />
+
+## Clustering and further dimensionality reduction
 
 Now, we can cluster the cells to find groups that belong to the same cell types. It is possible to plot the results from the SVD, but these often are not informative. Instead, we use the UMAP algorithm, which shows a better separation between the cell types. If you are interested, the paper describing UMAP can be found [here](https://arxiv.org/abs/1802.03426).
 
@@ -316,17 +360,38 @@ p2 <- DimPlot(object = pbmc, label = TRUE) +
 p1 | p2
 ```
 
-![Dimension reduction](umap.png)
+<br />
+<br />
 
+## Save object for the next tutorial
 
-### Motif analysis
+At this step you can save your data, so you don't have to re-run all your analysis for the next tutorial. To load the data later, type `load(file="pbmc.Rda")`.
+
+```{r}
+#| eval: FALSE
+#| echo: TRUE
+
+save(pbmc, file="pbmc.Rda")
+```
+
+::: {.callout-important collapse="false"}
+
+The `pbmc.Rda` file has to be loaded in the same file structure you are saving it on. Otherwise things will not work since Seurat Objects with fragments from ATAC-seq are not self contained, they contain paths to files with fragments and their indexes.
+
+:::
+
+<br />
+<br />
+
+## Motif analysis
 
 We can also analyze motif occurrence in the peaks, to see how this varies between the different cell types.
 
-#### Identifying enriched motifs
+<br />
 
-First, we will look at motifs that are enriched in a set of peaks, *e.g.* in peaks that show differential accessibility between two cell types. *Do you notice anything particular about these motifs?*
+### Identifying enriched motifs
 
+First, we will look at motifs that are enriched in a set of peaks, *e.g.* in peaks that show differential accessibility between two cell types (clusters).
 
 
 ```{r}
@@ -404,11 +469,15 @@ MotifPlot(
 )
 ```
 
-#### Motif activity scores
+*Do you notice anything particular about these motifs?*
+
+<br />
+
+### Motif activity scores
 
 We can also compute a per-cell motif activity score by running (better)ChromVAR. The motif activity score for a motif M is based on the number of reads mapping to peaks with motif M, after normalization correction for various biases: GC content, average number of reads mapping across all cells etc. You can read more about chromVar [here](https://www.nature.com/articles/nmeth.4401). Motif activity scores allow us to visualize motif activities per cell.
 
-It is also possible to directly test for differential activity scores between cell types, without looking at peaks with differential binding. This tends to give similar results as performing an enrichment test on differentially accessible peaks between the cell types (shown above).
+It is also possible to directly test for differential activity scores between cell types (cluster), without looking at peaks with differential binding. This tends to give similar results as performing an enrichment test on differentially accessible peaks (shown above) between the cell types (clusters).
 
 
 
@@ -488,24 +557,6 @@ MotifPlot(
     assay = 'peaks'
 )
 ```
-
-![Motif activity](motif_plot.png)
-
-Finally you can save your data, so you don't have to re-run all your analysis To load the data later, type `load(file="pbmc.Rda")`.
-
-```{r}
-#| eval: FALSE
-#| echo: TRUE
-
-save(pbmc, file="pbmc.Rda")
-```
-
-
-<br />
-<br />
-
-
-## References
 
 
 

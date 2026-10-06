@@ -1,5 +1,5 @@
 ---
-title: "single cell ATAC-seq"
+title: "Single Cell ATAC-seq"
 format: 
   html:
     fig-format: png
@@ -11,39 +11,19 @@ date-format: long
 editor: 
   markdown: 
     wrap: 72
-bibliography: references.bib
 ---
 
-
-```{=html}
-<!-- 
-About:          This qmd file is used to render the .html file. To modify or 
-                update the .html file, please do so in the .qmd file here and 
-                render it.
--->
-```
-
-<br />
-<br />
-
-Mapping the accessible genome of individual cells by assay for transposase-accessible chromatin using sequencing (ATAC-seq) enables addressing cell-to-cell variation in chromatin states [@Buenrostro2015a].
-
-
-<br />
 <br />
 
 ## Single cell ATAC-seq tutorials
 
 <br />
-<br />
-
-
 
 Tutorials in this module:
 
-* [scATAC-seq](../../tutorials/scATAC/index.html)
+* [Single cell ATAC-seq](../../tutorials/scATAC/index.html)
 
-* [scATAC-seq & RNA-seq integration](../../tutorials/scATAC_scRNA/index.html)
+* [Integrating scATAC-seq and scRNA-seq data](../../tutorials/scATAC_scRNA/index.html)
 
-* [multiome](../../tutorials/scMultiome/index.html)
+* [Analysis of single cell multiome data](../../tutorials/scMultiome/index.html)
 

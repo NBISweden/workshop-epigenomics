@@ -3,10 +3,7 @@ title: "Integrating scATAC-seq and scRNA-seq data"
 format: 
   html:
     toc: true
-    toc-depth: 2
     fig-format: png
-    mermaid:
-      theme: default
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 editor: 
   markdown: 
@@ -30,32 +27,28 @@ options(knitr.duplicate.label = "allow")
 
 ```
 
-```{=html}
-<!-- 
-Author:         Markus Ringnér and Jakub Orzechowski Westholm
-About:          This qmd file is used to render the .html file. To modify or 
-                update the .html file, please do so in the .qmd file here and 
-                render it.
--->
-```
 
-
-<br />
 
 ## Learning outcomes
 
-Using R
 
-* to combine single cell ATAC-seq data with single cell RNA-seq data to better infer cell types.
+* Combine single cell ATAC-seq data with single cell RNA-seq data to better infer cell types.
 
 <br />
-<br />
+
+## Setup
 
 ::: {.callout-note collapse="false"}
 
 ### Note on this workflow
 
-  This tutorial is a continuation of [scATAC](../scATAC/index.html). To run this on Pelle, setup and initialize R as you did in that exercise.
+  This tutorial is a continuation of [Single cell ATAC-seq](../scATAC/index.html). To run this on Pelle, setup and initialize R as you did in that exercise.
+
+:::
+
+::: {.callout-note}
+
+Alternatively you can work on this tutorial locally if you have all the R packages loaded below installed on your computer.
 
 :::
 
@@ -79,32 +72,42 @@ set.seed(1234)
 <br />
 <br />
 
+## Load the data generated in the scATAC-seq exercise
+
+
+All data for this tutorial is available on Pelle in the directory `/proj/epi2026/single_cell/scATAC_scRNA/`. If you work on the tutorial locally, you need to download the data and modify the path below according to your directory structure.
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+data.dir="/proj/epi2026/single_cell/scATAC_scRNA/"
+
+```
+
+The code here use a pre-calculated version. If you already have your pbmc object loaded, coming from the previous tutorial, you should skip running this code chunk.
+
 ::: {.callout-important collapse="false"}
 
   We assume that pbmc.Rda file you load was generated in the same file structure as you are running on now. That is the file structure you used in[scATAC](../scATAC/index.html) when you saved the file. Otherwise things will not work since Seurat Objects with fragments from ATAC-seq are not self contained, they contain paths to files with fragments and their indexes.
 
 :::
 
-<br />
-<br />
-
-
-### Load the data generated in the scATAC-seq exercise
-
-The code here use a pre-calculated version. If you already have your pbmc object loaded, coming from the previous tutorial, you should skip running this code chunk.
-
 ```{r}
 #| eval: FALSE
 #| echo: true
 
-lab.dir="/proj/epi2026/single_cell/scATAC_scRNA/"
-
-load(file=paste0(lab.dir, "data/pbmc.Rda"))
+load(file=paste0(data.dir, "data/pbmc.Rda"))
 ```
+
+<br />
+<br />
 
 ## Integrate with scRNA-seq data
 
 In this section, we will compare the scATAC-seq data to scRNA-seq data from a similar starting material (although not from exactly the same cells). Since it is easier to figure out which cell types clusters correspond to in scRNA-seq data, we will then use the scRNA-seq data to annotate the clusters in the scATAC-seq data. (Note that if you have multi-omics data, with RNA-seq and ATAC-seq from the same cells, you don't need to take the extra detour to gene activity scores, but can instead use your RNA-seq data directly to annotate cell types.)
+
+<br />
 
 ### Gene activity matrix
 
@@ -131,6 +134,7 @@ pbmc <- NormalizeData(
 GetAssayData(pbmc$RNA)[1:10,1:3]
 ```
 
+We can plot the gene activity scores for a set of genes across the clusters to get a first indication how it has worked.
 
 ```{r}
 #| eval: FALSE
@@ -146,7 +150,8 @@ FeaturePlot(
 )
 ```
 
-![Gene activity](gene_activity_scores.png)
+<br />
+<br />
 
 ### Label transfer
 
@@ -156,14 +161,14 @@ We start by finding anchors, *i.e.* pairs of cells, one from ATAC-seq and one fr
 
 These anchors can then be used to project the ATAC-seq data onto the RNA-seq data and find the cell type annotation of the nearby cells. This way annotations from the RNA-seq data can be transferred to the ATAC-seq data. This is sometimes referred to as **label transfer**.
 
-*How well do you think this worked? Can you see if some cells types are missing or merged?*
+The corresponding RNA-seq data of human peripheral blood mononuclear cells (PBMCs) provided by 10x Genomics covers 19089 genes in 9432 cells.
 
 ```{r}
 #| eval: FALSE
 #| echo: true
 
 # Load the pre-processed scRNA-seq data for PBMCs
-pbmc_rna_v3 <- readRDS(paste0(lab.dir,"data/pbmc_10k_v3.rds"))
+pbmc_rna_v3 <- readRDS(paste0(data.dir,"data/pbmc_10k_v3.rds"))
 pbmc_rna <- UpdateSeuratObject(pbmc_rna_v3)
 
 # Find anchors
@@ -181,7 +186,6 @@ predicted.labels <- TransferData(
 )
 
 pbmc <- AddMetaData(object = pbmc, metadata = predicted.labels)
-gc()
 ```
 
 ```{r}
@@ -192,17 +196,20 @@ plot1 <- DimPlot(
     object = pbmc_rna,
     group.by = 'celltype',
     label = TRUE,
+    label.size = 3,
     repel = TRUE) + NoLegend() + ggtitle('scRNA-seq')
 
 plot2 <- DimPlot(
     object = pbmc,
     group.by = 'predicted.id',
     label = TRUE,
+    label.size = 3,
     repel = TRUE) + NoLegend() + ggtitle('scATAC-seq')
 
 plot3 <- DimPlot(
     object = pbmc,
     label = TRUE,
+    label.size = 3,
     repel = TRUE) + NoLegend() + ggtitle('scATAC-seq')
 
 plot1 | plot2 | plot3
@@ -223,10 +230,13 @@ pbmc <- RenameIdents(
 )
 ```
 
+*How well do you think this worked? Can you see if some cells types are missing or merged?*
+
+<br />
 
 ### Differentially accessible regions, again
 
-Now, we will once again look at differentially accessible regions, this time between *CD4/8 Naive* cells and *CD14 Mono* cells (since we now can say what cell types these clusters represent.) We can plot the signal in this region in a couple of different ways. *Do you understand what these plots mean?*
+Now, we will once again look at differentially accessible regions, this time between *CD4/8 Naive* cells and *CD14 Mono* cells (since we now can say what cell types these clusters represent). We can plot the signal in this region in a couple of different ways. 
 
 
 ```{r}
@@ -269,6 +279,10 @@ plot2 <- FeaturePlot(
 plot1 | plot2
 ```
 
+*Do you understand what these plots mean?*
+
+<br />
+
 ### Annotating regions
 
 Genomic coordinates are difficult to interpret on their own, and often it is interesting to know which genes are near or at the genomic regions. Below, for each region, we find the nearest gene and the distance to it. This makes it easy to check for regions near genes of interest, and to analyze genes further, *e.g.* through a Gene Ontology analysis.
@@ -286,10 +300,22 @@ head(closest_genes_cd4naive)
 head(closest_genes_cd14mono)
 ```
 
-### Visualization
+
+<br />
+<br />
+
+## Plotting genomic regions
 
 It is often informative to plot the ATAC-seq signal for a particular genomic region, and group this by cluster, cell type or some other meta data. We can either plot the aggregate signal for a group with `coveragePlot` or the signal for individual cells, with `tilePlot`. More info about plotting genomic region can be found [here](https://satijalab.org/signac/articles/visualization.html).
 
+For plotting purposes, it’s nice to have related cell types grouped together. We can automatically sort the plotting order according to similarities across the annotated cell types by running the SortIdents() function:
+
+```{r}
+#| eval: FALSE
+#| echo: true
+#| 
+pbmc <- SortIdents(pbmc)
+```
 
 ```{r}
 #| eval: FALSE
@@ -316,3 +342,27 @@ TilePlot(
     extend.downstream = 40000
 )
 ```
+
+
+You can also highlight the differentially accessible regions overlapping a gene of interest.
+
+```{r}
+#| eval: FALSE
+#| echo: true
+
+# find DA peaks overlapping gene of interest
+regions_highlight <- subsetByOverlaps(StringToGRanges(open_cd4naive), LookupGeneCoords(pbmc, "HOOK1"))
+
+CoveragePlot(
+  object = pbmc,
+  region = "HOOK1",
+  region.highlight = regions_highlight,
+  extend.upstream = 1000,
+  extend.downstream = 1000
+)
+```
+
+
+<br />
+
+One can also create an interactive version of these plots using the `CoverageBrowser()` function. One can use `CoverageBrowser()` to browser the genome and adjust plotting parameters interactively. The “Save plot” button in `CoverageBrowser()` will add the current plot to a list of `ggplot` objects that is returned when the browser session is ended by pressing the “Done” button, allowing interesting views to be saved during an interactive session.
