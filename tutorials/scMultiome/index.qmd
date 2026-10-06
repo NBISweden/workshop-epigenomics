@@ -360,12 +360,14 @@ table(Label=cell_type_pred$labels,
       Lost=is.na(cell_type_pred$pruned.labels))
 ```
 
+
 ```{r}
 #| eval: FALSE
 #| echo: true
 # Plot scores for each cell and cell type
 plotScoreHeatmap(cell_type_pred)
 ```
+
 
 ```{r}
 #| eval: FALSE
