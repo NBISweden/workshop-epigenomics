@@ -182,7 +182,9 @@ colData(se)
 
 ## Downloading the data
 
-Let's download the `bam` files we will be using in this tutorial from Pelle, the HPC from UPPMAX. Make sure you do this in the same working directory you are using.
+::: {.callout-note}
+## Setting up and downloading the data
+Let's download the `bam` files we will be using in this tutorial from Pelle, the HPC from UPPMAX. Make sure you do this in the same working directory you are using. Open a terminal and navigate to your working directory (this is important) and follow these instructions:
 ```{bash}
 #| eval: false
 
@@ -190,7 +192,7 @@ Let's download the `bam` files we will be using in this tutorial from Pelle, the
 mkdir data
 rsync username@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/dataMapped/*_chr19.ucsc.fixed.bam*' data/ 
 ```
-
+:::
 
 ## Quality Control (QC)
 
@@ -554,12 +556,17 @@ $macs3 callpeak -t $bamIP -c $bamInput -f BAM -g $genomeSize -q 0.01 \
     -n $sampleName --outdir ChIPpeaks
 ```
 
+This command has been run for the rest of the samples. We will now download the peaks bed files and then read them into `R`.
+
 ::: {.callout-tip}
 ## Exercise
 Check the contents of the `ChIPpeaks` folder. You can have a look at the individual files using `less yourFileName`, and exit this with `q` (short for quit).
 :::
 
-This command has been run for the rest of the samples. We will now download the peaks bed files and then read them into `R`.
+
+::: {.callout-note}
+## Downloading the peak files
+Make sure you do this in the same working directory you are using. Open a terminal and navigate to your working directory (this is important) and follow these instructions:
 ```{bash}
 #| eval: false
 
@@ -567,6 +574,8 @@ This command has been run for the rest of the samples. We will now download the 
 mkdir peaks
 rsync username@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/peaks/*_peaks.narrowPeak' peaks/ 
 ```
+:::
+
 
 
 ### Peak overlap

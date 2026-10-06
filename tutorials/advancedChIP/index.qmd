@@ -46,6 +46,25 @@ suppressPackageStartupMessages({
 
 Our starting point for this tutorial is two raw count matrices: one on promoters and another on gene bodies. Promoters were defined as 1kb upstream and 500 bases downstream the transcription start site (TSS) and gene bodies as regions from 1kb to 3kb downstream the TSS. The rows in these count matrices correspond to genes and the columns correspond to the different modalities quantified on the promoter and gene body level and at three different developmental time points, namely E14, E18 and P4, where E14 means day 14 at the embryonic stage, E18 is embryonic stage at day 18 and this is actually when birth happens, and P4 means 4 days post-natally or after birth. The marks that were quantified are ATAC-seq, H3K27me3, H3K27Ac and H3K4me2. 
 
+
+### Downlading the data
+
+::: {.callout-note}
+## Setting up and downloading the data
+Open a terminal and navigate to your working directory (this is important) and follow these instructions:
+```{bash}
+#| eval: false
+
+## Go to your working directory and make a data folder
+mkdir dataObjects
+
+## Download the files from Pelle. Replace 'username' with your actual username
+rsync username@pelle.uppmax.uu.se:'/proj/uppmax2026-1-197/ChIP/advancedChIP/*' dataObjects/ 
+```
+:::
+
+### Reading in the data
+
 Let's begin by reading in the data.
 
 ```{r}
