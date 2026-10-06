@@ -494,10 +494,10 @@ Note&nbsp;1: Set up your working directory
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the list containing the bismark coverage files.</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>file.list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P6_1.bismark.cov.gz"</span>,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P6_4.bismark.cov.gz"</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P8_3.bismark.cov.gz"</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/P8_6.bismark.cov.gz"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P6_1.bismark.cov.gz"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P8_3.bismark.cov.gz"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P6_4.bismark.cov.gz"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/P8_6.bismark.cov.gz"</span></span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -777,14 +777,15 @@ Note
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First load the annotation data; i.e the coordinates of promoters, TSS, intron and exons</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># !!! change the file path if you are working in your local machine with a local copy of this BED file</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>refseq_anot <span class="ot">&lt;-</span> <span class="fu">readTranscriptFeatures</span>(<span class="st">"/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/mm10.refseq.genes.bed"</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>refseq_anot <span class="ot">&lt;-</span> <span class="fu">readTranscriptFeatures</span>(<span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/mm10.refseq.genes.bed"</span>)</span>
 <span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotate hypermethylated CpGs ("target") with promoter/exon/intron</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># information ("feature"). This function operates on GRanges objects, so we # first coerce the methylKit object to GRanges.</span></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper.anot <span class="ot">&lt;-</span> <span class="fu">annotateWithGeneParts</span>(<span class="at">target =</span> <span class="fu">as</span>(myDiff25p.hyper, <span class="st">"GRanges"</span>),<span class="at">feature =</span> refseq_anot)</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of target set annotation</span></span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper.anot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotate hypermethylated CpGs ("target") with promoter/exon/intron</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># information ("feature"). This function operates on GRanges objects, so we # first coerce the methylKit object to GRanges.</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper.anot <span class="ot">&lt;-</span> <span class="fu">annotateWithGeneParts</span>(<span class="at">target =</span> <span class="fu">as</span>(myDiff25p.hyper, <span class="st">"GRanges"</span>),<span class="at">feature =</span> refseq_anot)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of target set annotation</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>myDiff25p.hyper.anot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -817,23 +818,25 @@ Note
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># !!! change the file path if you are working in your local machine with a local copy of this BED file</span></span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>cpg_anot <span class="ot">&lt;-</span> <span class="fu">readFeatureFlank</span>(</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/home/louella/NBIS_TEACHING/2026/Epigenomics/localnotebook/WGBS/biseq_data/mm10.cpg.bed"</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>   <span class="st">"/gorilla/proj/epi2026/DNAM/WGBS/biseq_data/mm10.cpg.bed"</span>,</span>
 <span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature.flank.name =</span> <span class="fu">c</span>(<span class="st">"CpGi"</span>, <span class="st">"shores"</span>),</span>
 <span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank =</span> <span class="dv">2000</span></span>
 <span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>diffCpGann <span class="ot">&lt;-</span> <span class="fu">annotateWithFeatureFlank</span>(</span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>   <span class="fu">as</span>(myDiff25p, <span class="st">"GRanges"</span>),</span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature =</span> cpg_anot<span class="sc">$</span>CpGi,</span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank =</span> cpg_anot<span class="sc">$</span>shores,</span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature.name =</span> <span class="st">"CpGi"</span>,</span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank.name =</span> <span class="st">"shores"</span></span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="co"># See whether the CpG in myDiff25p belong to a CpG Island or Shore</span></span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">getMembers</span>(diffCpGann))</span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="co"># This can also be summarized for all differentially methylated CpGs</span></span>
-<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a><span class="fu">plotTargetAnnotation</span>(diffCpGann, <span class="at">main =</span> <span class="st">"Differential Methylation Annotation"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>diffCpGann <span class="ot">&lt;-</span> <span class="fu">annotateWithFeatureFlank</span>(</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>   <span class="fu">as</span>(myDiff25p, <span class="st">"GRanges"</span>),</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature =</span> cpg_anot<span class="sc">$</span>CpGi,</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank =</span> cpg_anot<span class="sc">$</span>shores,</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>   <span class="at">feature.name =</span> <span class="st">"CpGi"</span>,</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>   <span class="at">flank.name =</span> <span class="st">"shores"</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="co"># See whether the CpG in myDiff25p belong to a CpG Island or Shore</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">getMembers</span>(diffCpGann))</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a><span class="co"># This can also be summarized for all differentially methylated CpGs</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a><span class="fu">plotTargetAnnotation</span>(diffCpGann, <span class="at">main =</span> <span class="st">"Differential Methylation Annotation"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In general, this workflow can be used to annotate a CpG list with any set of features contained in a BED file.</p>
 </section>

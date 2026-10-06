@@ -82,9 +82,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-7d563484551c2eb5581e6552524d6514.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
-<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
-<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -251,9 +248,18 @@ background-size: cover;
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="collapse">
+  <ul>
   <li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link active" data-scroll-target="#learning-outcomes"><span class="header-section-number">1</span> Learning outcomes</a></li>
-  <li><a href="#which-clusters-from-rna--and-atac-seq-overlap" id="toc-which-clusters-from-rna--and-atac-seq-overlap" class="nav-link" data-scroll-target="#which-clusters-from-rna--and-atac-seq-overlap"><span class="header-section-number">2</span> Which clusters from RNA- and ATAC-seq overlap?</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup"><span class="header-section-number">2</span> Setup</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">3</span> Introduction</a></li>
+  <li><a href="#load-data" id="toc-load-data" class="nav-link" data-scroll-target="#load-data"><span class="header-section-number">4</span> Load data</a></li>
+  <li><a href="#quality-control" id="toc-quality-control" class="nav-link" data-scroll-target="#quality-control"><span class="header-section-number">5</span> Quality control</a></li>
+  <li><a href="#normalization" id="toc-normalization" class="nav-link" data-scroll-target="#normalization"><span class="header-section-number">6</span> Normalization</a></li>
+  <li><a href="#clustering" id="toc-clustering" class="nav-link" data-scroll-target="#clustering"><span class="header-section-number">7</span> Clustering</a>
+  <ul>
+  <li><a href="#which-clusters-from-rna--and-atac-seq-overlap" id="toc-which-clusters-from-rna--and-atac-seq-overlap" class="nav-link" data-scroll-target="#which-clusters-from-rna--and-atac-seq-overlap"><span class="header-section-number">7.1</span> Which clusters from RNA- and ATAC-seq overlap?</a></li>
+  </ul></li>
+  <li><a href="#gene-markers-and-cell-annotation" id="toc-gene-markers-and-cell-annotation" class="nav-link" data-scroll-target="#gene-markers-and-cell-annotation"><span class="header-section-number">8</span> Gene markers and cell annotation</a></li>
   </ul>
 </nav>
     </div>
@@ -265,20 +271,31 @@ background-size: cover;
 
 
 
-<!-- 
-Author:         Markus Ringnér and Jakub Orzechowski Westholm
-About:          This qmd file is used to render the .html file. To modify or 
-                update the .html file, please do so in the .qmd file here and 
-                render it.
--->
-<p><br></p>
 <section id="learning-outcomes" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="learning-outcomes"><span class="header-section-number">1</span> Learning outcomes</h2>
-<p>Using R</p>
 <ul>
-<li>To run the basic steps for quality control, normalization, dimensionality reduction, clustering and visualization of single cell multiome (RNA-seq + ATAC-seq) data</li>
+<li>The basic steps for quality control, normalization, dimensionality reduction, clustering and visualization of single cell multiome (RNA-seq + ATAC-seq) data</li>
 </ul>
 <p><br> <br></p>
+</section>
+<section id="setup" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="setup"><span class="header-section-number">2</span> Setup</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Note on this workflow
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>To run this on Pelle, setup and initialize R as you did in the <a href="../scATAC/index.html">Single cell ATAC-seq</a> tutorial.</p>
+</div>
+</div>
+</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -289,239 +306,250 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>We take advantage of the module system on Pelle in this tutorial. The code was tested under <code>R 4.6.1</code>.</p>
-</div>
-</div>
-<p><br> <br></p>
-<p>We access the R environment via:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R/4.6.1-gfbf-2026.1</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R-bundle-CRAN/2026.07-foss-2026.1</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load R-bundle-Bioconductor/3.23-foss-2026.1-R-4.6.1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>We activate R console upon typing <code>R</code> in the terminal.</p>
-<p>To be able to load all necessary libraries that are not available in modules, we need to update the paths to a custom library location:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>(<span class="fu">c</span>(<span class="fu">.libPaths</span>(),<span class="st">"/proj/epi2026/library/Rpackages/4.6.1"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <p>Alternatively you can work on this tutorial locally if you have all the R packages loaded below installed on your computer.</p>
-<p><br> <br></p>
+</div>
+</div>
 <p>We begin by loading necessary libraries:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Signac)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(EnsDb.Mmusculus.v79)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BSgenome.Mmusculus.UCSC.mm10)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pheatmap)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SingleR)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scrapper)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Signac)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(EnsDb.Mmusculus.v79)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BSgenome.Mmusculus.UCSC.mm10)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pheatmap)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SingleR)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scrapper)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Recently, single cell multi-omics methods that run several assays on the same cells have become available. One such method is <a href="https://www.10xgenomics.com/products/single-cell-multiome-atac-plus-gene-expression">Chromium Single Cell Multiome from 10X genomics</a>, which simultaneously measures gene expression (RNA-seq) and chromatin accessibility (ATAC-seq) in the same nuclei. This makes it possible to identify cell types and states based on both gene expression and accessibility. It also makes it easy to use external gene expression data to annotate your cells, and at the same time study the chromatin accessibility in the cells. In this exercise, we will look at a public data set downloaded from 10X genomics, from <a href="https://www.10xgenomics.com/resources/datasets/fresh-embryonic-e-18-mouse-brain-5-k-1-standard-2-0-0">embyomic mouse brain</a>. You will load both the RNA-seq and ATAC-seq data into the same <code>Seurat</code> object and do some simple pre-processing as was done for the ATAC-seq data above. Then, you will run joint clustering and visuaization of the combined data set, and finally use the gene expression measurements together with a public data set to annotate the cells.</p>
+<p><br> <br></p>
+</section>
+<section id="introduction" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="introduction"><span class="header-section-number">3</span> Introduction</h2>
+<p>Single cell multi-omics methods that run several assays on the same cells are increasingly becoming available. One such method is <a href="https://www.10xgenomics.com/products/single-cell-multiome-atac-plus-gene-expression">Chromium Single Cell Epi Multiome from 10X genomics</a>, which simultaneously measures gene expression (RNA-seq) and chromatin accessibility (ATAC-seq) in the same nuclei. This makes it possible to identify cell types and states based on both gene expression and accessibility. It also makes it easy to use external gene expression data to annotate your cells, and at the same time study the chromatin accessibility in the cells.</p>
+<p>In this exercise, we will look at a public data set downloaded from 10X genomics, from <a href="https://www.10xgenomics.com/resources/datasets/fresh-embryonic-e-18-mouse-brain-5-k-1-standard-2-0-0">embyomic mouse brain</a>.</p>
+<p>You will load both the RNA-seq and ATAC-seq data into the same <code>Seurat</code> object and do some simple pre-processing as was done for the ATAC-seq data in previous tutorials. Then, you will run joint clustering and visualization of the combined data set, and finally use the gene expression measurements together with a public data set to annotate the cells.</p>
+<p><br> <br></p>
+</section>
+<section id="load-data" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="load-data"><span class="header-section-number">4</span> Load data</h2>
 <p>Now, read the count tables for the mouse brain data into R. Both tables are in the same file, while the meta data is in a separate file.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>lab.dir<span class="ot">=</span><span class="st">"/proj/epi2026/single_cell/scMultiome/"</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>inputdata_10x <span class="ot">&lt;-</span> <span class="fu">Read10X_h5</span>(<span class="fu">paste0</span>(lab.dir, <span class="st">"data/e18_mouse_brain_fresh_5k_filtered_feature_bc_matrix.h5"</span>))</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>rna_counts <span class="ot">&lt;-</span> inputdata_10x<span class="sc">$</span><span class="st">`</span><span class="at">Gene Expression</span><span class="st">`</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>mt_index <span class="ot">&lt;-</span> <span class="fu">grepl</span>(<span class="st">"^mt-"</span>, <span class="fu">rownames</span>(rna_counts))</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>atac_counts <span class="ot">&lt;-</span> inputdata_10x<span class="sc">$</span>Peaks</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(inputdata_10x)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Only use 1000 cells, to make commands run faster, and use less memory</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>cell_sample <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">ncol</span>(rna_counts), <span class="dv">1000</span>) </span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>atac_counts <span class="ot">&lt;-</span> atac_counts[, cell_sample] </span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>rna_counts <span class="ot">&lt;-</span> rna_counts[, cell_sample]</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="fu">paste0</span>(lab.dir, <span class="st">"data/e18_mouse_brain_fresh_5k_per_barcode_metrics.csv"</span>),</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">header =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">row.names =</span> <span class="dv">1</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data.dir<span class="ot">=</span><span class="st">"/proj/epi2026/single_cell/scMultiome/"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>inputdata_10x <span class="ot">&lt;-</span> <span class="fu">Read10X_h5</span>(<span class="fu">paste0</span>(data.dir, <span class="st">"data/e18_mouse_brain_fresh_5k_filtered_feature_bc_matrix.h5"</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>rna_counts <span class="ot">&lt;-</span> inputdata_10x<span class="sc">$</span><span class="st">`</span><span class="at">Gene Expression</span><span class="st">`</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>mt_index <span class="ot">&lt;-</span> <span class="fu">grepl</span>(<span class="st">"^mt-"</span>, <span class="fu">rownames</span>(rna_counts))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>atac_counts <span class="ot">&lt;-</span> inputdata_10x<span class="sc">$</span>Peaks</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(inputdata_10x)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Only use 1000 cells, to make commands run faster, and use less memory</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>cell_sample <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">ncol</span>(rna_counts), <span class="dv">1000</span>) </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>atac_counts <span class="ot">&lt;-</span> atac_counts[, cell_sample] </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>rna_counts <span class="ot">&lt;-</span> rna_counts[, cell_sample]</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="fu">paste0</span>(data.dir, <span class="st">"data/e18_mouse_brain_fresh_5k_per_barcode_metrics.csv"</span>),</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">header =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">row.names =</span> <span class="dv">1</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We start by creating a <code>Seurat</code> object with the RNA-seq data.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> rna_counts, <span class="at">meta.data =</span> metadata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> rna_counts, <span class="at">meta.data =</span> metadata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Then, we create a <code>ChromatinAssay</code> object from the ATAC-seq data, as we did for the ATAC-seq data above. We add the <code>ChromatinAssay</code> to the <code>Seurat</code> object with the RNA-seq data. Now, the same <code>Seurat</code> object holds two assays, one for each data type. <em>Can you see what these assays are called? Can you see how many peaks and expressed genes we have in our data?</em></p>
+<p>Then, we create a <code>ChromatinAssay</code> object from the ATAC-seq data, as we did for the ATAC-seq data above. We add the <code>ChromatinAssay</code> to the <code>Seurat</code> object with the RNA-seq data.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract gene annotations from EnsDb</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>annotations <span class="ot">&lt;-</span> <span class="fu">GetGRangesFromEnsDb</span>(<span class="at">ensdb =</span> EnsDb.Mmusculus.v79)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">seqlevelsStyle</span>(annotations) <span class="ot">&lt;-</span> <span class="st">'UCSC'</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">genome</span>(annotations) <span class="ot">&lt;-</span> <span class="st">"mm10"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract gene annotations from EnsDb</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>annotations <span class="ot">&lt;-</span> <span class="fu">GetGRangesFromEnsDb</span>(<span class="at">ensdb =</span> EnsDb.Mmusculus.v79)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">seqlevelsStyle</span>(annotations) <span class="ot">&lt;-</span> <span class="st">'UCSC'</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">genome</span>(annotations) <span class="ot">&lt;-</span> <span class="st">"mm10"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Load ATAC-seq data</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>chrom_assay <span class="ot">&lt;-</span> <span class="fu">CreateChromatinAssay</span>(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">counts =</span> atac_counts,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sep =</span> <span class="fu">c</span>(<span class="st">":"</span>, <span class="st">"-"</span>),</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">genome =</span> <span class="st">'mm10'</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fragments =</span> <span class="fu">paste0</span>(lab.dir, <span class="st">'data/e18_mouse_brain_fresh_5k_atac_fragments.tsv.gz'</span>),</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">min.cells =</span> <span class="dv">10</span>,</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">min.features =</span> <span class="dv">1</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>seurat_multi[[<span class="st">"ATAC"</span>]] <span class="ot">&lt;-</span> chrom_assay</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(seurat_multi) <span class="ot">&lt;-</span> <span class="st">"ATAC"</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the gene information to the object</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="fu">Annotation</span>(seurat_multi) <span class="ot">&lt;-</span> annotations</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the object we have created</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>seurat_multi</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="fu">granges</span>(seurat_multi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Load ATAC-seq data</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>chrom_assay <span class="ot">&lt;-</span> <span class="fu">CreateChromatinAssay</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">counts =</span> atac_counts,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sep =</span> <span class="fu">c</span>(<span class="st">":"</span>, <span class="st">"-"</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">genome =</span> <span class="st">'mm10'</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fragments =</span> <span class="fu">paste0</span>(data.dir, <span class="st">'data/e18_mouse_brain_fresh_5k_atac_fragments.tsv.gz'</span>),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">min.cells =</span> <span class="dv">10</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">min.features =</span> <span class="dv">1</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>seurat_multi[[<span class="st">"ATAC"</span>]] <span class="ot">&lt;-</span> chrom_assay</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(seurat_multi) <span class="ot">&lt;-</span> <span class="st">"ATAC"</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the gene information to the object</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="fu">Annotation</span>(seurat_multi) <span class="ot">&lt;-</span> annotations</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the object we have created</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>seurat_multi</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="fu">granges</span>(seurat_multi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Next, we calculate quality measures to filter out low quality cells. This step takes around 10 minutes. It’s similar to what was done for the ATAC-seq data above, but now we have quality measures from both RNA-seq and ATAC-seq. <em>How many cells are left after filtering?</em></p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute nucleosome signal score per cell</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">NucleosomeSignal</span>(<span class="at">object =</span> seurat_multi)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute TSS enrichment score per cell</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">TSSEnrichment</span>(<span class="at">object =</span> seurat_multi, <span class="at">fast =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Add blacklist ratio and fraction of reads in peaks</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>seurat_multi<span class="sc">$</span>pct_reads_in_peaks <span class="ot">&lt;-</span> seurat_multi<span class="sc">$</span>atac_peak_region_fragments <span class="sc">/</span> seurat_multi<span class="sc">$</span>atac_fragments <span class="sc">*</span> <span class="dv">100</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">object =</span> seurat_multi,</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">features =</span> <span class="fu">c</span>(<span class="st">'gex_mapped_reads'</span>, <span class="st">'nFeature_RNA'</span>, <span class="st">'nCount_ATAC'</span>, </span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'nFeature_ATAC'</span>, <span class="st">'pct_reads_in_peaks'</span>, <span class="st">'atac_peak_region_fragments'</span>,</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'TSS.enrichment'</span>, <span class="st">'nucleosome_signal'</span>),</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">pt.size =</span> <span class="fl">0.01</span>,</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">4</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>) <span class="sc">&amp;</span> <span class="fu">FontSize</span>(<span class="at">main =</span> <span class="dv">8</span>) <span class="sc">&amp;</span> <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_blank</span>())  <span class="sc">&amp;</span> <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_blank</span>()) <span class="sc">&amp;</span> <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">subset</span>(</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> seurat_multi,</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">subset =</span> atac_peak_region_fragments <span class="sc">&gt;</span> <span class="dv">2000</span> <span class="sc">&amp;</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>             atac_peak_region_fragments <span class="sc">&lt;</span> <span class="dv">20000</span> <span class="sc">&amp;</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>             pct_reads_in_peaks <span class="sc">&gt;</span> <span class="dv">15</span> <span class="sc">&amp;</span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>             nucleosome_signal <span class="sc">&lt;</span> <span class="dv">4</span> <span class="sc">&amp;</span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>             TSS.enrichment <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">&amp;</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>             nFeature_RNA <span class="sc">&gt;</span> <span class="dv">1000</span> <span class="sc">&amp;</span></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>             nFeature_RNA <span class="sc">&lt;</span> <span class="dv">5000</span></span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>seurat_multi</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Normalization is done on the ATAC-seq and RNA-seq data separately. ATAC-seq data are normalized similar to the example above, while RNA-seq data are normalized using the default <code>Seurat</code> methods.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize ATAC-seq data</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">RunTFIDF</span>(seurat_multi)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindTopFeatures</span>(seurat_multi, <span class="at">min.cutoff =</span> <span class="st">'q5'</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">RunSVD</span>(seurat_multi, <span class="at">reduction.name =</span> <span class="st">"ATAC_lsi"</span>,)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize RNA-seq data</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(seurat_multi) <span class="ot">&lt;-</span> <span class="st">"RNA"</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(seurat_multi, <span class="at">normalization.method =</span> <span class="st">"LogNormalize"</span>)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(seurat_multi, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(seurat_multi)</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(seurat_multi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Let’s visualize the data. First, we look at RNA-seq and ATAC-seq data separately. <em>Do you think RNA-seq and ATAC-seq give similar clusterings of the cells?</em></p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cluster and visualize RNA-seq</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(seurat_multi) <span class="ot">&lt;-</span> <span class="st">"RNA"</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(seurat_multi, <span class="at">reduction =</span> <span class="st">"pca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(seurat_multi, <span class="at">resolution =</span> <span class="fl">0.5</span>)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(seurat_multi, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_multi, <span class="at">label =</span> T, <span class="at">label.size =</span> <span class="dv">4</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Cluster and visualize ATAC-seq</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(seurat_multi) <span class="ot">&lt;-</span> <span class="st">"ATAC"</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(seurat_multi, <span class="at">reduction =</span> <span class="st">"ATAC_lsi"</span>, <span class="at">dims =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">30</span>)</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(seurat_multi, <span class="at">resolution =</span> <span class="fl">0.5</span>)</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(seurat_multi, , <span class="at">reduction.name =</span> <span class="st">"umap.atac"</span>, <span class="at">dims =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">30</span>)</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_multi, <span class="at">reduction =</span> <span class="st">"umap.atac"</span>, <span class="at">label =</span> T, <span class="at">label.size =</span> <span class="dv">4</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<p>Now, the same <code>Seurat</code> object holds two assays, one for each data type.</p>
+<p><em>Can you see what these assays are called? Can you see how many peaks and expressed genes we have in our data?</em></p>
+<p><br> <br></p>
 </section>
-<section id="which-clusters-from-rna--and-atac-seq-overlap" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="which-clusters-from-rna--and-atac-seq-overlap"><span class="header-section-number">2</span> Which clusters from RNA- and ATAC-seq overlap?</h2>
+<section id="quality-control" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="quality-control"><span class="header-section-number">5</span> Quality control</h2>
+<p>Next, we calculate quality measures to filter out low quality cells. This step takes around 10 minutes. It’s similar to what was done for the ATAC-seq data above, but now we have quality measures from both RNA-seq and ATAC-seq.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(seurat_multi<span class="sc">$</span>RNA_snn_res.<span class="fl">0.5</span>, seurat_multi<span class="sc">$</span>ATAC_snn_res.<span class="fl">0.5</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pheatmap</span>(<span class="fu">table</span>(seurat_multi<span class="sc">$</span>RNA_snn_res.<span class="fl">0.5</span>, seurat_multi<span class="sc">$</span>ATAC_snn_res.<span class="fl">0.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute nucleosome signal score per cell</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">NucleosomeSignal</span>(<span class="at">object =</span> seurat_multi)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute TSS enrichment score per cell</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">TSSEnrichment</span>(<span class="at">object =</span> seurat_multi, <span class="at">fast =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Add blacklist ratio and fraction of reads in peaks</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>seurat_multi<span class="sc">$</span>pct_reads_in_peaks <span class="ot">&lt;-</span> seurat_multi<span class="sc">$</span>atac_peak_region_fragments <span class="sc">/</span> seurat_multi<span class="sc">$</span>atac_fragments <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">object =</span> seurat_multi,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">features =</span> <span class="fu">c</span>(<span class="st">'gex_mapped_reads'</span>, <span class="st">'nFeature_RNA'</span>, <span class="st">'nCount_ATAC'</span>, </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'nFeature_ATAC'</span>, <span class="st">'pct_reads_in_peaks'</span>, <span class="st">'atac_peak_region_fragments'</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'TSS.enrichment'</span>, <span class="st">'nucleosome_signal'</span>),</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">pt.size =</span> <span class="fl">0.01</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">4</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>) <span class="sc">&amp;</span> <span class="fu">FontSize</span>(<span class="at">main =</span> <span class="dv">8</span>) <span class="sc">&amp;</span> <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_blank</span>())  <span class="sc">&amp;</span> <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_blank</span>()) <span class="sc">&amp;</span> <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>))</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">subset</span>(</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> seurat_multi,</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">subset =</span> atac_peak_region_fragments <span class="sc">&gt;</span> <span class="dv">2000</span> <span class="sc">&amp;</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>             atac_peak_region_fragments <span class="sc">&lt;</span> <span class="dv">20000</span> <span class="sc">&amp;</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>             pct_reads_in_peaks <span class="sc">&gt;</span> <span class="dv">15</span> <span class="sc">&amp;</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>             nucleosome_signal <span class="sc">&lt;</span> <span class="dv">4</span> <span class="sc">&amp;</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>             TSS.enrichment <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">&amp;</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>             nFeature_RNA <span class="sc">&gt;</span> <span class="dv">1000</span> <span class="sc">&amp;</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>             nFeature_RNA <span class="sc">&lt;</span> <span class="dv">5000</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>seurat_multi</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p><em>How many cells are left after filtering?</em></p>
+<p><br> <br></p>
+</section>
+<section id="normalization" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="normalization"><span class="header-section-number">6</span> Normalization</h2>
+<p>Normalization is done on the ATAC-seq and RNA-seq data separately. ATAC-seq data are normalized similar to the previous tutorial, while RNA-seq data are normalized using the default <code>Seurat</code> methods.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize ATAC-seq data</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">RunTFIDF</span>(seurat_multi)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindTopFeatures</span>(seurat_multi, <span class="at">min.cutoff =</span> <span class="st">'q5'</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">RunSVD</span>(seurat_multi, <span class="at">reduction.name =</span> <span class="st">"ATAC_lsi"</span>,)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize RNA-seq data</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(seurat_multi) <span class="ot">&lt;-</span> <span class="st">"RNA"</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(seurat_multi, <span class="at">normalization.method =</span> <span class="st">"LogNormalize"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(seurat_multi, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(seurat_multi)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(seurat_multi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><br> <br></p>
+</section>
+<section id="clustering" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="clustering"><span class="header-section-number">7</span> Clustering</h2>
+<p>Let’s visualize the data. First, we look at RNA-seq and ATAC-seq data separately.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cluster and visualize RNA-seq</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(seurat_multi) <span class="ot">&lt;-</span> <span class="st">"RNA"</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(seurat_multi, <span class="at">reduction =</span> <span class="st">"pca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(seurat_multi, <span class="at">resolution =</span> <span class="fl">0.5</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(seurat_multi, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_multi, <span class="at">label =</span> T, <span class="at">label.size =</span> <span class="dv">4</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cluster and visualize ATAC-seq</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(seurat_multi) <span class="ot">&lt;-</span> <span class="st">"ATAC"</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(seurat_multi, <span class="at">reduction =</span> <span class="st">"ATAC_lsi"</span>, <span class="at">dims =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(seurat_multi, <span class="at">resolution =</span> <span class="fl">0.5</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(seurat_multi, , <span class="at">reduction.name =</span> <span class="st">"umap.atac"</span>, <span class="at">dims =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_multi, <span class="at">reduction =</span> <span class="st">"umap.atac"</span>, <span class="at">label =</span> T, <span class="at">label.size =</span> <span class="dv">4</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="which-clusters-from-rna--and-atac-seq-overlap" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="which-clusters-from-rna--and-atac-seq-overlap"><span class="header-section-number">7.1</span> Which clusters from RNA- and ATAC-seq overlap?</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(seurat_multi<span class="sc">$</span>RNA_snn_res.<span class="fl">0.5</span>, seurat_multi<span class="sc">$</span>ATAC_snn_res.<span class="fl">0.5</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pheatmap</span>(<span class="fu">table</span>(seurat_multi<span class="sc">$</span>RNA_snn_res.<span class="fl">0.5</span>, seurat_multi<span class="sc">$</span>ATAC_snn_res.<span class="fl">0.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><em>What do you think about the similarities between clusters obtained from scRNA-seq and from scATAC-seq?</em></p>
 <p>Then we analyze the combined data.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyze combined data set, with Weighted Nearest Neighbor method</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindMultiModalNeighbors</span>(seurat_multi, <span class="at">reduction.list =</span> <span class="fu">list</span>(<span class="st">"pca"</span>, <span class="st">"ATAC_lsi"</span>), </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">dims.list =</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">30</span>), <span class="at">k.nn =</span> <span class="dv">30</span>, <span class="at">snn.graph.name =</span> <span class="st">"wsnn_cc"</span>,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">knn.graph.name =</span> <span class="st">"wknn_cc"</span>, <span class="at">weighted.nn.name =</span> <span class="st">"weighted.nn_cc"</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(seurat_multi, <span class="at">nn.name =</span> <span class="st">"weighted.nn_cc"</span>, <span class="at">reduction.name =</span> <span class="st">"wnn_cc_umap"</span>,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">reduction.key =</span> <span class="st">"wnnccUMAP_"</span>)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(seurat_multi, <span class="at">graph.name =</span> <span class="st">"wsnn_cc"</span>, <span class="at">algorithm =</span> <span class="dv">3</span>,</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">verbose =</span> F) </span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_multi, <span class="at">reduction =</span> <span class="st">"wnn_cc_umap"</span>, <span class="at">label =</span> T, <span class="at">label.size =</span> <span class="dv">4</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyze combined data set, with Weighted Nearest Neighbor method</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindMultiModalNeighbors</span>(seurat_multi, <span class="at">reduction.list =</span> <span class="fu">list</span>(<span class="st">"pca"</span>, <span class="st">"ATAC_lsi"</span>), </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">dims.list =</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">30</span>), <span class="at">k.nn =</span> <span class="dv">30</span>, <span class="at">snn.graph.name =</span> <span class="st">"wsnn_cc"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">knn.graph.name =</span> <span class="st">"wknn_cc"</span>, <span class="at">weighted.nn.name =</span> <span class="st">"weighted.nn_cc"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(seurat_multi, <span class="at">nn.name =</span> <span class="st">"weighted.nn_cc"</span>, <span class="at">reduction.name =</span> <span class="st">"wnn_cc_umap"</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">reduction.key =</span> <span class="st">"wnnccUMAP_"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>seurat_multi <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(seurat_multi, <span class="at">graph.name =</span> <span class="st">"wsnn_cc"</span>, <span class="at">algorithm =</span> <span class="dv">3</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">verbose =</span> F) </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_multi, <span class="at">reduction =</span> <span class="st">"wnn_cc_umap"</span>, <span class="at">label =</span> T, <span class="at">label.size =</span> <span class="dv">4</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="quarto-figure quarto-figure-left">
-<figure class="figure">
-<p><a href="umap_multi.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Umap multi-omics"><img src="umap_multi.png" class="img-fluid figure-img" alt="Umap multi-omics"></a></p>
-<figcaption>Umap multi-omics</figcaption>
-</figure>
-</div>
+<p><br> <br></p>
+</section>
+</section>
+<section id="gene-markers-and-cell-annotation" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="gene-markers-and-cell-annotation"><span class="header-section-number">8</span> Gene markers and cell annotation</h2>
 <p>Let’s continue with the clusters based on both RNA- and ATAC-seq data. For each of these clusters, we can check if there are genes that are exclusively expressed in that cluster (or at least at much higher levels than in other clusters). These can be used as marker genes, to get an indication of what cell types the clusters contain. (Note that when we use multi-omics data we can use the RNA-seq directly to quantify gene expression, without having to approximate it with gene activity scores like we did in the ATAC-seq example.)</p>
 <p>Using the code below, we find markers for each cluster and plot the most significant ones.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cell type markers</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(seurat_multi) <span class="ot">&lt;-</span> <span class="st">"RNA"</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>cluster_markers <span class="ot">&lt;-</span> <span class="fu">FindAllMarkers</span>(seurat_multi, <span class="at">only.pos =</span> <span class="cn">TRUE</span>, <span class="at">min.pct =</span> <span class="fl">0.25</span>, <span class="at">logfc.threshold =</span> <span class="fl">0.25</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>cluster_markers <span class="sc">%&gt;%</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cluster) <span class="sc">%&gt;%</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">wt =</span> avg_log2FC) <span class="ot">-&gt;</span> top10</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(seurat_multi, <span class="at">features =</span> top10<span class="sc">$</span>gene) <span class="sc">+</span> <span class="fu">NoLegend</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cell type markers</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(seurat_multi) <span class="ot">&lt;-</span> <span class="st">"RNA"</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>cluster_markers <span class="ot">&lt;-</span> <span class="fu">FindAllMarkers</span>(seurat_multi, <span class="at">only.pos =</span> <span class="cn">TRUE</span>, <span class="at">min.pct =</span> <span class="fl">0.25</span>, <span class="at">logfc.threshold =</span> <span class="fl">0.25</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>cluster_markers <span class="sc">%&gt;%</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cluster) <span class="sc">%&gt;%</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">wt =</span> avg_log2FC) <span class="ot">-&gt;</span> top10</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(seurat_multi, <span class="at">features =</span> top10<span class="sc">$</span>gene) <span class="sc">+</span> <span class="fu">NoLegend</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div class="quarto-figure quarto-figure-left">
-<figure class="figure">
-<p><a href="marker_genes.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Marker gene expression"><img src="marker_genes.png" class="img-fluid figure-img" alt="Marker gene expression"></a></p>
-<figcaption>Marker gene expression</figcaption>
-</figure>
-</div>
+<p><br></p>
 <p>A more systematic approach than just looking at cluster-specific genes, is to compare the cells in our data set to a reference data set with cell type annotations. There are many methods available for this. In this exercise, we will use <a href="https://www.nature.com/articles/s41590-018-0276-y">SingleR</a>. <code>SingleR</code> correlates the cells in a data set to annotated cell types in a reference data set using only variable genes.</p>
 <p>For annotating the cells, we will use an annotated data set on mouse brains from <a href="https://www.science.org/doi/10.1126/science.aaa1934">Zeisel et al.&nbsp;(2015)</a>. We load and pre-process the data set, making sure to pre-process it in exactly the same way as our data. (Note that this data set is from postnatal mice, so it’s not ideal for annotating cells from embryos like we have in our data. But here we just use it as an illustration.)</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load and normalize Zeisel et al. (2015) dataset</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>seurat_zeisel_ <span class="ot">&lt;-</span> <span class="fu">load</span>(<span class="fu">paste0</span>(lab.dir, <span class="st">"data/zeisel_seurat.rds"</span>))</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>seurat_zeisel <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(seurat_zeisel, <span class="at">normalization.method =</span> <span class="st">"LogNormalize"</span>)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>seurat_zeisel <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(seurat_zeisel, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>seurat_zeisel <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(seurat_zeisel)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>seurat_zeisel <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(seurat_zeisel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load and normalize Zeisel et al. (2015) dataset</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>seurat_zeisel_ <span class="ot">&lt;-</span> <span class="fu">load</span>(<span class="fu">paste0</span>(data.dir, <span class="st">"data/zeisel_seurat.rds"</span>))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>seurat_zeisel <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(seurat_zeisel, <span class="at">normalization.method =</span> <span class="st">"LogNormalize"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>seurat_zeisel <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(seurat_zeisel, <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="at">nfeatures =</span> <span class="dv">2000</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>seurat_zeisel <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(seurat_zeisel)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>seurat_zeisel <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(seurat_zeisel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Then, we are ready to run the actual cell annotation. This method produces a score for each cell in our data set and each cell type in the reference set, indicating how similar the cell is to the cell type in the reference data. <em>Which cell types seem to be represented in our data? Do different clusters of cells seem to contain different cell types?</em></p>
+<p>Then, we are ready to run the actual cell annotation. This method produces a score for each cell in our data set and each cell type in the reference set, indicating how similar the cell is to the cell type in the reference data.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cell type annotation with singleR</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>zeisel_labels<span class="ot">=</span><span class="fu">as.vector</span>(<span class="fu">read.csv</span>(<span class="fu">paste0</span>(lab.dir, <span class="st">"data/zeisel_labels.txt"</span>), <span class="at">header=</span><span class="cn">FALSE</span>))<span class="sc">$</span>V1</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>cell_type_pred <span class="ot">&lt;-</span> <span class="fu">SingleR</span>(<span class="at">test=</span><span class="fu">as.matrix</span>(<span class="fu">GetAssayData</span>(<span class="at">object =</span> seurat_multi, <span class="at">layer =</span> <span class="st">"data"</span>)), </span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">ref=</span><span class="fu">as.matrix</span>(<span class="fu">GetAssayData</span>(<span class="at">object =</span> seurat_zeisel, <span class="at">layer =</span> <span class="st">"data"</span>)), </span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">labels=</span>zeisel_labels,</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">sd.thresh =</span> <span class="fl">0.5</span>,</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">de.method=</span><span class="st">"wilcox"</span>)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># See how many cell could be annotated, and how did not pass the confidence threshold</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="at">Label=</span>cell_type_pred<span class="sc">$</span>labels,</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">Lost=</span><span class="fu">is.na</span>(cell_type_pred<span class="sc">$</span>pruned.labels))</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot scores for each cell and cell type</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plotScoreHeatmap</span>(cell_type_pred)</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Overlaps between clusters and cell types</span></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="at">cluster=</span>seurat_multi<span class="sc">$</span>seurat_clusters, <span class="at">label=</span>cell_type_pred<span class="sc">$</span>labels) </span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>pheatmap<span class="sc">::</span><span class="fu">pheatmap</span>(<span class="fu">log10</span>(tab<span class="sc">+</span><span class="dv">10</span>))</span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP based on RNA and ATAC, labelled with the cell types</span></span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>seurat_multi<span class="sc">$</span>cell_annot <span class="ot">&lt;-</span> cell_type_pred<span class="sc">$</span>labels</span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_multi, <span class="at">reduction =</span> <span class="st">"wnn_cc_umap"</span>, <span class="at">group.by =</span> <span class="st">"cell_annot"</span>, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">label.size =</span> <span class="dv">3</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cell type annotation with singleR</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>zeisel_labels<span class="ot">=</span><span class="fu">as.vector</span>(<span class="fu">read.csv</span>(<span class="fu">paste0</span>(data.dir, <span class="st">"data/zeisel_labels.txt"</span>), <span class="at">header=</span><span class="cn">FALSE</span>))<span class="sc">$</span>V1</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>cell_type_pred <span class="ot">&lt;-</span> <span class="fu">SingleR</span>(<span class="at">test=</span><span class="fu">as.matrix</span>(<span class="fu">GetAssayData</span>(<span class="at">object =</span> seurat_multi, <span class="at">layer =</span> <span class="st">"data"</span>)), </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">ref=</span><span class="fu">as.matrix</span>(<span class="fu">GetAssayData</span>(<span class="at">object =</span> seurat_zeisel, <span class="at">layer =</span> <span class="st">"data"</span>)), </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">labels=</span>zeisel_labels,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">sd.thresh =</span> <span class="fl">0.5</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">de.method=</span><span class="st">"wilcox"</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># See how many cell could be annotated, and how did not pass the confidence threshold</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="at">Label=</span>cell_type_pred<span class="sc">$</span>labels,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">Lost=</span><span class="fu">is.na</span>(cell_type_pred<span class="sc">$</span>pruned.labels))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot scores for each cell and cell type</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotScoreHeatmap</span>(cell_type_pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Overlaps between clusters and cell types</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="at">cluster=</span>seurat_multi<span class="sc">$</span>seurat_clusters, <span class="at">label=</span>cell_type_pred<span class="sc">$</span>labels) </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>pheatmap<span class="sc">::</span><span class="fu">pheatmap</span>(<span class="fu">log10</span>(tab<span class="sc">+</span><span class="dv">10</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP based on RNA and ATAC, labelled with the cell types</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>seurat_multi<span class="sc">$</span>cell_annot <span class="ot">&lt;-</span> cell_type_pred<span class="sc">$</span>labels</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_multi, <span class="at">reduction =</span> <span class="st">"wnn_cc_umap"</span>, <span class="at">group.by =</span> <span class="st">"cell_annot"</span>, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">label.size =</span> <span class="dv">3</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><em>Which cell types seem to be represented in our data? Do different clusters of cells seem to contain different cell types?</em></p>
 <p>After the cell types have been annotated, there is a lot of additional analysis that can be done on the multi-omics data. Some questions that can be investigated are:</p>
 <ul>
 <li>Which promoters and enhancers become active in different cell types and conditions?</li>
@@ -529,7 +557,8 @@ Note
 <li>Are some genes primed for expression, <em>e.g.</em> the promoters show an open chromatin state, but the gene is not expressed yet?</li>
 <li>..</li>
 </ul>
-<p>Congratulations! You have now reached the end of this exercise, and hopefully you know more about how to analyze single cell ATAC-seq and multi-omics data.</p>
+<p><br></p>
+<p>Congratulations! You have now reached the end of the last single cell exercise, and hopefully you know more about how to analyze single cell ATAC-seq and multi-omics data.</p>
 
 
 </section>
@@ -949,38 +978,6 @@ Note
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
-(function() {
-  let previousOnload = window.onload;
-  window.onload = () => {
-    if (previousOnload) {
-      previousOnload();
-    }
-    lightboxQuarto.on('slide_before_load', (data) => {
-      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-      const href = trigger.getAttribute('href');
-      if (href !== null) {
-        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-        if (imgEl !== null) {
-          const srcAttr = imgEl.getAttribute("src");
-          if (srcAttr && srcAttr.startsWith("data:")) {
-            slideConfig.href = srcAttr;
-          }
-        }
-      } 
-    });
-  
-    lightboxQuarto.on('slide_after_load', (data) => {
-      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(slideNode);
-      }
-    });
-  
-  };
-  
-})();
-          </script>
 
 
 
