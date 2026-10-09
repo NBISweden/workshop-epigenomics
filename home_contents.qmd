@@ -24,7 +24,7 @@ format: html
 | Cut & Tag/Run                                                 | Prasoon Agarwal                                 |[Presentation](presentations/CUTandTag/CUTandTAGslides.pdf)                                                 |
 |[08-Oct-2026 (Thu)]{.badge .badge-primary}                                                                                                                          |||
 | Motifs                                                        | Dania Machlab                                   |[Presentation](presentations/TFs/TFslides.pdf), [Tutorials](landingPages/TF/index.html)|
-| BiG Talk (keynote)                                            | Mattias Mannervik                               |[BiG Talk](https://www.scilifelab.se/event/big-talk-pioneering-chromatin-landscapes-in-embryo-development-epigenomic-methods-reveal-how-gene-expression-patterns-are-formed-and-maintained/)                                                    |
+| BiG Talk (keynote)                                            | Mattias Mannervik                               |[Presentation](presentations/keynote/keynoteMattiasMannervik.pdf)                                                    |
 |[09-Oct-2026 (Fri)]{.badge .badge-primary}                                                                                                                          |||
 | Integrative and single cell omics                             | Markus Ringnér                                  |[Presentation](presentations/scATAC/scATACslides.pdf), [Tutorials](landingPages/scATAC/index.html)|
 
