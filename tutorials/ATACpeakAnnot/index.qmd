@@ -753,7 +753,7 @@ DA_res.prom.top=DA_res.prom.top|>
 We can now create a *named list* (names are entrez gene id) and sort it:
 
 ```{r}
-#| eval: false
+#| eval: true
 #| echo: true
 
 gene_list=DA_res.prom.top$gsea_metric #using -log10(pval)*logFC
