@@ -255,7 +255,7 @@ background-size: cover;
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">09-Oct-2026</p>
+        <p class="date">20-Oct-2026</p>
       </div>
     </div>
     
@@ -950,11 +950,11 @@ txdb = TxDb.Hsapiens.UCSC.mm39.knownGene</code></pre>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>tagMatrix<span class="ot">=</span><span class="fu">getTagMatrix</span>(peaks_gr, <span class="at">windows=</span>promoter)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing start_site regions by gene... 2026-10-09 13:45:57</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing tag matrix...  2026-10-09 13:45:57</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing start_site regions by gene... 2026-10-20 20:44:49</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing tag matrix...  2026-10-20 20:44:49</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>TSS_profile<span class="ot">=</span><span class="fu">plotAvgProf</span>(tagMatrix, <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">3000</span>, <span class="dv">3000</span>), <span class="at">xlab=</span><span class="st">"Genomic Region (5'-&gt;3')"</span>, <span class="at">ylab =</span> <span class="st">"Read Count in Peaks"</span>)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; plotting figure...             2026-10-09 13:46:25</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; plotting figure...             2026-10-20 20:45:14</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="fig-tss-profile" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1230,7 +1230,7 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <p><br></p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>DA_res<span class="ot">=</span>DA_res<span class="sc">|&gt;</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">gsea_metric=</span>PValue<span class="sc">*</span>logFC)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">gsea_metric=</span><span class="sc">-</span><span class="fu">log10</span>(PValue)<span class="sc">*</span>logFC)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br></p>
 <p>GSEA statistical framework recommends that the ranked gene list is duplicate free; yet often a gene may have more than one peak annotated. If we leave the list as is (i.e.&nbsp;with duplicated gene ids and different value for ranking metric for each entry), we have no control over which peak / metric value gets selected for GSEA, which may lead to unexpected results. Applying some selection strategy for genes with multiple peaks helps with interpretability of the GSEA results.</p>
@@ -1262,11 +1262,13 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <p><br> <br></p>
 <p>We can now create a <em>named list</em> (names are entrez gene id) and sort it:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>gene_list<span class="ot">=</span>DA_res.prom.top<span class="sc">$</span>gsea_metric <span class="co">#using pval*logFC</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>gene_list<span class="ot">=</span>DA_res.prom.top<span class="sc">$</span>gsea_metric <span class="co">#using -log10(pval)*logFC</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(gene_list)<span class="ot">=</span>DA_res.prom.top<span class="sc">$</span>entrezgene_id</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>gene_list<span class="ot">=</span>gene_list[<span class="fu">order</span>(gene_list,<span class="at">decreasing=</span><span class="cn">TRUE</span>)]</span>
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gene_list)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gene_list)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 102632099     12519     70533     12738     77097 102636674 </span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 12.717162 12.050571 11.662036 10.851577 10.740165  8.467789</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br></p>
 <p>We prepare the GO terms and run GSEA:</p>
@@ -1287,21 +1289,97 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <p><br> <br></p>
 <p>The resulting object contains basic statistics of the GSEA test.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">head</span>(gsea_go)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>     pathway      pval      padj    log2err         ES        NES size</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> GO<span class="sc">:</span><span class="dv">0000018</span> <span class="fl">0.9928571</span> <span class="fl">1.0000000</span> <span class="fl">0.05400883</span>  <span class="fl">0.1824006</span>  <span class="fl">0.6768697</span>  <span class="dv">120</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> GO<span class="sc">:</span><span class="dv">0000027</span> <span class="fl">0.9490446</span> <span class="fl">1.0000000</span> <span class="fl">0.05080541</span>  <span class="fl">0.2415674</span>  <span class="fl">0.6675675</span>   <span class="dv">24</span></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> GO<span class="sc">:</span><span class="dv">0000028</span> <span class="fl">0.1902072</span> <span class="fl">0.8391112</span> <span class="fl">0.13649044</span> <span class="sc">-</span><span class="fl">0.4844570</span> <span class="sc">-</span><span class="fl">1.2474683</span>   <span class="dv">19</span></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> GO<span class="sc">:</span><span class="dv">0000038</span> <span class="fl">0.2611111</span> <span class="fl">0.8800840</span> <span class="fl">0.11284336</span> <span class="sc">-</span><span class="fl">0.4165674</span> <span class="sc">-</span><span class="fl">1.1610107</span>   <span class="dv">27</span></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> GO<span class="sc">:</span><span class="dv">0000041</span> <span class="fl">0.3404255</span> <span class="fl">0.9065779</span> <span class="fl">0.09374654</span> <span class="sc">-</span><span class="fl">0.2997705</span> <span class="sc">-</span><span class="fl">1.0499786</span>   <span class="dv">83</span></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span> GO<span class="sc">:</span><span class="dv">0000045</span> <span class="fl">0.3294118</span> <span class="fl">0.8975844</span> <span class="fl">0.11331291</span>  <span class="fl">0.2753809</span>  <span class="fl">1.0549553</span>  <span class="dv">137</span></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>   leadingEdge</span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">19264</span>, <span class="dv">7</span>....</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="dv">72831</span>, <span class="dv">2</span>....</span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="dv">67097</span>, <span class="dv">9</span>....</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="dv">14081</span>, <span class="dv">1</span>....</span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> <span class="dv">226025</span>, ....</span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span> <span class="dv">240327</span>, ....</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">head</span>(gsea_go)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 6%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">pathway</th>
+<th style="text-align: right;">pval</th>
+<th style="text-align: right;">padj</th>
+<th style="text-align: right;">log2err</th>
+<th style="text-align: right;">ES</th>
+<th style="text-align: right;">NES</th>
+<th style="text-align: right;">size</th>
+<th style="text-align: left;">leadingEdge</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">GO:0000018</td>
+<td style="text-align: right;">0.2288889</td>
+<td style="text-align: right;">0.8947302</td>
+<td style="text-align: right;">0.0897105</td>
+<td style="text-align: right;">-0.6494198</td>
+<td style="text-align: right;">-1.2166458</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: left;">99982, 2….</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GO:0000027</td>
+<td style="text-align: right;">0.5073746</td>
+<td style="text-align: right;">0.8992288</td>
+<td style="text-align: right;">0.0630790</td>
+<td style="text-align: right;">-0.5800163</td>
+<td style="text-align: right;">-0.9832416</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: left;">67025, 9….</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GO:0000028</td>
+<td style="text-align: right;">0.3616692</td>
+<td style="text-align: right;">0.8947302</td>
+<td style="text-align: right;">0.0826646</td>
+<td style="text-align: right;">-0.6842573</td>
+<td style="text-align: right;">-1.1364051</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: left;">56412, 9….</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GO:0000038</td>
+<td style="text-align: right;">0.2881598</td>
+<td style="text-align: right;">0.8947302</td>
+<td style="text-align: right;">0.0908241</td>
+<td style="text-align: right;">-0.6963113</td>
+<td style="text-align: right;">-1.1918451</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: left;">235674, ….</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GO:0000041</td>
+<td style="text-align: right;">0.9195804</td>
+<td style="text-align: right;">0.9749557</td>
+<td style="text-align: right;">0.0236501</td>
+<td style="text-align: right;">-0.3431480</td>
+<td style="text-align: right;">-0.6304391</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: left;">18125, 6….</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GO:0000045</td>
+<td style="text-align: right;">0.8693245</td>
+<td style="text-align: right;">0.9663806</td>
+<td style="text-align: right;">0.0239330</td>
+<td style="text-align: right;">-0.3830003</td>
+<td style="text-align: right;">-0.7181493</td>
+<td style="text-align: right;">137</td>
+<td style="text-align: left;">64143, 73683</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <p><br></p>
 <p>We can format these results:</p>
@@ -1317,20 +1395,83 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(pathway,NES,pval,padj,size)<span class="sc">|&gt;</span></span>
 <span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(go_terms, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"pathway"</span><span class="ot">=</span><span class="st">"GOID"</span>))</span>
 <span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">head</span>(gsea_go)</span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>     pathway       NES        pval      padj size                         TERM</span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> GO<span class="sc">:</span><span class="dv">0002064</span> <span class="sc">-</span><span class="fl">1.539558</span> <span class="fl">0.001013134</span> <span class="fl">0.5754347</span>  <span class="dv">181</span>  epithelial cell development</span>
-<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> GO<span class="sc">:</span><span class="dv">0003014</span> <span class="sc">-</span><span class="fl">1.542754</span> <span class="fl">0.004758923</span> <span class="fl">0.5757116</span>   <span class="dv">85</span>         renal system process</span>
-<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> GO<span class="sc">:</span><span class="dv">0006814</span> <span class="sc">-</span><span class="fl">1.434938</span> <span class="fl">0.006011068</span> <span class="fl">0.5757116</span>  <span class="dv">171</span>         sodium ion transport</span>
-<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> GO<span class="sc">:</span><span class="dv">0006836</span> <span class="sc">-</span><span class="fl">1.473969</span> <span class="fl">0.002957773</span> <span class="fl">0.5754347</span>  <span class="dv">184</span>   neurotransmitter transport</span>
-<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> GO<span class="sc">:</span><span class="dv">0007431</span> <span class="sc">-</span><span class="fl">1.702995</span> <span class="fl">0.003805549</span> <span class="fl">0.5757116</span>   <span class="dv">31</span>   salivary gland development</span>
-<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span> GO<span class="sc">:</span><span class="dv">0007435</span> <span class="sc">-</span><span class="fl">1.738422</span> <span class="fl">0.002137247</span> <span class="fl">0.5754347</span>   <span class="dv">27</span> salivary gland morphogenesis</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gsea_go)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 5%">
+<col style="width: 51%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">pathway</th>
+<th style="text-align: right;">NES</th>
+<th style="text-align: right;">pval</th>
+<th style="text-align: right;">padj</th>
+<th style="text-align: right;">size</th>
+<th style="text-align: left;">TERM</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">GO:0002181</td>
+<td style="text-align: right;">1.442812</td>
+<td style="text-align: right;">0.0044082</td>
+<td style="text-align: right;">0.7796423</td>
+<td style="text-align: right;">202</td>
+<td style="text-align: left;">cytoplasmic translation</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GO:0002183</td>
+<td style="text-align: right;">1.771211</td>
+<td style="text-align: right;">0.0012883</td>
+<td style="text-align: right;">0.4556922</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: left;">cytoplasmic translational initiation</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GO:0002710</td>
+<td style="text-align: right;">1.715219</td>
+<td style="text-align: right;">0.0080788</td>
+<td style="text-align: right;">0.7968870</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: left;">negative regulation of T cell mediated immunity</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GO:0003300</td>
+<td style="text-align: right;">-1.536868</td>
+<td style="text-align: right;">0.0076948</td>
+<td style="text-align: right;">0.7968870</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: left;">cardiac muscle hypertrophy</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GO:0006111</td>
+<td style="text-align: right;">1.712781</td>
+<td style="text-align: right;">0.0039804</td>
+<td style="text-align: right;">0.7796423</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: left;">regulation of gluconeogenesis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GO:0006289</td>
+<td style="text-align: right;">1.593972</td>
+<td style="text-align: right;">0.0073920</td>
+<td style="text-align: right;">0.7968870</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: left;">nucleotide-excision repair</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <p>Upon object inspection we can see terms related to immune cell biology, amongst other GO terms.</p>
-<ul>
-<li><p>antigen processing and presentation (GO:0019882)</p></li>
-<li><p>antigen processing and presentation of peptide antigen (GO:0048002)</p></li>
-</ul>
 <p><br> <br></p>
 <p><br> <br></p>
 </section>
@@ -1374,16 +1515,16 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [8] base     </span></span>
 <span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a><span class="do">## other attached packages:</span></span>
-<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] ReactomePA_1.56.0      fgsea_1.38.0           org.Mm.eg.db_3.23.0   </span></span>
-<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] txdbmaker_1.8.0        GenomicFeatures_1.64.0 AnnotationDbi_1.74.0  </span></span>
-<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] Biobase_2.72.0         biomaRt_2.68.0         ggimage_0.3.5         </span></span>
-<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] ggupset_0.4.1          ChIPseeker_1.48.0      GenomicRanges_1.64.0  </span></span>
-<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] Seqinfo_1.2.0          IRanges_2.46.0         S4Vectors_0.50.2      </span></span>
-<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] BiocGenerics_0.58.1    generics_0.1.4         kableExtra_1.4.1      </span></span>
-<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] lubridate_1.9.5        forcats_1.0.1          stringr_1.6.0         </span></span>
-<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a><span class="do">## [22] dplyr_1.2.1            purrr_1.2.2            readr_2.2.0           </span></span>
-<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a><span class="do">## [25] tidyr_1.3.2            tibble_3.3.1           ggplot2_4.0.3         </span></span>
-<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a><span class="do">## [28] tidyverse_2.0.0        knitr_1.51            </span></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] GO.db_3.23.1           ReactomePA_1.56.0      fgsea_1.38.0          </span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] org.Mm.eg.db_3.23.0    txdbmaker_1.8.0        GenomicFeatures_1.64.0</span></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] AnnotationDbi_1.74.0   Biobase_2.72.0         biomaRt_2.68.0        </span></span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] ggimage_0.3.5          ggupset_0.4.1          ChIPseeker_1.48.0     </span></span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] GenomicRanges_1.64.0   Seqinfo_1.2.0          IRanges_2.46.0        </span></span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] S4Vectors_0.50.2       BiocGenerics_0.58.1    generics_0.1.4        </span></span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] kableExtra_1.4.1       lubridate_1.9.5        forcats_1.0.1         </span></span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a><span class="do">## [22] stringr_1.6.0          dplyr_1.2.1            purrr_1.2.2           </span></span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a><span class="do">## [25] readr_2.2.0            tidyr_1.3.2            tibble_3.3.1          </span></span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a><span class="do">## [28] ggplot2_4.0.3          tidyverse_2.0.0        knitr_1.51            </span></span>
 <span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a><span class="do">## loaded via a namespace (and not attached):</span></span>
 <span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a><span class="do">##   [1] splines_4.6.1                           </span></span>
@@ -1459,80 +1600,79 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <span id="cb36-106"><a href="#cb36-106" aria-hidden="true" tabindex="-1"></a><span class="do">##  [71] R6_2.6.1                                </span></span>
 <span id="cb36-107"><a href="#cb36-107" aria-hidden="true" tabindex="-1"></a><span class="do">##  [72] gridGraphics_0.5-1                      </span></span>
 <span id="cb36-108"><a href="#cb36-108" aria-hidden="true" tabindex="-1"></a><span class="do">##  [73] textshaping_1.0.5                       </span></span>
-<span id="cb36-109"><a href="#cb36-109" aria-hidden="true" tabindex="-1"></a><span class="do">##  [74] GO.db_3.23.1                            </span></span>
-<span id="cb36-110"><a href="#cb36-110" aria-hidden="true" tabindex="-1"></a><span class="do">##  [75] gtools_3.9.5                            </span></span>
-<span id="cb36-111"><a href="#cb36-111" aria-hidden="true" tabindex="-1"></a><span class="do">##  [76] dichromat_2.0-1                         </span></span>
-<span id="cb36-112"><a href="#cb36-112" aria-hidden="true" tabindex="-1"></a><span class="do">##  [77] RSQLite_3.53.1                          </span></span>
-<span id="cb36-113"><a href="#cb36-113" aria-hidden="true" tabindex="-1"></a><span class="do">##  [78] cigarillo_1.2.0                         </span></span>
-<span id="cb36-114"><a href="#cb36-114" aria-hidden="true" tabindex="-1"></a><span class="do">##  [79] data.table_1.18.6.1                     </span></span>
-<span id="cb36-115"><a href="#cb36-115" aria-hidden="true" tabindex="-1"></a><span class="do">##  [80] fontLiberation_0.1.0                    </span></span>
-<span id="cb36-116"><a href="#cb36-116" aria-hidden="true" tabindex="-1"></a><span class="do">##  [81] renv_1.2.3                              </span></span>
-<span id="cb36-117"><a href="#cb36-117" aria-hidden="true" tabindex="-1"></a><span class="do">##  [82] rtracklayer_1.72.0                      </span></span>
-<span id="cb36-118"><a href="#cb36-118" aria-hidden="true" tabindex="-1"></a><span class="do">##  [83] graphlayouts_1.2.5                      </span></span>
-<span id="cb36-119"><a href="#cb36-119" aria-hidden="true" tabindex="-1"></a><span class="do">##  [84] prettyunits_1.2.0                       </span></span>
-<span id="cb36-120"><a href="#cb36-120" aria-hidden="true" tabindex="-1"></a><span class="do">##  [85] httr_1.4.8                              </span></span>
-<span id="cb36-121"><a href="#cb36-121" aria-hidden="true" tabindex="-1"></a><span class="do">##  [86] htmlwidgets_1.6.4                       </span></span>
-<span id="cb36-122"><a href="#cb36-122" aria-hidden="true" tabindex="-1"></a><span class="do">##  [87] S4Arrays_1.12.1                         </span></span>
-<span id="cb36-123"><a href="#cb36-123" aria-hidden="true" tabindex="-1"></a><span class="do">##  [88] scatterpie_0.2.6                        </span></span>
-<span id="cb36-124"><a href="#cb36-124" aria-hidden="true" tabindex="-1"></a><span class="do">##  [89] graphite_1.58.0                         </span></span>
-<span id="cb36-125"><a href="#cb36-125" aria-hidden="true" tabindex="-1"></a><span class="do">##  [90] pkgconfig_2.0.3                         </span></span>
-<span id="cb36-126"><a href="#cb36-126" aria-hidden="true" tabindex="-1"></a><span class="do">##  [91] gtable_0.3.6                            </span></span>
-<span id="cb36-127"><a href="#cb36-127" aria-hidden="true" tabindex="-1"></a><span class="do">##  [92] blob_1.3.0                              </span></span>
-<span id="cb36-128"><a href="#cb36-128" aria-hidden="true" tabindex="-1"></a><span class="do">##  [93] S7_0.2.2                                </span></span>
-<span id="cb36-129"><a href="#cb36-129" aria-hidden="true" tabindex="-1"></a><span class="do">##  [94] XVector_0.52.0                          </span></span>
-<span id="cb36-130"><a href="#cb36-130" aria-hidden="true" tabindex="-1"></a><span class="do">##  [95] htmltools_0.5.9                         </span></span>
-<span id="cb36-131"><a href="#cb36-131" aria-hidden="true" tabindex="-1"></a><span class="do">##  [96] fontBitstreamVera_0.1.1                 </span></span>
-<span id="cb36-132"><a href="#cb36-132" aria-hidden="true" tabindex="-1"></a><span class="do">##  [97] scales_1.4.0                            </span></span>
-<span id="cb36-133"><a href="#cb36-133" aria-hidden="true" tabindex="-1"></a><span class="do">##  [98] png_0.1-9                               </span></span>
-<span id="cb36-134"><a href="#cb36-134" aria-hidden="true" tabindex="-1"></a><span class="do">##  [99] ggfun_0.2.1                             </span></span>
-<span id="cb36-135"><a href="#cb36-135" aria-hidden="true" tabindex="-1"></a><span class="do">## [100] rstudioapi_0.19.0                       </span></span>
-<span id="cb36-136"><a href="#cb36-136" aria-hidden="true" tabindex="-1"></a><span class="do">## [101] tzdb_0.5.0                              </span></span>
-<span id="cb36-137"><a href="#cb36-137" aria-hidden="true" tabindex="-1"></a><span class="do">## [102] reshape2_1.4.5                          </span></span>
-<span id="cb36-138"><a href="#cb36-138" aria-hidden="true" tabindex="-1"></a><span class="do">## [103] rjson_0.2.23                            </span></span>
-<span id="cb36-139"><a href="#cb36-139" aria-hidden="true" tabindex="-1"></a><span class="do">## [104] nlme_3.1-169                            </span></span>
-<span id="cb36-140"><a href="#cb36-140" aria-hidden="true" tabindex="-1"></a><span class="do">## [105] curl_7.1.0                              </span></span>
-<span id="cb36-141"><a href="#cb36-141" aria-hidden="true" tabindex="-1"></a><span class="do">## [106] cachem_1.1.0                            </span></span>
-<span id="cb36-142"><a href="#cb36-142" aria-hidden="true" tabindex="-1"></a><span class="do">## [107] KernSmooth_2.23-26                      </span></span>
-<span id="cb36-143"><a href="#cb36-143" aria-hidden="true" tabindex="-1"></a><span class="do">## [108] parallel_4.6.1                          </span></span>
-<span id="cb36-144"><a href="#cb36-144" aria-hidden="true" tabindex="-1"></a><span class="do">## [109] restfulr_0.0.16                         </span></span>
-<span id="cb36-145"><a href="#cb36-145" aria-hidden="true" tabindex="-1"></a><span class="do">## [110] pillar_1.11.1                           </span></span>
-<span id="cb36-146"><a href="#cb36-146" aria-hidden="true" tabindex="-1"></a><span class="do">## [111] grid_4.6.1                              </span></span>
-<span id="cb36-147"><a href="#cb36-147" aria-hidden="true" tabindex="-1"></a><span class="do">## [112] vctrs_0.7.3                             </span></span>
-<span id="cb36-148"><a href="#cb36-148" aria-hidden="true" tabindex="-1"></a><span class="do">## [113] gplots_3.3.0                            </span></span>
-<span id="cb36-149"><a href="#cb36-149" aria-hidden="true" tabindex="-1"></a><span class="do">## [114] tidydr_0.0.6                            </span></span>
-<span id="cb36-150"><a href="#cb36-150" aria-hidden="true" tabindex="-1"></a><span class="do">## [115] dbplyr_2.5.2                            </span></span>
-<span id="cb36-151"><a href="#cb36-151" aria-hidden="true" tabindex="-1"></a><span class="do">## [116] cluster_2.1.8.2                         </span></span>
-<span id="cb36-152"><a href="#cb36-152" aria-hidden="true" tabindex="-1"></a><span class="do">## [117] evaluate_1.0.5                          </span></span>
-<span id="cb36-153"><a href="#cb36-153" aria-hidden="true" tabindex="-1"></a><span class="do">## [118] magick_2.9.1                            </span></span>
-<span id="cb36-154"><a href="#cb36-154" aria-hidden="true" tabindex="-1"></a><span class="do">## [119] cli_3.6.6                               </span></span>
-<span id="cb36-155"><a href="#cb36-155" aria-hidden="true" tabindex="-1"></a><span class="do">## [120] compiler_4.6.1                          </span></span>
-<span id="cb36-156"><a href="#cb36-156" aria-hidden="true" tabindex="-1"></a><span class="do">## [121] Rsamtools_2.28.0                        </span></span>
-<span id="cb36-157"><a href="#cb36-157" aria-hidden="true" tabindex="-1"></a><span class="do">## [122] rlang_1.3.0                             </span></span>
-<span id="cb36-158"><a href="#cb36-158" aria-hidden="true" tabindex="-1"></a><span class="do">## [123] crayon_1.5.3                            </span></span>
-<span id="cb36-159"><a href="#cb36-159" aria-hidden="true" tabindex="-1"></a><span class="do">## [124] labeling_0.4.3                          </span></span>
-<span id="cb36-160"><a href="#cb36-160" aria-hidden="true" tabindex="-1"></a><span class="do">## [125] plyr_1.8.9                              </span></span>
-<span id="cb36-161"><a href="#cb36-161" aria-hidden="true" tabindex="-1"></a><span class="do">## [126] fs_2.1.0                                </span></span>
-<span id="cb36-162"><a href="#cb36-162" aria-hidden="true" tabindex="-1"></a><span class="do">## [127] ggiraph_0.9.6                           </span></span>
-<span id="cb36-163"><a href="#cb36-163" aria-hidden="true" tabindex="-1"></a><span class="do">## [128] stringi_1.8.7                           </span></span>
-<span id="cb36-164"><a href="#cb36-164" aria-hidden="true" tabindex="-1"></a><span class="do">## [129] viridisLite_0.4.3                       </span></span>
-<span id="cb36-165"><a href="#cb36-165" aria-hidden="true" tabindex="-1"></a><span class="do">## [130] BiocParallel_1.46.0                     </span></span>
-<span id="cb36-166"><a href="#cb36-166" aria-hidden="true" tabindex="-1"></a><span class="do">## [131] Biostrings_2.80.0                       </span></span>
-<span id="cb36-167"><a href="#cb36-167" aria-hidden="true" tabindex="-1"></a><span class="do">## [132] lazyeval_0.2.3                          </span></span>
-<span id="cb36-168"><a href="#cb36-168" aria-hidden="true" tabindex="-1"></a><span class="do">## [133] GOSemSim_2.38.3                         </span></span>
-<span id="cb36-169"><a href="#cb36-169" aria-hidden="true" tabindex="-1"></a><span class="do">## [134] fontquiver_0.2.1                        </span></span>
-<span id="cb36-170"><a href="#cb36-170" aria-hidden="true" tabindex="-1"></a><span class="do">## [135] Matrix_1.7-5                            </span></span>
-<span id="cb36-171"><a href="#cb36-171" aria-hidden="true" tabindex="-1"></a><span class="do">## [136] hms_1.1.4                               </span></span>
-<span id="cb36-172"><a href="#cb36-172" aria-hidden="true" tabindex="-1"></a><span class="do">## [137] patchwork_1.3.2                         </span></span>
-<span id="cb36-173"><a href="#cb36-173" aria-hidden="true" tabindex="-1"></a><span class="do">## [138] bit64_4.8.2                             </span></span>
-<span id="cb36-174"><a href="#cb36-174" aria-hidden="true" tabindex="-1"></a><span class="do">## [139] KEGGREST_1.52.0                         </span></span>
-<span id="cb36-175"><a href="#cb36-175" aria-hidden="true" tabindex="-1"></a><span class="do">## [140] SummarizedExperiment_1.42.0             </span></span>
-<span id="cb36-176"><a href="#cb36-176" aria-hidden="true" tabindex="-1"></a><span class="do">## [141] igraph_2.3.3                            </span></span>
-<span id="cb36-177"><a href="#cb36-177" aria-hidden="true" tabindex="-1"></a><span class="do">## [142] memoise_2.0.1                           </span></span>
-<span id="cb36-178"><a href="#cb36-178" aria-hidden="true" tabindex="-1"></a><span class="do">## [143] ggtree_4.2.0                            </span></span>
-<span id="cb36-179"><a href="#cb36-179" aria-hidden="true" tabindex="-1"></a><span class="do">## [144] fastmatch_1.1-8                         </span></span>
-<span id="cb36-180"><a href="#cb36-180" aria-hidden="true" tabindex="-1"></a><span class="do">## [145] bit_4.6.0                               </span></span>
-<span id="cb36-181"><a href="#cb36-181" aria-hidden="true" tabindex="-1"></a><span class="do">## [146] gson_0.2.1                              </span></span>
-<span id="cb36-182"><a href="#cb36-182" aria-hidden="true" tabindex="-1"></a><span class="do">## [147] ape_5.8-1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb36-109"><a href="#cb36-109" aria-hidden="true" tabindex="-1"></a><span class="do">##  [74] gtools_3.9.5                            </span></span>
+<span id="cb36-110"><a href="#cb36-110" aria-hidden="true" tabindex="-1"></a><span class="do">##  [75] dichromat_2.0-1                         </span></span>
+<span id="cb36-111"><a href="#cb36-111" aria-hidden="true" tabindex="-1"></a><span class="do">##  [76] RSQLite_3.53.1                          </span></span>
+<span id="cb36-112"><a href="#cb36-112" aria-hidden="true" tabindex="-1"></a><span class="do">##  [77] cigarillo_1.2.0                         </span></span>
+<span id="cb36-113"><a href="#cb36-113" aria-hidden="true" tabindex="-1"></a><span class="do">##  [78] data.table_1.18.6.1                     </span></span>
+<span id="cb36-114"><a href="#cb36-114" aria-hidden="true" tabindex="-1"></a><span class="do">##  [79] fontLiberation_0.1.0                    </span></span>
+<span id="cb36-115"><a href="#cb36-115" aria-hidden="true" tabindex="-1"></a><span class="do">##  [80] renv_1.2.3                              </span></span>
+<span id="cb36-116"><a href="#cb36-116" aria-hidden="true" tabindex="-1"></a><span class="do">##  [81] rtracklayer_1.72.0                      </span></span>
+<span id="cb36-117"><a href="#cb36-117" aria-hidden="true" tabindex="-1"></a><span class="do">##  [82] graphlayouts_1.2.5                      </span></span>
+<span id="cb36-118"><a href="#cb36-118" aria-hidden="true" tabindex="-1"></a><span class="do">##  [83] prettyunits_1.2.0                       </span></span>
+<span id="cb36-119"><a href="#cb36-119" aria-hidden="true" tabindex="-1"></a><span class="do">##  [84] httr_1.4.8                              </span></span>
+<span id="cb36-120"><a href="#cb36-120" aria-hidden="true" tabindex="-1"></a><span class="do">##  [85] htmlwidgets_1.6.4                       </span></span>
+<span id="cb36-121"><a href="#cb36-121" aria-hidden="true" tabindex="-1"></a><span class="do">##  [86] S4Arrays_1.12.1                         </span></span>
+<span id="cb36-122"><a href="#cb36-122" aria-hidden="true" tabindex="-1"></a><span class="do">##  [87] scatterpie_0.2.6                        </span></span>
+<span id="cb36-123"><a href="#cb36-123" aria-hidden="true" tabindex="-1"></a><span class="do">##  [88] graphite_1.58.0                         </span></span>
+<span id="cb36-124"><a href="#cb36-124" aria-hidden="true" tabindex="-1"></a><span class="do">##  [89] pkgconfig_2.0.3                         </span></span>
+<span id="cb36-125"><a href="#cb36-125" aria-hidden="true" tabindex="-1"></a><span class="do">##  [90] gtable_0.3.6                            </span></span>
+<span id="cb36-126"><a href="#cb36-126" aria-hidden="true" tabindex="-1"></a><span class="do">##  [91] blob_1.3.0                              </span></span>
+<span id="cb36-127"><a href="#cb36-127" aria-hidden="true" tabindex="-1"></a><span class="do">##  [92] S7_0.2.2                                </span></span>
+<span id="cb36-128"><a href="#cb36-128" aria-hidden="true" tabindex="-1"></a><span class="do">##  [93] XVector_0.52.0                          </span></span>
+<span id="cb36-129"><a href="#cb36-129" aria-hidden="true" tabindex="-1"></a><span class="do">##  [94] htmltools_0.5.9                         </span></span>
+<span id="cb36-130"><a href="#cb36-130" aria-hidden="true" tabindex="-1"></a><span class="do">##  [95] fontBitstreamVera_0.1.1                 </span></span>
+<span id="cb36-131"><a href="#cb36-131" aria-hidden="true" tabindex="-1"></a><span class="do">##  [96] scales_1.4.0                            </span></span>
+<span id="cb36-132"><a href="#cb36-132" aria-hidden="true" tabindex="-1"></a><span class="do">##  [97] png_0.1-9                               </span></span>
+<span id="cb36-133"><a href="#cb36-133" aria-hidden="true" tabindex="-1"></a><span class="do">##  [98] ggfun_0.2.1                             </span></span>
+<span id="cb36-134"><a href="#cb36-134" aria-hidden="true" tabindex="-1"></a><span class="do">##  [99] rstudioapi_0.19.0                       </span></span>
+<span id="cb36-135"><a href="#cb36-135" aria-hidden="true" tabindex="-1"></a><span class="do">## [100] tzdb_0.5.0                              </span></span>
+<span id="cb36-136"><a href="#cb36-136" aria-hidden="true" tabindex="-1"></a><span class="do">## [101] reshape2_1.4.5                          </span></span>
+<span id="cb36-137"><a href="#cb36-137" aria-hidden="true" tabindex="-1"></a><span class="do">## [102] rjson_0.2.23                            </span></span>
+<span id="cb36-138"><a href="#cb36-138" aria-hidden="true" tabindex="-1"></a><span class="do">## [103] nlme_3.1-169                            </span></span>
+<span id="cb36-139"><a href="#cb36-139" aria-hidden="true" tabindex="-1"></a><span class="do">## [104] curl_7.1.0                              </span></span>
+<span id="cb36-140"><a href="#cb36-140" aria-hidden="true" tabindex="-1"></a><span class="do">## [105] cachem_1.1.0                            </span></span>
+<span id="cb36-141"><a href="#cb36-141" aria-hidden="true" tabindex="-1"></a><span class="do">## [106] KernSmooth_2.23-26                      </span></span>
+<span id="cb36-142"><a href="#cb36-142" aria-hidden="true" tabindex="-1"></a><span class="do">## [107] parallel_4.6.1                          </span></span>
+<span id="cb36-143"><a href="#cb36-143" aria-hidden="true" tabindex="-1"></a><span class="do">## [108] restfulr_0.0.16                         </span></span>
+<span id="cb36-144"><a href="#cb36-144" aria-hidden="true" tabindex="-1"></a><span class="do">## [109] pillar_1.11.1                           </span></span>
+<span id="cb36-145"><a href="#cb36-145" aria-hidden="true" tabindex="-1"></a><span class="do">## [110] grid_4.6.1                              </span></span>
+<span id="cb36-146"><a href="#cb36-146" aria-hidden="true" tabindex="-1"></a><span class="do">## [111] vctrs_0.7.3                             </span></span>
+<span id="cb36-147"><a href="#cb36-147" aria-hidden="true" tabindex="-1"></a><span class="do">## [112] gplots_3.3.0                            </span></span>
+<span id="cb36-148"><a href="#cb36-148" aria-hidden="true" tabindex="-1"></a><span class="do">## [113] tidydr_0.0.6                            </span></span>
+<span id="cb36-149"><a href="#cb36-149" aria-hidden="true" tabindex="-1"></a><span class="do">## [114] dbplyr_2.5.2                            </span></span>
+<span id="cb36-150"><a href="#cb36-150" aria-hidden="true" tabindex="-1"></a><span class="do">## [115] cluster_2.1.8.2                         </span></span>
+<span id="cb36-151"><a href="#cb36-151" aria-hidden="true" tabindex="-1"></a><span class="do">## [116] evaluate_1.0.5                          </span></span>
+<span id="cb36-152"><a href="#cb36-152" aria-hidden="true" tabindex="-1"></a><span class="do">## [117] magick_2.9.1                            </span></span>
+<span id="cb36-153"><a href="#cb36-153" aria-hidden="true" tabindex="-1"></a><span class="do">## [118] cli_3.6.6                               </span></span>
+<span id="cb36-154"><a href="#cb36-154" aria-hidden="true" tabindex="-1"></a><span class="do">## [119] compiler_4.6.1                          </span></span>
+<span id="cb36-155"><a href="#cb36-155" aria-hidden="true" tabindex="-1"></a><span class="do">## [120] Rsamtools_2.28.0                        </span></span>
+<span id="cb36-156"><a href="#cb36-156" aria-hidden="true" tabindex="-1"></a><span class="do">## [121] rlang_1.3.0                             </span></span>
+<span id="cb36-157"><a href="#cb36-157" aria-hidden="true" tabindex="-1"></a><span class="do">## [122] crayon_1.5.3                            </span></span>
+<span id="cb36-158"><a href="#cb36-158" aria-hidden="true" tabindex="-1"></a><span class="do">## [123] labeling_0.4.3                          </span></span>
+<span id="cb36-159"><a href="#cb36-159" aria-hidden="true" tabindex="-1"></a><span class="do">## [124] plyr_1.8.9                              </span></span>
+<span id="cb36-160"><a href="#cb36-160" aria-hidden="true" tabindex="-1"></a><span class="do">## [125] fs_2.1.0                                </span></span>
+<span id="cb36-161"><a href="#cb36-161" aria-hidden="true" tabindex="-1"></a><span class="do">## [126] ggiraph_0.9.6                           </span></span>
+<span id="cb36-162"><a href="#cb36-162" aria-hidden="true" tabindex="-1"></a><span class="do">## [127] stringi_1.8.7                           </span></span>
+<span id="cb36-163"><a href="#cb36-163" aria-hidden="true" tabindex="-1"></a><span class="do">## [128] viridisLite_0.4.3                       </span></span>
+<span id="cb36-164"><a href="#cb36-164" aria-hidden="true" tabindex="-1"></a><span class="do">## [129] BiocParallel_1.46.0                     </span></span>
+<span id="cb36-165"><a href="#cb36-165" aria-hidden="true" tabindex="-1"></a><span class="do">## [130] Biostrings_2.80.0                       </span></span>
+<span id="cb36-166"><a href="#cb36-166" aria-hidden="true" tabindex="-1"></a><span class="do">## [131] lazyeval_0.2.3                          </span></span>
+<span id="cb36-167"><a href="#cb36-167" aria-hidden="true" tabindex="-1"></a><span class="do">## [132] GOSemSim_2.38.3                         </span></span>
+<span id="cb36-168"><a href="#cb36-168" aria-hidden="true" tabindex="-1"></a><span class="do">## [133] fontquiver_0.2.1                        </span></span>
+<span id="cb36-169"><a href="#cb36-169" aria-hidden="true" tabindex="-1"></a><span class="do">## [134] Matrix_1.7-5                            </span></span>
+<span id="cb36-170"><a href="#cb36-170" aria-hidden="true" tabindex="-1"></a><span class="do">## [135] hms_1.1.4                               </span></span>
+<span id="cb36-171"><a href="#cb36-171" aria-hidden="true" tabindex="-1"></a><span class="do">## [136] patchwork_1.3.2                         </span></span>
+<span id="cb36-172"><a href="#cb36-172" aria-hidden="true" tabindex="-1"></a><span class="do">## [137] bit64_4.8.2                             </span></span>
+<span id="cb36-173"><a href="#cb36-173" aria-hidden="true" tabindex="-1"></a><span class="do">## [138] KEGGREST_1.52.0                         </span></span>
+<span id="cb36-174"><a href="#cb36-174" aria-hidden="true" tabindex="-1"></a><span class="do">## [139] SummarizedExperiment_1.42.0             </span></span>
+<span id="cb36-175"><a href="#cb36-175" aria-hidden="true" tabindex="-1"></a><span class="do">## [140] igraph_2.3.3                            </span></span>
+<span id="cb36-176"><a href="#cb36-176" aria-hidden="true" tabindex="-1"></a><span class="do">## [141] memoise_2.0.1                           </span></span>
+<span id="cb36-177"><a href="#cb36-177" aria-hidden="true" tabindex="-1"></a><span class="do">## [142] ggtree_4.2.0                            </span></span>
+<span id="cb36-178"><a href="#cb36-178" aria-hidden="true" tabindex="-1"></a><span class="do">## [143] fastmatch_1.1-8                         </span></span>
+<span id="cb36-179"><a href="#cb36-179" aria-hidden="true" tabindex="-1"></a><span class="do">## [144] bit_4.6.0                               </span></span>
+<span id="cb36-180"><a href="#cb36-180" aria-hidden="true" tabindex="-1"></a><span class="do">## [145] gson_0.2.1                              </span></span>
+<span id="cb36-181"><a href="#cb36-181" aria-hidden="true" tabindex="-1"></a><span class="do">## [146] ape_5.8-1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
