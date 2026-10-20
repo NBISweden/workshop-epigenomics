@@ -706,7 +706,7 @@ Common practice for constructing the metric based on `edgeR` results is:
 
 ```{r}
 DA_res=DA_res|>
-  dplyr::mutate(gsea_metric=PValue*logFC)
+  dplyr::mutate(gsea_metric=-log10(PValue)*logFC)
 ```
 
 <br />
@@ -756,7 +756,7 @@ We can now create a *named list* (names are entrez gene id) and sort it:
 #| eval: false
 #| echo: true
 
-gene_list=DA_res.prom.top$gsea_metric #using pval*logFC
+gene_list=DA_res.prom.top$gsea_metric #using -log10(pval)*logFC
 names(gene_list)=DA_res.prom.top$entrezgene_id
 gene_list=gene_list[order(gene_list,decreasing=TRUE)]
 
@@ -770,7 +770,7 @@ We prepare the GO terms and run GSEA:
 <br />
 
 ```{r}
-#| eval: false
+#| eval: true
 #| echo: true
 
 all_go.bp=as.data.frame(org.Mm.egGO)|>
@@ -792,24 +792,10 @@ gsea_go=fgsea(pathways = go_terms,
 The resulting object contains basic statistics of the GSEA test.
 
 ```{r}
-#| eval: false
+#| eval: true
 #| echo: true
 
  head(gsea_go)
-     pathway      pval      padj    log2err         ES        NES size
-1 GO:0000018 0.9928571 1.0000000 0.05400883  0.1824006  0.6768697  120
-2 GO:0000027 0.9490446 1.0000000 0.05080541  0.2415674  0.6675675   24
-3 GO:0000028 0.1902072 0.8391112 0.13649044 -0.4844570 -1.2474683   19
-4 GO:0000038 0.2611111 0.8800840 0.11284336 -0.4165674 -1.1610107   27
-5 GO:0000041 0.3404255 0.9065779 0.09374654 -0.2997705 -1.0499786   83
-6 GO:0000045 0.3294118 0.8975844 0.11331291  0.2753809  1.0549553  137
-   leadingEdge
-1 19264, 7....
-2 72831, 2....
-3 67097, 9....
-4 14081, 1....
-5 226025, ....
-6 240327, ....
 
 ```
 
@@ -820,7 +806,7 @@ We can format these results:
 <br />
 
 ```{r}
-#| eval: false
+#| eval: true
 #| echo: true
 
 gsea_go=as.data.frame(gsea_go)
@@ -833,14 +819,7 @@ gsea_go=gsea_go|>
     dplyr::select(pathway,NES,pval,padj,size)|>
     left_join(go_terms, by=c("pathway"="GOID"))
 
-> head(gsea_go)
-     pathway       NES        pval      padj size                         TERM
-1 GO:0002064 -1.539558 0.001013134 0.5754347  181  epithelial cell development
-2 GO:0003014 -1.542754 0.004758923 0.5757116   85         renal system process
-3 GO:0006814 -1.434938 0.006011068 0.5757116  171         sodium ion transport
-4 GO:0006836 -1.473969 0.002957773 0.5754347  184   neurotransmitter transport
-5 GO:0007431 -1.702995 0.003805549 0.5757116   31   salivary gland development
-6 GO:0007435 -1.738422 0.002137247 0.5754347   27 salivary gland morphogenesis
+head(gsea_go)
 ```
 
 
@@ -848,9 +827,6 @@ gsea_go=gsea_go|>
 
 Upon object inspection we can see terms related to immune cell biology, amongst other GO terms. 
 
-* antigen processing and presentation (GO:0019882)
-
-* antigen processing and presentation of peptide antigen (GO:0048002)
 
 <br />
 <br />
