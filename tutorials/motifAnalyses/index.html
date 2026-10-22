@@ -262,7 +262,7 @@ background-size: cover;
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">20-Oct-2026</p>
+        <p class="date">22-Oct-2026</p>
       </div>
     </div>
     
@@ -611,15 +611,15 @@ Distal Intergenic  Promoter (1-2kb)  Promoter (2-3kb)
 <p>We load the PWMs of vertebrate TFs from Jaspar.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Extract PWMs of vertebrate TFs from JASPAR2024</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>JASPAR2024 <span class="ot">&lt;-</span> <span class="fu">JASPAR2024</span>()</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>JASPARConnect <span class="ot">&lt;-</span> RSQLite<span class="sc">::</span><span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="fu">db</span>(JASPAR2024))</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>pwms <span class="ot">&lt;-</span> <span class="fu">getMatrixSet</span>(JASPARConnect,</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">opts =</span> <span class="fu">list</span>(<span class="at">tax_group =</span> <span class="st">"vertebrates"</span>,</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">collection=</span><span class="st">"CORE"</span>,</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">matrixtype =</span> <span class="st">"PWM"</span>))</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Disconnect Db</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>RSQLite<span class="sc">::</span><span class="fu">dbDisconnect</span>(JASPARConnect)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>JASPAR2024 <span class="ot">&lt;-</span> <span class="fu">JASPAR2024</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>JASPARConnect <span class="ot">&lt;-</span> RSQLite<span class="sc">::</span><span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="fu">db</span>(JASPAR2024))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>pwms <span class="ot">&lt;-</span> <span class="fu">getMatrixSet</span>(JASPARConnect,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">opts =</span> <span class="fu">list</span>(<span class="at">tax_group =</span> <span class="st">"vertebrates"</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">collection=</span><span class="st">"CORE"</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">matrixtype =</span> <span class="st">"PWM"</span>))</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Disconnect Db</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>RSQLite<span class="sc">::</span><span class="fu">dbDisconnect</span>(JASPARConnect)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="run-binned-enrichment" class="level3" data-number="2.3">
@@ -648,13 +648,13 @@ Distal Intergenic  Promoter (1-2kb)  Promoter (2-3kb)
 </tbody>
 </table>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Motif enrichment using 4 cores</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">calcBinnedMotifEnrR</span>(<span class="at">seqs =</span> seqs, </span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">bins =</span> bins, </span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">pwmL =</span> pwms, </span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">background =</span> <span class="st">"otherBins"</span>, </span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">BPPARAM =</span> <span class="fu">MulticoreParam</span>(<span class="dv">4</span>))</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>se</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Motif enrichment using 4 cores</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">calcBinnedMotifEnrR</span>(<span class="at">seqs =</span> seqs, </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">bins =</span> bins, </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">pwmL =</span> pwms, </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">background =</span> <span class="st">"otherBins"</span>, </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">BPPARAM =</span> <span class="fu">MulticoreParam</span>(<span class="dv">4</span>))</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>se</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>class: SummarizedExperiment 
 dim: 879 9 
@@ -673,15 +673,15 @@ colData names(6): bin.names bin.lower ... totalWgtForeground
 <p>The resulting object is a <code>SummarizedExperiment</code> object. Briefly, these classes are a convenient way to store matrices of the same dimensions as well as any row and column metadata. In our case, the rows correspond to the motifs and the columns to the bins. The figure below illustrates what this class of objects looks like and more details can be found <a href="https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html">here</a>.</p>
 <p><a href="assets/SE.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="assets/SE.png" class="img-fluid"></a></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Assays (matrices)</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">assays</span>(se)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Assays (matrices)</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">assays</span>(se)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of length 7
 names(7): negLog10P negLog10Padj ... sumBackgroundWgtWithHits</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">assays</span>(se)<span class="sc">$</span>log2enr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">assays</span>(se)<span class="sc">$</span>log2enr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         [-3.64,-0.768] (-0.768,-0.549] (-0.549,-0.416] (-0.416,-0.335]
 MA0004.1     0.05597966      0.04640559    -0.189753535     -0.06415103
@@ -708,19 +708,19 @@ MA0107.1   0.17052358</code></pre>
 </div>
 <p>Let’s visualize the results of the enrichment analysis. We can use the plot function provided by <code>monaLisa</code> to do this.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Select strongly enriched motifs</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>sel <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="fu">assay</span>(se, <span class="st">"negLog10Padj"</span>), <span class="dv">1</span>, </span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>             <span class="cf">function</span>(x) <span class="fu">max</span>(<span class="fu">abs</span>(x), <span class="dv">0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">&gt;</span> <span class="fl">4.0</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(sel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Select strongly enriched motifs</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>sel <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="fu">assay</span>(se, <span class="st">"negLog10Padj"</span>), <span class="dv">1</span>, </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>             <span class="cf">function</span>(x) <span class="fu">max</span>(<span class="fu">abs</span>(x), <span class="dv">0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">&gt;</span> <span class="fl">4.0</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(sel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 41</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>seSel <span class="ot">&lt;-</span> se[sel, ]</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMotifHeatmaps</span>(<span class="at">x =</span> seSel, <span class="at">which.plots =</span> <span class="fu">c</span>(<span class="st">"log2enr"</span>, <span class="st">"negLog10Padj"</span>), </span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">width =</span> <span class="fl">2.0</span>, <span class="at">cluster =</span> <span class="cn">TRUE</span>, <span class="at">maxEnr =</span> <span class="dv">2</span>, <span class="at">maxSig =</span> <span class="dv">10</span>, </span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">show_motif_GC =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>seSel <span class="ot">&lt;-</span> se[sel, ]</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMotifHeatmaps</span>(<span class="at">x =</span> seSel, <span class="at">which.plots =</span> <span class="fu">c</span>(<span class="st">"log2enr"</span>, <span class="st">"negLog10Padj"</span>), </span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">width =</span> <span class="fl">2.0</span>, <span class="at">cluster =</span> <span class="cn">TRUE</span>, <span class="at">maxEnr =</span> <span class="dv">2</span>, <span class="at">maxSig =</span> <span class="dv">10</span>, </span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">show_motif_GC =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -728,18 +728,18 @@ MA0107.1   0.17052358</code></pre>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">## plot with motif sequence logos</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>SimMatSel <span class="ot">&lt;-</span> <span class="fu">motifSimilarity</span>(<span class="fu">rowData</span>(seSel)<span class="sc">$</span>motif.pfm)</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(SimMatSel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="do">## plot with motif sequence logos</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>SimMatSel <span class="ot">&lt;-</span> <span class="fu">motifSimilarity</span>(<span class="fu">rowData</span>(seSel)<span class="sc">$</span>motif.pfm)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(SimMatSel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.1332093 1.0000000</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">## create hclust object, similarity defined by 1 - Pearson correlation</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>hcl <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">as.dist</span>(<span class="dv">1</span> <span class="sc">-</span> SimMatSel), <span class="at">method =</span> <span class="st">"average"</span>)</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMotifHeatmaps</span>(<span class="at">x =</span> seSel, <span class="at">which.plots =</span> <span class="fu">c</span>(<span class="st">"log2enr"</span>, <span class="st">"negLog10Padj"</span>), </span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">width =</span> <span class="fl">1.8</span>, <span class="at">cluster =</span> hcl, <span class="at">maxEnr =</span> <span class="dv">2</span>, <span class="at">maxSig =</span> <span class="dv">10</span>,</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">show_dendrogram =</span> <span class="cn">TRUE</span>, <span class="at">show_seqlogo =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">width.seqlogo =</span> <span class="fl">1.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="do">## create hclust object, similarity defined by 1 - Pearson correlation</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>hcl <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">as.dist</span>(<span class="dv">1</span> <span class="sc">-</span> SimMatSel), <span class="at">method =</span> <span class="st">"average"</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMotifHeatmaps</span>(<span class="at">x =</span> seSel, <span class="at">which.plots =</span> <span class="fu">c</span>(<span class="st">"log2enr"</span>, <span class="st">"negLog10Padj"</span>), </span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">width =</span> <span class="fl">1.8</span>, <span class="at">cluster =</span> hcl, <span class="at">maxEnr =</span> <span class="dv">2</span>, <span class="at">maxSig =</span> <span class="dv">10</span>,</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">show_dendrogram =</span> <span class="cn">TRUE</span>, <span class="at">show_seqlogo =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">width.seqlogo =</span> <span class="fl">1.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -754,50 +754,50 @@ MA0107.1   0.17052358</code></pre>
 <h3 data-number="2.4" class="anchored" data-anchor-id="binned-k-mer-enrichment-analysis"><span class="header-section-number">2.4</span> Binned k-mer enrichment analysis</h3>
 <p>Sometimes one may want to perform the binned enrichment analysis in a more unbiased way, without using known motifs from a database. We perform this on our dataset and look at which kmers are enriched. We will set the kmer size to 6 base pairs.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Binned kmer enrichment (with 2 cores)</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ... this can take a minute, feel free to increase cores if possible</span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span> <span class="fu">file.exists</span>(<span class="st">"data/seKmer.rds"</span>)) {</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  seKmer <span class="ot">&lt;-</span>  <span class="fu">calcBinnedKmerEnr</span>(<span class="at">seqs =</span> seqs, <span class="at">bins =</span> bins, <span class="at">kmerLen =</span> <span class="dv">6</span>, </span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">includeRevComp =</span> <span class="cn">TRUE</span>, <span class="at">BPPARAM =</span> <span class="fu">MulticoreParam</span>(<span class="dv">2</span>))</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  seKmer <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/seKmer.rds"</span>)</span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Binned kmer enrichment (with 2 cores)</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ... this can take a minute, feel free to increase cores if possible</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span> <span class="fu">file.exists</span>(<span class="st">"data/seKmer.rds"</span>)) {</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  seKmer <span class="ot">&lt;-</span>  <span class="fu">calcBinnedKmerEnr</span>(<span class="at">seqs =</span> seqs, <span class="at">bins =</span> bins, <span class="at">kmerLen =</span> <span class="dv">6</span>, </span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">includeRevComp =</span> <span class="cn">TRUE</span>, <span class="at">BPPARAM =</span> <span class="fu">MulticoreParam</span>(<span class="dv">2</span>))</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  seKmer <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/seKmer.rds"</span>)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Enriched kmers</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>selKmer <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="fu">assay</span>(seKmer, <span class="st">"negLog10Padj"</span>), <span class="dv">1</span>,</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>               <span class="cf">function</span>(x) <span class="fu">max</span>(<span class="fu">abs</span>(x), <span class="dv">0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">&gt;</span> <span class="dv">4</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(selKmer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Enriched kmers</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>selKmer <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="fu">assay</span>(seKmer, <span class="st">"negLog10Padj"</span>), <span class="dv">1</span>,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>               <span class="cf">function</span>(x) <span class="fu">max</span>(<span class="fu">abs</span>(x), <span class="dv">0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">&gt;</span> <span class="dv">4</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(selKmer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 14</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>seKmerSel <span class="ot">&lt;-</span> seKmer[selKmer, ]</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate similarity between enriched kmers and enriched motifs</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>pfmSel <span class="ot">&lt;-</span> <span class="fu">rowData</span>(seSel)<span class="sc">$</span>motif.pfm</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>sims <span class="ot">&lt;-</span> <span class="fu">motifKmerSimilarity</span>(<span class="at">x =</span> pfmSel,</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">kmers =</span> <span class="fu">rownames</span>(seKmerSel),</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">includeRevComp =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(sims)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>seKmerSel <span class="ot">&lt;-</span> seKmer[selKmer, ]</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate similarity between enriched kmers and enriched motifs</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>pfmSel <span class="ot">&lt;-</span> <span class="fu">rowData</span>(seSel)<span class="sc">$</span>motif.pfm</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>sims <span class="ot">&lt;-</span> <span class="fu">motifKmerSimilarity</span>(<span class="at">x =</span> pfmSel,</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">kmers =</span> <span class="fu">rownames</span>(seKmerSel),</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>                            <span class="at">includeRevComp =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(sims)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 41 14</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot kmers and motif similarity</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>maxwidth <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">sapply</span>(TFBSTools<span class="sc">::</span><span class="fu">Matrix</span>(pfmSel), ncol))</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>seqlogoGrobs <span class="ot">&lt;-</span> <span class="fu">lapply</span>(pfmSel, seqLogoGrob, <span class="at">xmax =</span> maxwidth)</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>hmSeqlogo <span class="ot">&lt;-</span> <span class="fu">rowAnnotation</span>(<span class="at">logo =</span> <span class="fu">annoSeqlogo</span>(seqlogoGrobs, <span class="at">which =</span> <span class="st">"row"</span>),</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">annotation_width =</span> <span class="fu">unit</span>(<span class="fl">1.5</span>, <span class="st">"inch"</span>), </span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">show_annotation_name =</span> <span class="cn">FALSE</span></span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="fu">Heatmap</span>(sims, </span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">show_row_names =</span> <span class="cn">TRUE</span>, <span class="at">row_names_gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">8</span>),</span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">show_column_names =</span> <span class="cn">TRUE</span>, <span class="at">column_names_gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">8</span>),</span>
-<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">"Similarity"</span>, <span class="at">column_title =</span> <span class="st">"Selected TFs and enriched k-mers"</span>,</span>
-<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">colorRamp2</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">c</span>(<span class="st">"white"</span>, <span class="st">"red"</span>)), </span>
-<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">right_annotation =</span> hmSeqlogo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot kmers and motif similarity</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>maxwidth <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">sapply</span>(TFBSTools<span class="sc">::</span><span class="fu">Matrix</span>(pfmSel), ncol))</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>seqlogoGrobs <span class="ot">&lt;-</span> <span class="fu">lapply</span>(pfmSel, seqLogoGrob, <span class="at">xmax =</span> maxwidth)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>hmSeqlogo <span class="ot">&lt;-</span> <span class="fu">rowAnnotation</span>(<span class="at">logo =</span> <span class="fu">annoSeqlogo</span>(seqlogoGrobs, <span class="at">which =</span> <span class="st">"row"</span>),</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">annotation_width =</span> <span class="fu">unit</span>(<span class="fl">1.5</span>, <span class="st">"inch"</span>), </span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">show_annotation_name =</span> <span class="cn">FALSE</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="fu">Heatmap</span>(sims, </span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">show_row_names =</span> <span class="cn">TRUE</span>, <span class="at">row_names_gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">8</span>),</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">show_column_names =</span> <span class="cn">TRUE</span>, <span class="at">column_names_gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">8</span>),</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">"Similarity"</span>, <span class="at">column_title =</span> <span class="st">"Selected TFs and enriched k-mers"</span>,</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">colorRamp2</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">c</span>(<span class="st">"white"</span>, <span class="st">"red"</span>)), </span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">right_annotation =</span> hmSeqlogo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -814,11 +814,11 @@ MA0107.1   0.17052358</code></pre>
 <p>Another method to find relevant motifs is via a regression-based approach. As opposed to the binned approach, where each motif is tested independently for enrichment, the regression framework allows motifs to compete against each other for selection. Following our example, the aim is to select those which are more likely to explain the observed changes in accessibilty we see across the enhancers. In <code>monaLisa</code>, stability selection with randomized lasso is the implemented regression method of choice. For more details about the method, see the details section in the <code>randLassoStabSel</code> function, as well as the publication from <span class="citation" data-cites="Meinshausen2010Stability">Meinshausen and Bühlmann (<a href="#ref-Meinshausen2010Stability" role="doc-biblioref">2010</a>)</span>. Briefly, with lasso stability selection, the lasso regression is performed multiple times on subsets of the response vector and predictor matrix, and each predictor (TF) ends up with a selection probability which is simply the number of times it was selected divided by the total number of times a regression was done. With the randomized lasso, a <em>weakness</em> parameter is additionally used to vary the lasso penalty term&nbsp;λ&nbsp;to a randomly chosen value between [λ,&nbsp;λ/weakness] for each predictor. This type of regularization has advantages in cases where the number of predictors exceeds the number of observations, in selecting variables consistently, demonstrating better error control and not depending strongly on the penalization parameter <span class="citation" data-cites="Meinshausen2010Stability">(<a href="#ref-Meinshausen2010Stability" role="doc-biblioref">Meinshausen and Bühlmann 2010</a>)</span>.</p>
 <p>First, we will create the predictor matrix in our regression framework. This will consist of the predicted TF binding sites (TFBSs) across the enhancers. We use the PWMs from Jaspar to scan for motif hits across the enhancers, using a minimum score of 10 for a match.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Scan for motif hits across enhancer sequences</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ... (this step takes a few seconds)</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>hits <span class="ot">&lt;-</span> <span class="fu">findMotifHits</span>(<span class="at">query =</span> pwms, <span class="at">subject =</span> seqs, <span class="at">min.score =</span> <span class="fl">10.0</span>,</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">BPPARAM =</span> BiocParallel<span class="sc">::</span><span class="fu">MulticoreParam</span>(<span class="dv">4</span>))</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(hits)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Scan for motif hits across enhancer sequences</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ... (this step takes a few seconds)</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>hits <span class="ot">&lt;-</span> <span class="fu">findMotifHits</span>(<span class="at">query =</span> pwms, <span class="at">subject =</span> seqs, <span class="at">min.score =</span> <span class="fl">10.0</span>,</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">BPPARAM =</span> BiocParallel<span class="sc">::</span><span class="fu">MulticoreParam</span>(<span class="dv">4</span>))</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(hits)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>GRanges object with 6 ranges and 4 metadata columns:
       seqnames    ranges strand |     matchedSeq    pwmid pwmname     score
@@ -834,13 +834,13 @@ MA0107.1   0.17052358</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add columns reflecting motif ID and name (for ease of interpretability later)</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>hits<span class="sc">$</span>pwmIdName <span class="ot">&lt;-</span> <span class="fu">paste0</span>(hits<span class="sc">$</span>pwmid, <span class="st">"_"</span>, hits<span class="sc">$</span>pwmname)</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Create TFBS matrix (unique motif IDs are shown as columns rather than the names)</span></span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>TFBSmatrix <span class="ot">&lt;-</span> <span class="fu">unclass</span>(<span class="fu">table</span>(<span class="fu">factor</span>(<span class="fu">seqnames</span>(hits), <span class="at">levels =</span> <span class="fu">seqlevels</span>(hits)),</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">factor</span>(hits<span class="sc">$</span>pwmIdName, <span class="at">levels =</span> <span class="fu">unique</span>(hits<span class="sc">$</span>pwmIdName))))</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>TFBSmatrix[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add columns reflecting motif ID and name (for ease of interpretability later)</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>hits<span class="sc">$</span>pwmIdName <span class="ot">&lt;-</span> <span class="fu">paste0</span>(hits<span class="sc">$</span>pwmid, <span class="st">"_"</span>, hits<span class="sc">$</span>pwmname)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Create TFBS matrix (unique motif IDs are shown as columns rather than the names)</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>TFBSmatrix <span class="ot">&lt;-</span> <span class="fu">unclass</span>(<span class="fu">table</span>(<span class="fu">factor</span>(<span class="fu">seqnames</span>(hits), <span class="at">levels =</span> <span class="fu">seqlevels</span>(hits)),</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">factor</span>(hits<span class="sc">$</span>pwmIdName, <span class="at">levels =</span> <span class="fu">unique</span>(hits<span class="sc">$</span>pwmIdName))))</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>TFBSmatrix[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     
       MA0801.1_MGA MA0803.1_TBX15 MA0805.1_TBX1 MA0806.1_TBX4 MA0807.1_TBX5
@@ -861,25 +861,25 @@ MA0107.1   0.17052358</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Remove TF motifs with 0 binding sites (if any) in all regions</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>zero_TF <span class="ot">&lt;-</span> <span class="fu">colSums</span>(TFBSmatrix) <span class="sc">==</span> <span class="dv">0</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(zero_TF)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Remove TF motifs with 0 binding sites (if any) in all regions</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>zero_TF <span class="ot">&lt;-</span> <span class="fu">colSums</span>(TFBSmatrix) <span class="sc">==</span> <span class="dv">0</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(zero_TF)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>TFBSmatrix <span class="ot">&lt;-</span> TFBSmatrix[, <span class="sc">!</span>zero_TF]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>TFBSmatrix <span class="ot">&lt;-</span> TFBSmatrix[, <span class="sc">!</span>zero_TF]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We add the fraction of G+C and CpG observed/expected ratio as predictors to the matrix, to ensure that selected TF motifs are not just detecting a simple trend in GC or CpG composition.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate G+C and CpG obs/expected</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>fMono <span class="ot">&lt;-</span> <span class="fu">oligonucleotideFrequency</span>(seqs, <span class="at">width =</span> <span class="dv">1</span>L, <span class="at">as.prob =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>fDi <span class="ot">&lt;-</span> <span class="fu">oligonucleotideFrequency</span>(seqs, <span class="at">width =</span> <span class="dv">2</span>L, <span class="at">as.prob =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>fracGC <span class="ot">&lt;-</span> fMono[, <span class="st">"G"</span>] <span class="sc">+</span> fMono[, <span class="st">"C"</span>]</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>oeCpG <span class="ot">&lt;-</span> (fDi[, <span class="st">"CG"</span>] <span class="sc">+</span> <span class="fl">0.01</span>) <span class="sc">/</span> (fMono[, <span class="st">"G"</span>] <span class="sc">*</span> fMono[, <span class="st">"C"</span>] <span class="sc">+</span> <span class="fl">0.01</span>)</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Add GC and oeCpG to predictor matrix</span></span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>TFBSmatrix <span class="ot">&lt;-</span> <span class="fu">cbind</span>(fracGC, oeCpG, TFBSmatrix)</span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>TFBSmatrix[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate G+C and CpG obs/expected</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>fMono <span class="ot">&lt;-</span> <span class="fu">oligonucleotideFrequency</span>(seqs, <span class="at">width =</span> <span class="dv">1</span>L, <span class="at">as.prob =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>fDi <span class="ot">&lt;-</span> <span class="fu">oligonucleotideFrequency</span>(seqs, <span class="at">width =</span> <span class="dv">2</span>L, <span class="at">as.prob =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>fracGC <span class="ot">&lt;-</span> fMono[, <span class="st">"G"</span>] <span class="sc">+</span> fMono[, <span class="st">"C"</span>]</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>oeCpG <span class="ot">&lt;-</span> (fDi[, <span class="st">"CG"</span>] <span class="sc">+</span> <span class="fl">0.01</span>) <span class="sc">/</span> (fMono[, <span class="st">"G"</span>] <span class="sc">*</span> fMono[, <span class="st">"C"</span>] <span class="sc">+</span> <span class="fl">0.01</span>)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Add GC and oeCpG to predictor matrix</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>TFBSmatrix <span class="ot">&lt;-</span> <span class="fu">cbind</span>(fracGC, oeCpG, TFBSmatrix)</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>TFBSmatrix[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       fracGC     oeCpG MA0801.1_MGA MA0803.1_TBX15 MA0805.1_TBX1 MA0806.1_TBX4
 e_1 0.4269663 0.2625459            7              7             7             7
@@ -892,10 +892,10 @@ e_6 0.4539326 0.3939226            0              0             0             1<
 </div>
 <p>Next we run stability selection with randomized lasso. Since this is a stochastic process, we will need to set the seed to reproduce our results.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Run randomized lasso stability selection</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">randLassoStabSel</span>(<span class="at">x =</span> TFBSmatrix, <span class="at">y =</span> gr<span class="sc">$</span>logFC, <span class="at">cutoff =</span> <span class="fl">0.8</span>)</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>se</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Run randomized lasso stability selection</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">randLassoStabSel</span>(<span class="at">x =</span> TFBSmatrix, <span class="at">y =</span> gr<span class="sc">$</span>logFC, <span class="at">cutoff =</span> <span class="fl">0.8</span>)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>se</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>class: SummarizedExperiment 
 dim: 19361 856 
@@ -909,9 +909,9 @@ colData names(30): selProb selected ... regStep26 regStep27</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="do">## selected TFs</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>sel <span class="ot">&lt;-</span> <span class="fu">colnames</span>(se)[se<span class="sc">$</span>selected]</span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>sel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="do">## selected TFs</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>sel <span class="ot">&lt;-</span> <span class="fu">colnames</span>(se)[se<span class="sc">$</span>selected]</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>sel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "MA1142.2_FOSL1::JUND" "MA0835.3_BATF3"       "MA0002.3_Runx1"      
 [4] "MA0791.2_POU4F3"      "MA0645.2_ETV6"       </code></pre>
@@ -920,8 +920,8 @@ colData names(30): selProb selected ... regStep26 regStep27</code></pre>
 <p>As mentioned, motifs are competing against each other for selection here. A known challenge with regression methods is colinearity between the predictors. This is worth keeping in mind for very highly correlated TFBSs. If we have two TFs with highly similar motifs explaining the logFC, only one of them may end up being selected. That is why it is worth focusing on interpreting the motifs rather than the particular TF name.</p>
 <p>Let’s have a look at the stability paths of the motifs. These paths show the selection probability as a function of the regularization step. The strength of the regularization decreases from left to right and the stronger the regularization, the less motifs are selected. The motifs above the minimum selection probability at the last step are the final selected ones. These paths can give an indication of how strongly a particular motif can explain the logFC in accessibility, by being selected fairly early and then consistently along the regulalrization steps. It can also show how well the selected motifs separate from the non-selected ones and how strong the signal is.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Stability paths</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotStabilityPaths</span>(se, <span class="at">labelPaths =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Stability paths</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotStabilityPaths</span>(se, <span class="at">labelPaths =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -933,9 +933,9 @@ colData names(30): selProb selected ... regStep26 regStep27</code></pre>
 <p>Based on these, BATF3 is the first motif to be selected which indicates that this motif quite strongly explains the logFC compared to the rest. This may be expected since this TF was knocked out.</p>
 <p>Let’s look at where the GC and CpG content predictors fall on these paths.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Stability paths with specific naming</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotStabilityPaths</span>(se, <span class="at">labelPaths =</span> <span class="cn">TRUE</span>, <span class="at">labelNudgeX =</span> <span class="dv">3</span>,</span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"fracGC"</span>, <span class="st">"oeCpG"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Stability paths with specific naming</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotStabilityPaths</span>(se, <span class="at">labelPaths =</span> <span class="cn">TRUE</span>, <span class="at">labelNudgeX =</span> <span class="dv">3</span>,</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"fracGC"</span>, <span class="st">"oeCpG"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -946,8 +946,8 @@ colData names(30): selProb selected ... regStep26 regStep27</code></pre>
 </div>
 <p>They have very low selection probabilities and were not contributing to explaining the logFC in accessibility. What if we want to get a sense of the direction in which the selected motifs explain accessibility changes: towards positive logFC values indicating more accessibility in KO, or toward negative logFC values indicating more accessibility in the Wt? To reflect that, we can plot the selection probabilities multiplied by the sign of the correlation to the logFC vector.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot selection probability</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSelectionProb</span>(se, <span class="at">directional =</span> <span class="cn">TRUE</span>, <span class="at">ylimext =</span> <span class="dv">1</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot selection probability</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotSelectionProb</span>(se, <span class="at">directional =</span> <span class="cn">TRUE</span>, <span class="at">ylimext =</span> <span class="dv">1</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -958,19 +958,19 @@ colData names(30): selProb selected ... regStep26 regStep27</code></pre>
 </div>
 <p>BATF3, Runx1 and FOSL1::JUND explain negative changes in accessibility, so enhancers which were more accessible in Wt and lost that accessibility in the Batf-KO. The motifs for BATF3 and FOSL1::JUND were also enriched in the binned approach, in bins with lower logFC values. Interestingly Runx1 only shows up here. Let’s have a look at the motif seqlogo to see if that motif came up in the enrichment approach under another TF name.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get PFM</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>JASPAR2024 <span class="ot">&lt;-</span> <span class="fu">JASPAR2024</span>()</span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>JASPARConnect <span class="ot">&lt;-</span> RSQLite<span class="sc">::</span><span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="fu">db</span>(JASPAR2024))</span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>pfm <span class="ot">&lt;-</span> <span class="fu">getMatrixByID</span>(<span class="at">x =</span> JASPARConnect, <span class="at">ID =</span> <span class="st">"MA0002.3"</span>)</span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>RSQLite<span class="sc">::</span><span class="fu">dbDisconnect</span>(JASPARConnect)</span>
-<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span>(pfm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get PFM</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>JASPAR2024 <span class="ot">&lt;-</span> <span class="fu">JASPAR2024</span>()</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>JASPARConnect <span class="ot">&lt;-</span> RSQLite<span class="sc">::</span><span class="fu">dbConnect</span>(RSQLite<span class="sc">::</span><span class="fu">SQLite</span>(), <span class="fu">db</span>(JASPAR2024))</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>pfm <span class="ot">&lt;-</span> <span class="fu">getMatrixByID</span>(<span class="at">x =</span> JASPARConnect, <span class="at">ID =</span> <span class="st">"MA0002.3"</span>)</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>RSQLite<span class="sc">::</span><span class="fu">dbDisconnect</span>(JASPARConnect)</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span>(pfm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Runx1"</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot seqlogo</span></span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">seqLogo</span>(<span class="at">x =</span> <span class="fu">toICM</span>(pfm))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot seqlogo</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">seqLogo</span>(<span class="at">x =</span> <span class="fu">toICM</span>(pfm))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -981,20 +981,20 @@ colData names(30): selProb selected ... regStep26 regStep27</code></pre>
 </div>
 <p>We did not see this motif in the binned approach. Perhaps this could only be selected in context with the rest of the motifs. We can also have a closer look at some of the enhancers which have predicted binding sites for a motif of interest, ordering by absolute logFC in accessibility as a means of ranking the most important ones. Let’s look at such top enhancers for the Runx1 motif.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="do">## TF on interest</span></span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>TF <span class="ot">&lt;-</span> sel[<span class="dv">3</span>]</span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>TF</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="do">## TF on interest</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>TF <span class="ot">&lt;-</span> sel[<span class="dv">3</span>]</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>TF</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "MA0002.3_Runx1"</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Identify enhancers which contain predicted TFBSs </span></span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">assay</span>(se, <span class="st">"x"</span>)[, TF] <span class="sc">&gt;</span> <span class="dv">0</span>) </span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Order by absolute logFC</span></span>
-<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">abs</span>(gr<span class="sc">$</span>logFC[i]), <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>gr[i][o]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Identify enhancers which contain predicted TFBSs </span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">assay</span>(se, <span class="st">"x"</span>)[, TF] <span class="sc">&gt;</span> <span class="dv">0</span>) </span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Order by absolute logFC</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">abs</span>(gr<span class="sc">$</span>logFC[i]), <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>gr[i][o]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>GRanges object with 7865 ranges and 13 metadata columns:
           seqnames              ranges strand |             peakID        logFC
@@ -1072,13 +1072,13 @@ colData names(30): selProb selected ... regStep26 regStep27</code></pre>
 <section id="session" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="session"><span class="header-section-number">5</span> Session</h2>
 <div class="cell" data-output-fold="true">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <details><summary>Code Output</summary>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Tue Oct 20 20:34:38 2026"</code></pre>
+<pre><code>[1] "Thu Oct 22 09:02:08 2026"</code></pre>
 </div>
 </details>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <details><summary>Code Output</summary>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.6.1 (2026-06-24)

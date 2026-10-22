@@ -255,7 +255,7 @@ background-size: cover;
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">20-Oct-2026</p>
+        <p class="date">22-Oct-2026</p>
       </div>
     </div>
     
@@ -950,11 +950,11 @@ txdb = TxDb.Hsapiens.UCSC.mm39.knownGene</code></pre>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>tagMatrix<span class="ot">=</span><span class="fu">getTagMatrix</span>(peaks_gr, <span class="at">windows=</span>promoter)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing start_site regions by gene... 2026-10-20 20:44:49</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing tag matrix...  2026-10-20 20:44:49</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing start_site regions by gene... 2026-10-22 09:15:30</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; preparing tag matrix...  2026-10-22 09:15:30</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>TSS_profile<span class="ot">=</span><span class="fu">plotAvgProf</span>(tagMatrix, <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">3000</span>, <span class="dv">3000</span>), <span class="at">xlab=</span><span class="st">"Genomic Region (5'-&gt;3')"</span>, <span class="at">ylab =</span> <span class="st">"Read Count in Peaks"</span>)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; plotting figure...             2026-10-20 20:45:14</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="do">## &gt;&gt; plotting figure...             2026-10-22 09:15:53</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="fig-tss-profile" class="quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1318,61 +1318,61 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">GO:0000018</td>
-<td style="text-align: right;">0.2288889</td>
-<td style="text-align: right;">0.8947302</td>
-<td style="text-align: right;">0.0897105</td>
+<td style="text-align: right;">0.2089385</td>
+<td style="text-align: right;">0.8096611</td>
+<td style="text-align: right;">0.0952880</td>
 <td style="text-align: right;">-0.6494198</td>
-<td style="text-align: right;">-1.2166458</td>
+<td style="text-align: right;">-1.2155347</td>
 <td style="text-align: right;">120</td>
 <td style="text-align: left;">99982, 2….</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">GO:0000027</td>
-<td style="text-align: right;">0.5073746</td>
-<td style="text-align: right;">0.8992288</td>
-<td style="text-align: right;">0.0630790</td>
+<td style="text-align: right;">0.4551920</td>
+<td style="text-align: right;">0.8361039</td>
+<td style="text-align: right;">0.0665892</td>
 <td style="text-align: right;">-0.5800163</td>
-<td style="text-align: right;">-0.9832416</td>
+<td style="text-align: right;">-1.0062244</td>
 <td style="text-align: right;">24</td>
 <td style="text-align: left;">67025, 9….</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">GO:0000028</td>
-<td style="text-align: right;">0.3616692</td>
-<td style="text-align: right;">0.8947302</td>
-<td style="text-align: right;">0.0826646</td>
+<td style="text-align: right;">0.3333333</td>
+<td style="text-align: right;">0.8246516</td>
+<td style="text-align: right;">0.0847985</td>
 <td style="text-align: right;">-0.6842573</td>
-<td style="text-align: right;">-1.1364051</td>
+<td style="text-align: right;">-1.1614689</td>
 <td style="text-align: right;">19</td>
 <td style="text-align: left;">56412, 9….</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">GO:0000038</td>
-<td style="text-align: right;">0.2881598</td>
-<td style="text-align: right;">0.8947302</td>
-<td style="text-align: right;">0.0908241</td>
+<td style="text-align: right;">0.2577904</td>
+<td style="text-align: right;">0.8225873</td>
+<td style="text-align: right;">0.0968878</td>
 <td style="text-align: right;">-0.6963113</td>
-<td style="text-align: right;">-1.1918451</td>
+<td style="text-align: right;">-1.2127595</td>
 <td style="text-align: right;">27</td>
 <td style="text-align: left;">235674, ….</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">GO:0000041</td>
-<td style="text-align: right;">0.9195804</td>
-<td style="text-align: right;">0.9749557</td>
-<td style="text-align: right;">0.0236501</td>
+<td style="text-align: right;">0.9232586</td>
+<td style="text-align: right;">0.9796322</td>
+<td style="text-align: right;">0.0241448</td>
 <td style="text-align: right;">-0.3431480</td>
-<td style="text-align: right;">-0.6304391</td>
+<td style="text-align: right;">-0.6373614</td>
 <td style="text-align: right;">83</td>
 <td style="text-align: left;">18125, 6….</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">GO:0000045</td>
-<td style="text-align: right;">0.8693245</td>
-<td style="text-align: right;">0.9663806</td>
-<td style="text-align: right;">0.0239330</td>
+<td style="text-align: right;">0.8662281</td>
+<td style="text-align: right;">0.9597737</td>
+<td style="text-align: right;">0.0235793</td>
 <td style="text-align: right;">-0.3830003</td>
-<td style="text-align: right;">-0.7181493</td>
+<td style="text-align: right;">-0.7169619</td>
 <td style="text-align: right;">137</td>
 <td style="text-align: left;">64143, 73683</td>
 </tr>
@@ -1420,51 +1420,51 @@ Figure&nbsp;2: Summary of features annotated to peaks.
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">GO:0002181</td>
-<td style="text-align: right;">1.442812</td>
-<td style="text-align: right;">0.0044082</td>
-<td style="text-align: right;">0.7796423</td>
+<td style="text-align: right;">1.432148</td>
+<td style="text-align: right;">0.0079553</td>
+<td style="text-align: right;">0.7862364</td>
 <td style="text-align: right;">202</td>
 <td style="text-align: left;">cytoplasmic translation</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">GO:0002183</td>
-<td style="text-align: right;">1.771211</td>
-<td style="text-align: right;">0.0012883</td>
-<td style="text-align: right;">0.4556922</td>
+<td style="text-align: right;">1.805896</td>
+<td style="text-align: right;">0.0027520</td>
+<td style="text-align: right;">0.6145265</td>
 <td style="text-align: right;">42</td>
 <td style="text-align: left;">cytoplasmic translational initiation</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">GO:0002710</td>
-<td style="text-align: right;">1.715219</td>
-<td style="text-align: right;">0.0080788</td>
-<td style="text-align: right;">0.7968870</td>
+<td style="text-align: right;">1.762228</td>
+<td style="text-align: right;">0.0070799</td>
+<td style="text-align: right;">0.7862364</td>
 <td style="text-align: right;">29</td>
 <td style="text-align: left;">negative regulation of T cell mediated immunity</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">GO:0003300</td>
-<td style="text-align: right;">-1.536868</td>
-<td style="text-align: right;">0.0076948</td>
-<td style="text-align: right;">0.7968870</td>
+<td style="text-align: right;">-1.549294</td>
+<td style="text-align: right;">0.0082161</td>
+<td style="text-align: right;">0.7862364</td>
 <td style="text-align: right;">84</td>
 <td style="text-align: left;">cardiac muscle hypertrophy</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">GO:0006111</td>
-<td style="text-align: right;">1.712781</td>
-<td style="text-align: right;">0.0039804</td>
-<td style="text-align: right;">0.7796423</td>
+<td style="text-align: right;">1.750771</td>
+<td style="text-align: right;">0.0022291</td>
+<td style="text-align: right;">0.6145265</td>
 <td style="text-align: right;">47</td>
 <td style="text-align: left;">regulation of gluconeogenesis</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">GO:0006289</td>
-<td style="text-align: right;">1.593972</td>
-<td style="text-align: right;">0.0073920</td>
-<td style="text-align: right;">0.7968870</td>
-<td style="text-align: right;">74</td>
-<td style="text-align: left;">nucleotide-excision repair</td>
+<td style="text-align: left;">GO:0006869</td>
+<td style="text-align: right;">-1.464460</td>
+<td style="text-align: right;">0.0004533</td>
+<td style="text-align: right;">0.5353755</td>
+<td style="text-align: right;">305</td>
+<td style="text-align: left;">lipid transport</td>
 </tr>
 </tbody>
 </table>
