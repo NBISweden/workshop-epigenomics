@@ -13,3 +13,5 @@ by different topics as well.
 
 For instructions on how to work with the tutorials and setup options please 
 refer to the `home_tutorialsetup.qmd` file. 
+
+For queries feel free to write to us at edu.epigenomics[at]nbis.se.
