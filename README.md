@@ -1,6 +1,6 @@
 # Epigenomics Data Analysis: From Bulk to Single Cell
 
-## Contributers
+## Contributors
 
 For instructions on how to add material to the workshop please refer to the 
 `contributors.md` file.
