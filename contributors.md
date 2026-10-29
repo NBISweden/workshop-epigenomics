@@ -1,3 +1,7 @@
+---
+format: html
+---
+
 # Epigenomics Data Analysis: From Bulk to Single Cell
 
 ## Contributors

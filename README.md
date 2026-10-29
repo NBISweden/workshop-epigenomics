@@ -3,7 +3,7 @@
 ## Contributors
 
 For instructions on how to add material to the workshop please refer to the 
-`_contributors.md` file.
+`contributors.md` file.
 
 ## Students
 
