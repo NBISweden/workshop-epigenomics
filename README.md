@@ -7,11 +7,18 @@ For instructions on how to add material to the workshop please refer to the
 
 ## Students
 
-The presentations can be found in the `presentations` folder where they are 
-grouped by topic. All tutorials can be found in the `tutorials` folder grouped 
-by different topics as well.
+All relevant material and instructions can be found on the course [website](https://nbisweden.github.io/workshop-epigenomics/).
+Navigate to the 
+- `Tutorials Setup` tab for instructions on how to set up to be able to work with the tutorials.
+- `Contents` tab for an overview and links to all presentations and tutorials.
+- `Tutorials` tab to be directed to the exercises on the different topics covered.
 
-For instructions on how to work with the tutorials and setup options please 
-refer to the `home_tutorialsetup.qmd` file. 
+Material from previous iterations of the course are available as release tags. 
+You can download the state of this GitHub repository at previous years by using
+the relevant release tag. To clone the repo from 2026, do:
+
+```bash
+git clone --branch 2026 https://github.com/NBISweden/workshop-epigenomics.git
+```
 
 For queries feel free to write to us at **edu.epigenomics[at]nbis.se**.
