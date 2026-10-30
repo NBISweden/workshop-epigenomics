@@ -18,11 +18,12 @@ concurrency:
 jobs: 
   build-deploy:
     runs-on: ubuntu-latest
+    env:
+      TZ: Europe/Stockholm
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    env:
-      TZ: Europe/Stockholm
+
 
     steps:
       - name: Checkout repository
