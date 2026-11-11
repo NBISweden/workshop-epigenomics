@@ -24,32 +24,38 @@ toastui:
       workweek: true
       taskView: false
       eventView: ['time']
-      hourStart: 9
-      hourEnd: 18
-      showNowIndicator: false
+      showNowIndicator: true
+    autoHourRange: true
+    timezone:
+      zones:
+        - timezoneName: Europe/Stockholm
     calendars:
-      - id: "session"
-        name: "Session"
+      - id: "talk"
+        name: "Talk"
         color: inherit
-        backgroundColor: "#D6EAF8"
-        dragBackgroundColor: "#D6EAF8"
-        borderColor: "#85C1E9"
+        backgroundColor: "#A7D4CA"
+        dragBackgroundColor: "#A7D4CA"
+        borderColor: "#6AAA99"
+      - id: "lab"
+        name: "Lab"
+        color: inherit
+        backgroundColor: "#D5EEE8"
+        dragBackgroundColor: "#D5EEE8"
+        borderColor: "#9BCDBF"
       - id: "free"
         name: "Free"
         color: inherit
-        backgroundColor: "#FCF3CF"
-        dragBackgroundColor: "#FCF3CF"
-        borderColor: "#F7DC6F"
+        backgroundColor: "#F5D9BD"
+        dragBackgroundColor: "#F5D9BD"
+        borderColor: "#DDAF83"
       - id: "extra"
         name: "Extra"
         color: inherit
-        backgroundColor: "#E8DAEF"
-        dragBackgroundColor: "#E8DAEF"
-        borderColor: "#BB8FCE"
-format:
-  html
+        backgroundColor: "#D6E5F3"
+        dragBackgroundColor: "#D6E5F3"
+        borderColor: "#9DBBD8"
+format: html
 ---
 
-<!-- Remember to set first schedule date in the YAML above -->
+<!-- Remember to set first day of schedule and file path in the YAML above -->
 {{< toastui schedule >}}
-

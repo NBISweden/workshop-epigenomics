@@ -1,5 +1,7 @@
 # Epigenomics Data Analysis: From Bulk to Single Cell
 
+[![Build and deploy website](https://github.com/nbisweden/workshop-epigenomics/actions/workflows/build-and-deploy-website.yml/badge.svg)](https://github.com/nbisweden/workshop-epigenomics/actions/workflows/build-and-deploy-website.yml)  
+
 ## Contributors
 
 For instructions on how to add material to the workshop please refer to the 

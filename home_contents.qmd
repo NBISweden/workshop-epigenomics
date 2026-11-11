@@ -13,20 +13,19 @@ format: html
 
 |Topic                                                          |Instructor	                                      | Links 												                     |
 |---------------------------------------------------------------|-------------------------------------------------|----------------------------------------------------|
-|[05-Oct-2026 (Mon)]{.badge .badge-primary}                                                                                                                          |||
-| DNA methylation                                               | Louella Vasquez                                 |[Presentation](presentations/DNAme/DNAMEslides.pdf), [Tutorials](landingPages/DNAme/index.html)|
-| Methylation methods & technologies (NGI)                      | Amanda Raine                                    |[Presentation](presentations/NGI/EpigeneticsMethodsNGI2025.pdf)  |
-|[06-Oct-2026 (Tue)]{.badge .badge-primary}                                                                                                                          |||
-| ATAC-seq                                                      | Agata Smialowska                                |[Presentation](presentations/ATAC/ATACslides.pdf), [Tutorials](landingPages/ATAC/index.html)|
-| Presentation and Q&A with NGI                                 | Orlando Contreras Lopez and Anja Metzger        |[Presentation Epigenomics](presentations/NGI/EpigenomicMethodsNGI2026.pdf), [Presentation Single Cell](presentations/NGI/SingleCellMethodsNGI2026.pdf)                                                   |
-|[07-Oct-2026 (Wed)]{.badge .badge-primary}                                                                                                                          |||
-| ChIP-seq                                                      | Dania Machlab                                   |[Presentation](presentations/ChIP/ChIPslides.pdf), [Tutorials](landingPages/ChIP/index.html)|
-| Cut & Tag/Run                                                 | Prasoon Agarwal                                 |[Presentation](presentations/CUTandTag/CUTandTAGslides.pdf)                                                 |
-|[08-Oct-2026 (Thu)]{.badge .badge-primary}                                                                                                                          |||
-| Motifs                                                        | Dania Machlab                                   |[Presentation](presentations/TFs/TFslides.pdf), [Tutorials](landingPages/TF/index.html)|
-| BiG Talk (keynote)                                            | Mattias Mannervik                               |[Presentation](presentations/keynote/keynoteMattiasMannervik.pdf)                                                    |
-|[09-Oct-2026 (Fri)]{.badge .badge-primary}                                                                                                                          |||
-| Integrative and single cell omics                             | Markus Ringnér                                  |[Presentation](presentations/scATAC/scATACslides.pdf), [Tutorials](landingPages/scATAC/index.html)|
+|[05-Oct-2026 (Mon)]{.badge .badge-tertiary}                                                                                                                          |||
+| DNA methylation                                               | Louella Vasquez                                 |[[{{< fa file-powerpoint >}} Presentation](presentations/DNAme/DNAMEslides.pdf)]{.btn .btn-xs} [[{{< fa file-lines >}} Tutorials](landingPages/DNAme/index.qmd)]{.btn .btn-xs}|
+| Methylation methods & technologies                            | Amanda Raine (NGI)                                    |[[{{< fa file-powerpoint >}} Presentation](presentations/NGI/EpigeneticsMethodsNGI2025.pdf)]{.btn .btn-xs}  |
+|[06-Oct-2026 (Tue)]{.badge .badge-tertiary}                                                                                                                          |||
+| ATAC-seq                                                      | Agata Smialowska                                |[[{{< fa file-powerpoint >}} Presentation](presentations/ATAC/ATACslides.pdf)]{.btn .btn-xs} [[{{< fa file-lines >}} Tutorials](landingPages/ATAC/index.qmd)]{.btn .btn-xs}|
+| Presentation and Q&A                                          | Orlando Contreras Lopez and Anja Metzger (NGI)        |[[{{< fa file-powerpoint >}} Epigenomics](presentations/NGI/EpigenomicMethodsNGI2026.pdf)]{.btn .btn-xs} [[{{< fa file-powerpoint >}} Single Cell](presentations/NGI/SingleCellMethodsNGI2026.pdf)]{.btn .btn-xs}                                                   |
+|[07-Oct-2026 (Wed)]{.badge .badge-tertiary}                                                                                                                          |||
+| ChIP-seq                                                      | Dania Machlab                                   |[[{{< fa file-powerpoint >}} Presentation](presentations/ChIP/ChIPslides.pdf)]{.btn .btn-xs} [[{{< fa file-lines >}} Tutorials](landingPages/ChIP/index.qmd)]{.btn .btn-xs}|
+| Cut & Tag/Run                                                 | Prasoon Agarwal                                 |[[{{< fa file-powerpoint >}} Presentation](presentations/CUTandTag/CUTandTAGslides.pdf)]{.btn .btn-xs}                                                 |
+|[08-Oct-2026 (Thu)]{.badge .badge-tertiary}                                                                                                                          |||
+| Motifs                                                        | Dania Machlab                                   |[[{{< fa file-powerpoint >}} Presentation](presentations/TFs/TFslides.pdf)]{.btn .btn-xs} [[{{< fa file-lines >}} Tutorials](landingPages/TF/index.qmd)]{.btn .btn-xs}|
+| BiG Talk (Keynote)                                            | Mattias Mannervik                               |[[{{< fa file-powerpoint >}} Presentation](presentations/keynote/keynoteMattiasMannervik.pdf)]{.btn .btn-xs}                                                    |
+|[09-Oct-2026 (Fri)]{.badge .badge-tertiary}                                                                                                                          |||
+| Integrative and single cell omics                             | Markus Ringnér                                  |[[{{< fa file-powerpoint >}} Presentation](presentations/scATAC/scATACslides.pdf)]{.btn .btn-xs} [[{{< fa file-lines >}} Tutorials](landingPages/scATAC/index.qmd)]{.btn .btn-xs}|
 
 :::
-
